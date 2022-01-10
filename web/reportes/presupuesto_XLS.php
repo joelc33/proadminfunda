@@ -65,7 +65,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
     $conex = new ConexionComun();
 
            
-        $sql = "SELECT  distinct nu_partida,substring(nu_partida,1,1)||case when substring(nu_partida,2,2) <> '' then '.' else '' end||
+        $sql = "SELECT  distinct tb085.id,nu_partida,substring(nu_partida,1,1)||case when substring(nu_partida,2,2) <> '' then '.' else '' end||
                         substring(nu_partida,2,2)||case when substring(nu_partida,4,2) <> '' then '.' else '' end||
                         substring(nu_partida,4,2)||case when substring(nu_partida,6,2) <> '' then '.' else '' end||
                         substring(nu_partida,6,2)||case when substring(nu_partida,8,2) <> '' then '.' else '' end||
@@ -77,7 +77,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
                      join tb083_proyecto_ac tb083 on (tb084.id_tb083_proyecto_ac = tb083.id)
                      join tb082_ejecutor tb082 on (tb083.id_tb082_ejecutor = tb082.id)
                     -- join tb139_aplicacion tb139 on (tx_tip_aplicacion = tip_apl)
-                WHERE nu_se <> '' $condicion;";
+                WHERE nu_fi <> '' $condicion order by tb085.id;";
      //echo $sql; exit();
     $retencion = $conex->ObtenerFilasBySqlSelect($sql);
 
