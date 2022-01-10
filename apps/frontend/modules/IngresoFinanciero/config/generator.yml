@@ -1,0 +1,5 @@
+generator:
+  class:              sfPropelAdminGenerator
+  param:
+    model_class:      Tb155CuentaBancariaHistorico
+    theme:            default

@@ -1,0 +1,11 @@
+WARNING: Failed to set ACL on the directory containing the configuration database: [Errno 1] Operation not permitted: '/var/lib/pgadmin'
+Traceback (most recent call last):
+  File "/opt/enviromentpy/pgadmin4/lib/python3.8/site-packages/pgadmin4/pgAdmin4.py", line 64, in <module>
+    exec(open(file_quote(setupfile), 'r').read())
+  File "<string>", line 413, in <module>
+  File "<string>", line 345, in setup_db
+  File "/opt/enviromentpy/pgadmin4/lib/python3.8/site-packages/pgadmin4/pgadmin/setup/data_directory.py", line 40, in create_app_data_directory
+    _create_directory_if_not_exists(config.SESSION_DB_PATH)
+  File "/opt/enviromentpy/pgadmin4/lib/python3.8/site-packages/pgadmin4/pgadmin/setup/data_directory.py", line 16, in _create_directory_if_not_exists
+    os.mkdir(_path)
+PermissionError: [Errno 13] Permission denied: '/var/lib/pgadmin/sessions'

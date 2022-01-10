@@ -1,0 +1,31 @@
+dev:
+  propel:
+    param:
+      classname:  DebugPDO
+
+test:
+  propel:
+    param:
+      classname:  DebugPDO
+
+all:
+  propel:
+    class:        sfPropelDatabase
+    param:
+      classname:  PropelPDO
+      dsn:        pgsql:dbname=administrativo;host=localhost
+      username:   postgres
+      password:   2021cafe**
+      encoding:   utf8
+      persistent: true
+      pooling:    true
+#  poa:
+#    class:        sfPropelDatabase
+#    param:
+#      classname:  PropelPDO
+#      dsn:        pgsql:dbname=formulacion;host=201.249.48.146;port=8531
+#      username:   postgres
+#      password:   yperez
+#      encoding:   utf8
+#      persistent: true
+#      pooling:    true

@@ -1,0 +1,182 @@
+body {
+    padding: 2px;
+}
+.msg .x-box-mc {
+    font-size:14px;
+}
+#msg-div {
+    position:absolute;
+    left:35%;
+    top:10px;
+    width:250px;
+    z-index:20000;
+}
+#loading-mask{
+	position:absolute;
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+	z-index:20000;
+	background-color:white;
+	}
+#loading{
+	position:absolute;
+	left:45%;
+	top:40%;
+	padding:2px;
+	z-index:20001;
+	height:auto;
+	}
+#loading a {
+	color:#225588;
+	}
+#loading .loading-indicator{
+	background:white;
+	color:#444;
+	font:bold 13px tahoma,arial,helvetica;
+	padding:10px;
+	margin:0;
+	height:auto;
+	}
+#loading-msg {
+	font: normal 10px arial,tahoma,sans-serif;
+	}
+.icon-configuracion{background-image:  url('../images/16x16/cog.png')  !important;}
+.icon-salir{background-image: url('../images/32x32/gnome-logout.png') !important;}
+.icon-clientes{background-image: url('../images/32x32/emblem-people.png') !important;}
+.icon-clientes2{background-image: url('../images/16x16/ico_user.gif') !important;}
+.icon-buscar{background-image: url('../images/16x16/search.png') !important;}
+.icon-bansur{background-image: url('../images/16x16/cardiogram.png') !important;}
+.icon-buscarbansur{background-image: url('../images/16x16/buscar-bansur.png') !important;}
+.icon-medicine{background-image: url('../images/16x16/hospital.png') !important;}
+.icon-solicitudesbansur{background-image: url('../images/16x16/report-bansur.png') !important;}
+.icon-nursebansur{background-image: url('../images/16x16/nurse.png') !important;}
+.icon-jeringa{background-image: url('../images/16x16/jeringa.png') !important;}
+.icon-pills{background-image: url('../images/16x16/pills.png') !important;}
+.icon-cleanmedic{background-image: url('../images/16x16/cleanmedical.png') !important;}
+.icon-comprarali{background-image: url('../images/16x16/shopping-cart.png') !important;}
+.icon-calculator{background-image: url('../images/16x16/calculator.png') !important;}
+.icon-recaudacion-bandeja{background-image: url('../images/16x16/recaudacion.png') !important;}
+.icon-recaudacion-porrecaudar{background-image: url('../images/16x16/alcancia.png') !important;}
+.icon-recaudacion-recaudado{background-image: url('../images/16x16/recaudado.png') !important;}
+.icon-recaudacion-inicial{background-image: url('../images/16x16/cupon.png') !important;}
+.icon-fiscal{background-image: url('../images/16x16/fiscal.png') !important;}
+.icon-contribuyentes{background-image: url('../images/16x16/contribuyentes.png') !important;}
+.icon-veripago{background-image: url('../images/16x16/verif-pago.png') !important;}
+.icon-entidades{background-image: url('../images/16x16/entidad.png') !important;}
+.icon-sicsum{background-image: url('../images/16x16/sicsum_icono.ico') !important;}
+.icon-soporte{background-image: url('../images/16x16/soporte_tec.png') !important;}
+.icon-reportes2{background-image: url('../images/16x16/reportes2.png') !important;}
+.icon-done{background-image: url('../images/16x16/done.png') !important;}
+.icon-anteriores{background-image: url('../images/16x16/anteriores.png') !important;}
+
+
+
+.icon-internet{background-image: url('../images/16x16/Internet.png') !important;}
+.icon-grafico{background-image: url('../images/16x16/ico_grafic.gif') !important;}
+
+.icon-local{background-image: url('../images/16x16/local.png') !important;}
+
+.icon-subirImagen{background-image: url('../images/16x16/image_add.png') !important;}
+.icon-franquicias{background-image: url('../images/32x32/gnome-monitor.png') !important;}
+.icon-locaciones{background-image: url('../images/32x32/gnome-main-menu.png') !important;}
+.icon-productos{background-image: url('../images/32x32/deb.png') !important;}
+.icon-contenidoweb{background-image: url('../images/32x32/web-browser.png') !important;}
+.icon-articulo{background-image: url('../images/32x32/accessories-text-editor.png') !important;}
+.icon-ventas{background-image: url('../images/32x32/ventas.png') !important;}
+.icon-reportes{background-image: url('../images/16x16/page.png') !important;}
+.icon-usuario{background-image: url('../images/16x16/user.gif') !important;}
+.icon-usuarios{background-image: url('../images/16x16/group_key.png') !important;}
+.icon-pdf{background-image: url('../images/16x16/pdf.png') !important;}
+
+
+.icon-region{background: url('../images/16x16/region.png') 0px 0px no-repeat !important;}
+.icon-limpiar{background: url('../images/16x16/clear.gif') 0px 0px no-repeat !important;}
+.icon-pagos{background: url('../images/16x16/dinero.png') 0px 0px no-repeat !important;}
+.icon-zonaentrega{background: url('../images/16x16/ico_propiedades.gif') 0px 0px no-repeat !important;}
+.icon-salir2{background: url('../images/16x16/gnome-logout.png') 0px 0px no-repeat !important;}
+.registro_detalle {font-size: 11px; margin: 5px;}
+
+.icon-mostrar{background: url('../images/16x16/search.png') 0px 0px no-repeat !important;}
+.icon-editar{background: url('../images/16x16/edit.png') 0px 0px no-repeat !important;}
+.icon-eliminar{background: url('../images/16x16/delete.png') 0px 0px no-repeat !important;}
+.icon-nuevo{background: url('../images/16x16/add.png') 0px 0px no-repeat !important;}
+.icon-agregar{background: url('../images/16x16/drop-add.gif') 0px 0px no-repeat !important;}
+.icon-guardar{background: url('../images/16x16/save.png') 0px 0px no-repeat !important;}
+.icon-volver{background: url('../images/16x16/ico_back_1.gif') 0px 0px no-repeat !important;}
+.icon-cancelar{background: url('../images/16x16/cancel.gif') 0px 0px no-repeat !important;}
+
+.icon-inicio{background: url('../images/16x16/house.png') 0px 0px no-repeat !important;}
+.icon-organizacion{background: url('../images/16x16/chart_organisation.png') 0px 0px no-repeat !important;}
+.icon-electores{background: url('../images/16x16/group.png') 0px 0px no-repeat !important;}
+.icon-login{background: url('../images/16x16/key.png') 0px 0px no-repeat !important;}
+.icon-telefono{background: url('../images/16x16/telephone.png') 0px 0px no-repeat !important;}
+.icon-movil{background: url('../images/16x16/phone.png') 0px 0px no-repeat !important;}
+.icon-privilegio{background: url('../images/16x16/cup_key.png') 0px 0px no-repeat !important;}
+.icon-reubica{background: url('../images/16x16/house_go.png') 0px 0px no-repeat !important;}
+.icon-mapa{background: url('../images/16x16/map.png') 0px 0px no-repeat !important;}
+.icon-mapalupa{background: url('../images/16x16/map_magnify.png') 0px 0px no-repeat !important;}
+.icon-libro{background: url('../images/16x16/book.png') 0px 0px no-repeat !important;}
+.icon-casa{background: url('../images/16x16/residencia.png') 0px 0px no-repeat !important;}
+.icon-rolmenu{background: url('../images/16x16/group_gear.png') 0px 0px no-repeat !important;}
+.icon-capacitacion{background: url('../images/16x16/carta_user.png') 0px 0px no-repeat !important;}
+.icon-navegacion{background: url('../images/16x16/folder_go.png') 0px 0px no-repeat !important;}
+.icon-reporteest{background: url('../images/16x16/table.png') 0px 0px no-repeat !important;}
+.icon-reportegraf{background: url('../images/16x16/chart_bar.png') 0px 0px no-repeat !important;}
+.icon-reportetorta{background: url('../images/16x16/chart_pie.png') 0px 0px no-repeat !important;}
+.icon-ficha{background: url('../images/16x16/report_user.png') 0px 0px no-repeat !important;}
+.icon-adjuntar{background: url('../images/16x16/Attach.png') 0px 0px no-repeat !important;}
+.icon-solicitud{background: url('../images/16x16/folder_user.png') 0px 0px no-repeat !important;}
+.icon-solpendiente{background: url('../images/16x16/group_error.png') 0px 0px no-repeat !important;}
+.icon-cambio{background: url('../images/16x16/form_edit.png') 0px 0px no-repeat !important;}
+.icon-caja{background: url('../images/16x16/box.png') 0px 0px no-repeat !important;}
+.icon-tiposol{background: url('../images/16x16/tipo_solicitud.png') 0px 0px no-repeat !important;}
+.icon-feliz{background: url('../images/16x16/feliz.png') 0px 0px no-repeat !important;}
+.icon-triste{background: url('../images/16x16/triste.png') 0px 0px no-repeat !important;}
+.icon-fin{background: url('../images/16x16/check.png') 0px 0px no-repeat !important;}
+.icon-aprobar{background: url('../images/16x16/aprobar.png') 0px 0px no-repeat !important;}
+.icon-carro{background: url('../images/16x16/car.png') 0px 0px no-repeat !important;}
+.icon-transito{background: url('../images/16x16/carro.png') 0px 0px no-repeat !important;}
+.icon-atendido{background: url('../images/16x16/group_go.png') 0px 0px no-repeat !important;}
+.icon-doble{background: url('../images/16x16/app_2.png') 0px 0px no-repeat !important;}
+.icon-listarecaudacion{background: url('../images/graphic-icons/png/32x32/yes.png') 0px 0px no-repeat !important;}
+.icon-descargar{background: url('../images/16x16/descargar.png') 0px 0px no-repeat !important;}
+
+
+
+
+.icon-contribuyente{background: url('../images/ico_user.gif') 0px 0px no-repeat !important;}
+.icon-contri{background: url('../images/financial-icons/gif/16x16/cliente.gif') 0px 0px no-repeat !important;}
+.icon-liq{background: url('../images/financial-icons/gif/16x16/Currency.gif') 0px 0px no-repeat !important;}
+.icon-liquidacion{background: url('../images/money-icons/gif/bundle-16x16x8b.gif') 0px 0px no-repeat !important;}
+.icon-vehiculo{background: url('../images/transport-icons/gif/car_016.gif') 0px 0px no-repeat !important;}
+.icon-recaudacion{background: url('../images/financial-icons/gif/16x16/Red basket.gif') 0px 0px no-repeat !important;}
+.icon-buscar{background: url('../images/search.gif') 0px 0px no-repeat !important;}
+.icon-filtro{background: url('../images/graphic-icons/gif/16x16/Filter.gif') 0px 0px no-repeat !important;}
+.icon-add{background: url('../images/add.gif') 0px 0px no-repeat !important;}
+.icon-limpiar{background: url('../images/graphic-icons/gif/16x16/Clear.gif') 0px 0px no-repeat !important;}
+.icon-save{background: url('../images/graphic-icons/gif/16x16/Save file.gif') 0px 0px no-repeat !important;}
+.icon-ajuste{background: url('../images/graphic-icons/gif/16x16/Settings.gif') 0px 0px no-repeat !important;}
+.icon-delete{background: url('../images/cancel.gif') 0px 0px no-repeat !important;}
+.icon-inicio{background: url('../images/cancel.gif') 0px 0px no-repeat !important;}
+.icon-monedas{background: url('../images/monedas.gif') 0px 0px no-repeat !important;}
+.icon-reporteVeh{background: url('../images/factu.png') 0px 0px no-repeat !important;}
+.icon-imprimir{background: url('../images/graphic-icons/gif/16x16/Printer v2.png') 0px 0px no-repeat !important;}
+.icon-multiSelVeh{background: url('../images/graphic-icons/gif/16x16/Properties.png') 0px 0px no-repeat !important;}
+.desconectar{background: url('../images/desconectar.gif') 0px 0px no-repeat !important;}
+.icon-editar{background: url('../images/ico_edit.gif') 0px 0px no-repeat !important;}
+.icon-grafic{background: url('../images/ico_grafic.gif') 0px 0px no-repeat !important;}
+.icon-refrescar{background: url('../js/ext-3.2.1/resources/images/default/grid/refresh.gif') 0px 0px no-repeat !important;}
+
+.icon-calendar{background-image: url('../images/16x16/calendar.png') !important;}
+
+.icon-calculator_new{background: url('../images/16x16/calculator_new.png') 0px 0px no-repeat !important;}
+.icon-calculator_add{background: url('../images/16x16/calculator_add.png') 0px 0px no-repeat !important;}
+.icon-calculator_edit{background: url('../images/16x16/calculator_edit.png') 0px 0px no-repeat !important;}
+.icon-calculator_delete{background: url('../images/16x16/calculator_delete.png') 0px 0px no-repeat !important;}
+.icon-calculator_error{background: url('../images/16x16/calculator_error.png') 0px 0px no-repeat !important;}
+.icon-calculator_link{background: url('../images/16x16/calculator_link.png') 0px 0px no-repeat !important;}
+
+.icon-cerrar{background: url('../images/16x16/lock_go.png') 0px 0px no-repeat !important;}
+.icon-abrir{background: url('../images/16x16/lock_open.png') 0px 0px no-repeat !important;}

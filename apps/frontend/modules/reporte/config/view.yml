@@ -1,0 +1,5 @@
+default:
+  http_metas:
+  content-type: text/html
+  has_layout: on
+  layout: login
