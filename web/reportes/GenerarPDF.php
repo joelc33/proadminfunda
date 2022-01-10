@@ -83,8 +83,8 @@ $datos_ruta = getRutaId( $co_solicitud, $co_tipo_solicitud, $co_proceso);
 
 $definicion =  $_SERVER["SERVER_NAME"].'/proadmin/web/reportes/'.$datos_ruta['nb_reporte_orden'].'.php?codigo='.$datos_ruta['co_ruta'];
 
-//echo $definicion;
-//exit();
+echo $definicion;
+exit();
 
 $get_data = callAPI('GET', $definicion, false);
 $response = json_decode($get_data, true);
