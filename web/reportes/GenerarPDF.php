@@ -81,7 +81,7 @@ function getRutaId($co_solicitud, $co_tipo_solicitud, $co_proceso){
 
 $datos_ruta = getRutaId( $co_solicitud, $co_tipo_solicitud, $co_proceso);
 
-$definicion =  $_SERVER["SERVER_NAME"].'/public_html/proadmin/web/reportes/'.$datos_ruta['nb_reporte_orden'].'.php?codigo='.$datos_ruta['co_ruta'];
+$definicion =  $_SERVER["SERVER_NAME"].'/proadmin/web/reportes/'.$datos_ruta['nb_reporte_orden'].'.php?codigo='.$datos_ruta['co_ruta'];
 
 //echo $definicion;
 //exit();
