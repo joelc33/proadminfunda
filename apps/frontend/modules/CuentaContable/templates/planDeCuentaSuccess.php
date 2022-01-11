@@ -78,6 +78,11 @@ this.filtro = new Ext.Button({
     }
 });
 
+this.excel = new Ext.Button({
+    text:'Exportar a Excel',
+    iconCls:'icon-libro',
+    handler: this.onExportar
+});
 
 //Grid principal
 this.gridPanel_ = new Ext.grid.GridPanel({
@@ -88,7 +93,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 //    frame:true,
     height:420,
     tbar:[
-        this.nuevo,'-',this.editar,'-',this.filtro
+        this.nuevo,'-',this.editar,'-',this.filtro,'-',this.excel
     ],
     columns: [
     new Ext.grid.RowNumberer(),
@@ -165,6 +170,11 @@ getLista: function(){
            ]
     });
     return this.store;
+}
+,onExportar : function() {
+
+    
+   window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/plan_cuenta_XLS.php');
 }
 };
 Ext.onReady(CuentaContable.main.init, CuentaContable.main);
