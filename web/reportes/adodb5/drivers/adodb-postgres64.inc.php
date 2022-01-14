@@ -674,6 +674,7 @@ WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\'))';
 		   		if ($user) $str .= " user=".$user;
 		   		if ($pwd)  $str .= " password=".$pwd;
 				if ($db)   $str .= " dbname=".$db;
+                                $str .= " port=1992";
 		}
 
 		//if ($user) $linea = "user=$user host=$linea password=$pwd dbname=$db port=5432";
