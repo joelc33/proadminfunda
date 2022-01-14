@@ -171,7 +171,7 @@
             return this.store;
         },
         getDatos: function(){        
-            window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/"+Detalle.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta'));  
+            window.open("<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/index.php/reporte/index/i/"+Detalle.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta'));  
         },
         getImagen: function(){
                 this.msg = Ext.get('formularioImagen');
