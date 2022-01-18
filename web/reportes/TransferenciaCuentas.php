@@ -63,7 +63,7 @@ class PDF extends FPDF {
          $this->AddPage();  
          $this->SetFont('Arial','',8);
          $this->campo = $this->getDetalleTransf(); 
-         $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->campo['dia'].' de '.mes($this->campo['mes']).' del '.$this->campo['anio']),0,0,'R');
+         $this->Cell(0,0,utf8_decode('San Francisco, '.$this->campo['dia'].' de '.mes($this->campo['mes']).' del '.$this->campo['anio']),0,0,'R');
          $this->SetFont('Arial','B',9);
          $this->SetFillColor(255, 255, 255);
          $this->SetWidths(array(60,140));
