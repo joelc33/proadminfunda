@@ -258,28 +258,85 @@ this.fecha_entrega = new Ext.form.DateField({
 	width:100
 });
 
+this.forma_pago = new Ext.form.NumberField({
+	fieldLabel:'Forma de Pago',
+	name:'tb052_compras[forma_pago]',      
+	allowBlank:false,
+	width:200
+});
 
 this.monto_contrato = new Ext.form.NumberField({
-	fieldLabel:'Monto Contrato',
+	fieldLabel:'Monto Presupuesto',
 	name:'tb052_compras[monto]',
         value:  this.OBJ.monto,        
         readOnly:(this.OBJ.co_factura!='')?true:false,
 	style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
 	allowBlank:false,
-	width:415
+	width:200
+});
+
+this.Panelforma = new Ext.Panel({
+   items:[
+       {
+           layout:'column',
+           defaults:{layout:'form'},
+           items:[
+               {
+                   labelWidth:100,
+                   columnWidth:.5,                                  
+                   items:[this.monto_contrato]
+               },
+               {
+                   labelWidth:120,
+                   columnWidth:.5,                                   
+                   items:[this.forma_pago]
+               }
+           ]
+       }
+   ]
 });
 
 this.tiempo_garantia = new Ext.form.TextField({
 	fieldLabel:'Garantia',
 	name:'tb052_compras[tiempo_garantia]',
 	value:this.OBJ.tiempo_garantia,
-	width:415
+	width:200
+});
+
+this.forma_entrega = new Ext.form.TextField({
+	fieldLabel:'Forma de Entrega',
+	name:'tb052_compras[forma_entrega]',
+	value:this.OBJ.forma_entrega,
+        allowBlank:false,
+	width:200
+});
+
+this.Paneltiempo = new Ext.Panel({
+   items:[
+       {
+           layout:'column',
+           defaults:{layout:'form'},
+           items:[
+               {
+                   labelWidth:100,
+                   columnWidth:.5,                                  
+                   items:[this.tiempo_garantia]
+               },
+               {
+                   labelWidth:120,
+                   columnWidth:.5,                                   
+                   items:[this.forma_entrega]
+               }
+           ]
+       }
+   ]
 });
 
 this.nu_orden_compra = new Ext.form.TextField({
-	fieldLabel:'Orden Pre-Impresa',
+	fieldLabel:'Nro. Proceso',
 	name:'tb052_compras[nu_orden_compra]',
 	value:this.OBJ.nu_orden_compra,
+        allowBlank:false,
 	width:200
 });
 
@@ -299,8 +356,8 @@ this.fieldContrato= new Ext.form.FieldSet({
           this.fecha_fin,
           this.fecha_entrega,
           this.in_responsabilidad_social,
-          this.monto_contrato,
-          this.tiempo_garantia,
+          this.Panelforma,
+          this.Paneltiempo,
           this.tx_observacion
        ]
 });
