@@ -837,13 +837,13 @@ class PDF_Flo extends PDF_FlowingBlock
                           total_pagar,
                           po_retencion,
                           mo_retencion,
-                          substr(tx_tipo_retencion,1,12) as tx_tipo_retencion
+                          case when tb046.co_tipo_retencion = 92 then substr(tx_tipo_retencion,1,13)||' '||po_retencion||' %'  else substr(tx_tipo_retencion,1,13) end as tx_tipo_retencion
                   from   tb045_factura as tb045     
                   left join tb046_factura_retencion as tb046 on tb046.co_factura = tb045.co_factura
                   left join tb041_tipo_retencion as tb041 on tb041.co_tipo_retencion = tb046.co_tipo_retencion
                   where mo_retencion<>0 and tb045.in_anular is null and tb045.co_factura = ".$fact; 
                        
-        //   echo $sql; exit();
+          //echo $sql; exit();
           return $conex->ObtenerFilasBySqlSelect($sql);
   
     }
@@ -1010,31 +1010,31 @@ class PDF_Flo extends PDF_FlowingBlock
 
 }
 
-$pdf=new PDF_Flo('P','mm','letter');
-$pdf->AliasNbPages();
-$pdf->PrintChapter();
-
-$comm = new ConexionComun();
-$ruta = $comm->getRuta();
-
-//rmdir($ruta);
-//mkdir($ruta, 0777, true);    
-
-$dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
-//
-//
-$update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
-//
-////echo $update; exit();
-$comm->Execute($update);    
-$pdf->SetMargins(0, 0);
-$pdf->Output($dir, 'F');
-
-
 //$pdf=new PDF_Flo('P','mm','letter');
+//$pdf->AliasNbPages();
 //$pdf->PrintChapter();
+//
+//$comm = new ConexionComun();
+//$ruta = $comm->getRuta();
+//
+////rmdir($ruta);
+////mkdir($ruta, 0777, true);    
+//
+//$dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
+////
+////
+//$update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
+////
+//////echo $update; exit();
+//$comm->Execute($update);    
 //$pdf->SetMargins(0, 0);
-//$pdf->SetDisplayMode('default');
-//$pdf->Output();
+//$pdf->Output($dir, 'F');
+
+
+$pdf=new PDF_Flo('P','mm','letter');
+$pdf->PrintChapter();
+$pdf->SetMargins(0, 0);
+$pdf->SetDisplayMode('default');
+$pdf->Output();
 
 ?>
