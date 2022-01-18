@@ -668,13 +668,13 @@ WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\'))';
 			 	$host = split(":", $str);
 				if ($host[0]) $str = "host=".adodb_addslashes($host[0]);
 				else $str = '';
-				if (isset($host[1])) $str .= " port=1992";
-				else if (!empty($this->port)) $str .= " port=1992";
+				if (isset($host[1])) $str .= " port=$host[1]";
+				else if (!empty($this->port)) $str .= " port=".$this->port;
 			}
 		   		if ($user) $str .= " user=".$user;
 		   		if ($pwd)  $str .= " password=".$pwd;
 				if ($db)   $str .= " dbname=".$db;
-                                $str .= " port=1992";
+                                //$str .= " port=1992";
 		}
 
 		//if ($user) $linea = "user=$user host=$linea password=$pwd dbname=$db port=5432";
