@@ -258,7 +258,7 @@ this.fecha_entrega = new Ext.form.DateField({
 	width:100
 });
 
-this.forma_pago = new Ext.form.NumberField({
+this.forma_pago = new Ext.form.TextField({
 	fieldLabel:'Forma de Pago',
 	name:'tb052_compras[forma_pago]',      
 	allowBlank:false,
