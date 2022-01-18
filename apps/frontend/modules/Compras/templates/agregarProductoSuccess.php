@@ -177,8 +177,8 @@ this.fieldDatos= new Ext.form.FieldSet({
            this.in_exento,
            this.co_unidad_producto,
            this.precio_unitario,
-           this.detalle_producto,
-           this.co_partida
+           this.detalle_producto
+           //this.co_partida
        ]
 });
 

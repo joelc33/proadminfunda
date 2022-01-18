@@ -1059,7 +1059,7 @@ class ComprasActions extends sfActions
                     $tb053_detalle_compras->setPrecioUnitario($productoForm["precio_unitario"]);
                     $tb053_detalle_compras->setMonto($productoForm["monto"]);
                     $tb053_detalle_compras->setDetalle($productoForm["detalle"]);
-                    $tb053_detalle_compras->setCoPartida($productoForm["co_partida"]);
+                    //$tb053_detalle_compras->setCoPartida($productoForm["co_partida"]);
                     $tb053_detalle_compras->setCoUnidadProducto($productoForm["co_unidad_producto"]);
                     $tb053_detalle_compras->setInCalcularIva(true);
                     $tb053_detalle_compras->setInExento($productoForm["in_exento"]);
