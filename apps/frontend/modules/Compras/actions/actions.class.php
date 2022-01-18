@@ -1145,16 +1145,36 @@ class ComprasActions extends sfActions
   {
 
     $tb052_comprasForm = $this->getRequestParameter('tb052_compras');
+    $co_compra = $this->getRequestParameter('co_compras');
     
      $con = Propel::getConnection();
      try
       { 
         $con->beginTransaction();
+
+        $compra = Tb052ComprasPeer::retrieveByPk($co_compra);
+        $compra->setMontoSubTotal($tb052_comprasForm['monto_compra']);
+        $compra->setMontoIva($tb052_comprasForm['monto_iva']);
+        $compra->setMontoTotal($tb052_comprasForm['monto_total']);
+        $compra->save($con);
+
+
+        $wherec = new Criteria();
+        $wherec->add(Tb053DetalleComprasPeer::CO_COMPRAS, $co_compra);
+        $wherec->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336);
+
+        $updc = new Criteria();
+        $updc->add(Tb053DetalleComprasPeer::PRECIO_UNITARIO, round($tb052_comprasForm['monto_compra'],2));
+        $updc->add(Tb053DetalleComprasPeer::MONTO, round($tb052_comprasForm['monto_iva'],2));
+        BasePeer::doUpdate($wherec, $updc, $con);  
+
+
      
         $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb052_comprasForm["co_solicitud"]));
         $ruta->setCoUsuario($this->getUser()->getAttribute('codigo'));
         $ruta->setInCargarDato(true)->save($con);
         $con->commit();
+
         Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());  
         
         $this->data = json_encode(array(
@@ -1303,7 +1323,7 @@ class ComprasActions extends sfActions
       
   }
   
-    public function executeAgregarProducto(sfWebRequest $request)
+  public function executeAgregarProducto(sfWebRequest $request)
   {
     $codigo = $this->getRequestParameter("codigo");
     if($codigo!=''||$codigo!=null){
@@ -1330,6 +1350,90 @@ class ComprasActions extends sfActions
                             "fe_registro"        => date("d-m-Y"),
                             "tx_concepto"        => "",
                             "tx_observacion"     => "",
+                    ));
+    }
+
+  }
+
+  public function executeGuardarProducto(sfWebRequest $request){
+
+
+        $co_detalle_compras      = $this->getRequestParameter("co_detalle_compras");
+        $co_detalle_requisicion  = $this->getRequestParameter("co_detalle_requisicion");
+        $co_producto             = $this->getRequestParameter("co_producto");
+        $cod_producto            = $this->getRequestParameter("cod_producto");
+        $tx_producto             = $this->getRequestParameter("tx_producto");
+        $nu_cantidad             = $this->getRequestParameter("nu_cantidad");
+        $precio_unitario         = $this->getRequestParameter("precio_unitario");
+        $detalle                 = $this->getRequestParameter("detalle");
+        $monto                   = $this->getRequestParameter("monto");              
+           
+        $con = Propel::getConnection();
+                  
+         
+         try
+         { 
+            $con->beginTransaction();  
+
+            $Tb053DetalleCompras = Tb053DetalleComprasPeer::retrieveByPk($co_detalle_compras);
+            $Tb053DetalleCompras->setMonto($monto);
+            $Tb053DetalleCompras->setNuCantidad($nu_cantidad);
+            $Tb053DetalleCompras->setPrecioUnitario($precio_unitario);
+            $Tb053DetalleCompras->save($con);
+
+            $con->commit();
+
+            $this->data = json_encode(array(
+                    "success" => true,
+                    "msg" => 'Proceso realizado exitosamente'
+            ));
+
+            $this->setTemplate('guardar');
+                 
+         }catch (PropelException $e){
+            $con->rollback();
+            $this->data = json_encode(array(
+                "success" => false,
+                "msg" =>  $e->getMessage()
+            ));
+         }      
+  }
+
+  public function executeEditarProducto(sfWebRequest $request)
+  {
+    $codigo = $this->getRequestParameter("codigo");
+    if($codigo!=''||$codigo!=null){
+        
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_REQUISICION);
+        $c->addSelectColumn(Tb048ProductoPeer::CO_PRODUCTO);
+        $c->addSelectColumn(Tb048ProductoPeer::COD_PRODUCTO);
+        $c->addSelectColumn(Tb048ProductoPeer::TX_PRODUCTO);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::NU_CANTIDAD);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::PRECIO_UNITARIO);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::DETALLE);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::MONTO);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::IN_EXENTO);
+        $c->addJoin(Tb053DetalleComprasPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO);
+        $c->add(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS,$codigo);
+
+        $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+        $this->data = json_encode(array(
+                            "co_detalle_compras"      => $campos["co_detalle_compras"],
+                            "co_detalle_requisicion"  => $campos["co_detalle_requisicion"],
+                            "co_producto"             => $campos["co_producto"],
+                            "cod_producto"            => $campos["cod_producto"],
+                            "tx_producto"             => $campos["tx_producto"],
+                            "nu_cantidad"             => $campos["nu_cantidad"],
+                            "precio_unitario"         => $campos["precio_unitario"],
+                            "detalle"                 => $campos["detalle"],
+                            "monto"                   => $campos["monto"],
+                            "in_exento"               => $campos["in_exento"]
                     ));
     }
 

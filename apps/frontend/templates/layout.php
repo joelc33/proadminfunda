@@ -99,7 +99,8 @@ Ext.onReady(function(){
                         margins: '0 0 0 5',
 			border:true,
 			autoScroll: true,
-                        tbar:[
+                        tbar:[{
+                             xtype: 'tbtext', text: '<span style="color:blue;"><b>EJERCICIO FISCAL: <?php echo $sf_request->getAttribute('ejercicio'); ?></b></span>'},'-',
                              <?php echo $sf_request->getAttribute('menu'); ?>
                         ],
 			items: [
@@ -337,7 +338,7 @@ this.ejercicio = new Ext.Window({
 <body>
                 <div id="centro" align="center" style="padding-bottom: 1%;width:100%;height:500px;">
                 <!-- <img width="500" src="<?php echo image_path('admbpm.png'); ?>" align="bottom"  style="margin-top: 150px;" /> -->
-               <!-- <img src="<?php echo image_path('escudogobernacion.png'); ?>"  width="200" style="top: 80px; right: 30px;" />-->
+                <img src="<?= image_path('logo_sanfco_new.png'); ?>"  width="300" style="position: absolute; top: 60%; right: 6px;" />
         	</div>
                 <div id="centro" align="center" style="padding-bottom: 1%">
 

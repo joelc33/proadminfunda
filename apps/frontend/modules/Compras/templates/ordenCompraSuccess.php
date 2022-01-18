@@ -585,15 +585,20 @@ this.editar = new Ext.Button({
     text: 'Editar',
     iconCls: 'icon-editar',
     handler: function () {
-        this.msg = Ext.get('formularioEditar');
+        this.msg = Ext.get('formularioAgregar');
         this.msg.load({
             url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/editarProducto',
-            params: 'codigo=<?php echo $co_requisicion; ?>',
+            params: {
+            	codigo:ComprasEditar.main.gridPanel.getSelectionModel().getSelected().get('co_detalle_compras')
+            },
             scripts: true,
             text: "Cargando.."
         });
     }
 });
+
+this.editar.disable();
+
 this.botonEliminar = new Ext.Button({
                 text:'Eliminar',
                 iconCls: 'icon-eliminar',
@@ -614,7 +619,7 @@ this.gridPanel = new Ext.grid.GridPanel({
         loadMask:true,
         height:180,
         width:930,
-       // tbar:[this.agregar,'-',this.botonEliminar],
+        tbar:[this.editar],
         columns: [
         new Ext.grid.RowNumberer(),
             {header: 'co_detalle_compras', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_detalle_requisicion'},
@@ -630,7 +635,7 @@ this.gridPanel = new Ext.grid.GridPanel({
         autoScroll:true,
         stateful: true,
         listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-            //ComprasEditar.main.botonEliminar.enable();
+            ComprasEditar.main.editar.enable();
         }}
 });
 
@@ -670,10 +675,11 @@ this.guardar = new Ext.Button({
             return false;
         }
 
-        if(ComprasEditar.main.monto_contrato.getValue()!=ComprasEditar.main.monto_total.getValue()){
+      /*  if(ComprasEditar.main.monto_contrato.getValue()!=ComprasEditar.main.monto_total.getValue()){
             Ext.Msg.alert("Alerta","El monto del contrato no coincide con el total de la compra");
             return false;
-        }
+        }*/
+
         if(!ComprasEditar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos requeridos! Verifique");
             return false;
@@ -891,22 +897,7 @@ this.monto = paqueteComunJS.funcion.getSumaColumnaGrid({
             campo:'monto'
             });
 
-if(this.monto>0){
-    Ext.get('co_ejecutor').setStyle('background-color','#c9c9c9');
-    ComprasEditar.main.co_ejecutor.setReadOnly(true);
-//    Ext.get('co_proyecto').setStyle('background-color','#c9c9c9');
-//    ComprasEditar.main.co_proyecto.setReadOnly(true);
-//    Ext.get('co_accion').setStyle('background-color','#c9c9c9');
-//    ComprasEditar.main.co_accion.setReadOnly(true);
 
-}else{
-    Ext.get('co_ejecutor').setStyle('background-color','#FFFFFF');
-    ComprasEditar.main.co_ejecutor.setReadOnly(false);
-//    Ext.get('co_proyecto').setStyle('background-color','#FFFFFF');
-//    ComprasEditar.main.co_proyecto.setReadOnly(false);
-//    Ext.get('co_accion').setStyle('background-color','#FFFFFF');
-//    ComprasEditar.main.co_accion.setReadOnly(false);
-}
 this.cancelar = parseFloat(this.monto);
 if(this.iva==''||this.iva==null||this.iva==0){
 this.totaliva = 0;
