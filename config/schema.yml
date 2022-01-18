@@ -2,6 +2,19 @@ propel:
   _attributes:
     package: lib.model
     defaultIdMethod: native
+  mo_movimiento:
+    _attributes: { phpName: MoMovimiento }
+    sum: { type: NUMERIC, required: false }
+  presupuesto_alcaldia:
+    _attributes: { phpName: PresupuestoAlcaldia }
+    programa: { type: VARCHAR, required: false }
+    actividad: { type: VARCHAR, required: false }
+    proyecto: { type: VARCHAR, required: false }
+    cuenta_presupuestaria: { type: VARCHAR, required: false }
+    monto: { type: VARCHAR, required: false }
+    cuenta_contable: { type: VARCHAR, required: false }
+    descripcion: { type: VARCHAR, required: false }
+    nu_anio: { type: BIGINT, required: false }
   tb001_usuario:
     _attributes: { phpName: Tb001Usuario }
     co_usuario: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -89,6 +102,8 @@ propel:
     tx_cuenta_contable: { type: VARCHAR, required: false }
     nu_codigo: { type: VARCHAR, required: false }
     in_rrhh: { type: BOOLEAN, required: false, defaultValue: false }
+    co_cuenta_orden_pasivo: { type: BIGINT, required: false }
+    co_cuenta_orden_activo: { type: BIGINT, required: false }
     _indexes: { fki_co_banco_proveedor: [co_banco], fki_co_clasificacion: [co_clasificacion], fki_co_cuenta_contable_proveedor: [co_cuenta_contable], fki_co_documento: [co_documento], fki_co_tipo_proveedor: [co_tipo_proveedor], fki_co_tipo_residencia: [co_tipo_residencia], fki_co_tipo_retencion: [co_tipo_retencion] }
   tb009_partida_presupuestaria:
     _attributes: { phpName: Tb009PartidaPresupuestaria }
@@ -123,12 +138,14 @@ propel:
     mo_egreso: { type: NUMERIC, required: false }
     tip_mov: { type: VARCHAR, required: false }
     nu_contrato: { type: NUMERIC, required: false }
+    monto: { type: NUMERIC, required: false }
+    in_fondo_tercero: { type: BOOLEAN, required: false }
     _indexes: { fki_co_banco: [co_banco], fki_co_cuenta_contable_cuenta: [co_cuenta_contable], fki_co_empresa_cuenta_bancaria: [co_empresa], fki_o_tipo_cuenta: [co_tipo_cuenta] }
   tb012_tipo_cuenta_bancaria:
     _attributes: { phpName: Tb012TipoCuentaBancaria }
     co_tipo_cuenta: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     tx_tipo_cuenta: { type: VARCHAR, required: false }
-    co_empresa: { type: BIGINT, required: false }
+    co_empresa: { type: BIGINT, required: false, foreignTable: tb015_empresa, foreignReference: co_empresa }
     _indexes: { fki_co_empresa_cuenta: [co_empresa] }
   tb013_anio_fiscal:
     _attributes: { phpName: Tb013AnioFiscal }
@@ -170,7 +187,7 @@ propel:
     nb_municipio: { type: VARCHAR, required: false }
     co_estado: { type: BIGINT, required: false, foreignTable: tb016_estado, foreignReference: co_estado }
     in_activo: { type: BOOLEAN, required: false }
-    co_ter: { type: VARCHAR, required: false }
+    co_ter: { type: BIGINT, required: false }
     _indexes: { fki_co_estado_municipio: [co_estado] }
   tb018_sector:
     _attributes: { phpName: Tb018Sector }
@@ -231,13 +248,21 @@ propel:
     nu_cuenta_contable: { type: VARCHAR, required: false }
     tx_codigo_cuenta: { type: VARCHAR, required: false }
     mo_disponible: { type: NUMERIC, required: false }
-    acu_deb: { type: NUMERIC, required: false }
-    acu_cre: { type: NUMERIC, required: false }
-    mes_deb: { type: NUMERIC, required: false }
-    mes_cre: { type: NUMERIC, required: false }
-    pre_deb: { type: NUMERIC, required: false }
-    pre_cre: { type: NUMERIC, required: false }
+    acu_deb: { type: NUMERIC, size: '32', scale: '2', required: true, defaultValue: '0' }
+    acu_cre: { type: NUMERIC, size: '32', scale: '2', required: true, defaultValue: '0' }
+    mes_deb: { type: NUMERIC, size: '32', scale: '2', required: false, defaultValue: '0' }
+    mes_cre: { type: NUMERIC, size: '32', scale: '2', required: false, defaultValue: '0' }
+    pre_deb: { type: NUMERIC, size: '32', scale: '2', required: false, defaultValue: '0' }
+    pre_cre: { type: NUMERIC, size: '32', scale: '2', required: false, defaultValue: '0' }
     nu_anexo: { type: BIGINT, required: false }
+    tx_anexo: { type: VARCHAR, required: false }
+    tp_cuenta: { type: VARCHAR, required: false }
+    acu_deb_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    acu_cre_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mes_deb_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mes_cre_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    pre_deb_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    pre_cre_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
   tb025_detalle_partida:
     _attributes: { phpName: Tb025DetallePartida }
     co_detalle_partida: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -291,7 +316,7 @@ propel:
     co_proceso: { type: BIGINT, required: true, foreignTable: tb028_proceso, foreignReference: co_proceso }
     observacion: { type: VARCHAR, required: false }
     co_estatus_ruta: { type: INTEGER, required: true, foreignTable: tb031_estatus_ruta, foreignReference: co_estatus_ruta }
-    co_usuario: { type: INTEGER, required: true }
+    co_usuario: { type: INTEGER, required: false }
     nu_orden: { type: INTEGER, required: true }
     created_at: { type: TIMESTAMP, required: true }
     updated_at: { type: TIMESTAMP, required: false }
@@ -378,7 +403,7 @@ propel:
     co_servicio: { type: BIGINT, required: false, foreignTable: tb050_servicio, foreignReference: co_servicio }
     nu_requisicion: { type: NUMERIC, required: false }
     nu_anio: { type: NUMERIC, required: false }
-    updated_at: { type: TIMESTAMP, required: false}
+    updated_at: { type: TIMESTAMP, required: false }
     fe_registro: { type: DATE, required: false }
     _indexes: { fki_co_servicio_req: [co_servicio], fki_co_solicitud_req: [co_solicitud], fki_co_tipo_solicitud_req: [co_tipo_solicitud], fki_co_usuario_req: [co_usuario] }
   tb040_proveedor_ramo:
@@ -402,7 +427,7 @@ propel:
     _attributes: { phpName: Tb042Retencion }
     co_retencion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     co_documento: { type: BIGINT, required: false, foreignTable: tb007_documento, foreignReference: co_documento }
-    co_tipo_retencion: { type: BIGINT, required: false, foreignTable: tb041_tipo_retencion, foreignReference: co_tipo_retencion }
+    co_tipo_retencion: { type: BIGINT, required: false }
     nu_valor: { type: NUMERIC, required: false }
     nu_sustraendo: { type: NUMERIC, required: false }
     co_ramo: { type: BIGINT, required: false, foreignTable: tb038_ramo, foreignReference: co_ramo }
@@ -449,20 +474,21 @@ propel:
     nu_control: { type: VARCHAR, required: false }
     id_tb048_producto: { type: BIGINT, required: false }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: false}
-    updated_at: { type: TIMESTAMP, required: false}
+    created_at: { type: TIMESTAMP, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
     co_solicitud_original: { type: BIGINT, required: false }
     sub_total_cs: { type: NUMERIC, size: '32', scale: '2', required: false }
     nu_iva_cs: { type: NUMERIC, size: '32', scale: '2', required: false }
     fe_registro: { type: DATE, required: false }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
+    nu_exento: { type: NUMERIC, size: '32', scale: '2', required: false }
     _indexes: { fki_co_compra: [co_compra], fki_co_iva_factura: [co_iva], fki_co_odp_factura: [co_odp], fki_co_proveedor: [co_proveedor], fki_co_ramo_factura: [co_ramo], fki_co_solicitud: [co_solicitud] }
   tb046_factura_retencion:
     _attributes: { phpName: Tb046FacturaRetencion }
     co_factura_retencion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     co_factura: { type: BIGINT, required: false, foreignTable: tb045_factura, foreignReference: co_factura, onDelete: CASCADE, onUpdate: CASCADE }
-    co_tipo_retencion: { type: BIGINT, required: false, foreignTable: tb041_tipo_retencion, foreignReference: co_tipo_retencion }
+    co_tipo_retencion: { type: BIGINT, required: false }
     po_retencion: { type: NUMERIC, size: '32', scale: '2', required: false }
     mo_retencion: { type: NUMERIC, size: '32', scale: '2', required: false }
     co_odp: { type: BIGINT, required: false }
@@ -485,14 +511,12 @@ propel:
     co_clase: { type: BIGINT, required: false, foreignTable: tb092_clase_producto, foreignReference: id }
     co_unidad_producto: { type: BIGINT, required: false, foreignTable: tb057_unidad_producto, foreignReference: co_unidad_producto }
     in_ver: { type: BOOLEAN, required: false }
+    id_tb024_cuenta_contable: { type: BIGINT, required: false }
     _indexes: { fki_co_clase_producto_producto: [co_clase], fki_co_unidad_producto: [co_unidad_producto] }
   tb049_tipo_producto:
     _attributes: { phpName: Tb049TipoProducto }
     co_tipo_producto: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     tx_tipo_producto: { type: VARCHAR, required: false }
-    co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
-    updated_at: { type: TIMESTAMP, required: false }
-    created_at: { type: TIMESTAMP, required: false }
   tb050_servicio:
     _attributes: { phpName: Tb050Servicio }
     co_servicio: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -520,7 +544,7 @@ propel:
     anio: { type: NUMERIC, required: false }
     co_servicio: { type: BIGINT, required: false, foreignTable: tb050_servicio, foreignReference: co_servicio }
     co_tipo_solicitud: { type: BIGINT, required: false }
-    nu_iva: { type: NUMERIC, required: false }
+    nu_iva: { type: NUMERIC, size: '4', scale: '2', required: false }
     monto_iva: { type: NUMERIC, size: '32', scale: '2', required: false }
     monto_sub_total: { type: NUMERIC, size: '32', scale: '2', required: false }
     monto_total: { type: NUMERIC, size: '32', scale: '2', required: false }
@@ -538,6 +562,7 @@ propel:
     in_anulado: { type: BOOLEAN, required: true, defaultValue: false }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
+    co_ramo: { type: BIGINT, required: false }
     _indexes: { fki_co_partida_presupuesto: [co_partida_presupuesto], fki_co_servicio: [co_servicio], fki_co_tipo_movimiento_compra: [co_tipo_movimiento] }
   tb053_detalle_compras:
     _attributes: { phpName: Tb053DetalleCompras }
@@ -560,8 +585,8 @@ propel:
     co_factura: { type: BIGINT, required: false }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
+    in_presupuesto: { type: BOOLEAN, required: true, defaultValue: true }
     in_bien: { type: BOOLEAN, required: false }
-    in_presupuesto: { type: BOOLEAN, required: false }
     _indexes: { fki_co_asiento_contable_detalle: [co_asiento_contable] }
   tb054_tipo_acta:
     _attributes: { phpName: Tb054TipoActa }
@@ -586,7 +611,7 @@ propel:
     fecha_inicio: { type: DATE, required: false }
     fecha_fin: { type: DATE, required: false }
     co_ramo: { type: BIGINT, required: false }
-    monto: { type: NUMERIC, required: false }
+    monto: { type: NUMERIC, size: '32', scale: '2', required: false }
     created_at: { type: TIMESTAMP, required: false }
     fecha_entrega: { type: DATE, required: false }
     tiempo_garantia: { type: VARCHAR, required: false }
@@ -641,6 +666,8 @@ propel:
     co_tipo_odp: { type: BIGINT, required: false, defaultValue: '1' }
     tx_concepto: { type: VARCHAR, required: false }
     co_prov_opanulada: { type: BIGINT, required: false }
+    rif_prov_anulada: { type: NUMERIC, required: false }
+    in_desafectado: { type: BOOLEAN, required: false, defaultValue: false }
     _indexes: { fki_co_ruta: [co_ruta], fki_co_solicitud_orden_pago: [co_solicitud] }
   tb061_asiento_contable:
     _attributes: { phpName: Tb061AsientoContable }
@@ -649,7 +676,7 @@ propel:
     co_cuenta_contable: { type: BIGINT, required: false, foreignTable: tb024_cuenta_contable, foreignReference: co_cuenta_contable }
     mo_debe: { type: NUMERIC, size: '32', scale: '2', required: false }
     mo_haber: { type: NUMERIC, size: '32', scale: '2', required: false }
-    created_at: { type: TIMESTAMP, required: false}
+    created_at: { type: TIMESTAMP, required: false }
     co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
     co_factura: { type: BIGINT, required: false, foreignTable: tb045_factura, foreignReference: co_factura }
     co_producto: { type: BIGINT, required: false, foreignTable: tb048_producto, foreignReference: co_producto }
@@ -661,9 +688,33 @@ propel:
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
-    updated_at: { type: TIMESTAMP, required: false}
+    updated_at: { type: TIMESTAMP, required: false }
+    mo_referencia: { type: NUMERIC, size: '32', scale: '2', required: false }
     nu_comprobante: { type: NUMERIC, required: false }
+    in_transcripcion_movimiento_masivo: { type: BOOLEAN, required: false }
+    id_tb155_cuenta_bancaria_historico: { type: BIGINT, required: false }
     _indexes: { fki_co_factura_asiento: [co_factura], fki_co_producto_asiento: [co_producto], fki_co_ruta_asiento: [co_ruta], fki_co_solicitud_fondo_tercero: [co_solicitud_fondo_tercero] }
+  tb061_asiento_contable_res:
+    _attributes: { phpName: Tb061AsientoContableRes }
+    co_asiento_contable: { type: BIGINT, required: true }
+    co_solicitud: { type: BIGINT, required: false }
+    co_cuenta_contable: { type: BIGINT, required: false }
+    mo_debe: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_haber: { type: NUMERIC, size: '32', scale: '2', required: false }
+    created_at: { type: TIMESTAMP, required: false }
+    co_usuario: { type: BIGINT, required: false }
+    co_factura: { type: BIGINT, required: false }
+    co_producto: { type: BIGINT, required: false }
+    co_solicitud_fondo_tercero: { type: BIGINT, required: false }
+    co_tipo_asiento: { type: BIGINT, required: false }
+    co_ruta: { type: BIGINT, required: false }
+    co_presupuesto: { type: BIGINT, required: false }
+    co_solicitud_original: { type: BIGINT, required: false }
+    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
+    co_solicitud_anular: { type: BIGINT, required: false }
+    in_anular: { type: BOOLEAN, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
+    mo_referencia: { type: NUMERIC, size: '32', scale: '2', required: false }
   tb062_liquidacion_pago:
     _attributes: { phpName: Tb062LiquidacionPago }
     co_liquidacion_pago: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -706,18 +757,25 @@ propel:
     nu_partida: { type: VARCHAR, required: false }
     tx_partida: { type: VARCHAR, required: false }
     tx_descripcion: { type: VARCHAR, required: false }
-    mo_inicial: { type: NUMERIC, required: false }
-    mo_actualizado: { type: NUMERIC, required: false }
+    mo_inicial: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_actualizado: { type: NUMERIC, size: '32', scale: '2', required: false }
     nu_anio: { type: NUMERIC, required: false }
-    mo_comprometido: { type: NUMERIC, required: false }
-    mo_causado: { type: NUMERIC, required: false }
-    mo_pagado: { type: NUMERIC, required: false }
-    mo_disponible: { type: NUMERIC, required: false }
+    mo_comprometido: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_causado: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_pagado: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_disponible: { type: NUMERIC, size: '32', scale: '2', required: false }
     nu_nivel: { type: NUMERIC, required: false }
     do_cat: { type: VARCHAR, required: false }
     tip_apl: { type: VARCHAR, required: false }
     tip_gas: { type: VARCHAR, required: false }
-    mo_comprometido_dia: { type: NUMERIC, required: false }
+    mo_comprometido_dia: { type: NUMERIC, size: '32', scale: '2', required: false }
+    nu_pa: { type: VARCHAR, required: false }
+    nu_ge: { type: VARCHAR, required: false }
+    nu_es: { type: VARCHAR, required: false }
+    nu_se: { type: VARCHAR, required: false }
+    nu_sse: { type: VARCHAR, required: false }
+    co_cuenta_contable: { type: BIGINT, required: false }
+    in_movimiento: { type: BOOLEAN, required: true, defaultValue: true }
   tb065_cuenta_proveedor:
     _attributes: { phpName: Tb065CuentaProveedor }
     co_cuenta_proveedor: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -745,6 +803,7 @@ propel:
     co_usuario_cambio_estado: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
+    co_tipo_retencion: { type: BIGINT, required: false }
     _indexes: { fki_co_banco_debito: [co_banco_debito], fki_co_cuenta_bancaria_debito: [co_cuenta_bancaria_debito], fki_co_cuenta_contable_debito: [co_cuenta_contable_debito], fki_co_estado: [co_estado], fki_co_usuario_estado: [co_usuario_cambio_estado] }
   tb067_creacion_partida:
     _attributes: { phpName: Tb067CreacionPartida }
@@ -770,7 +829,10 @@ propel:
     co_tipo_ingreso: { type: BIGINT, required: false, foreignTable: tb140_tipo_ingreso, foreignReference: co_tipo_ingreso }
     nu_partida_desagregada: { type: VARCHAR, required: false }
     co_solicitud_anular: { type: BIGINT, required: false }
-    in_anular: { type: BOOLEAN, required: false }
+    in_anular: { type: BOOLEAN, required: false, defaultValue: false }
+    co_area_estrategica: { type: BIGINT, required: false }
+    co_clasificacion_economica: { type: BIGINT, required: false }
+    co_tipo_gasto: { type: VARCHAR, required: false }
     _indexes: { fki_co_ambito: [co_ambito], fki_co_aplicacion: [co_aplicacion], fki_co_partida_creacion: [co_partida], fki_co_tipo_ingreso: [co_tipo_ingreso], fki_fuente_financiamiento: [co_fuente_financiamiento] }
   tb068_numero_fuente_financiamiento:
     _attributes: { phpName: Tb068NumeroFuenteFinanciamiento }
@@ -805,6 +867,8 @@ propel:
     co_fondo_tercero: { type: BIGINT, required: false }
     fe_desde: { type: DATE, required: false }
     fe_hasta: { type: DATE, required: false }
+    co_solicitud_anular: { type: BIGINT, required: false }
+    in_anular: { type: BOOLEAN, required: false }
   tb071_retencion_proveedor:
     _attributes: { phpName: Tb071RetencionProveedor }
     co_retencion_proveedor: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -845,11 +909,14 @@ propel:
     co_cheque: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     tx_descripcion: { type: VARCHAR, required: false }
     co_estado_cheque: { type: BIGINT, required: false }
-    created_at: { type: TIMESTAMP, required: false}
+    created_at: { type: TIMESTAMP, required: false }
     co_chequera: { type: BIGINT, required: false, foreignTable: tb079_chequera, foreignReference: co_chequera, onDelete: CASCADE, onUpdate: CASCADE }
     tx_observacion: { type: VARCHAR, required: false }
     in_activo: { type: BOOLEAN, required: false, defaultValue: true }
-    updated_at: { type: TIMESTAMP, required: false}
+    updated_at: { type: TIMESTAMP, required: false }
+    nb_titular: { type: VARCHAR, required: false }
+    mo_cheque: { type: NUMERIC, size: '32', scale: '2', required: false }
+    fe_pago: { type: DATE, required: false }
     _indexes: { tb077_cheque_co_chequera_idx: [co_chequera] }
   tb078_estado_chequera:
     _attributes: { phpName: Tb078EstadoChequera }
@@ -867,7 +934,7 @@ propel:
     nro_final: { type: NUMERIC, required: false }
     co_usuario: { type: BIGINT, required: false }
     fe_chequera: { type: DATE, required: false }
-    created_at: { type: TIMESTAMP, required: false}
+    created_at: { type: TIMESTAMP, required: false }
     co_estado_chequera: { type: BIGINT, required: false }
     in_activo: { type: BOOLEAN, required: false, defaultValue: true }
   tb080_sector:
@@ -892,9 +959,9 @@ propel:
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     nu_ejecutor: { type: VARCHAR, required: true }
     de_ejecutor: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: false }
-    created_at: { type: TIMESTAMP, required: false}
-    updated_at: { type: TIMESTAMP, required: false}
+    in_activo: { type: BOOLEAN, required: false, defaultValue: true }
+    created_at: { type: TIMESTAMP, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
     tx_sigla: { type: VARCHAR, required: false }
     co_sector: { type: BIGINT, required: false, foreignTable: tb080_sector, foreignReference: id }
     id_tb151_tipo_ejecutor: { type: BIGINT, required: false, foreignTable: tb151_tipo_ejecutor, foreignReference: id, onUpdate: CASCADE }
@@ -908,7 +975,7 @@ propel:
     nu_proyecto_ac: { type: VARCHAR, required: true }
     de_proyecto_ac: { type: VARCHAR, required: true }
     id_tb013_anio_fiscal: { type: BIGINT, required: true }
-    in_activo: { type: BOOLEAN, required: true }
+    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
     created_at: { type: TIMESTAMP, required: true }
     updated_at: { type: TIMESTAMP, required: true }
     id_tb086_tipo_prac: { type: BIGINT, required: true, foreignTable: tb086_tipo_prac, foreignReference: id, onDelete: CASCADE, onUpdate: CASCADE }
@@ -918,9 +985,11 @@ propel:
     id_tb083_proyecto_ac: { type: BIGINT, required: false }
     nu_accion_especifica: { type: VARCHAR, required: true }
     de_accion_especifica: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true }
+    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
     created_at: { type: TIMESTAMP, required: true }
     updated_at: { type: TIMESTAMP, required: true }
+  tb084_clasificacion_economica:
+    _attributes: { phpName: Tb084ClasificacionEconomica }
   tb085_presupuesto:
     _attributes: { phpName: Tb085Presupuesto }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -969,6 +1038,17 @@ propel:
     cod_ente: { type: VARCHAR, required: false }
     nu_sector: { type: VARCHAR, required: false }
     id_tb139_aplicacion: { type: BIGINT, required: false }
+    mo_admon_ant: { type: NUMERIC, required: false }
+    mo_modificado_admon: { type: NUMERIC, required: false }
+    co_clasificacion_economica: { type: BIGINT, required: false, foreignTable: tb184_clasificacion_economica, foreignReference: co_clasificacion_economica }
+    co_area_estrategica: { type: BIGINT, required: false }
+    mo_inicial_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_actualizado_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_comprometido_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_causado_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_pagado_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_disponible_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    _indexes: { fki_co_clasificacion_economica: [co_clasificacion_economica] }
   tb085_presupuesto3:
     _attributes: { phpName: Tb085Presupuesto3 }
     id: { type: BIGINT, autoIncrement: true, required: true }
@@ -993,6 +1073,54 @@ propel:
     nu_sse: { type: VARCHAR, required: false }
     co_partida: { type: VARCHAR, required: false }
     nu_nivel: { type: BIGINT, required: false }
+  tb085a_presupuesto:
+    _attributes: { phpName: Tb085aPresupuesto }
+    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    id_tb084_accion_especifica: { type: BIGINT, required: false }
+    nu_partida: { type: VARCHAR, required: true }
+    de_partida: { type: VARCHAR, required: true }
+    mo_inicial: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_actualizado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_precomprometido: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_comprometido: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_causado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_pagado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_disponible: { type: NUMERIC, size: '32', scale: '2', required: true }
+    in_activo: { type: BOOLEAN, required: false }
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
+    in_movimiento: { type: BOOLEAN, required: true }
+    nu_pa: { type: VARCHAR, required: false }
+    nu_ge: { type: VARCHAR, required: false }
+    nu_es: { type: VARCHAR, required: false }
+    nu_se: { type: VARCHAR, required: false }
+    nu_sse: { type: VARCHAR, required: false }
+    co_partida: { type: VARCHAR, required: false }
+    nu_nivel: { type: BIGINT, required: false }
+    nu_fi: { type: VARCHAR, required: false }
+    co_categoria: { type: VARCHAR, required: false }
+    nu_aplicacion: { type: VARCHAR, required: false }
+    tp_ingreso: { type: VARCHAR, required: false }
+    co_cuenta_contable: { type: BIGINT, required: false }
+    tip_apl: { type: VARCHAR, required: false }
+    in_gen_cheque: { type: BOOLEAN, required: false }
+    tip_gasto: { type: VARCHAR, required: false }
+    tip_ing: { type: VARCHAR, required: false }
+    cod_amb: { type: VARCHAR, required: false }
+    co_ente: { type: BIGINT, required: false }
+    nu_anio: { type: NUMERIC, required: false }
+    mo_disponible_act: { type: NUMERIC, required: false }
+    mo_aumento: { type: NUMERIC, required: false }
+    mo_disminucion: { type: NUMERIC, required: false }
+    mo_admon: { type: NUMERIC, required: false }
+    mo_actualizado_ant: { type: NUMERIC, required: false }
+    comprometido_dia: { type: NUMERIC, required: false }
+    causado_dia: { type: NUMERIC, required: false }
+    pagado_dia: { type: NUMERIC, required: false }
+    disponible: { type: NUMERIC, required: false }
+    cod_ente: { type: VARCHAR, required: false }
+    nu_sector: { type: VARCHAR, required: false }
+    id_tb139_aplicacion: { type: BIGINT, required: false }
   tb086_tipo_prac:
     _attributes: { phpName: Tb086TipoPrac }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1004,10 +1132,10 @@ propel:
     _attributes: { phpName: Tb087PresupuestoMovimiento }
     co_presupuesto_movimiento: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     co_partida: { type: BIGINT, required: false, foreignTable: tb085_presupuesto, foreignReference: id }
-    nu_monto: { type: NUMERIC, required: false }
+    nu_monto: { type: NUMERIC, size: '32', scale: '2', required: false }
     nu_anio: { type: NUMERIC, required: false }
-    created_at: { type: TIMESTAMP, required: false}
-    updated_at: { type: TIMESTAMP, required: false}
+    created_at: { type: TIMESTAMP, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
     co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
     co_tipo_movimiento: { type: BIGINT, required: false, foreignTable: tb088_tipo_movimiento, foreignReference: id }
     co_detalle_compra: { type: BIGINT, required: false }
@@ -1020,7 +1148,8 @@ propel:
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
     in_cerrado: { type: BOOLEAN, required: false }
-    _indexes: { fki_co_compra_servicio: [co_compra_servicio], fki_co_detalle_compra: [co_detalle_compra], fki_co_tipo_movimiento: [co_tipo_movimiento] }
+    nu_monto_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    _indexes: { fki_co_compra_servicio: [co_compra_servicio], fki_co_detalle_compra: [co_detalle_compra], fki_co_tipo_movimiento: [co_tipo_movimiento], tb087_presupuesto_movimiento_co_: [co_partida] }
   tb088_tipo_movimiento:
     _attributes: { phpName: Tb088TipoMovimiento }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1070,7 +1199,7 @@ propel:
     created_at: { type: TIMESTAMP, required: false }
     updated_at: { type: TIMESTAMP, required: false }
     id_tb093_familia_producto: { type: BIGINT, required: false, foreignTable: tb093_familia_producto, foreignReference: id, onDelete: CASCADE, onUpdate: CASCADE }
-    cod_clase_producto: { type: VARCHAR, required: false }
+    cod_clase_producto: { type: BIGINT, required: false }
   tb093_familia_producto:
     _attributes: { phpName: Tb093FamiliaProducto }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1078,9 +1207,6 @@ propel:
     in_activo: { type: BOOLEAN, required: false }
     created_at: { type: TIMESTAMP, required: false }
     updated_at: { type: TIMESTAMP, required: false }
-    co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
-    co_tipo_producto: { type: BIGINT, required: false, foreignTable: tb049_tipo_producto, foreignReference: co_tipo_producto }
-    cod_familia_producto: { type: VARCHAR, required: false }
   tb094_partida_producto:
     _attributes: { phpName: Tb094PartidaProducto }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1147,6 +1273,7 @@ propel:
     mo_disponible: { type: NUMERIC, size: '32', scale: '2', required: false }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
+    _indexes: { tb097_modificacion_detalle_id_tb: [id_tb096_presupuesto_modificacion] }
   tb098_tipo_distribucion:
     _attributes: { phpName: Tb098TipoDistribucion }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1367,16 +1494,19 @@ propel:
     _indexes: { fki_co_ejecutor_pago: [co_ejecutor] }
   tb123_archivo_pago:
     _attributes: { phpName: Tb123ArchivoPago }
-    co_persona: { type: BIGINT, primaryKey: true, required: true }
+    co_persona: { type: BIGINT, required: true }
     tx_cedula: { type: VARCHAR, required: false }
     nb_persona: { type: VARCHAR, required: false }
     tx_cuenta_bancaria: { type: VARCHAR, required: false }
     nu_monto: { type: NUMERIC, size: '32', scale: '2', required: false }
     cod_banco: { type: VARCHAR, required: false }
-    co_pago_nomina: { type: BIGINT, primaryKey: true, required: true }
+    co_pago_nomina: { type: BIGINT, required: true }
     id_tb163_modo_pago: { type: BIGINT, required: false }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
+    co_ubicacion: { type: BIGINT, required: false }
+    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    _uniques: { tb123_archivo_pago_co_persona_co: [co_persona, co_ubicacion, co_pago_nomina] }
   tb124_fuente_ingreso:
     _attributes: { phpName: Tb124FuenteIngreso }
     co_fuente_ingreso: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1420,6 +1550,7 @@ propel:
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
     id_tb013_anio_fiscal: { type: INTEGER, required: true }
+    mo_total_ayuda: { type: NUMERIC, required: false }
     _indexes: { fki_co_persona: [co_proveedor], fki_co_proveedor_solicitante: [co_proveedor_solicitante], fki_co_solicitud_sol_ayuda: [co_solicitud], fki_co_tipo_ayuda: [co_tipo_ayuda], fki_co_usuario_sol_ayuda: [co_usuario] }
   tb127_tipo_ayuda:
     _attributes: { phpName: Tb127TipoAyuda }
@@ -1482,6 +1613,7 @@ propel:
     co_pago: { type: BIGINT, required: false, foreignTable: tb122_pago_nomina, foreignReference: co_pago_nomina }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
+    co_ubicacion: { type: BIGINT, required: false }
     _indexes: { fki_co_pago: [co_pago], fki_co_solicitud_nomina_masivo: [co_solicitud], fki_co_usuario_nomina_masivo: [co_usuario] }
   tb133_tipo_asiento:
     _attributes: { phpName: Tb133TipoAsiento }
@@ -1502,7 +1634,6 @@ propel:
     co_solicitud: { type: BIGINT, required: false, foreignTable: tb026_solicitud, foreignReference: co_solicitud }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
-    co_asiento_contable: { type: BIGINT, required: false }
     _indexes: { fki_co_cuenta_contable_movimient: [co_cuenta_contable], fki_co_movimiento_usuario: [co_usuario], fki_co_solicitud_movimiento: [co_solicitud] }
   tb134_tipo_servicio:
     _attributes: { phpName: Tb134TipoServicio }
@@ -1558,8 +1689,8 @@ propel:
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     de_tipo_cuota: { type: VARCHAR, required: false }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
   tb142_cuenta_cobrar:
     _attributes: { phpName: Tb142CuentaCobrar }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1567,8 +1698,8 @@ propel:
     co_usuario: { type: BIGINT, required: true }
     co_proveedor: { type: BIGINT, required: false }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
     de_soporte: { type: VARCHAR, required: false }
     id_tb143_cuenta_concepto: { type: BIGINT, required: false, foreignTable: tb143_cuenta_concepto, foreignReference: id, onUpdate: CASCADE }
     id_tb144_clase_ingreso: { type: BIGINT, required: false, foreignTable: tb144_clase_ingreso, foreignReference: id, onUpdate: CASCADE }
@@ -1583,15 +1714,15 @@ propel:
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     de_cuenta_concepto: { type: VARCHAR, required: false }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
   tb144_clase_ingreso:
     _attributes: { phpName: Tb144ClaseIngreso }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     de_clase_ingreso: { type: VARCHAR, required: false }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
   tb145_cuenta_cobrar_detalle:
     _attributes: { phpName: Tb145CuentaCobrarDetalle }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1600,8 +1731,8 @@ propel:
     mo_cuota: { type: NUMERIC, size: '30', scale: '2', required: false }
     fe_pago: { type: DATE, required: false }
     in_activo: { type: BOOLEAN, required: false, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
     mo_pagado: { type: NUMERIC, size: '30', scale: '2', required: false, defaultValue: '0' }
     mo_pendiente: { type: NUMERIC, size: '30', scale: '2', required: false, defaultValue: '0' }
     in_pago: { type: BOOLEAN, required: true, defaultValue: false }
@@ -1625,8 +1756,8 @@ propel:
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     de_tipo_documento: { type: VARCHAR, required: true }
     in_activo: { type: BOOLEAN, required: false, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
   tb148_cuenta_cobrar_pago:
     _attributes: { phpName: Tb148CuentaCobrarPago }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1640,8 +1771,8 @@ propel:
     id_tb147_tipo_documento: { type: BIGINT, required: true }
     de_orden_ingreso: { type: VARCHAR, required: true }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
     id_tb155_cuenta_bancaria_historico: { type: BIGINT, required: false }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
@@ -1649,8 +1780,8 @@ propel:
     _attributes: { phpName: Tb150PresupuestoIngresoMovimiento }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     in_activo: { type: BOOLEAN, required: false, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: false}
-    updated_at: { type: TIMESTAMP, required: false}
+    created_at: { type: TIMESTAMP, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
     mo_movimiento: { type: NUMERIC, size: '32', scale: '2', required: true }
     nu_anio: { type: INTEGER, required: false }
     co_tipo_movimiento: { type: BIGINT, required: true }
@@ -1659,43 +1790,47 @@ propel:
     co_usuario: { type: BIGINT, required: true }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
+    co_solicitud: { type: BIGINT, required: false }
+    mo_saldo_anterior: { type: NUMERIC, size: '32', scale: '2', required: false, defaultValue: '0' }
+    mo_saldo_nuevo: { type: NUMERIC, size: '32', scale: '2', required: false, defaultValue: '0' }
+    id_tb142_cuenta_cobrar: { type: BIGINT, required: false }
     in_cerrado: { type: BOOLEAN, required: false }
   tb151_tipo_ejecutor:
     _attributes: { phpName: Tb151TipoEjecutor }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     de_tipo_ejecutor: { type: VARCHAR, required: true }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
   tb152_tipo_credito:
     _attributes: { phpName: Tb152TipoCredito }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     de_tipo_credito: { type: VARCHAR, required: true }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
   tb153_tipo_documento_cuenta:
     _attributes: { phpName: Tb153TipoDocumentoCuenta }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     nu_tipo_documento_cuenta: { type: VARCHAR, required: true }
     de_tipo_documento_cuenta: { type: VARCHAR, required: true }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
   tb154_tipo_cuenta_movimiento:
     _attributes: { phpName: Tb154TipoCuentaMovimiento }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
     de_tipo_cuenta_movimiento: { type: VARCHAR, required: true }
     nu_operacion: { type: VARCHAR, required: false }
   tb155_cuenta_bancaria_historico:
     _attributes: { phpName: Tb155CuentaBancariaHistorico }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
     id_tb011_cuenta_bancaria: { type: BIGINT, required: true, foreignTable: tb011_cuenta_bancaria, foreignReference: co_cuenta_bancaria, onUpdate: CASCADE }
     mo_transaccion: { type: NUMERIC, size: '32', scale: '2', required: true, defaultValue: '0' }
     fe_transaccion: { type: DATE, required: true }
@@ -1713,15 +1848,18 @@ propel:
     id_tb148_cuenta_cobrar_pago: { type: BIGINT, required: false }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
+    mo_reconversion: { type: NUMERIC, size: '32', scale: '2', required: false }
   tb156_subtipo_documento:
     _attributes: { phpName: Tb156SubtipoDocumento }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     nu_subtipo_documento: { type: VARCHAR, required: true }
     de_subtipo_documento: { type: VARCHAR, required: true }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
     id_tb154_tipo_cuenta_movimiento: { type: BIGINT, required: false }
+    in_posteo: { type: BOOLEAN, required: false, defaultValue: false }
+    co_cuenta_contable: { type: BIGINT, required: false }
   tb157_aporte_patronal:
     _attributes: { phpName: Tb157AportePatronal }
     co_aporte_patronal: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1737,7 +1875,7 @@ propel:
     co_aporte_patronal_nomina: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     tx_tipo_nomina: { type: VARCHAR, required: false }
     tx_serial_nomina: { type: VARCHAR, required: false }
-    mo_aporte: { type: NUMERIC, required: false }
+    mo_aporte: { type: NUMERIC, size: '32', scale: '2', required: false }
     tx_tipo_aporte: { type: VARCHAR, required: false }
     co_solicitud: { type: BIGINT, required: false, foreignTable: tb026_solicitud, foreignReference: co_solicitud }
     co_detalle_compra: { type: BIGINT, required: false }
@@ -1759,7 +1897,7 @@ propel:
     fe_desde: { type: DATE, required: false }
     fe_hasta: { type: DATE, required: false }
     co_clase_retencion: { type: BIGINT, required: false, foreignTable: tb072_clase_retencion, foreignReference: co_clase_retencion }
-    co_tipo_retencion: { type: BIGINT, required: false, foreignTable: tb041_tipo_retencion, foreignReference: co_tipo_retencion }
+    co_tipo_retencion: { type: BIGINT, required: false }
     mo_disponible: { type: NUMERIC, required: false }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
@@ -1776,15 +1914,13 @@ propel:
     id_tb163_modo_pago: { type: BIGINT, required: false }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
-    created_at: { type: TIMESTAMP, required: false}
-    updated_at: { type: TIMESTAMP, required: false}
   tb163_modo_pago:
     _attributes: { phpName: Tb163ModoPago }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     de_modo_pago: { type: VARCHAR, required: true }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
     de_sigla: { type: VARCHAR, required: false }
   tb163_unificacion_odp:
     _attributes: { phpName: Tb163UnificacionOdp }
@@ -1804,16 +1940,16 @@ propel:
     _attributes: { phpName: Tb165PacTmp }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     id_tb080_sector: { type: BIGINT, required: true, foreignTable: tb080_sector, foreignReference: id, onUpdate: CASCADE }
-    id_tb081_sub_sector: { type: BIGINT, required: true, foreignTable: tb081_sub_sector, foreignReference: id, onUpdate: CASCADE }
+    id_tb081_sub_sector: { type: BIGINT, required: false, foreignTable: tb081_sub_sector, foreignReference: id, onUpdate: CASCADE }
     id_tb082_ejecutor: { type: BIGINT, required: true, foreignTable: tb082_ejecutor, foreignReference: id, onUpdate: CASCADE }
     nu_proyecto_ac: { type: VARCHAR, required: true }
     de_proyecto_ac: { type: VARCHAR, required: true }
-    id_tb013_anio_fiscal: { type: BIGINT, required: true, foreignTable: tb013_anio_fiscal, foreignReference: co_anio_fiscal, onUpdate: CASCADE }
+    id_tb013_anio_fiscal: { type: BIGINT, required: false, foreignTable: tb013_anio_fiscal, foreignReference: co_anio_fiscal, onUpdate: CASCADE }
     id_tb086_tipo_prac: { type: BIGINT, required: true, foreignTable: tb086_tipo_prac, foreignReference: id, onUpdate: CASCADE }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
     in_cargado: { type: BOOLEAN, required: true, defaultValue: false }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
     mo_presupuesto: { type: NUMERIC, size: '32', scale: '2', required: false }
   tb166_pac_ae_tmp:
     _attributes: { phpName: Tb166PacAeTmp }
@@ -1822,8 +1958,8 @@ propel:
     nu_accion_especifica: { type: VARCHAR, required: true }
     de_accion_especifica: { type: VARCHAR, required: true }
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
   tb167_pac_ae_partida_tmp:
     _attributes: { phpName: Tb167PacAePartidaTmp }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1838,11 +1974,15 @@ propel:
     in_activo: { type: BOOLEAN, required: true, defaultValue: true }
     mo_partida: { type: NUMERIC, size: '32', scale: '2', required: true }
     id_tb139_aplicacion: { type: BIGINT, required: false, foreignTable: tb139_aplicacion, foreignReference: co_aplicacion, onUpdate: CASCADE }
-    id_tb091_partida: { type: BIGINT, required: true, foreignTable: tb091_partida, foreignReference: id, onDelete: CASCADE, onUpdate: CASCADE }
+    id_tb091_partida: { type: BIGINT, required: false, foreignTable: tb091_partida, foreignReference: id, onDelete: CASCADE, onUpdate: CASCADE }
     id_tb140_tipo_ingreso: { type: BIGINT, required: true, foreignTable: tb140_tipo_ingreso, foreignReference: co_tipo_ingreso, onUpdate: CASCADE }
     id_tb138_ambito: { type: BIGINT, required: true, foreignTable: tb138_ambito, foreignReference: co_ambito, onUpdate: CASCADE }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
+    id_tb013_anio_fiscal: { type: BIGINT, required: false }
+    co_clasificacion_economica: { type: BIGINT, required: false }
+    co_area_estrategica: { type: BIGINT, required: false }
+    co_tipo_gasto: { type: BIGINT, required: false }
   tb168_comprobante_ajuste:
     _attributes: { phpName: Tb168ComprobanteAjuste }
     co_comprobante_ajuste: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1868,12 +2008,6 @@ propel:
     tx_observacion: { type: VARCHAR, required: false }
     co_proceso: { type: BIGINT, required: false, foreignTable: tb030_ruta, foreignReference: co_ruta }
     _indexes: { fki_co_proceso_anulacion: [co_proceso], fki_co_solicitud_anulacion: [co_solicitud], fki_co_solicitud_anular: [co_solicitud_anular], fki_co_usuario_anular: [co_usuario] }
-  tb170_parroquia:
-    _attributes: { phpName: Tb170Parroquia }
-    co_parroquia: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_municipio: { type: BIGINT, required: false, foreignTable: tb017_municipio, foreignReference: co_municipio }
-    tx_parroquia: { type: VARCHAR, required: false }
-    _indexes: { fki_co_municipio_parroquia: [co_municipio] }
   tb170_tipo_incorporacion:
     _attributes: { phpName: Tb170TipoIncorporacion }
     co_tipo_incorporacion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1888,7 +2022,7 @@ propel:
     co_detalle_compras: { type: BIGINT, required: false, foreignTable: tb053_detalle_compras, foreignReference: co_detalle_compras }
     tx_detalle: { type: VARCHAR, required: false }
     co_tipo_incorporacion: { type: BIGINT, required: false }
-    in_activo: { type: BOOLEAN, required: true }
+    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
     created_at: { type: TIMESTAMP, required: false }
     updated_at: { type: TIMESTAMP, required: false }
     co_producto: { type: BIGINT, required: false }
@@ -1912,6 +2046,35 @@ propel:
     doc_ing: { type: VARCHAR, required: false }
     doc_egr: { type: VARCHAR, required: false }
     co_responsable: { type: BIGINT, required: false }
+    co_tipo_bienes: { type: BIGINT, required: false, foreignTable: tbbn011_tipo_bienes, foreignReference: co_tipo_bienes }
+    co_tipo_inmueble: { type: BIGINT, required: false, foreignTable: tbbn014_tipo_inmueble, foreignReference: co_tipo_inmueble }
+    co_parroquia: { type: BIGINT, required: false }
+    tx_avenida: { type: VARCHAR, required: false }
+    tx_calle: { type: VARCHAR, required: false }
+    tx_sector: { type: VARCHAR, required: false }
+    tx_punto_referencia: { type: VARCHAR, required: false }
+    tx_direccion: { type: VARCHAR, required: false }
+    tx_lindero_norte: { type: VARCHAR, required: false }
+    tx_lindero_sur: { type: VARCHAR, required: false }
+    tx_lindero_este: { type: VARCHAR, required: false }
+    tx_lindero_oeste: { type: VARCHAR, required: false }
+    tx_lindero_inmueble: { type: VARCHAR, required: false }
+    tx_estado_legal: { type: VARCHAR, required: false }
+    co_medida: { type: BIGINT, required: false }
+    nu_area_construccion: { type: NUMERIC, size: '32', scale: '2', required: false }
+    nu_area_cubierta: { type: NUMERIC, size: '32', scale: '2', required: false }
+    nu_area_oi: { type: NUMERIC, size: '32', scale: '2', required: false }
+    nu_area_total: { type: NUMERIC, size: '32', scale: '2', required: false }
+    nu_area_terreno: { type: BIGINT, required: false }
+    nu_avaluo_act: { type: NUMERIC, size: '32', scale: '2', required: false }
+    nu_avaluo_compra: { type: NUMERIC, size: '32', scale: '2', required: false }
+    con_inc: { type: VARCHAR, required: false }
+    co_clasificacion_inmueble: { type: BIGINT, required: false, foreignTable: tbbn012_clasificacion_inmueble, foreignReference: co_clasificacion_inmueble }
+    tx_lindero_aux: { type: VARCHAR, required: false }
+    fe_com: { type: TIMESTAMP, required: false }
+    desc_inm: { type: VARCHAR, required: false }
+    cod_adm: { type: VARCHAR, required: false }
+    fec_reg: { type: VARCHAR, required: false }
   tb171_tipo_odp:
     _attributes: { phpName: Tb171TipoOdp }
     co_tipo_odp: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1948,15 +2111,16 @@ propel:
     _attributes: { phpName: Tb173MovimientoBienes }
     co_movimiento_bienes: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     co_bienes: { type: BIGINT, required: false }
-    co_usuario: { type: BIGINT, required: false }
+    co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
     created_at: { type: TIMESTAMP, required: false }
     updated_at: { type: TIMESTAMP, required: false }
     in_activo: { type: BOOLEAN, required: false }
     tx_motivo: { type: VARCHAR, required: false }
-    co_documento: { type: BIGINT, required: false }
-    co_documento_ant: { type: BIGINT, required: false }
-    co_ubicacion_origen: { type: BIGINT, required: false }
-    co_uso: { type: BIGINT, required: false }
+    co_documento: { type: BIGINT, required: false, foreignTable: tbbn008_documento_bienes, foreignReference: co_documento_bienes }
+    co_documento_ant: { type: BIGINT, required: false, foreignTable: tbbn008_documento_bienes, foreignReference: co_documento_bienes }
+    co_ubicacion_origen: { type: BIGINT, required: false, foreignTable: tbbn006_organigrama, foreignReference: co_organigrama }
+    co_uso: { type: BIGINT, required: false, foreignTable: tbbn009_uso, foreignReference: co_uso }
+    _indexes: { tb173i_co_bienes: [co_bienes], tb173i_co_documento: [co_documento] }
   tb174_cierre_ingreso:
     _attributes: { phpName: Tb174CierreIngreso }
     co_cierre_ingreso: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -1979,16 +2143,19 @@ propel:
     in_activo: { type: BOOLEAN, required: false }
   tb175_archivo_temporal_pago:
     _attributes: { phpName: Tb175ArchivoTemporalPago }
-    co_archivo_temporal: { type: BIGINT, autoIncrement: true, required: true }
-    co_persona: { type: BIGINT, primaryKey: true, required: true }
+    co_archivo_temporal: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    co_persona: { type: BIGINT, required: true }
     tx_cedula: { type: VARCHAR, required: false }
     nb_persona: { type: VARCHAR, required: false }
     tx_cuenta_bancaria: { type: VARCHAR, required: false }
     nu_monto: { type: NUMERIC, size: '32', scale: '2', required: false }
     cod_banco: { type: VARCHAR, required: false }
-    co_liquidacion_pago: { type: BIGINT, primaryKey: true, required: true }
+    co_liquidacion_pago: { type: BIGINT, required: false }
     co_usuario: { type: BIGINT, required: false }
     created_at: { type: DATE, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
+    co_solicitud: { type: BIGINT, required: false }
+    co_banco: { type: BIGINT, required: false }
   tb175_modelo:
     _attributes: { phpName: Tb175Modelo }
     co_modelo: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -2004,41 +2171,27 @@ propel:
     nu_comprobante: { type: VARCHAR, required: false }
     mo_debito: { type: NUMERIC, required: false }
     mo_credito: { type: NUMERIC, required: false }
+    nu_anio: { type: NUMERIC, required: false }
+    co_usuario: { type: BIGINT, required: false }
+    fe_comprobante: { type: DATE, required: false }
+    co_tipo_asiento: { type: BIGINT, required: false, foreignTable: tb133_tipo_asiento, foreignReference: co_tipo_asiento }
     created_at: { type: DATE, required: false }
     in_contabilizado: { type: BOOLEAN, required: false }
     in_cerrado: { type: BOOLEAN, required: false }
     fe_contabilizado: { type: DATE, required: false }
     fe_cerrado: { type: DATE, required: false }
-    in_automatico: { type: BOOLEAN, required: false }
-    co_mes: { type: BIGINT, required: false }
-    nu_anio: { type: NUMERIC, required: false }
-    co_usuario: { type: BIGINT, required: false }
-    fe_comprobante: { type: DATE, required: false }
-    co_tipo_asiento: { type: BIGINT, required: false, foreignTable: tb133_tipo_asiento, foreignReference: co_tipo_asiento }
     _indexes: { fki_co_tipo_asiento: [co_tipo_asiento] }
-  tb176_tipo_desincorporacion:
-    _attributes: { phpName: Tb176TipoDesincorporacion }
-    co_tipo_desincorporacion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tipo_desincorporacion: { type: VARCHAR, required: false }
-    co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
-    created_at: { type: TIMESTAMP, required: false }
-    updated_at: { type: TIMESTAMP, required: false }
   tb177_det_comprobante:
     _attributes: { phpName: Tb177DetComprobante }
     co_det_comprobante: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_comprobante_contable: { type: BIGINT, required: false, foreignTable: tb176_comprobante_contable, foreignReference: co_comprobante_contable }
+    co_comprobante_contable: { type: BIGINT, required: false }
     mo_anterior: { type: NUMERIC, required: false }
     mo_credito: { type: NUMERIC, required: false }
     mo_debito: { type: NUMERIC, required: false }
-    mo_disponible: { type: NUMERIC, required: false }
     co_cuenta_contable: { type: BIGINT, required: false }
     fe_movimiento: { type: DATE, required: false }
-    in_pagado: { type: BOOLEAN, required: false }
-    fe_pago: { type: DATE, required: false }
     co_usuario: { type: BIGINT, required: false }
     co_solicitud: { type: BIGINT, required: false }
-    co_solicitud_anular: { type: BIGINT, required: false }
-    in_anular: { type: BOOLEAN, required: false }
     _indexes: { fki_co_comprobante_contable: [co_comprobante_contable] }
   tb178_creacion_partida_ingreso:
     _attributes: { phpName: Tb178CreacionPartidaIngreso }
@@ -2066,13 +2219,15 @@ propel:
     co_resumen_mensual_contable: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     co_mes: { type: BIGINT, required: false }
     nu_anio: { type: NUMERIC, required: false }
-    mo_credito: { type: NUMERIC, required: false }
-    mo_debito: { type: NUMERIC, required: false }
+    acu_debito: { type: NUMERIC, size: '32', scale: '2', required: true, defaultValue: '0' }
+    acu_credito: { type: NUMERIC, size: '32', scale: '2', required: true, defaultValue: '0' }
+    mes_debito: { type: NUMERIC, size: '32', scale: '2', required: true, defaultValue: '0' }
+    mes_credito: { type: NUMERIC, size: '32', scale: '2', required: true, defaultValue: '0' }
     co_cuenta_contable: { type: BIGINT, required: false, foreignTable: tb024_cuenta_contable, foreignReference: co_cuenta_contable }
     co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
     created_at: { type: DATE, required: false }
-    co_maestro_mensual: { type: BIGINT, required: false }
-    _indexes: { fki_co_cuenta_contable_resumen: [co_cuenta_contable], fki_co_usuario_resumen: [co_usuario] }
+    co_maestro_contable: { type: BIGINT, required: false }
+    in_cierre: { type: BOOLEAN, required: false }
   tb180_historico_presupuesto:
     _attributes: { phpName: Tb180HistoricoPresupuesto }
     co_historico_presupuesto: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -2089,8 +2244,8 @@ propel:
     mo_transaccion_causado: { type: NUMERIC, size: '32', scale: '2', required: false }
     mo_transaccion_pagado: { type: NUMERIC, size: '32', scale: '2', required: false }
     fe_movimiento: { type: DATE, required: false }
-    created_at: { type: TIMESTAMP, required: false}
-    update_at: { type: TIMESTAMP, required: false}
+    created_at: { type: TIMESTAMP, required: false }
+    update_at: { type: TIMESTAMP, required: false }
   tb180_maestro_contable:
     _attributes: { phpName: Tb180MaestroContable }
     co_maestro_contable: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -2101,7 +2256,248 @@ propel:
     co_usuario: { type: BIGINT, required: false }
     created_at: { type: DATE, required: false }
     fecha_cierre: { type: DATE, required: false }
-    _indexes: { fki_co_usuario_maestro_contable: [co_usuario] }
+  tb180_presupuesto_diario:
+    _attributes: { phpName: Tb180PresupuestoDiario }
+    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    id_tb085_presupuesto: { type: BIGINT, required: true }
+    mo_ley: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_aumento: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_disminucion: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_modificado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_aprobado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_comprometido: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_causado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_pagado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_disponible: { type: NUMERIC, size: '32', scale: '2', required: true }
+    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
+    fe_movimiento: { type: DATE, required: true }
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
+    in_carga: { type: BOOLEAN, required: true, defaultValue: false }
+  tb180_presupuesto_diario_tmp:
+    _attributes: { phpName: Tb180PresupuestoDiarioTmp }
+    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    id_tb085_presupuesto: { type: BIGINT, required: true }
+    mo_ley: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_aumento: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_disminucion: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_modificado: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_aprobado: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_comprometido: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_causado: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_pagado: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_disponible: { type: NUMERIC, size: '32', scale: '2', required: false }
+    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
+    in_real: { type: BOOLEAN, required: false }
+    fe_movimiento: { type: DATE, required: true }
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
+  tb181_movimiento_contable_diario:
+    _attributes: { phpName: Tb181MovimientoContableDiario }
+    co_movimiento_contable: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    mo_debe: { type: NUMERIC, required: false }
+    mo_haber: { type: NUMERIC, required: false }
+    mo_saldo_anterior: { type: NUMERIC, required: false }
+    mo_saldo_atual: { type: NUMERIC, required: false }
+    co_cuenta_contable: { type: BIGINT, required: false, foreignTable: tb024_cuenta_contable, foreignReference: co_cuenta_contable }
+    _indexes: { fki_co_cuenta_contable_diario: [co_cuenta_contable] }
+  tb182_presupuesto_ingreso_diario:
+    _attributes: { phpName: Tb182PresupuestoIngresoDiario }
+    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    co_presupuesto_ingreso: { type: BIGINT, required: true }
+    mo_ley: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_aumento: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_disminucion: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_modificado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_aprobado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_devengado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_liquidado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_recaudado: { type: NUMERIC, size: '32', scale: '2', required: true }
+    mo_disponible: { type: NUMERIC, size: '32', scale: '2', required: true }
+    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
+    fe_movimiento: { type: DATE, required: true }
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
+    in_carga: { type: BOOLEAN, required: true, defaultValue: false }
+  tb183_tipo_gasto:
+    _attributes: { phpName: Tb183TipoGasto }
+    co_tipo_gasto: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    tx_siglas: { type: VARCHAR, required: false }
+    tx_descripcion: { type: VARCHAR, required: false }
+  tb184_clasificacion_economica:
+    _attributes: { phpName: Tb184ClasificacionEconomica }
+    co_clasificacion_economica: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    tx_siglas: { type: VARCHAR, required: false }
+    tx_descripcion: { type: VARCHAR, required: false }
+    co_area_estrategica: { type: BIGINT, required: false }
+  tb185_area_estrategica:
+    _attributes: { phpName: Tb185AreaEstrategica }
+    co_area_estrategica: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    tx_siglas: { type: VARCHAR, required: false }
+    tx_descripcion: { type: VARCHAR, required: false }
+  tb190_anexo_contable:
+    _attributes: { phpName: Tb190AnexoContable }
+    co_anexo_contable: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    codigo: { type: NUMERIC, required: false }
+    descripcion: { type: VARCHAR, required: false }
+    nu_cuenta: { type: VARCHAR, required: false }
+  tb191_prestacion_social:
+    _attributes: { phpName: Tb191PrestacionSocial }
+    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
+    co_solicitud: { type: BIGINT, required: true }
+    co_usuario: { type: BIGINT, required: true }
+    co_documento: { type: BIGINT, required: false }
+    nu_documento: { type: VARCHAR, required: false }
+    nb_persona: { type: VARCHAR, required: false }
+    ap_persona: { type: VARCHAR, required: false }
+    co_tipo_trabajador: { type: BIGINT, required: false }
+    co_ejecutor: { type: BIGINT, required: false }
+    co_situacion_trabajador: { type: BIGINT, required: false }
+    fe_ingreso: { type: DATE, required: false }
+    fe_egreso: { type: DATE, required: false }
+    fe_movimiento: { type: DATE, required: false }
+    de_observacion: { type: VARCHAR, required: false }
+    mo_pago: { type: NUMERIC, size: '32', scale: '2', required: false }
+    co_proveedor: { type: BIGINT, required: true }
+    co_prestacion_causa_retiro: { type: BIGINT, required: false }
+  tb192_situacion_empleado:
+    _attributes: { phpName: Tb192SituacionEmpleado }
+    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    de_situacion_empleado: { type: VARCHAR, required: false }
+    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
+  tb193_nomina_trabajador:
+    _attributes: { phpName: Tb193NominaTrabajador }
+    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    nu_nomina: { type: VARCHAR, required: false }
+    de_nomina: { type: VARCHAR, required: false }
+    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
+    created_at: { type: TIMESTAMP, required: true }
+    updated_at: { type: TIMESTAMP, required: true }
+  tb194_ajuste_contable:
+    _attributes: { phpName: Tb194AjusteContable }
+    co_ajuste_contable: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    co_solicitud: { type: BIGINT, required: false }
+    co_cuenta_contable: { type: BIGINT, required: false }
+    mo_debe: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_haber: { type: NUMERIC, size: '32', scale: '2', required: false }
+    fecha: { type: DATE, required: false }
+    co_usuario: { type: BIGINT, required: false }
+    co_tipo_asiento: { type: BIGINT, required: false }
+    nu_comprobante: { type: NUMERIC, required: false }
+    in_aprobado: { type: BOOLEAN, required: false }
+    in_rechazado: { type: BOOLEAN, required: false }
+    created_at: { type: TIMESTAMP, required: false }
+    descripcion: { type: VARCHAR, required: false }
+    in_anular: { type: BOOLEAN, required: false }
+  tb195_importar_presupuesto:
+    _attributes: { phpName: Tb195ImportarPresupuesto }
+    nu_ejercicio: { type: NUMERIC, size: '255', scale: '0', required: false }
+    nu_ejecutor: { type: VARCHAR, size: '255', required: false }
+    de_ejecutor: { type: VARCHAR, size: '255', required: false }
+    nu_sector: { type: VARCHAR, size: '255', required: false }
+    co_ac_pr: { type: VARCHAR, size: '255', required: false }
+    nu_proyecto_ac: { type: VARCHAR, size: '255', required: false }
+    de_proyecto_ac: { type: VARCHAR, size: '255', required: false }
+    nu_accion_especifica: { type: VARCHAR, size: '255', required: false }
+    de_accion_especifica: { type: VARCHAR, size: '255', required: false }
+    nu_partida: { type: VARCHAR, size: '255', required: false }
+    nu_desagregado: { type: VARCHAR, size: '255', required: false }
+    nu_fi: { type: VARCHAR, size: '255', required: false }
+    de_partida: { type: VARCHAR, size: '255', required: false }
+    mo_inicial: { type: NUMERIC, size: '32', scale: '2', required: false }
+    co_categoria: { type: VARCHAR, size: '255', required: false }
+    nu_pa: { type: VARCHAR, size: '255', required: false }
+    nu_aplicacion: { type: VARCHAR, size: '255', required: false }
+    nu_area_estrategica: { type: VARCHAR, size: '255', required: false }
+    nu_amb: { type: VARCHAR, size: '255', required: false }
+    tip_gasto: { type: VARCHAR, size: '255', required: false }
+    nu_clasificacion_economica: { type: VARCHAR, size: '255', required: false }
+    tipo_ordenador: { type: VARCHAR, size: '255', required: false }
+    tp_ingreso: { type: VARCHAR, size: '255', required: false }
+    nu_ff: { type: VARCHAR, size: '255', required: false }
+    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+  tb196_ac_predefinida:
+    _attributes: { phpName: Tb196AcPredefinida }
+    id: { type: VARCHAR, primaryKey: true, required: true }
+    de_nombre: { type: VARCHAR, size: '255', required: false }
+    in_activo: { type: VARCHAR, size: '255', required: false }
+    created_at: { type: TIMESTAMP, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
+    de_accion: { type: VARCHAR, required: false }
+    nu_original: { type: VARCHAR, size: '255', required: false }
+  tb197_ac_ae_predefinida:
+    _attributes: { phpName: Tb197AcAePredefinida }
+    id: { type: VARCHAR, primaryKey: true, required: true }
+    id_tb196_ac_predefinida: { type: NUMERIC, required: false }
+    nu_numero: { type: VARCHAR, size: '255', required: false }
+    de_nombre: { type: VARCHAR, size: '255', required: false }
+    in_activo: { type: BOOLEAN, required: false }
+    created_at: { type: TIMESTAMP, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
+  tb198_prestacion_terceros:
+    _attributes: { phpName: Tb198PrestacionTerceros }
+    co_prestacion_terceros: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    nu_cedula: { type: NUMERIC, required: false }
+    nombre: { type: VARCHAR, required: false }
+    nu_cuenta: { type: NUMERIC, required: false }
+    porcentaje: { type: NUMERIC, required: false }
+    mo_pagar: { type: NUMERIC, size: '32', scale: '2', required: false }
+    co_solicitud: { type: BIGINT, required: false }
+  tb199_prestacion_causa_retiro:
+    _attributes: { phpName: Tb199PrestacionCausaRetiro }
+    co_prestacion_causa_retiro: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    tx_prestacion_causa_retiro: { type: VARCHAR, required: false }
+  tb200_cierre_contable:
+    _attributes: { phpName: Tb200CierreContable }
+    co_cierre_contable: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    co_solicitud: { type: BIGINT, required: false }
+    co_cuenta_contable: { type: BIGINT, required: false }
+    mo_debe: { type: NUMERIC, size: '32', scale: '2', required: false }
+    mo_haber: { type: NUMERIC, size: '32', scale: '2', required: false }
+    fecha: { type: DATE, required: false }
+    co_usuario: { type: BIGINT, required: false }
+    co_tipo_asiento: { type: BIGINT, required: false }
+    nu_comprobante: { type: NUMERIC, required: false }
+    in_aprobado: { type: BOOLEAN, required: false }
+    in_rechazado: { type: BOOLEAN, required: false }
+    created_at: { type: TIMESTAMP, required: false }
+    descripcion: { type: VARCHAR, required: false }
+    in_anular: { type: BOOLEAN, required: false }
+  tb203_consignacion_cheque:
+    _attributes: { phpName: Tb203ConsignacionCheque }
+    co_consignacion_cheque: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    co_solicitud: { type: BIGINT, required: true }
+    co_banco: { type: BIGINT, required: false, foreignTable: tb010_banco, foreignReference: co_banco, onUpdate: CASCADE }
+    co_cuenta_bancaria: { type: BIGINT, required: false, foreignTable: tb011_cuenta_bancaria, foreignReference: co_cuenta_bancaria, onUpdate: CASCADE }
+    co_chequera: { type: BIGINT, required: false, foreignTable: tb079_chequera, foreignReference: co_chequera, onUpdate: CASCADE }
+    co_cheque: { type: BIGINT, required: false, foreignTable: tb077_cheque, foreignReference: co_cheque, onUpdate: CASCADE }
+    nb_titular: { type: VARCHAR, required: false }
+    mo_cheque: { type: NUMERIC, size: '32', scale: '2', required: false }
+    fe_pago: { type: DATE, required: false }
+    created_at: { type: TIMESTAMP, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
+    id_tb154_tipo_cuenta_movimiento: { type: BIGINT, required: false }
+    id_tb156_subtipo_documento: { type: BIGINT, required: false }
+    id_tb155_cuenta_bancaria_historico: { type: BIGINT, required: false }
+    co_estado_cheque: { type: BIGINT, required: false }
+    tx_observacion: { type: VARCHAR, required: false }
+  tb204_retencion_fondo_tercero:
+    _attributes: { phpName: Tb204RetencionFondoTercero }
+    co_retencion_fondo_tercero: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    co_factura_retencion: { type: BIGINT, required: false }
+    co_detalle_fondo: { type: BIGINT, required: false }
+    co_solicitud: { type: BIGINT, required: false }
+  tb205_desafectacion:
+    _attributes: { phpName: Tb205Desafectacion }
+    co_desafectacion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    co_solicitud: { type: BIGINT, required: false }
+    co_orden_pago: { type: BIGINT, required: false }
+    fe_desafectacion: { type: DATE, required: false }
   tbbn003_parroquia:
     _attributes: { phpName: Tbbn003Parroquia }
     co_parroquia: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -2120,7 +2516,7 @@ propel:
     created_at: { type: TIMESTAMP, required: false }
     updated_at: { type: TIMESTAMP, required: false }
     in_activo: { type: BOOLEAN, required: false }
-    co_tipo_movimiento_bienes: { type: BIGINT, required: false, foreignTable: tb172_tipo_movimiento_bienes, foreignReference: co_tipo_movimiento_bienes }
+    co_tipo_movimiento_bienes: { type: BIGINT, required: false }
     for_usa: { type: VARCHAR, required: false }
     ace_dep: { type: VARCHAR, required: false }
     cla_con: { type: BIGINT, required: false }
@@ -2129,7 +2525,7 @@ propel:
     _attributes: { phpName: Tbbn005TipoDocumento }
     co_documento: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     tx_documento: { type: VARCHAR, required: false }
-    co_tipo_movimiento_bienes: { type: BIGINT, required: false, foreignTable: tb172_tipo_movimiento_bienes, foreignReference: co_tipo_movimiento_bienes }
+    co_tipo_movimiento_bienes: { type: BIGINT, required: false }
     co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
     created_at: { type: TIMESTAMP, required: false }
     updated_at: { type: TIMESTAMP, required: false }
@@ -2157,19 +2553,6 @@ propel:
     co_dgb: { type: BIGINT, required: false }
     ace_mov: { type: VARCHAR, required: false }
     cod_cia: { type: VARCHAR, required: false }
-  tbbn007_empleado_cargo:
-    _attributes: { phpName: Tbbn007EmpleadoCargo }
-    co_empleado_cargo: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_persona: { type: BIGINT, required: false }
-    co_cargo: { type: BIGINT, required: false }
-    co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
-    in_activo: { type: BOOLEAN, required: false }
-    created_at: { type: TIMESTAMP, required: false }
-    updated_at: { type: TIMESTAMP, required: false }
-    fe_ingreso: { type: DATE, required: false }
-    fe_egreso: { type: DATE, required: false }
-    cod_cia: { type: VARCHAR, required: false }
-    co_ubicacion: { type: BIGINT, required: false, foreignTable: tbbn006_organigrama, foreignReference: co_organigrama }
   tbbn008_documento_bienes:
     _attributes: { phpName: Tbbn008DocumentoBienes }
     co_documento_bienes: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -2193,6 +2576,7 @@ propel:
     co_documento_des: { type: BIGINT, required: false }
     co_subtipo_movimiento_ori: { type: BIGINT, required: false }
     co_responsable: { type: BIGINT, required: false, foreignTable: tbbn010_responsables, foreignReference: co_responsables }
+    co_bienes: { type: BIGINT, required: false }
   tbbn009_uso:
     _attributes: { phpName: Tbbn009Uso }
     co_uso: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
@@ -2214,957 +2598,44 @@ propel:
     updated_at: { type: TIMESTAMP, required: false }
     in_activo: { type: BOOLEAN, required: false }
     co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
-  T_BITER:
-    _attributes: { phpName: TBiter }
-    COD_TER: { type: VARCHAR, size: '7', required: false }
-    DESCRIP: { type: VARCHAR, size: '30', required: false }
-    EDO_REG: { type: VARCHAR, size: '1', required: false }
-    ACE_MOV: { type: VARCHAR, size: '1', required: false }
-    NIV_CTA: { type: VARCHAR, size: '1', required: false }
-  tbrh001_trabajador:
-    _attributes: { phpName: Tbrh001Trabajador }
-    co_trabajador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    nu_cedula: { type: NUMERIC, required: false }
-    nb_primer_nombre: { type: VARCHAR, required: false }
-    nb_segundo_nombre: { type: VARCHAR, required: false }
-    nb_primer_apellido: { type: VARCHAR, required: false }
-    nb_segundo_apellido: { type: VARCHAR, required: false }
-    co_documento: { type: BIGINT, required: false, foreignTable: tb007_documento, foreignReference: co_documento }
-    co_ente: { type: BIGINT, required: false }
-    co_edo_civil: { type: BIGINT, required: false, foreignTable: tbrh047_edo_civil, foreignReference: co_edo_civil }
-    fe_nacimiento: { type: DATE, required: false }
-    co_tp_motricida: { type: VARCHAR, size: '1', required: false }
-    nu_hijo: { type: NUMERIC, required: false }
-    tx_direccion_domicilio: { type: VARCHAR, required: false }
-    co_parroquia_domicilio: { type: BIGINT, required: false }
-    tx_ciudad_domicilio: { type: VARCHAR, required: false }
-    tx_ciudad_nacimiento: { type: VARCHAR, required: false }
-    co_parroquia_nacimiento: { type: BIGINT, required: false }
-    co_nacionalidad: { type: BIGINT, required: false }
-    nu_seguro_social: { type: NUMERIC, required: false }
-    nu_rif: { type: VARCHAR, required: false }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    co_nivel_educativo: { type: BIGINT, required: false, foreignTable: tbrh037_nom_grado_instruccion, foreignReference: co_nom_grado_instruccion }
-    nu_anio_aprobado_educativo: { type: NUMERIC, required: false }
-    co_profesion: { type: BIGINT, required: false }
-    fe_graduacion: { type: DATE, required: false }
-    tx_correo_electronico: { type: VARCHAR, required: false }
-    co_solicitud: { type: BIGINT, required: false, foreignTable: tb026_solicitud, foreignReference: co_solicitud }
-    co_sexo: { type: BIGINT, required: false, foreignTable: tbrh046_sexo, foreignReference: co_sexo }
-    nu_cedula_entrevistador: { type: NUMERIC, required: false }
-    co_documento_entrevistador: { type: BIGINT, required: false }
-    nb_entrevistador: { type: VARCHAR, required: false }
-    tx_observacion: { type: VARCHAR, required: false }
-    nu_telefono_contacto: { type: VARCHAR, required: false }
-    nu_telefono_secundario: { type: VARCHAR, required: false }
-    co_banco: { type: BIGINT, required: false, foreignTable: tb010_banco, foreignReference: co_banco }
-    nu_cuenta_bancaria: { type: VARCHAR, required: false }
-    co_grupo_sanguineo: { type: BIGINT, required: false, foreignTable: tbrh048_grupo_sanguineo, foreignReference: co_grupo }
-    nu_estatura: { type: NUMERIC, required: false }
-    nu_peso: { type: NUMERIC, required: false }
-    in_lente: { type: BOOLEAN, required: false }
-    in_vehiculo: { type: BOOLEAN, required: false }
-    nu_grado_licencia: { type: NUMERIC, required: false }
-    in_viajar: { type: BOOLEAN, required: false }
-    co_destreza: { type: BIGINT, required: false, foreignTable: tbrh049_destreza, foreignReference: co_destreza }
-    co_tipo_vivienda: { type: BIGINT, required: false, foreignTable: tbrh050_tipo_vivienda, foreignReference: co_tipo_vivienda }
-    tx_ruta_imagen: { type: VARCHAR, required: false }
-    tx_nivel_educativo: { type: VARCHAR, required: false }
-    in_seguro_social: { type: BOOLEAN, required: false }
-    in_nomina: { type: BOOLEAN, required: false }
-    nu_mes_reconocido: { type: INTEGER, required: false, defaultValue: '0' }
-    tx_estatus: { type: VARCHAR, required: false }
-    aumtab: { type: VARCHAR, required: false }
-    tx_niveduc: { type: VARCHAR, required: false }
-    tx_codzona: { type: VARCHAR, required: false }
-    tx_zona_imp: { type: VARCHAR, required: false }
-    tx_zona: { type: VARCHAR, required: false }
-    tx_nactra: { type: VARCHAR, required: false }
-    tx_tarjeta: { type: VARCHAR, required: false }
-    tx_banco: { type: VARCHAR, required: false }
-    in_sobreviviente: { type: BOOLEAN, required: false }
-    _indexes: { fki_co_banco_trabajador: [co_banco], fki_co_destreza: [co_destreza], fki_co_documento_trabajador: [co_documento], fki_co_edo_civil_trabajador: [co_edo_civil], fki_co_grupo_sanguineo: [co_grupo_sanguineo], fki_co_nivel_educativo: [co_nivel_educativo], fki_co_parroquia_domicilio: [co_parroquia_domicilio], fki_co_sexo_trabajador: [co_sexo], fki_co_solicitud_trabajador: [co_solicitud], fki_co_tipo_vivienda: [co_tipo_vivienda], fki_co_trabajador: [co_trabajador] }
-  tbrh002_ficha:
-    _attributes: { phpName: Tbrh002Ficha }
-    co_ficha: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_trabajador: { type: BIGINT, required: false }
-    fe_ingreso: { type: DATE, required: false }
-    fe_finiquito: { type: DATE, required: false }
-    co_estatus: { type: BIGINT, required: false }
-    nu_solicitud_ingreso: { type: NUMERIC, required: false }
-    tx_direccion_oficina: { type: VARCHAR, required: false }
-    nu_telefono_oficina: { type: NUMERIC, required: false }
-    fe_contrato: { type: DATE, required: false }
-    nu_ficha: { type: VARCHAR, required: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: false}
-    updated_at: { type: TIMESTAMP, required: false}
-    fe_corporativa: { type: DATE, required: false }
-    _indexes: { fki_co_ficha_fkey: [co_ficha] }
-  tbrh003_dependencia:
-    _attributes: { phpName: Tbrh003Dependencia }
-    co_dependencia: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_dependecia: { type: VARCHAR, required: false }
-    nu_codigo: { type: VARCHAR, required: false }
-  tbrh004_nivel_jerarquico:
-    _attributes: { phpName: Tbrh004NivelJerarquico }
-    co_nivel_jerarquico: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nivel_jerarquico: { type: VARCHAR, required: false }
-  tbrh005_estructura_administrativa:
-    _attributes: { phpName: Tbrh005EstructuraAdministrativa }
-    co_estructura_administrativa: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_padre: { type: BIGINT, required: false }
-    tx_nom_estructura_administrativa: { type: VARCHAR, required: true }
-    nu_centro_costo: { type: VARCHAR, required: false }
-    co_ente: { type: BIGINT, required: false }
-    co_nivel_jerarquico: { type: BIGINT, required: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    co_dependencia: { type: BIGINT, required: false }
-    co_enteorgano: { type: NUMERIC, required: false }
-    nu_codigo: { type: VARCHAR, required: false }
-    _indexes: { fki_tbrh005_: [co_nivel_jerarquico], fki_tbrh005_co_dependencia_fkey: [co_dependencia] }
-  tbrh006_jornada_laboral:
-    _attributes: { phpName: Tbrh006JornadaLaboral }
-    co_jornada_laboral: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_descripcion: { type: VARCHAR, required: false }
-    nu_cantidad_hora: { type: NUMERIC, required: false }
-    co_turno: { type: BIGINT, required: false }
-  tbrh007_historial_cargo:
-    _attributes: { phpName: Tbrh007HistorialCargo }
-    co_historial_cargo: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_estructura: { type: BIGINT, required: false, foreignTable: tbrh009_cargo_estructura, foreignReference: co_cargo_estructura }
-    co_ficha: { type: BIGINT, required: false, foreignTable: tbrh002_ficha, foreignReference: co_ficha }
-    _indexes: { fki_tbrh002_ficha: [co_ficha], fki_tbrh009_cargo_estructura: [co_estructura] }
-  tbrh008_tabulador:
-    _attributes: { phpName: Tbrh008Tabulador }
-    co_tabulador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_clasif_personal: { type: BIGINT, required: false }
-    created_at: { type: TIMESTAMP, required: false}
-    co_tp_tabulador: { type: BIGINT, required: false }
-    mo_sueldo: { type: NUMERIC, required: false }
-    nu_codigo_tab: { type: VARCHAR, required: false }
-  tbrh009_cargo_estructura:
-    _attributes: { phpName: Tbrh009CargoEstructura }
-    co_cargo_estructura: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_estructura_administrativa: { type: BIGINT, required: false }
-    co_cargo: { type: BIGINT, required: false }
-    nivel: { type: BIGINT, required: false }
-    co_padre: { type: BIGINT, required: false }
-    co_tp_tabulador: { type: BIGINT, required: false }
-    nu_cant_puesto: { type: NUMERIC, required: false }
-    nu_vacante: { type: NUMERIC, required: false }
-    nu_codigo_cargo: { type: VARCHAR, required: false }
-    nu_codigo_estructura: { type: VARCHAR, required: false }
-    co_tabulador: { type: BIGINT, required: false }
-  tbrh0105_ingreso_trabajador:
-    _attributes: { phpName: Tbrh0105IngresoTrabajador }
-  tbrh010_cta_trabajador:
-    _attributes: { phpName: Tbrh010CtaTrabajador }
-    co_cta_trabajador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_cta_bancaria: { type: BIGINT, required: false }
-    co_cta_contable: { type: NUMERIC, required: false }
-    co_banco: { type: BIGINT, required: false }
-  tbrh012_parentesco:
-    _attributes: { phpName: Tbrh012Parentesco }
-    co_parentesco: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_parentesco: { type: VARCHAR, required: false }
-  tbrh013_nomina:
-    _attributes: { phpName: Tbrh013Nomina }
-    co_nomina: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_solicitud: { type: BIGINT, required: true }
-    co_tp_nomina: { type: BIGINT, required: true, foreignTable: tbrh017_tp_nomina, foreignReference: co_tp_nomina, onDelete: CASCADE, onUpdate: CASCADE }
-    co_nom_frecuencia_pago: { type: BIGINT, required: true, foreignTable: tbrh023_nom_frecuencia_pago, foreignReference: co_nom_frecuencia_pago, onUpdate: CASCADE }
-    nu_nomina: { type: VARCHAR, required: true }
-    de_nomina: { type: VARCHAR, required: true }
-    de_observacion: { type: VARCHAR, required: false }
-    fe_inicio: { type: DATE, required: true }
-    fe_fin: { type: DATE, required: true }
-    fe_pago: { type: DATE, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    in_procesado: { type: BOOLEAN, required: true, defaultValue: false }
-    id_tbrh060_nomina_estatus: { type: BIGINT, required: false, foreignTable: tbrh060_nomina_estatus, foreignReference: id, onUpdate: CASCADE }
-    co_grupo_nomina: { type: BIGINT, required: false }
-  tbrh014_concepto:
-    _attributes: { phpName: Tbrh014Concepto }
-    co_concepto: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    nu_concepto: { type: VARCHAR, required: true }
-    tx_concepto: { type: VARCHAR, required: true }
-    co_tipo_concepto: { type: BIGINT, required: true, foreignTable: tbrh020_tp_concepto, foreignReference: co_tp_concepto, onUpdate: CASCADE }
-    co_tipo_unidad: { type: BIGINT, required: true, foreignTable: tbrh050_tp_unidad, foreignReference: co_tp_unidad, onUpdate: CASCADE }
-    nu_cuenta_contable: { type: VARCHAR, required: false }
-    nu_cuenta_presupuesto: { type: VARCHAR, required: false }
-    nu_valor: { type: NUMERIC, size: '32', scale: '4', required: true, defaultValue: '0' }
-    in_imprime_detalle: { type: BOOLEAN, required: false, defaultValue: false }
-    in_descripcion_alternativa: { type: BOOLEAN, required: false, defaultValue: false }
-    in_valor_referencia: { type: BOOLEAN, required: false, defaultValue: false }
-    in_hoja_tiempo: { type: BOOLEAN, required: false, defaultValue: false }
-    in_prorratea: { type: BOOLEAN, required: false, defaultValue: false }
-    in_modifica_descripcion: { type: BOOLEAN, required: false, defaultValue: false }
-    in_monto_calculo: { type: BOOLEAN, required: false, defaultValue: false }
-    in_contractual: { type: BOOLEAN, required: false, defaultValue: false }
-    in_bonificable: { type: BOOLEAN, required: false, defaultValue: false }
-    in_monto_cero: { type: BOOLEAN, required: false, defaultValue: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    de_formula: { type: VARCHAR, required: false }
-    co_moneda: { type: BIGINT, required: true, foreignTable: tbrh030_moneda, foreignReference: co_moneda, onUpdate: CASCADE }
-    nu_prioridad: { type: BIGINT, required: true, defaultValue: '1' }
-    de_observacion: { type: VARCHAR, required: false }
-    co_modo_concepto: { type: BIGINT, required: true, foreignTable: tbrh092_modo_concepto, foreignReference: co_modo_concepto, onUpdate: CASCADE }
-  tbrh015_nom_trabajador:
-    _attributes: { phpName: Tbrh015NomTrabajador }
-    co_nom_trabajador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_ficha: { type: BIGINT, required: false, foreignTable: tbrh002_ficha, foreignReference: co_ficha }
-    co_tp_nomina: { type: BIGINT, required: false, foreignTable: tbrh017_tp_nomina, foreignReference: co_tp_nomina }
-    co_grupo_nomina: { type: BIGINT, required: false }
-    co_cargo_estructura: { type: BIGINT, required: false, foreignTable: tbrh009_cargo_estructura, foreignReference: co_cargo_estructura, onDelete: CASCADE, onUpdate: CASCADE }
-    in_sueldo_tab: { type: BOOLEAN, required: false }
-    nu_horas: { type: NUMERIC, required: false }
-    mo_salario_base: { type: NUMERIC, size: '32', scale: '2', required: false }
-    co_tp_cargo: { type: BIGINT, required: false, foreignTable: tbrh084_tipo_cargo, foreignReference: co_tp_cargo }
-    fe_ingreso: { type: DATE, required: false }
-    fe_finiquito: { type: DATE, required: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    co_solicitud: { type: BIGINT, required: false }
-    in_cestaticket: { type: BOOLEAN, required: true, defaultValue: true }
-    mo_salario_normal: { type: NUMERIC, size: '32', scale: '2', required: false, defaultValue: '0' }
-    co_nom_situacion: { type: BIGINT, required: false }
-    _indexes: { fkey_co_tp_nomina: [co_tp_nomina], fki_co_ficha: [co_ficha], fki_co_tp_cargo: [co_tp_cargo] }
-  tbrh015_nom_trabajador_historico:
-    _attributes: { phpName: Tbrh015NomTrabajadorHistorico }
-    co_nom_trabajador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_ficha: { type: BIGINT, required: false }
-    co_tp_nomina: { type: BIGINT, required: false }
-    co_grupo_nomina: { type: BIGINT, required: false }
-    co_cargo_estructura: { type: BIGINT, required: false }
-    in_sueldo_tab: { type: BOOLEAN, required: false }
-    nu_horas: { type: NUMERIC, required: false }
-    mo_salario_base: { type: NUMERIC, size: '32', scale: '2', required: false }
-    co_tp_cargo: { type: BIGINT, required: false }
-    fe_ingreso: { type: DATE, required: false }
-    fe_finiquito: { type: DATE, required: false }
-    in_activo: { type: BOOLEAN, required: false }
-    co_solicitud: { type: BIGINT, required: false }
-  tbrh016_sindicato:
-    _attributes: { phpName: Tbrh016Sindicato }
-    co_sindicato: { type: BIGINT, primaryKey: true, required: true }
-    tx_sindicato: { type: VARCHAR, required: false }
-  tbrh017_tp_nomina:
-    _attributes: { phpName: Tbrh017TpNomina }
-    co_tp_nomina: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tp_nomina: { type: VARCHAR, required: false }
-    nu_hora: { type: NUMERIC, size: '4', scale: '2', required: true }
-    co_nom_tipo_ingreso: { type: BIGINT, required: false }
-    nu_dia_derecho_vacaciones: { type: NUMERIC, required: true }
-    nu_anio_antiguedad_vacaciones: { type: NUMERIC, required: true }
-    nu_dia_vacaciones: { type: NUMERIC, required: true }
-    co_nom_tipo_disfrute: { type: BIGINT, required: false }
-    nu_dia_adicional_anio: { type: NUMERIC, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    nu_nomina: { type: VARCHAR, required: false }
-  tbrh018_detalle_nomina:
-    _attributes: { phpName: Tbrh018DetalleNomina }
-    co_detalle_nomina: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_tp_nomina: { type: BIGINT, required: false, foreignTable: tbrh017_tp_nomina, foreignReference: co_tp_nomina }
-    co_concepto: { type: BIGINT, required: false, foreignTable: tbrh014_concepto, foreignReference: co_concepto }
-    _indexes: { fki_tbhr018_co_tp_nomina_fkey: [co_tp_nomina], fki_tbrh018_co_concepto_fkey: [co_concepto] }
-  tbrh019_concep_adicional:
-    _attributes: { phpName: Tbrh019ConcepAdicional }
-    co_concep_adicional: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_concep_adicional: { type: VARCHAR, required: false }
-  tbrh020_tp_concepto:
-    _attributes: { phpName: Tbrh020TpConcepto }
-    co_tp_concepto: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tp_concepto: { type: VARCHAR, required: false }
-  tbrh021_nom_acumulado:
-    _attributes: { phpName: Tbrh021NomAcumulado }
-    co_nom_acumulado: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_acumulado: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh022_nom_aumento:
-    _attributes: { phpName: Tbrh022NomAumento }
-    co_nom_aumento: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_aumento: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh023_nom_frecuencia_pago:
-    _attributes: { phpName: Tbrh023NomFrecuenciaPago }
-    co_nom_frecuencia_pago: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_frecuencia_pago: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh024_nom_situacion:
-    _attributes: { phpName: Tbrh024NomSituacion }
-    co_nom_situacion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_situacion: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh025_nom_frecuencia_pago:
-    _attributes: { phpName: Tbrh025NomFrecuenciaPago }
-    co_nom_frecuencia_pago: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_frecuencia_pago: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh026_concep_tipo_nomina:
-    _attributes: { phpName: Tbrh026ConcepTipoNomina }
-    co_concepto_tipo_nomina: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_concepto: { type: BIGINT, required: true }
-    co_tp_nomina: { type: BIGINT, required: true, foreignTable: tbrh017_tp_nomina, foreignReference: co_tp_nomina }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    co_grupo_nomina: { type: BIGINT, required: true }
-    _indexes: { fki_tbrh026_co_concepto: [co_concepto], fki_tbrh026_co_tipo_nomina: [co_tp_nomina] }
-  tbrh027_concepto_situacion:
-    _attributes: { phpName: Tbrh027ConceptoSituacion }
-    co_concepto_situacion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_concepto: { type: BIGINT, required: true }
-    co_situacion: { type: BIGINT, required: true, foreignTable: tbrh024_nom_situacion, foreignReference: co_nom_situacion, onUpdate: CASCADE }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh028_ejercicio_fiscal:
-    _attributes: { phpName: Tbrh028EjercicioFiscal }
-    co_ejercicio_fiscal: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    fe_inicio: { type: DATE, required: true }
-    fe_fin: { type: DATE, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh029_ejercicio_fiscal_estatus:
-    _attributes: { phpName: Tbrh029EjercicioFiscalEstatus }
-    co_ejercicio_fiscal_estatus: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_ejercicio_fiscal: { type: INTEGER, required: true }
-    fe_desde: { type: DATE, required: true }
-    fe_hasta: { type: DATE, required: true }
-    de_apertura: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: false}
-    updated_at: { type: TIMESTAMP, required: false}
-  tbrh030_moneda:
-    _attributes: { phpName: Tbrh030Moneda }
-    co_moneda: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_simbolo: { type: VARCHAR, required: true }
-    tx_sigla: { type: VARCHAR, required: true }
-    de_moneda: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh031_concep_adicional:
-    _attributes: { phpName: Tbrh031ConcepAdicional }
-    co_concep_adicional: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_concep_adicional: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    co_nom_trabajador: { type: BIGINT, required: false }
-    co_concepto: { type: BIGINT, required: false }
-    nu_valor: { type: NUMERIC, size: '32', scale: '2', required: false }
-    nu_cantidad: { type: NUMERIC, required: false }
-  tbrh032_cargo:
-    _attributes: { phpName: Tbrh032Cargo }
-    co_cargo: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_cargo: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    co_tabulador2: { type: BIGINT, required: false }
-    nu_codigo: { type: VARCHAR, required: false }
-    co_tp_tabulador: { type: NUMERIC, required: false }
-    co_tabulador: { type: NUMERIC, required: false }
-  tbrh033_nom_campo_adicional:
-    _attributes: { phpName: Tbrh033NomCampoAdicional }
-    co_nom_campo_adicional: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_campo_adicional: { type: VARCHAR, required: true }
-    tx_etiqueta: { type: VARCHAR, required: true }
-    co_tipo_dato: { type: BIGINT, required: true }
-    tx_valor_defecto: { type: VARCHAR, required: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh034_concep_acumulado:
-    _attributes: { phpName: Tbrh034ConcepAcumulado }
-    co_concep_acumulado: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_concepto: { type: BIGINT, required: true, foreignTable: tbrh014_concepto, foreignReference: co_concepto, onUpdate: CASCADE }
-    co_nom_acumulado: { type: BIGINT, required: true, foreignTable: tbrh021_nom_acumulado, foreignReference: co_nom_acumulado, onUpdate: CASCADE }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh035_nom_funcion:
-    _attributes: { phpName: Tbrh035NomFuncion }
-    co_nom_funcion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_funcion: { type: VARCHAR, required: true }
-    tx_nom_descripcion: { type: VARCHAR, required: true }
-    tx_nom_parametro: { type: VARCHAR, required: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    co_tp_funcion: { type: BIGINT, required: false, foreignTable: tbrh036_tipo_funcion, foreignReference: co_tp_funcion, onUpdate: CASCADE }
-  tbrh036_tipo_funcion:
-    _attributes: { phpName: Tbrh036TipoFuncion }
-    co_tp_funcion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tp_funcion: { type: VARCHAR, required: false }
-  tbrh037_nom_grado_instruccion:
-    _attributes: { phpName: Tbrh037NomGradoInstruccion }
-    co_nom_grado_instruccion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_grado_instruccion: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh038_nom_incapacidad:
-    _attributes: { phpName: Tbrh038NomIncapacidad }
-    co_nom_incapacidad: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_incapacidad: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh039_nom_liquidacion:
-    _attributes: { phpName: Tbrh039NomLiquidacion }
-    co_nom_liquidacion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_liquidacion: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh040_nom_motivo_cambio:
-    _attributes: { phpName: Tbrh040NomMotivoCambio }
-    co_nom_motivo_cambio: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_motivo_cambio: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh041_nom_motivo_retiro:
-    _attributes: { phpName: Tbrh041NomMotivoRetiro }
-    co_nom_motivo_retiro: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_motivo_retiro: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh042_nom_prestamo:
-    _attributes: { phpName: Tbrh042NomPrestamo }
-    co_nom_prestamo: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_nom_prestamo: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh043_profesion:
-    _attributes: { phpName: Tbrh043Profesion }
-    co_profesion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_profesion: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh044_tipo_disfrute:
-    _attributes: { phpName: Tbrh044TipoDisfrute }
-    co_tp_disfrute: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tp_disfrute: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh045_nom_tipo_ingreso:
-    _attributes: { phpName: Tbrh045NomTipoIngreso }
-    co_tp_ingreso: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tp_ingreso: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh046_sexo:
-    _attributes: { phpName: Tbrh046Sexo }
-    co_sexo: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_sexo: { type: VARCHAR, required: false }
-  tbrh047_edo_civil:
-    _attributes: { phpName: Tbrh047EdoCivil }
-    co_edo_civil: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_edo_civil: { type: VARCHAR, required: false }
-    tx_sigla: { type: VARCHAR, required: false }
-  tbrh048_grupo_sanguineo:
-    _attributes: { phpName: Tbrh048GrupoSanguineo }
-    co_grupo: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_grupo: { type: VARCHAR, required: false }
-  tbrh049_destreza:
-    _attributes: { phpName: Tbrh049Destreza }
-    co_destreza: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_destreza: { type: VARCHAR, required: false }
-  tbrh050_tipo_vivienda:
-    _attributes: { phpName: Tbrh050TipoVivienda }
-    co_tipo_vivienda: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tipo_vivienda: { type: VARCHAR, required: false }
-  tbrh050_tp_unidad:
-    _attributes: { phpName: Tbrh050TpUnidad }
-    co_tp_unidad: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tp_unidad: { type: VARCHAR, required: true }
-  tbrh051_concep_frecuecia:
-    _attributes: { phpName: Tbrh051ConcepFrecuecia }
-    co_concep_frecuecia: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_concepto: { type: BIGINT, required: true, foreignTable: tbrh014_concepto, foreignReference: co_concepto, onUpdate: CASCADE }
-    co_nom_frecuencia_pago: { type: BIGINT, required: true, foreignTable: tbrh023_nom_frecuencia_pago, foreignReference: co_nom_frecuencia_pago, onUpdate: CASCADE }
-    in_activo: { type: BOOLEAN, required: false, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh060_nomina_estatus:
-    _attributes: { phpName: Tbrh060NominaEstatus }
-    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    de_nomina_estatus: { type: VARCHAR, required: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh061_nomina_movimiento:
-    _attributes: { phpName: Tbrh061NominaMovimiento }
-    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    id_tbrh013_nomina: { type: BIGINT, required: true }
-    id_tbrh014_concepto: { type: BIGINT, required: true }
-    id_tbrh020_tp_concepto: { type: BIGINT, required: false }
-    id_tbrh002_ficha: { type: BIGINT, required: true }
-    de_concepto: { type: VARCHAR, required: true }
-    nu_valor: { type: NUMERIC, size: '32', scale: '2', required: false, defaultValue: '0' }
-    nu_monto: { type: NUMERIC, size: '32', scale: '2', required: true }
-    id_tbrh050_tp_unidad: { type: BIGINT, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    in_imprime_detalle: { type: BOOLEAN, required: false, defaultValue: false }
-    in_descripcion_alternativa: { type: BOOLEAN, required: false, defaultValue: false }
-    in_valor_referencia: { type: BOOLEAN, required: false, defaultValue: false }
-    in_hoja_tiempo: { type: BOOLEAN, required: false, defaultValue: false }
-    in_prorratea: { type: BOOLEAN, required: false, defaultValue: false }
-    in_modifica_descripcion: { type: BOOLEAN, required: false, defaultValue: false }
-    in_monto_calculo: { type: BOOLEAN, required: false, defaultValue: false }
-    in_contractual: { type: BOOLEAN, required: false, defaultValue: false }
-    in_bonificable: { type: BOOLEAN, required: false, defaultValue: false }
-    in_monto_cero: { type: BOOLEAN, required: false, defaultValue: false }
-    id_tbrh030_moneda: { type: BIGINT, required: true }
-    id_tbrh015_nom_trabajador: { type: BIGINT, required: false }
-    id_tbrh086_conceptos_fijos: { type: BIGINT, required: false }
-    nu_prioridad: { type: BIGINT, required: false }
-    _indexes: { id_tbrh002_ficha: [id_tbrh002_ficha], id_tbrh013_nomina: [id_tbrh013_nomina], tbrh061_nomina_movimiento_id_tbr: [id_tbrh002_ficha, id_tbrh013_nomina] }
-  tbrh062_nomina_movimiento_acumula:
-    _attributes: { phpName: Tbrh062NominaMovimientoAcumula }
-    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    id_tbrh061_nomina_movimiento: { type: BIGINT, required: true }
-    id_tbrh021_nom_acumulado: { type: BIGINT, required: true, foreignTable: tbrh021_nom_acumulado, foreignReference: co_nom_acumulado, onDelete: CASCADE, onUpdate: CASCADE }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    id_tbrh013_nomina: { type: BIGINT, required: false }
-    id_tbrh002_ficha: { type: BIGINT, required: false }
-    id_tbrh067_grupo_nomina: { type: BIGINT, required: false }
-  tbrh063_claupsula:
-    _attributes: { phpName: Tbrh063Claupsula }
-    co_claupsula: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_codigo_claupsula: { type: VARCHAR, required: false }
-    nb_claupsula: { type: VARCHAR, required: false }
-    co_tp_nomina: { type: BIGINT, required: false }
-  tbrh064_claupsula_concepto:
-    _attributes: { phpName: Tbrh064ClaupsulaConcepto }
-    co_claupsula_concepto: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_claupsula: { type: BIGINT, required: false }
-    co_concepto: { type: BIGINT, required: false }
-    co_tp_nomina: { type: BIGINT, required: false }
-  tbrh067_grupo_nomina:
-    _attributes: { phpName: Tbrh067GrupoNomina }
-    co_grupo_nomina: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_grupo_nomina: { type: VARCHAR, required: false }
-    co_tp_nomina: { type: BIGINT, required: false }
-    cod_grupo_nomina: { type: VARCHAR, required: false }
-  tbrh070_prima_antiguedad:
-    _attributes: { phpName: Tbrh070PrimaAntiguedad }
-    co_prima_antiguedad: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_tp_nomina: { type: BIGINT, required: false, foreignTable: tbrh017_tp_nomina, foreignReference: co_tp_nomina, onUpdate: CASCADE }
-    co_grupo_nomina: { type: BIGINT, required: false, foreignTable: tbrh067_grupo_nomina, foreignReference: co_grupo_nomina, onUpdate: CASCADE }
-    nu_anio: { type: NUMERIC, size: '4', scale: '2', required: false }
-    nu_porcentaje: { type: NUMERIC, size: '6', scale: '2', required: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    de_condicional: { type: VARCHAR, required: false }
-  tbrh071_tp_personal:
-    _attributes: { phpName: Tbrh071TpPersonal }
-    co_tp_personal: { type: BIGINT, autoIncrement: true, required: true }
-    tx_tp_personal: { type: VARCHAR, required: false }
-  tbrh072_grupos_cargos:
-    _attributes: { phpName: Tbrh072GruposCargos }
-    co_grupos_cargos: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_grupos_cargos: { type: VARCHAR, required: false }
-  tbrh073_rangos_sueldos:
-    _attributes: { phpName: Tbrh073RangosSueldos }
-    co_rango: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_rango: { type: VARCHAR, required: false }
-  tbrh074_tp_funcionarios:
-    _attributes: { phpName: Tbrh074TpFuncionarios }
-    co_tp_funcionarios: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tp_funcionarios: { type: VARCHAR, required: false }
-    co_tp_personal: { type: BIGINT, required: false }
-  tbrh076_remuneracion_funcionarios:
-    _attributes: { phpName: Tbrh076RemuneracionFuncionarios }
-    co_remuneracion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_grupo: { type: BIGINT, required: false }
-    co_rango: { type: BIGINT, required: false }
-    mo_remuneracion: { type: NUMERIC, required: false }
-    co_tp_funcionario: { type: BIGINT, required: false }
-    co_tabulador: { type: BIGINT, required: false }
-  tbrh077_prima_cestaticket:
-    _attributes: { phpName: Tbrh077PrimaCestaticket }
-    co_prima_cestaticket: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_prima_cestaticket: { type: VARCHAR, required: false }
-    co_tp_personal: { type: BIGINT, required: false }
-    nu_prima_cestaticket: { type: NUMERIC, size: '32', scale: '2', required: false }
-  tbrh078_prima_hijos:
-    _attributes: { phpName: Tbrh078PrimaHijos }
-    co_prima_hijos: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_prima_hijos: { type: VARCHAR, required: false }
-    co_tp_personal: { type: BIGINT, required: false }
-    nu_prima_hijos: { type: NUMERIC, size: '32', scale: '2', required: false }
-    co_tp_nomina: { type: BIGINT, required: false }
-  tbrh079_remuneracion_obreros:
-    _attributes: { phpName: Tbrh079RemuneracionObreros }
-    co_remuneraciones_obreros: { type: BIGINT, autoIncrement: true, required: true }
-    nu_grado: { type: NUMERIC, required: false }
-    mo_salario: { type: NUMERIC, size: '32', scale: '2', required: false }
-    co_tp_funcionario: { type: BIGINT, required: false }
-  tbrh080_prima_prof:
-    _attributes: { phpName: Tbrh080PrimaProf }
-    co_prima_prof: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_tp_personal: { type: BIGINT, required: false }
-    co_nom_grado_instruccion: { type: BIGINT, required: false }
-    nu_porcentaje: { type: NUMERIC, size: '32', scale: '2', required: false }
-    co_tp_nomina: { type: BIGINT, required: false }
-  tbrh081_remuneracion_docente:
-    _attributes: { phpName: Tbrh081RemuneracionDocente }
-    co_remuneracion_personal: { type: BIGINT, required: false }
-    tx_remuneracion_personal: { type: VARCHAR, required: false }
-    co_tp_personal: { type: BIGINT, required: false }
-    co_tabulador: { type: BIGINT, required: false }
-  tbrh081_sueldo_trabajador:
-    _attributes: { phpName: Tbrh081SueldoTrabajador }
-    co_sueldo_trabajador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_cargo: { type: BIGINT, required: false, foreignTable: tbrh032_cargo, foreignReference: co_cargo }
-    mo_sueldo: { type: NUMERIC, required: false }
-    co_tipo_pago: { type: BIGINT, required: false, foreignTable: tbrh80_tipo_de_pago, foreignReference: co_tipo_pago }
-    co_trabajador: { type: BIGINT, required: false }
-    co_usuario: { type: BIGINT, required: false }
-    created_at: { type: DATE, required: false }
-    updated_at: { type: DATE, required: false }
-    _indexes: { fki_co_cargo_sueldo: [co_cargo], fki_co_tipo_pago: [co_tipo_pago] }
-  tbrh082_parentesco:
-    _attributes: { phpName: Tbrh082Parentesco }
-    co_parentesco: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_parentesco: { type: VARCHAR, required: false }
-  tbrh082_remuneracion_altonivel:
-    _attributes: { phpName: Tbrh082RemuneracionAltonivel }
-    co_remuneracion_altonivel: { type: BIGINT, autoIncrement: true, required: true }
-    tx_descripcion: { type: VARCHAR, required: false }
-    mo_salario_base: { type: NUMERIC, required: false }
-    tx_siglas: { type: VARCHAR, required: false }
-    nu_complemento: { type: NUMERIC, size: '32', scale: '2', required: false }
-    co_tabulador: { type: BIGINT, required: false }
-  tbrh083_familiar_trabajador:
-    _attributes: { phpName: Tbrh083FamiliarTrabajador }
-    co_familiar_trabajador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    fe_nacimiento: { type: DATE, required: false }
-    co_sexo: { type: BIGINT, required: false, foreignTable: tbrh046_sexo, foreignReference: co_sexo }
-    co_parentesco: { type: BIGINT, required: false, foreignTable: tbrh082_parentesco, foreignReference: co_parentesco }
-    nb_familiar: { type: VARCHAR, required: false }
-    tx_identificacion: { type: VARCHAR, required: false }
-    co_usuario: { type: BIGINT, required: false }
-    created_at: { type: DATE, required: false }
-    updated_at: { type: DATE, required: false }
-    in_eliminar: { type: BOOLEAN, required: false }
-    co_trabajador: { type: BIGINT, required: false }
-    in_removido: { type: BOOLEAN, required: false }
-  tbrh083_familiar_trabajador_historico:
-    _attributes: { phpName: Tbrh083FamiliarTrabajadorHistorico }
-    co_familiar_trabajador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    fe_nacimiento: { type: DATE, required: false }
-    co_sexo: { type: BIGINT, required: false }
-    co_parentesco: { type: BIGINT, required: false }
-    nb_familiar: { type: VARCHAR, required: false }
-    tx_identificacion: { type: VARCHAR, required: false }
-    co_usuario: { type: BIGINT, required: false }
-    created_at: { type: DATE, required: false }
-    updated_at: { type: DATE, required: false }
-    in_eliminar: { type: BOOLEAN, required: false }
-    co_trabajador: { type: BIGINT, required: false }
-    in_removido: { type: BOOLEAN, required: false }
-    co_solicitud: { type: BIGINT, required: false }
-  tbrh083_remuneracion_policial:
-    _attributes: { phpName: Tbrh083RemuneracionPolicial }
-    co_remuneracion_policial: { type: BIGINT, autoIncrement: true, required: true }
-    tx_remuneracion_policial: { type: VARCHAR, required: false }
-    nu_grado: { type: NUMERIC, required: false }
-    mo_salario_basico: { type: NUMERIC, size: '32', scale: '2', required: false }
-    nu_complemento: { type: NUMERIC, required: false }
-    co_tabulador: { type: BIGINT, required: false }
-  tbrh084_profesion_trabajador:
-    _attributes: { phpName: Tbrh084ProfesionTrabajador }
-    co_profesion_trabajador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_universidad: { type: BIGINT, required: false }
-    co_profesion: { type: BIGINT, required: false, foreignTable: tbrh043_profesion, foreignReference: co_profesion }
-    tx_titulo_obtenido: { type: VARCHAR, required: false }
-    fe_egreso: { type: DATE, required: false }
-    co_trabajador: { type: BIGINT, required: false, foreignTable: tbrh001_trabajador, foreignReference: co_trabajador }
-    co_usuario: { type: BIGINT, required: false }
-    created_at: { type: DATE, required: false }
-    updated_at: { type: DATE, required: false }
-    co_solicitud: { type: BIGINT, required: false }
-    _indexes: { fki_co_profesion: [co_profesion], fki_co_trabajador_profesion: [co_trabajador], fki_co_universidad: [co_universidad] }
-  tbrh084_profesion_trabajador_historico:
-    _attributes: { phpName: Tbrh084ProfesionTrabajadorHistorico }
-    co_profesion_trabajador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_universidad: { type: BIGINT, required: false }
-    co_profesion: { type: BIGINT, required: false }
-    tx_titulo_obtenido: { type: VARCHAR, required: false }
-    fe_egreso: { type: DATE, required: false }
-    co_trabajador: { type: BIGINT, required: false }
-    co_usuario: { type: BIGINT, required: false }
-    created_at: { type: DATE, required: false }
-    updated_at: { type: DATE, required: false }
-    co_solicitud: { type: BIGINT, required: false }
-  tbrh084_tipo_cargo:
-    _attributes: { phpName: Tbrh084TipoCargo }
-    co_tp_cargo: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tipo_cargo: { type: VARCHAR, required: false }
-  tbrh085_concepto_tipo_cargo:
-    _attributes: { phpName: Tbrh085ConceptoTipoCargo }
-    co_concepto_tipo_cargo: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_concepto: { type: BIGINT, required: true, foreignTable: tbrh014_concepto, foreignReference: co_concepto, onUpdate: CASCADE }
-    co_tp_cargo: { type: BIGINT, required: true, foreignTable: tbrh084_tipo_cargo, foreignReference: co_tp_cargo, onUpdate: CASCADE }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh085_universidad:
-    _attributes: { phpName: Tbrh085Universidad }
-    co_universidad: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_universidad: { type: VARCHAR, required: false }
-  tbrh086_conceptos_fijos:
-    _attributes: { phpName: Tbrh086ConceptosFijos }
-    co_conceptos_fijos: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_nom_trabajador: { type: BIGINT, required: false }
-    nu_monto: { type: NUMERIC, size: '32', scale: '4', required: false }
-    nu_valor: { type: NUMERIC, size: '32', scale: '4', required: false }
-    mo_saldo: { type: NUMERIC, size: '32', scale: '2', required: false }
-    fe_movimiento: { type: DATE, required: false }
-    fe_vencimiento: { type: DATE, required: false }
-    co_embargo: { type: BIGINT, required: false }
-    co_tp_formula: { type: BIGINT, required: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    tx_codigo_concepto: { type: VARCHAR, required: false }
-    co_concepto_formula: { type: BIGINT, required: false }
-    co_ficha: { type: BIGINT, required: false }
-  tbrh087_sentencia:
-    _attributes: { phpName: Tbrh087Sentencia }
-    co_sentencia: { type: BIGINT, autoIncrement: true, required: true }
-    nu_sentencia: { type: NUMERIC, required: false }
-    tx_sentencia: { type: VARCHAR, required: false }
-    fe_sentencia: { type: DATE, required: false }
-  tbrh088_embargo:
-    _attributes: { phpName: Tbrh088Embargo }
-    co_embargo: { type: BIGINT, autoIncrement: true, required: true }
-    co_sentencia: { type: BIGINT, required: false }
-    co_embargante: { type: BIGINT, required: false }
-    co_trabajador: { type: BIGINT, required: false }
-  tbrh089_embargantes:
-    _attributes: { phpName: Tbrh089Embargantes }
-    co_embargante: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    nu_cedula: { type: NUMERIC, required: false }
-    nb_nombre: { type: VARCHAR, required: false }
-    nb_apellido: { type: VARCHAR, required: false }
-    nu_cuenta: { type: VARCHAR, required: false }
-    co_banco: { type: BIGINT, required: false }
-    co_tp_forma_pago: { type: BIGINT, required: false }
-    fe_nacimiento: { type: DATE, required: false }
-    co_sexo: { type: BIGINT, required: false }
-    fe_ingreso: { type: DATE, required: false }
-    tx_desbanco: { type: VARCHAR, required: false }
-    co_trabajador: { type: BIGINT, required: false }
-  tbrh090_tp_forma_pago:
-    _attributes: { phpName: Tbrh090TpFormaPago }
-    co_tp_forma_pago: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tp_forma_pago: { type: VARCHAR, required: false }
-  tbrh092_modo_concepto:
-    _attributes: { phpName: Tbrh092ModoConcepto }
-    co_modo_concepto: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    de_modo_concepto: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh093_nivel_educativo:
-    _attributes: { phpName: Tbrh093NivelEducativo }
-    co_nivel_educativo: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    de_nivel_educativo: { type: VARCHAR, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh094_prima_nivel_edu:
-    _attributes: { phpName: Tbrh094PrimaNivelEdu }
-    co_prima_nivel_edu: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_tp_nomina: { type: BIGINT, required: true }
-    co_grupo_nomina: { type: BIGINT, required: true }
-    co_nivel_educativo: { type: BIGINT, required: true }
-    nu_porcentaje: { type: NUMERIC, size: '6', scale: '2', required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh095_trabajador_novedad:
-    _attributes: { phpName: Tbrh095TrabajadorNovedad }
-    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_solicitud: { type: BIGINT, required: true }
-    nu_cedula: { type: NUMERIC, required: true }
-    nb_trabajador: { type: VARCHAR, required: false }
-    nu_concepto: { type: VARCHAR, required: true }
-    nu_valor: { type: NUMERIC, size: '32', scale: '2', required: true }
-    de_cargo: { type: VARCHAR, required: false }
-    fe_novedad: { type: DATE, required: true }
-    fe_ejecucion: { type: DATE, required: false }
-    nu_nomina: { type: VARCHAR, required: false }
-    tx_grupo_nomina: { type: VARCHAR, required: false }
-    co_ficha: { type: BIGINT, required: false }
-    co_tp_nomina: { type: BIGINT, required: false }
-    co_grupo_nomina: { type: BIGINT, required: false }
-    co_concepto: { type: BIGINT, required: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    in_utilizado: { type: BOOLEAN, required: true, defaultValue: false }
-    co_nomina: { type: BIGINT, required: false }
-  tbrh096_salario_minimo:
-    _attributes: { phpName: Tbrh096SalarioMinimo }
-    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    mo_salario_minimo: { type: NUMERIC, size: '32', scale: '2', required: true }
-    fe_ini: { type: DATE, required: false }
-    fe_fin: { type: DATE, required: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh097_petro:
-    _attributes: { phpName: Tbrh097Petro }
-    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    mo_petro: { type: NUMERIC, size: '32', scale: '2', required: true }
-    fe_ini: { type: DATE, required: false }
-    fe_fin: { type: DATE, required: false }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh098_concepto_tiempo:
-    _attributes: { phpName: Tbrh098ConceptoTiempo }
-    co_concepto_tiempo: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_tp_nomina: { type: BIGINT, required: true, foreignTable: tbrh017_tp_nomina, foreignReference: co_tp_nomina, onUpdate: CASCADE }
-    co_grupo_nomina: { type: BIGINT, required: true, foreignTable: tbrh067_grupo_nomina, foreignReference: co_grupo_nomina, onUpdate: CASCADE }
-    nu_mes_ini: { type: NUMERIC, size: '32', scale: '2', required: true, defaultValue: '0' }
-    nu_concepto: { type: VARCHAR, required: true }
-    co_concepto: { type: BIGINT, required: true, foreignTable: tbrh014_concepto, foreignReference: co_concepto, onUpdate: CASCADE }
-    nu_valor: { type: NUMERIC, size: '32', scale: '2', required: true, defaultValue: '0' }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    nu_mes_fin: { type: NUMERIC, size: '32', scale: '2', required: false, defaultValue: '0' }
-  tbrh099_clasif_personal:
-    _attributes: { phpName: Tbrh099ClasifPersonal }
-    tx_clasif_personal: { type: VARCHAR, required: false }
-    co_clasif_personal: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-  tbrh099_egreso:
-    _attributes: { phpName: Tbrh099Egreso }
-    co_egreso: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_ficha: { type: BIGINT, required: false }
-    co_tp_nomina: { type: BIGINT, required: false, foreignTable: tbrh017_tp_nomina, foreignReference: co_tp_nomina }
-    co_cargo: { type: BIGINT, required: false }
-    co_solicitud: { type: BIGINT, required: false, foreignTable: tb026_solicitud, foreignReference: co_solicitud }
-    co_trabajador: { type: BIGINT, required: false, foreignTable: tbrh001_trabajador, foreignReference: co_trabajador }
-    fe_movimiento: { type: DATE, required: false }
-    fe_egreso: { type: DATE, required: false }
-    tx_motivo: { type: VARCHAR, required: false }
-    in_soporte: { type: BOOLEAN, required: false }
-    in_cedula: { type: BOOLEAN, required: false }
-    in_declaracion: { type: BOOLEAN, required: false }
+  tbbn011_tipo_bienes:
+    _attributes: { phpName: Tbbn011TipoBienes }
+    co_tipo_bienes: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    tx_tipo_bienes: { type: VARCHAR, required: false }
     co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
-    created_at: { type: DATE, required: false }
-    updated_at: { type: DATE, required: false }
-    co_nom_trabajador: { type: BIGINT, required: false, foreignTable: tbrh015_nom_trabajador, foreignReference: co_nom_trabajador }
-    co_nom_situacion: { type: BIGINT, required: false, foreignTable: tbrh024_nom_situacion, foreignReference: co_nom_situacion }
-    _indexes: { fki_co_nom_situacion: [co_nom_situacion], fki_co_nom_trabajador: [co_nom_trabajador], fki_co_solicitud_egreso: [co_solicitud] }
-  tbrh100_tp_tabulador:
-    _attributes: { phpName: Tbrh100TpTabulador }
-    co_tp_tabulador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tp_tabulador: { type: VARCHAR, required: false }
-  tbrh101_cierre_nomina_presupuesto:
-    _attributes: { phpName: Tbrh101CierreNominaPresupuesto }
-    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    id_tbrh013_nomina: { type: BIGINT, required: true }
-    id_tbrh014_concepto: { type: BIGINT, required: true }
-    de_concepto: { type: VARCHAR, required: true }
-    id_tb026_solicitud: { type: BIGINT, required: true }
-    mo_concepto: { type: NUMERIC, size: '32', scale: '2', required: true }
-    de_sucursal: { type: VARCHAR, required: false }
-    de_fun: { type: VARCHAR, required: true }
-    nu_concepto: { type: VARCHAR, required: true }
-    de_categoria: { type: VARCHAR, required: false }
-    nu_banco: { type: VARCHAR, required: true }
-    id_tb010_banco: { type: BIGINT, required: true }
-    nu_partida: { type: VARCHAR, required: false }
-    nu_decreto: { type: VARCHAR, required: false }
-    fe_pago: { type: DATE, required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-  tbrh102_cierre_nomina_trabajador:
-    _attributes: { phpName: Tbrh102CierreNominaTrabajador }
-    id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    id_tb026_solicitud: { type: BIGINT, required: true }
-    id_tbrh013_nomina: { type: BIGINT, required: true }
-    id_tbrh002_ficha: { type: BIGINT, required: true }
-    id_tbrh015_nom_trabajador: { type: BIGINT, required: true }
-    de_inicial: { type: VARCHAR, required: true }
-    nu_cedula: { type: NUMERIC, required: true }
-    nb_trabajador: { type: VARCHAR, required: true }
-    nu_cuenta: { type: VARCHAR, required: true }
-    nu_banco: { type: VARCHAR, required: true }
-    mo_pago: { type: NUMERIC, size: '32', scale: '2', required: true }
-    in_activo: { type: BOOLEAN, required: true, defaultValue: true }
-    created_at: { type: TIMESTAMP, required: true}
-    updated_at: { type: TIMESTAMP, required: true}
-    mo_salario_normal: { type: NUMERIC, size: '32', scale: '2', required: true, defaultValue: '0' }
-  tbrh103_historial_tabulador:
-    _attributes: { phpName: Tbrh103HistorialTabulador }
-    co_hist_tabulador: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    co_tabulador: { type: BIGINT, required: false }
-    co_clasif_personal: { type: BIGINT, required: false }
-    fe_tabulador: { type: DATE, required: false }
-    created_at: { type: TIMESTAMP, required: false}
-    co_tp_tabulador: { type: BIGINT, required: false }
-    mo_sueldo: { type: NUMERIC, required: false }
-    nu_codigo_tab: { type: VARCHAR, required: false }
-  tbrh104_nom_trabajador_egreso:
-    _attributes: { phpName: Tbrh104NomTrabajadorEgreso }
-    co_nom_trabajador_egreso: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    fe_finiquito: { type: DATE, required: false }
-    co_egreso: { type: BIGINT, required: false }
-    co_nom_trabajador: { type: BIGINT, required: false }
-  tbrh105_ingreso_trabajador:
-    _attributes: { phpName: Tbrh105IngresoTrabajador }
-    co_ingreso_trabajador: { type: BIGINT, primaryKey: true, required: true }
-    co_solicitud: { type: BIGINT, required: false }
-    co_ficha: { type: BIGINT, required: false }
-    co_usuario: { type: BIGINT, required: false }
-    created_at: { type: DATE, required: false }
-    updated_at: { type: DATE, required: false }
-  tbrh80_tipo_de_pago:
-    _attributes: { phpName: Tbrh80TipoDePago }
-    co_tipo_pago: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
-    tx_tipo_pago: { type: VARCHAR, required: false }
-
+    updated_at: { type: TIMESTAMP, required: false }
+    created_at: { type: TIMESTAMP, required: false }
+  tbbn012_clasificacion_inmueble:
+    _attributes: { phpName: Tbbn012ClasificacionInmueble }
+    co_clasificacion_inmueble: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    tx_clasificacion_inmueble: { type: VARCHAR, required: false }
+    cod_cla: { type: VARCHAR, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
+    created_at: { type: TIMESTAMP, required: false }
+    co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
+    in_activo: { type: BOOLEAN, required: false }
+    cod_con: { type: VARCHAR, required: false }
+  tbbn014_tipo_inmueble:
+    _attributes: { phpName: Tbbn014TipoInmueble }
+    co_tipo_inmueble: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    tx_tipo_inmueble: { type: VARCHAR, required: false }
+    created_at: { type: TIMESTAMP, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
+    co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
+    in_activo: { type: BOOLEAN, required: false }
+  tbbn015_tipo_reporte:
+    _attributes: { phpName: Tbbn015TipoReporte }
+    co_tipo_reporte: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    tx_tipo_reporte: { type: VARCHAR, required: false }
+    co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
+    created_at: { type: TIMESTAMP, required: false }
+    update_at: { type: TIMESTAMP, required: false }
+  tbbn016_reporte:
+    _attributes: { phpName: Tbbn016Reporte }
+    co_reporte: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    co_tipo_reporte: { type: BIGINT, required: false }
+    co_solicitud: { type: BIGINT, required: false, foreignTable: tb026_solicitud, foreignReference: co_solicitud }
+    co_usuario: { type: BIGINT, required: false, foreignTable: tb001_usuario, foreignReference: co_usuario }
+    created_at: { type: TIMESTAMP, required: false }
+    updated_at: { type: TIMESTAMP, required: false }
+    _uniques: { unique_co_solicitud: [co_solicitud] }
