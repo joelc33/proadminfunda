@@ -69,7 +69,7 @@ class PDF extends FPDF {
          $this->AddPage();
         $this->Ln(5);
         $this->SetFont('Arial','',8);
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
+        $this->Cell(0,0,utf8_decode('San Francisco, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
  
          $this->Ln(5);
               
