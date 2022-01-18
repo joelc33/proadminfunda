@@ -9,7 +9,7 @@ class PDF extends FPDF {
     function Header() {
 
 
-        $this->Image("imagenes/escudosanfco.png", 100, 7,20);
+        $this->Image("imagenes/escudosanfco.jpg", 100, 7,20);
 
         $this->SetFont('Arial','B',10);
         $this->SetTextColor(0,0,0);
@@ -18,7 +18,7 @@ class PDF extends FPDF {
         $this->Ln(6);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
         $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACION Y FINANZAS'),0,0,'C');
+        $this->Cell(0,0,utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),0,0,'C');
         $this->Ln(8);
         $this->SetFont('Arial','B',12);        
         $this->Cell(0,0,utf8_decode('TRANSFERENCIA ENTRE CUENTAS'),0,0,'C');      
@@ -139,7 +139,7 @@ class PDF extends FPDF {
 	 $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(40,120,40));
          $this->SetFont('Arial','B',7); 
-         $this->Row(array(utf8_decode('SECRET. ADMIN. Y FINAN.'),utf8_decode('UNIDAD DE TESORERIA'),utf8_decode('MÁXIMA AUTORIDAD')),1,1);
+         $this->Row(array(utf8_decode('SECRETARIA GENERAL DE ADMINISTRACIÓN'),utf8_decode('COORDINACIÓN DE TESORERIA'),utf8_decode('ALCALDE')),1,1);
          $this->SetFillColor(255,255,255);
          $this->SetWidths(array(40,30,30,40));
          $this->SetAligns(array("L", "L","L","L"));
@@ -158,7 +158,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','',6);
          $this->ln(15);
          $this->SetWidths(array(40,60,60,40));
-         $this->Row(array(utf8_decode('Autorizado por: LIC. RAISA BRICEÑO'),'Elaborado por: '.utf8_decode(strtoupper($this->campo['nb_usuario'])),'Conformado por: LIC. ARIANNA PETIT ','Autorizado por: Econ. Omar Prieto'),1,1);
+         $this->Row(array(utf8_decode('Autorizado por: '),'Elaborado por: '.utf8_decode(strtoupper($this->campo['nb_usuario'])),'Conformado por: ','Autorizado por: '),1,1);
          $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(200));
          $this->SetAligns(array("C"));

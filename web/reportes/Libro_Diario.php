@@ -181,8 +181,8 @@ left join tb027_tipo_solicitud tb027 on (tb027.co_tipo_solicitud = tb026.co_tipo
 left join tb133_tipo_asiento tb133 on (tb133.co_tipo_asiento = tb061.co_tipo_asiento) 
 where tb061.created_at::date >= '".$fe_inicio."' and tb061.created_at::date <= '".$fe_fin."' order by tb061.created_at::date asc, tb190.co_anexo_contable asc";
                         
-//            var_dump($sql);
-//            exit();
+            var_dump($sql);
+            exit();
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol;  
 	

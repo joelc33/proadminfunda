@@ -28,8 +28,8 @@ class PDF extends FPDF {
         $this->SetTextColor(0,0,0);
         $this->SetY(32);
         $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
-        $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
+//        $this->Ln(6);
+//        $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
         $this->Ln(6);
         //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACION Y FINANZAS'),0,0,'C');
         $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
@@ -150,7 +150,7 @@ class PDF extends FPDF {
          $this->SetY($Y);
          $this->SetFont('Arial','',6);
          $this->ln(20);
-         $this->Row(array(utf8_decode('Autorizado por: LIC. RAISA BRICEÑO'),'Elaborado por: '.utf8_decode(strtoupper($this->datos['nb_usuario'])),'Conformado por: LIC. ARIANNA PETIT ','Autorizado por: Econ. Omar Prieto'),1,1);
+         $this->Row(array(utf8_decode('Autorizado por: '),'Elaborado por: '.utf8_decode(strtoupper($this->datos['nb_usuario'])),'Conformado por: ','Autorizado por: '),1,1);
          $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(200));
          $this->SetAligns(array("C"));

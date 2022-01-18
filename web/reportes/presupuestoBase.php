@@ -157,7 +157,8 @@ class PDF extends FPDF {
           $i++;
          }
          //$total_iva = round(($SubTotal * $iva)/100,2);
-         $total_iva = $TotalIVA;
+         //$total_iva = $TotalIVA;
+         $total_iva = $this->datos['monto_iva'];
          
          $TotalGenerado= $SubTotal + $total_iva;
          
@@ -239,6 +240,7 @@ class PDF extends FPDF {
                          tb008.tx_email,
                          tb047.tx_ente,
                          tb056.nu_expediente,
+                         tb052.monto_iva,
                          upper(tb039.tx_concepto) as tx_concepto
                   from   tb039_requisiciones as tb039
                   left join tb052_compras as tb052 on tb052.co_requisicion=tb039.co_requisicion  

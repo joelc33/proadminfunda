@@ -11,13 +11,13 @@ class PDF extends FPDF {
         $this->empresa = $this->getDatosEmpresa(1);
 
         if(!empty($this->empresa['tx_imagen_izq'])){
-            $this->Image($this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+            $this->Image("imagenes/".$this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
         
 
-        if(!empty($this->empresa['tx_imagen_der'])){
-            $this->Image($this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
-        }
+//        if(!empty($this->empresa['tx_imagen_der'])){
+//            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+//        }
 
         $this->SetFont('Arial','B',8);
         $this->SetTextColor(0,0,0);
@@ -29,7 +29,7 @@ class PDF extends FPDF {
         //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');
         $this->Ln(4);
         $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('DIVISION DE CONTABILIDAD'),0,0,'C');
+        $this->Cell(0,0,utf8_decode('COORDINACIÓN DE CONTABILIDAD'),0,0,'C');
         $this->Ln(4);
         $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
@@ -39,7 +39,7 @@ class PDF extends FPDF {
         $this->Ln(6);
         $this->Cell(0,0,utf8_decode('BALANCE DE COMPROBACIÓN'),0,0,'C');                
         $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('AL PERIODO AGOSTO 2018'),0,0,'C');         
+        //$this->Cell(0,0,utf8_decode('AL PERIODO AGOSTO 2018'),0,0,'C');         
              
 
     }
@@ -74,7 +74,7 @@ class PDF extends FPDF {
          $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(195,105,35)); 
          $this->SetAligns(array("L","C","R"));
-         $this->Row(array('','--------------DURANTE EL PERIODO AGOSTO 2018-------------------',''),0,0); 
+         $this->Row(array('','--------------DURANTE EL PERIODO -------------------',''),0,0); 
          $this->SetFont('Arial','B',8);     
          $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(60,100,35,35,35,35,35)); 
