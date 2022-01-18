@@ -31,9 +31,9 @@ class PDF extends FPDF {
         //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');
         $this->Ln(4);
         $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('DIVISION DE CONTABILIDAD'),0,0,'C');
+        $this->Cell(0,0,utf8_decode('COORDINACIÓN DE CONTABILIDAD'),0,0,'C');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
         $this->SetFont('Arial','B',10);
         $this->SetWidths(array(200));
@@ -181,8 +181,8 @@ left join tb027_tipo_solicitud tb027 on (tb027.co_tipo_solicitud = tb026.co_tipo
 left join tb133_tipo_asiento tb133 on (tb133.co_tipo_asiento = tb061.co_tipo_asiento) 
 where tb061.created_at::date >= '".$fe_inicio."' and tb061.created_at::date <= '".$fe_fin."' order by tb061.created_at::date asc, tb190.co_anexo_contable asc";
                         
-            var_dump($sql);
-            exit();
+//            var_dump($sql);
+//            exit();
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol;  
 	
