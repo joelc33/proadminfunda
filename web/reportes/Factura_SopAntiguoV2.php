@@ -64,16 +64,12 @@ class PDF extends FPDF {
         }*/
 
          $this->SetTextColor(0,0,0);
-         $this->SetY(10);
-         $this->SetX(140); // configura la linea donde comenzara escribir en el eje de y
-         //$this->Cell(30,0,utf8_decode('REPÚBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
-         $this->SetY(14);
-         $this->SetX(140); // configura la linea donde comenzara escribir en el eje de y
-         //$this->Cell(30,0,utf8_decode('GOBERNACIÓN DEL ESTADO ZULIA'),0,0,'C');
-         $this->SetY(18);
-         $this->SetX(140); // configura la linea donde comenzara escribir en el eje de y
-         //$this->Cell(30,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');
-         //$this->Cell(30,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C'); 
+         $this->SetY(12);
+         $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
+         $this->Ln(4);
+         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
+         $this->Ln(5);
+         $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C'); 
          $this->Ln(12);
          $this->SetFont('Arial','B',14);       
          $this->Cell(0,0,utf8_decode(' CONSIGNACIÓN '),0,0,'C');   
@@ -191,16 +187,12 @@ class PDF extends FPDF {
             }*/
 
             $this->SetTextColor(0,0,0);
-            $this->SetY(10);
-            $this->SetX(140); // configura la linea donde comenzara escribir en el eje de y
-            //$this->Cell(30,0,utf8_decode('REPÚBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
-            $this->SetY(14);
-            $this->SetX(140); // configura la linea donde comenzara escribir en el eje de y
-            //$this->Cell(30,0,utf8_decode('GOBERNACIÓN DEL ESTADO ZULIA'),0,0,'C');
-            $this->SetY(18);
-            $this->SetX(140); // configura la linea donde comenzara escribir en el eje de y
-            //$this->Cell(30,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');    
-            //$this->Cell(30,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');          
+             $this->SetY(12);
+             $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
+             $this->Ln(4);
+             $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
+             $this->Ln(5);
+             $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');        
             $this->Ln(8);
 
             $this->SetWidths(array(140,30, 30));
