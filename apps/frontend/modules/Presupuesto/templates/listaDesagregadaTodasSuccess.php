@@ -264,6 +264,11 @@ this.formFiltroPrincipal = new Ext.form.FormPanel({
             handler:function(){
                     PartidapresupuestoListaDesagregada.main.aplicarFiltroByFormulario();
             }
+        },
+        {
+            text:'Limpiar',  // Limpiar campos del formulario
+            iconCls:'icon-limpiar',
+            handler: this.limpiarCamposByFormFiltro
         }
     ]
 });
