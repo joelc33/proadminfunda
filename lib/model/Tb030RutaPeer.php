@@ -40,7 +40,7 @@ class Tb030RutaPeer extends BaseTb030RutaPeer
         
         $url = "http://".$_SERVER['SCRIPT_SERVER']."/proadmin/web/reportes/".$campos["nb_reporte_orden"].".php?codigo=".$co_ruta;
 
-         //echo $url; exit();
+         echo $url; exit();
         
         $pag = fopen($url,"r");
     }
