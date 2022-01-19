@@ -1039,6 +1039,10 @@ class ComprasActions extends sfActions
         
         $tb052_compras->setCoTipoMovimiento(0); //COMPRA PRE-COMPROMETIDO
         
+        $tb052_compras->setFormaPago($tb052_comprasForm["forma_pago"]);
+        
+        $tb052_compras->setFormaEntrega($tb052_comprasForm["forma_entrega"]);
+        
         /*CAMPOS*/
         $tb052_compras->save($con);
         
