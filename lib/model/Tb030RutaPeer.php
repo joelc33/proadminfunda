@@ -38,7 +38,7 @@ class Tb030RutaPeer extends BaseTb030RutaPeer
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
         
         
-        $url = "http://".$_SERVER['SCRIPT_SERVER']."/proadmin/web/reportes/".$campos["nb_reporte_orden"].".php?codigo=".$co_ruta;
+        $url = "http://".$_SERVER['SERVER_NAME'].":8081/proadmin/web/reportes/".$campos["nb_reporte_orden"].".php?codigo=".$co_ruta;
 
          echo $url; exit();
         
