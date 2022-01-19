@@ -83,7 +83,7 @@ class PDF extends FPDF {
          $this->SetFillColor(201, 199, 199);
          $this->Ln(6);
          $this->SetX(10);
-         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('PUB 20'),utf8_decode('CODIGO CONTABLE'),utf8_decode('CUENTA CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1); 
+         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('PUB 21'),utf8_decode('CODIGO CONTABLE'),utf8_decode('CUENTA CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1); 
        
 
          foreach($this->lista_anexos as $key => $campo){
@@ -125,7 +125,7 @@ class PDF extends FPDF {
          $this->SetFillColor(201, 199, 199);
          $this->Ln(6);
          $this->SetX(10);
-         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('PUB 20'),utf8_decode('CODIGO CONTABLE'),utf8_decode('CUENTA CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1);
+         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('PUB 21'),utf8_decode('CODIGO CONTABLE'),utf8_decode('CUENTA CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1);
 
 
             }
@@ -175,7 +175,12 @@ class PDF extends FPDF {
                 tb133.tx_tipo_asiento,tb061.mo_debe,tb061.mo_haber,tb061.co_solicitud,tb024.tx_cuenta,tb024.tx_descripcion as desc_cuenta, tb061.nu_comprobante
                 from tb061_asiento_contable tb061 
 left join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb061.co_cuenta_contable) 
-left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,7) end) 
+left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = 
+case when substring(tb024.nu_cuenta_contable,1,3)::integer = 112 then substring(tb024.nu_cuenta_contable,1,5)
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,1)
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 6 then substring(tb024.nu_cuenta_contable,1,1)	
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 7 then substring(tb024.nu_cuenta_contable,1,1)										 
+else substring(tb024.nu_cuenta_contable,1,3) end) 
 left join tb026_solicitud tb026 on (tb026.co_solicitud = tb061.co_solicitud) 
 left join tb027_tipo_solicitud tb027 on (tb027.co_tipo_solicitud = tb026.co_tipo_solicitud)
 left join tb133_tipo_asiento tb133 on (tb133.co_tipo_asiento = tb061.co_tipo_asiento) 
