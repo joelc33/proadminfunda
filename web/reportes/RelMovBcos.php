@@ -372,7 +372,7 @@ class PDF extends FPDF {
                                 where tb030.co_estatus_ruta<>3 and $condicion
                                 group by 1, 2, 3, 4, 5, 6,7,8,9, 10,11 order by 10,1,11)";
                   
-          //echo var_dump($sql); exit();
+          echo var_dump($sql); exit();
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol;  
 	
