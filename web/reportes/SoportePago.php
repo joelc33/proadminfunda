@@ -33,6 +33,8 @@ class PDF extends FPDF {
         $this->Ln(6);
         //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACION Y FINANZAS'),0,0,'C');
         $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
+        $this->Ln(5);
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');
         $this->Ln(10);
         $this->Cell(0,0,utf8_decode('SOPORTE DE PAGO'),0,0,'C');      
      
@@ -94,7 +96,7 @@ class PDF extends FPDF {
          $this->Row(array('Nro. Serial: '.$this->datos['tx_serial'],'Monto a Pagar: '.$montopag,'Monto Pagado: '.$montopagado,'Monto Pendiente: '.$montopend, 'Fecha: '.$this->datos['fe_emision']),1,1);                           
          $this->SetWidths(array(40,160));
          $montoletra = numtoletras($this->datos['mo_pagar'], 1);        
-         $this->Row(array('La Cantidad de: ',$montoletra),1,1);                  
+         $this->Row(array('Cantidad: ',$montoletra),1,1);                  
          $this->Row(array(utf8_decode('Beneficiario:'),utf8_decode($this->datos['tx_razon_social'])),1,1); 
          $this->Row(array('Cuenta Proveedor: ',$this->datos['nu_cuenta_bancaria']),1,1);
          //$this->Row(array('Concepto: ',utf8_decode($this->datos['tx_concepto'])),1,1);
@@ -130,31 +132,31 @@ class PDF extends FPDF {
          
          $this->ln();
          $this->SetAligns(array("C","C", "C"));
-	     $this->SetFillColor(201, 199, 199);
+	 $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(80,80,40));
-         $this->Row(array(utf8_decode('SECRET. ADMIN. Y FINAN.'),utf8_decode('UNIDAD DE TESORERIA'),utf8_decode('MÁXIMA AUTORIDAD')),1,1);
+         $this->Row(array(utf8_decode('COORDINACIÓN DE TESORERIA'),utf8_decode('SECRETARIA GENERAL DE ADMINISTRACIÓN'),utf8_decode('MÁXIMA AUTORIDAD')),1,1);
          $this->SetFillColor(255,255,255);
-         $this->SetWidths(array(80,40,40,40));
+         $this->SetWidths(array(80,80,40));
          $this->SetAligns(array("L", "L","L","L"));
          $Y = $this->GetY();
          $this->MultiCell(80,25,'',1,1,'L',1);
          $this->SetY($Y);
          $this->SetX(90);
-         $this->MultiCell(40,25,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(130);
-         $this->MultiCell(40,25,'',1,1,'L',1);
+         $this->MultiCell(80,25,'',1,1,'L',1);
          $this->SetY($Y);
          $this->SetX(170);
          $this->MultiCell(40,25,'',1,1,'L',1);
          $this->SetY($Y);
+//         $this->SetX(170);
+//         $this->MultiCell(40,25,'',1,1,'L',1);
+         $this->SetY($Y);
          $this->SetFont('Arial','',6);
          $this->ln(20);
-         $this->Row(array(utf8_decode('Autorizado por: '),'Elaborado por: '.utf8_decode(strtoupper($this->datos['nb_usuario'])),'Conformado por: ','Autorizado por: '),1,1);
+         $this->Row(array('Elaborado por: '.utf8_decode(strtoupper($this->datos['nb_usuario'])),'Conformado por: ','Alcalde: '),1,1);
          $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(200));
          $this->SetAligns(array("C"));
-         $this->Row(array(utf8_decode('DATOS DE RECEPCIÓN -  REPRESENTANTE LEGAL DEL BENEFICIARIO')),1,1);
+         $this->Row(array(utf8_decode('RECIBE CONFORME')),1,1);
 	     $this->SetFillColor(255,255,255);
          $this->SetAligns(array("L","L","L"));
          $this->SetWidths(array(50,50,100));
@@ -165,7 +167,7 @@ class PDF extends FPDF {
          $this->MultiCell(40,20,utf8_decode('CI/RIF: '.$this->datos['inicial'].'-'.$this->datos['tx_rif']),1,1,'L',1);
          $this->SetY($Y);
          $this->SetX(130);
-         $this->MultiCell(80,20,utf8_decode('Recibe Conforme: '),1,1,'L',1);
+         $this->MultiCell(80,20,utf8_decode('Firma: '),1,1,'L',1);
 
          $this->ln();
          

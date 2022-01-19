@@ -149,6 +149,8 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->Row(array(utf8_decode('ESTADO ZULIA')),0,0);
         $this->SetX(20);
         $this->Row(array(utf8_decode('MUNICIPIO SAN FRANCISCO')),0,0);
+        $this->SetX(20);
+        $this->Row(array(utf8_decode('RIF. G-200005297')),0,0);
 
         //***** Primer emblema der ******//
         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(100, 150, 255));
@@ -161,6 +163,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetWidths(array(80));
         $this->SetAligns(array("C"));
         $this->Row(array(utf8_decode('ALCALDIA DE SAN FRANCISCO')),0,0);
+
 
 
         //***** Segundo emblema izq ******//
@@ -492,7 +495,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->newFlowingBlock( 180, 5, '', 'J' );
             $this->SetFont('Times', 'B', 9 );
-            $this->WriteFlowingBlock(utf8_decode('ANEXOS: '));
+            $this->WriteFlowingBlock(utf8_decode('OTRAS ESPECIFICACIONES: '));
             $this->SetFont( 'Times', '', 9 );
             $this->WriteFlowingBlock('    '.$campo['tx_observacion']);
             $this->SetX(15);
@@ -503,11 +506,11 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetY($Y+10);
             $this->SetX(15);
             $this->SetFont( 'Times', 'B', 9 );
-            $this->MultiCell(50,5,utf8_decode('FORMA DE PAGO:'),0,'L');
+            $this->MultiCell(50,5,utf8_decode('FORMA DE PAGO: '),0,'L');
             $this->SetY($Y+10);
             $this->SetX(65);
             $this->SetFont( 'Times', '', 9 );
-            $this->MultiCell(100,5,utf8_decode(''),0,'L');
+            $this->MultiCell(100,5,utf8_decode($this->punto['forma_pago']),0,'L');
             $this->SetX(15);
             $this->SetFont( 'Times', 'B', 9 );
             $this->MultiCell(70,5,utf8_decode('TIEMPO:'),0,'L');
@@ -517,14 +520,14 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->MultiCell(100,5,utf8_decode($this->punto['fecha_inicio'].' - '.$this->punto['fecha_fin']),0,'L');            
             $this->SetX(15);
             $this->SetFont( 'Times', 'B', 9 );
-            $this->MultiCell(70,5,utf8_decode('FORMA DE ENTREGA:'),0,'L');
+            $this->MultiCell(70,5,utf8_decode('FORMA DE ENTREGA: '),0,'L');
             $this->SetY($Y+20);
             $this->SetX(65);
             $this->SetFont( 'Times', '', 9 );
-            $this->MultiCell(100,5,utf8_decode(''),0,'L');            
+            $this->MultiCell(100,5,utf8_decode($this->punto['forma_entrega']),0,'L');            
             $this->SetX(15);
             $this->SetFont( 'Times', 'B', 9 );
-            $this->MultiCell(70,5,utf8_decode('OTRAS ESPECIFICACIONES:'),0,'L');
+//            $this->MultiCell(70,5,utf8_decode('OTRAS ESPECIFICACIONES: '),0,'L');
             $this->SetY($Y+25);
             $this->SetX(65);
             $this->SetFont( 'Times', '', 9 );
@@ -679,6 +682,8 @@ class PDF_Flo extends PDF_FlowingBlock
                          to_char(fecha_fin, 'dd/mm/yyyy') as fecha_fin,
                          tx_fuente_financiamiento,
                          tiempo_garantia,
+                         forma_pago,
+                         forma_entrega,
                          UPPER(tx_razon_social) AS tx_razon_social,
                          in_responsabilidad_social
                   from   tb052_compras as tb052

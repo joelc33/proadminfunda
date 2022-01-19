@@ -208,7 +208,9 @@ class PDF extends FPDF {
             $this->SetFont('Arial','',8);
             $this->Row(array('','Fecha Comprob.: ',$campo1['fe_emision']),0,0);   
             $this->Row(array('','Periodo Fiscal: ', utf8_decode('AÑO: '.$campo1['anio'].' / MES: '.$campo1['mes'])),0,0);   
-            $this->Row(array('','Comprob. Nro.: ',$campo1['anio'].'-'.$campo1['co_factura_retencion']),0,0);               
+            $this->Row(array('','Comprob. Nro.: ',$campo1['anio'].'-'.$campo1['co_factura_retencion']),0,0); 
+            $this->Row(array('','Nro. Factura: ',$campo['nu_factura']),0,0); 
+            $this->Row(array('','Nro. Control: ',$campo['nu_control']),0,0); 
             $this->SetWidths(array(200));
             $this->SetAligns(array("C")); 
             $this->Ln(8);            
@@ -260,17 +262,17 @@ class PDF extends FPDF {
             $this->SetFont('Arial','B',10); 
             $this->Row(array(utf8_decode('RETENCIÓN (COMPRAS INTERNAS O IMPORTACIONES)')),1,1);
             $this->SetFillColor(255, 255, 255); 
-            $this->SetAligns(array("L","L","R","L"));
-            $this->SetWidths(array(30,30,40,100));         
+            $this->SetAligns(array("C","L","L","C","C"));
+            $this->SetWidths(array(60,40,100));         
             $this->SetFont('Arial','',9);            
-            $this->Row(array('Nro.: '.$campo['nu_factura'],'Fecha: '.$campo['fe_emision'],'Monto: '.number_format($campo['nu_total'], 2, ',','.'), 'Concepto:  '.utf8_decode($campo['tx_concepto'])),1,1);
+            $this->Row(array('Fecha: '.$campo['fe_emision'],'Monto Factura: '.number_format($campo['nu_total'], 2, ',','.'),'Monto Exento: '.number_format($campo['monto_excento'], 2, ',','.')),1,1);
             $this->SetWidths(array(60,40,50,50)); 
             $this->SetAligns(array("C","C","C","C"));             
-            $this->Row(array('Base Imponible: '.number_format($campo['nu_base_imponible'], 2, ',','.'),'IVA: '.$campo['nu_iva_factura'],'Monto Exento: '.number_format($campo['monto_excento'], 2, ',','.'),'Total a pagar: '.number_format($campo['total_pagar'], 2, ',','.')),1,1);
+            $this->Row(array('Base Imponible: '.number_format($campo['nu_base_imponible'], 2, ',','.'),'IVA: '.$campo['nu_iva_factura'],'alicuota: '.$campo1['po_retencion']. ' %','Total a pagar: '.number_format($campo['total_pagar'], 2, ',','.')),1,1);
 
             $this->SetWidths(array(100,100));
-            $this->SetAligns(array("L","R"));    
-            $this->Row(array(utf8_decode($campo1['tx_tipo_retencion']),number_format($campo1['mo_retencion'], 2, ',','.')),1,1);     
+            $this->SetAligns(array("R","R"));    
+            $this->Row(array(utf8_decode($campo1['tx_tipo_retencion']. ' RETENIDO'),number_format($campo1['mo_retencion'], 2, ',','.')),1,1);     
             
             $this->SetFont('Arial','B',10);              
             $this->Ln(40);   
@@ -381,7 +383,8 @@ class PDF extends FPDF {
     function getRetenciones($fact){
 
 	  $conex = new ConexionComun();
-          $sql = "select  nu_factura, 
+          $sql = "select  nu_factura,
+                          nu_control,
                           to_char(fe_emision,'dd/mm/yyyy') as fe_emision, 
                           nu_base_imponible,                           
                           nu_iva_factura, 

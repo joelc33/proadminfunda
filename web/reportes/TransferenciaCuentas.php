@@ -17,6 +17,8 @@ class PDF extends FPDF {
         $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
         $this->Ln(6);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
+        $this->Ln(5);
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');        
         $this->Ln(6);
         $this->Cell(0,0,utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),0,0,'C');
         $this->Ln(8);
@@ -137,32 +139,32 @@ class PDF extends FPDF {
 
          $this->SetAligns(array("C","C", "C"));
 	 $this->SetFillColor(201, 199, 199);
-         $this->SetWidths(array(40,120,40));
+         $this->SetWidths(array(100,100));
          $this->SetFont('Arial','B',7); 
-         $this->Row(array(utf8_decode('SECRETARIA GENERAL DE ADMINISTRACIÓN'),utf8_decode('COORDINACIÓN DE TESORERIA'),utf8_decode('ALCALDE')),1,1);
+         $this->Row(array(utf8_decode('COORDINACIÓN DE TESORERIA'),utf8_decode('SECRETARIA GENERAL DE ADMINISTRACIÓN')),1,1);
          $this->SetFillColor(255,255,255);
          $this->SetWidths(array(40,30,30,40));
          $this->SetAligns(array("L", "L","L","L"));
          $Y = $this->GetY();
-         $this->MultiCell(40,20,'',1,1,'L',1);
+         //$this->MultiCell(40,20,'',1,1,'L',1);
          $this->SetY($Y);
-         $this->SetX(50);
-         $this->MultiCell(60,20,'',1,1,'L',1);
+         //$this->SetX(50);
+         $this->MultiCell(100,20,'',1,1,'L',1);
          $this->SetY($Y);
          $this->SetX(110);
-         $this->MultiCell(60,20,'',1,1,'L',1);
+         $this->MultiCell(100,20,'',1,1,'L',1);
          $this->SetY($Y);
-         $this->SetX(170);
-         $this->MultiCell(40,20,'',1,1,'L',1);
+//         $this->SetX(170);
+//         $this->MultiCell(40,20,'',1,1,'L',1);
          $this->SetY($Y);
          $this->SetFont('Arial','',6);
          $this->ln(15);
-         $this->SetWidths(array(40,60,60,40));
-         $this->Row(array(utf8_decode('Autorizado por: '),'Elaborado por: '.utf8_decode(strtoupper($this->campo['nb_usuario'])),'Conformado por: ','Autorizado por: '),1,1);
+         $this->SetWidths(array(100,100));
+         $this->Row(array('Elaborado por: '.utf8_decode(strtoupper($this->campo['nb_usuario'])),'Conformado por: '),1,1);
          $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(200));
          $this->SetAligns(array("C"));
-         $this->Row(array(utf8_decode('DATOS DE RECEPCIÓN -  REPRESENTANTE LEGAL DEL BENEFICIARIO')),1,1);
+         $this->Row(array(utf8_decode('RECIBE CONFORME')),1,1);
 	     $this->SetFillColor(255,255,255);
          $this->SetAligns(array("L","L","L"));
          $this->SetWidths(array(50,50,100));
@@ -173,7 +175,7 @@ class PDF extends FPDF {
          $this->MultiCell(40,20,utf8_decode('CI/RIF: '.$this->campo['inicial'].'-'.$this->campo['tx_rif']),1,1,'L',1);
          $this->SetY($Y);
          $this->SetX(130);
-         $this->MultiCell(80,20,utf8_decode('Recibe Conforme: '),1,1,'L',1);
+         $this->MultiCell(80,20,utf8_decode('Firma: '),1,1,'L',1);
 
          $this->ln();
          
