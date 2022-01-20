@@ -115,7 +115,7 @@ class PDF extends FPDF {
          $this->SetY($Y);
          $this->MultiCell(200,11,'',1,1,'L',1);
          $this->SetY($Y+1);
-         $this->Row(array('  CONCEPTO: '.$this->datos['tx_concepto']),0,0);
+         $this->Row(array('  CONCEPTO: '.utf8_decode($this->datos['tx_concepto'])),0,0);
          
          
          
