@@ -563,6 +563,8 @@ propel:
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
     co_ramo: { type: BIGINT, required: false }
+    forma_pago: { type: VARCHAR, required: false }
+    forma_entrega: { type: VARCHAR, required: false }
     _indexes: { fki_co_partida_presupuesto: [co_partida_presupuesto], fki_co_servicio: [co_servicio], fki_co_tipo_movimiento_compra: [co_tipo_movimiento] }
   tb053_detalle_compras:
     _attributes: { phpName: Tb053DetalleCompras }
