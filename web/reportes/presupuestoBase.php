@@ -170,33 +170,44 @@ class PDF extends FPDF {
          $this->Row(array(utf8_decode('Total Excento'),number_format($TotalExcento, 2, ',','.')),1,1);
          $this->Row(array(utf8_decode('Total Generado'),number_format($TotalGenerado, 2, ',','.')),1,1);
          
+        $this->SetY(230);
+        $this->SetX(72);
+        $this->SetFont('Arial','',9);
+        $this->MultiCell(72,0,'',1,1,'L',1);
+        $this->SetY(230);
+        $this->SetX(72);
+        $this->MultiCell(72,5,utf8_decode("Lcda. Milagros Arambulo"),0,'C');
+        $this->SetY(235);
+        $this->SetX(72);
+        $this->MultiCell(72,5,utf8_decode("COORDINACIÓN DE COMPRAS"),0,'C');
+        //$this->MultiCell(72,5,utf8_decode("COORDINACIÓN DE COMPRAS"),1,10,'C',0);           
 
-         $this->ln();
-         $this->SetAligns(array("C","C", "C"));
-	 $this->SetFillColor(201, 199, 199);
-         $this->SetWidths(array(200));
-         $this->SetFont('Arial','B',9); 
-         //$this->Row(array(utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS')),1,1);
-         $this->Row(array(utf8_decode($this->op_reporte['dep_compra'])),1,1);
-         $this->SetWidths(array(65,70,65));
-         $this->SetFillColor(255,255,255);
-         $this->SetAligns(array("L", "L","L"));
-         $Y = $this->GetY();
-         $this->MultiCell(65,20,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(75);
-         $this->MultiCell(70,20,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(145);
-         $this->MultiCell(65,20,'',1,1,'L',1);
-         $this->SetY($Y+17);
-         
-         $this->SetFont('Arial','B',7); 
-         $this->Row(array(utf8_decode('Elaborado por:'),utf8_decode('Conformado por:'), utf8_decode('Aprobado por:')),1,1);
-
-         $this->ln();
-         
-         $this->Cell(0,0,utf8_decode('Usuario Sistema:'),0,0,'L');
+//         $this->ln();
+//         $this->SetAligns(array("C","C", "C"));
+//	 $this->SetFillColor(201, 199, 199);
+//         $this->SetWidths(array(200));
+//         $this->SetFont('Arial','B',9); 
+//         //$this->Row(array(utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS')),1,1);
+//         $this->Row(array(utf8_decode($this->op_reporte['dep_compra'])),1,1);
+//         $this->SetWidths(array(65,70,65));
+//         $this->SetFillColor(255,255,255);
+//         $this->SetAligns(array("L", "L","L"));
+//         $Y = $this->GetY();
+//         $this->MultiCell(65,20,'',1,1,'L',1);
+//         $this->SetY($Y);
+//         $this->SetX(75);
+//         $this->MultiCell(70,20,'',1,1,'L',1);
+//         $this->SetY($Y);
+//         $this->SetX(145);
+//         $this->MultiCell(65,20,'',1,1,'L',1);
+//         $this->SetY($Y+17);
+//         
+//         $this->SetFont('Arial','B',7); 
+//         $this->Row(array(utf8_decode('Elaborado por:'),utf8_decode('Conformado por:'), utf8_decode('Aprobado por:')),1,1);
+//
+//         $this->ln();
+//         
+//         $this->Cell(0,0,utf8_decode('Usuario Sistema:'),0,0,'L');
          $this->ln();
 	 $this->SetY($this->GetY()+5);
          $this->Cell(0,0,utf8_decode(''),0,0,'L');      
