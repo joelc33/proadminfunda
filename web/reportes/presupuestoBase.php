@@ -166,7 +166,7 @@ class PDF extends FPDF {
          $this->SetAligns(array("R", "R"));
          $this->SetWidths(array(150,50));     
          $this->Row(array(utf8_decode('Sub-Total:'),number_format($SubTotal, 2, ',','.')),1,1);
-         $this->Row(array(utf8_decode('Total I.V.A '.$this->datos['monto_iva'].' %'),number_format($total_iva, 2, ',','.')),1,1);
+         $this->Row(array(utf8_decode('Total I.V.A '.$this->datos['nu_iva'].' %'),number_format($total_iva, 2, ',','.')),1,1);
          $this->Row(array(utf8_decode('Total Excento'),number_format($TotalExcento, 2, ',','.')),1,1);
          $this->Row(array(utf8_decode('Total Generado'),number_format($TotalGenerado, 2, ',','.')),1,1);
          
