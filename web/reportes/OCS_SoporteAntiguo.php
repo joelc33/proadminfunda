@@ -411,7 +411,8 @@ class PDF_Flo extends PDF_FlowingBlock
          $montoLetra = numtoletras($TotalGenerado,1);
          $this->SetX(15);
          $this->SetFont('Times','',8);
-         $this->WriteFlowingBlock(utf8_decode(' '.$montoLetra));          
+         $this->WriteFlowingBlock(utf8_decode(' '.$montoLetra)); 
+         $this->SetX(15);         
          $this->finishFlowingBlock();
          $this->SetY($Y); 
          $this->SetFont('Times','B',10);
