@@ -127,7 +127,7 @@ scrollMenu.add({
     icon: '../images/ico_list.gif',
     handler: function(){
         if(PagosPanel.main.co_pago!=0){
-             window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/../reportes/SoportePago.php?codigo="+PagosPanel.main.co_pago);
+             window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>:8081/../reportes/SoportePago.php?codigo="+PagosPanel.main.co_pago);
         }else{
           Ext.MessageBox.alert('Alerta', "Debe seleccionar un pago");
         }
@@ -240,7 +240,7 @@ else{
             if(PagosPanel.main.OBJ.co_forma_pago == 1){
                 window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/../reportes/OPCheque.php?codigo="+PagosPanel.main.OBJ.co_ruta);
             }else{
-                window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/archivoPago/i/"+PagosPanel.main.co_pago);
+                window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/archivoPago/i/"+PagosPanel.main.co_pago);
             }
 
         }    
