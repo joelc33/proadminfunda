@@ -35,8 +35,8 @@ class PDF extends FPDF {
 //        $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
         $this->Ln(4);
         $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
-        //$this->Ln(4);
-        //$this->Cell(0,0,utf8_decode($this->empresa['tx_rif']),0,0,'C');
+        $this->Ln(4);
+        $this->Cell(0,0,utf8_decode('RIF. '.$this->empresa['tx_rif']),0,0,'C');
         //$this->Ln(4);
         //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACION Y FINANZAS'),0,0,'C');
         //$this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
