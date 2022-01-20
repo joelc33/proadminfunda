@@ -486,7 +486,7 @@ this.nb_representante_legal = new Ext.form.TextField({
 	fieldLabel:'Nombre y Apellido',
 	name:'tb008_proveedor[nb_representante_legal]',
 	value:this.OBJ.nb_representante_legal,
-	allowBlank:false,
+	//allowBlank:false,
 	width:300
 });
 
@@ -494,7 +494,7 @@ this.nu_cedula_representante = new Ext.form.NumberField({
 	fieldLabel:'Cédula',
 	name:'tb008_proveedor[nu_cedula_representante]',
 	value:this.OBJ.nu_cedula_representante,
-	allowBlank:false,
+	//allowBlank:false,
 	width:100
 });
 
