@@ -112,7 +112,7 @@ class PDF extends FPDF {
          $this->MultiCell(200,13,'',1,1,'L',1);
          $this->SetY($Y);
          $this->SetAligns(array("J"));
-         $this->Row(array(utf8_decode('CONCEPTO: ').$this->datos['tx_concepto']),0,0);
+         $this->Row(array(utf8_decode('CONCEPTO: ').utf8_decode($this->datos['tx_concepto'])),0,0);
          $this->SetFont('Arial','B',9); 
          
          $concepto = $this->datos['tx_concepto'];
@@ -166,7 +166,7 @@ class PDF extends FPDF {
          $this->SetAligns(array("R", "R"));
          $this->SetWidths(array(150,50));     
          $this->Row(array(utf8_decode('Sub-Total:'),number_format($SubTotal, 2, ',','.')),1,1);
-         $this->Row(array(utf8_decode('Total I.V.A'),number_format($total_iva, 2, ',','.')),1,1);
+         $this->Row(array(utf8_decode('Total I.V.A '.$this->datos['monto_iva'].' %'),number_format($total_iva, 2, ',','.')),1,1);
          $this->Row(array(utf8_decode('Total Excento'),number_format($TotalExcento, 2, ',','.')),1,1);
          $this->Row(array(utf8_decode('Total Generado'),number_format($TotalGenerado, 2, ',','.')),1,1);
          
