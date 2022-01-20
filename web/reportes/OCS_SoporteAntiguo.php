@@ -407,7 +407,7 @@ class PDF_Flo extends PDF_FlowingBlock
          //$this->SetX(15);
          $Y = $this->GetY();
          $this->SetY($Y+10);         
-         $this->newFlowingBlock( 170, 5, '', 'J' ); 
+         $this->newFlowingBlock( 150, 5, '', 'J' ); 
          $montoLetra = numtoletras($TotalGenerado,1);
          $this->SetX(15);
          $this->SetFont('Times','',9);
