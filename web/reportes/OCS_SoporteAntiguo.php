@@ -282,7 +282,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->newFlowingBlock( 80, 5, '', 'J' );
             $this->SetFont('Times', 'B', 9 );
             $this->WriteFlowingBlock(utf8_decode('DIRECCIÓN: '));
-            $this->SetFont( 'Times', '', 9 );
+            $this->SetFont( 'Times', '', 8 );
             $this->SetY($Y+5);
             $this->SetX(16);
             $this->WriteFlowingBlock(utf8_decode($this->datos['tx_direccion']));
@@ -497,7 +497,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetFont('Times', 'B', 9 );
             $this->WriteFlowingBlock(utf8_decode('OTRAS ESPECIFICACIONES: '));
             $this->SetFont( 'Times', '', 9 );
-            $this->WriteFlowingBlock('    '.$campo['tx_observacion']);
+            $this->WriteFlowingBlock('    '.utf8_decode($campo['tx_observacion']));
             $this->SetX(15);
         $this->finishFlowingBlock();
 
