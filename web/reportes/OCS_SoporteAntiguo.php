@@ -154,7 +154,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         //***** Primer emblema der ******//
         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(100, 150, 255));
-        $this->RoundedRect(107, 12, 94, 60, 3.5, '1111', 'DF', $style);
+        $this->RoundedRect(107, 12, 94, 65, 3.5, '1111', 'DF', $style);
       //  $this->Image("imagenes/escudo.png", 140, 13 ,30);
         $this->SetFont('Times','B',9);
         $this->SetTextColor(0,0,0);
@@ -168,7 +168,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         //***** Segundo emblema izq ******//
         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(100, 150, 255));
-        $this->RoundedRect(15, 42, 90, 30, 3.5, '1111', 'DF', $style);
+        $this->RoundedRect(15, 42, 90, 35, 3.5, '1111', 'DF', $style);
 
         $this->Ln(2);
 
@@ -257,46 +257,62 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetX(16);
         $this->finishFlowingBlock();
         $Y = $this->GetY();
-
-        //-------------
-        $this->newFlowingBlock( 55, 5, '', 'J' );
+            $this->SetY($Y);
+            $this->SetX(16);
             $this->SetFont('Times', 'B', 9 );
-            $this->WriteFlowingBlock(utf8_decode('PROVEEDOR: '));
-            $this->SetFont( 'Times', '', 9 );
+            $this->MultiCell(90,5,utf8_decode('PROVEEDOR: '),0,'L');
+            $this->SetY($Y);
+            $this->SetX(39);
+            $this->SetFont( 'Times', '', 8 );
+            $this->MultiCell(70,5,utf8_decode($this->datos['nu_codigo'].'-'.utf8_decode($this->datos['tx_razon_social'])),0,'L');
+        $Y = $this->GetY();
+            $this->SetY($Y);
             $this->SetX(16);
-            $this->WriteFlowingBlock($this->datos['nu_codigo'].'-'.utf8_decode($this->datos['tx_razon_social']));
-            $this->SetX(16);
-        $this->finishFlowingBlock();
+            $this->SetFont('Times', 'B', 9 );
+            $this->MultiCell(90,5,utf8_decode('DIRECCIÓN: '),0,'L');
+            $this->SetY($Y);
+            $this->SetX(36);
+            $this->SetFont( 'Times', '', 8 );
+            $this->MultiCell(70,5,utf8_decode($this->datos['tx_direccion']),0,'L');            
+        //-------------
+//        $this->newFlowingBlock( 55, 5, '', 'J' );
+//            $this->SetFont('Times', 'B', 9 );
+//            $this->WriteFlowingBlock(utf8_decode('PROVEEDOR: '));
+//            $this->SetFont( 'Times', '', 9 );
+//            $this->SetX(16);
+//            $this->WriteFlowingBlock($this->datos['nu_codigo'].'-'.utf8_decode($this->datos['tx_razon_social']));
+//            $this->SetX(16);
+//        $this->finishFlowingBlock();
 
         $this->newFlowingBlock( 25, 5, '', 'J' );
             $this->SetFont('Times', 'B', 9 );
             $this->WriteFlowingBlock(utf8_decode('RIF: '));
             $this->SetFont( 'Times', '', 9 );
             $this->WriteFlowingBlock($this->datos['tx_rif']);
-            $this->SetY($Y);
+            $this->SetY(45);
             $this->SetX(79);
         $this->finishFlowingBlock();
         $Y = $this->GetY();
 
        //-------------
-        $this->newFlowingBlock( 80, 5, '', 'J' );
-            $this->SetFont('Times', 'B', 9 );
-            $this->WriteFlowingBlock(utf8_decode('DIRECCIÓN: '));
-            $this->SetFont( 'Times', '', 8 );
-            $this->SetY($Y+5);
-            $this->SetX(16);
-            $this->WriteFlowingBlock(utf8_decode($this->datos['tx_direccion']));
-            $this->SetX(16);
-        $this->finishFlowingBlock();
+//        $this->newFlowingBlock( 80, 5, '', 'J' );
+//            $this->SetFont('Times', 'B', 9 );
+//            $this->WriteFlowingBlock(utf8_decode('DIRECCIÓN: '));
+//            $this->SetFont( 'Times', '', 8 );
+//            $this->SetY($Y+5);
+//            $this->SetX(16);
+//            $this->WriteFlowingBlock(utf8_decode($this->datos['tx_direccion']));
+//            $this->SetX(16);
+//        $this->finishFlowingBlock();
         //-------------
         //***** tercer bloque completo ******//
         $Y = $this->GetY();
         $this->SetFillColor(255, 255, 255);
         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(100, 150, 255));
-        $this->RoundedRect(15, 75, 186, 180, 3.5, '0110', 'DF', $style);
+        $this->RoundedRect(15, 80, 186, 180, 3.5, '0110', 'DF', $style);
 
 
-         $this->SetY($Y+10);
+         $this->SetY(80);
          $this->SetX(15);
          $this->SetWidths(array(186));
          $this->SetAligns(array("C"));
@@ -314,8 +330,8 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetAligns(array("L","C","R","R","R","R"));
 
         $style2 = array('width' => 0.5, 'cap' => 'round', 'join' => 'miter', 'dash' => '2,10', 'color' => array(100, 150, 255));
-        $this->Line(15, 85, 200, 85, $style2);
-        $this->SetLineStyle(array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(100, 150, 255)));
+//        $this->Line(15, 85, 200, 85, $style2);
+        //$this->SetLineStyle(array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(100, 150, 255)));
 
          $j = 0;
          $SubTotal=0;
@@ -390,8 +406,8 @@ class PDF_Flo extends PDF_FlowingBlock
        //-------------
          //$this->SetX(15);
          $Y = $this->GetY();
-         $this->SetY($Y+15);         
-         $this->newFlowingBlock( 195, 5, '', 'J' ); 
+         $this->SetY($Y+10);         
+         $this->newFlowingBlock( 170, 5, '', 'J' ); 
          $montoLetra = numtoletras($TotalGenerado,1);
          $this->SetX(15);
          $this->SetFont('Times','',9);
@@ -424,7 +440,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetTextColor(0, 0, 0);
 
         $style2 = array('width' => 0.5, 'cap' => 'round', 'join' => 'miter', 'dash' => '2,10', 'color' => array(100, 150, 255));
-        $this->Line(15, 85, 200, 85, $style2);
+        $this->Line(15, 90, 200, 90, $style2);
         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(100, 150, 255));
         $this->SetLineStyle(array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(100, 150, 255)));
 
