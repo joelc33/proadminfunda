@@ -241,6 +241,7 @@ class PDF extends FPDF {
                          tb047.tx_ente,
                          tb056.nu_expediente,
                          tb052.monto_iva,
+                         tb052.nu_iva,
                          upper(tb039.tx_concepto) as tx_concepto
                   from   tb039_requisiciones as tb039
                   left join tb052_compras as tb052 on tb052.co_requisicion=tb039.co_requisicion  
