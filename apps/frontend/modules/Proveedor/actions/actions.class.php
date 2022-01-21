@@ -361,7 +361,7 @@ class ProveedorActions extends sfActions
                                                         
         /*Campo tipo VARCHAR */
         $tb008_proveedor->setTxObservacion($tb008_proveedorForm["tx_observacion"]);
-        
+        $tb008_proveedor->save($con);
         $listaRamo  = json_decode($json_ramo,true);
         $array_ramo = array();
         $i=0;
@@ -430,7 +430,7 @@ class ProveedorActions extends sfActions
         
                                 
         /*CAMPOS*/
-        $tb008_proveedor->save($con);
+//        $tb008_proveedor->save($con);
         $this->data = json_encode(array(
                     "success" => true,
                     "msg" => 'Modificación realizada exitosamente'
