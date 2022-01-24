@@ -32,6 +32,9 @@ this.co_compras = new Ext.form.Hidden({
     value:this.OBJ.co_compras});
 //</ClavePrimaria>
 
+this.co_solicitud_cotizacion = new Ext.form.Hidden({
+    name:'co_solicitud_cotizacion',
+    value:this.OBJ.co_solicitud_cotizacion});
 
 this.co_requisicion = new Ext.form.Hidden({
     name:'tb052_compras[co_requisicion]',
@@ -681,6 +684,7 @@ this.formPanel_ = new Ext.form.FormPanel({
     items:[
 
                     this.co_compras,
+                    this.co_solicitud_cotizacion,
                     this.co_proveedor,
                     this.co_contrato_compras,
                     this.co_tipo_solicitud,

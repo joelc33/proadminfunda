@@ -74,9 +74,13 @@ init:function(){
 
             var nu_iva = PresupuestoBase.main.gridPanel_.getSelectionModel().getSelected().get('nu_iva');
 
+            var co_solicitud_cotizacion = PresupuestoBase.main.gridPanel_.getSelectionModel().getSelected().get('co_solicitud');
+
             ComprasEditar.main.tx_serial_cotizacion.setValue(tx_serial_cotizacion);
             ComprasEditar.main.tx_observacion.setValue(tx_observacion);
             ComprasEditar.main.co_iva_factura.setValue(nu_iva);
+            ComprasEditar.main.co_solicitud_cotizacion.setValue(co_solicitud_cotizacion);
+            
 
             ComprasEditar.main.store_lista.baseParams.co_cotizacion = co_cotizacion;
             ComprasEditar.main.store_lista.load({

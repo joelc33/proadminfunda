@@ -45,6 +45,8 @@ class ComprasActions extends sfActions
     $c->addSelectColumn(Tb052ComprasPeer::CO_ACCION_ESPECIFICA);
     $c->addSelectColumn(Tb052ComprasPeer::CO_PARTIDA_IVA);
     $c->addSelectColumn(Tb052ComprasPeer::CREATED_AT);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_SOLICITUD_COTIZACION);
+    $c->addSelectColumn(Tb206CotizacionPeer::TX_SERIAL_COTIZACION);
     $c->addSelectColumn(Tb056ContratoComprasPeer::CO_CONTRATO_COMPRAS);
     $c->addSelectColumn(Tb056ContratoComprasPeer::FECHA_INICIO);
     $c->addSelectColumn(Tb056ContratoComprasPeer::FECHA_FIN);
@@ -57,6 +59,7 @@ class ComprasActions extends sfActions
     $c->addSelectColumn(Tb045FacturaPeer::CO_FACTURA); 
     $c->add(Tb052ComprasPeer::CO_SOLICITUD,$codigo);
     $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD, Tb045FacturaPeer::CO_SOLICITUD, Criteria::LEFT_JOIN);
+    $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD_COTIZACION, Tb206CotizacionPeer::CO_SOLICITUD, Criteria::LEFT_JOIN);
     $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb052ComprasPeer::CO_PROVEEDOR);
     $c->addJoin(Tb056ContratoComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
     $stmt = Tb052ComprasPeer::doSelectStmt($c);
@@ -103,7 +106,9 @@ class ComprasActions extends sfActions
                             "monto_total"        => $campos["monto_total"],
                             "nu_orden_compra"    => $campos["nu_orden_compra"],
                             "in_responsabilidad_social" => $campos["in_responsabilidad_social"],
-                            "co_factura"         => ($campos["co_factura"]==null)?'':$campos["co_factura"]
+                            "co_factura"         => ($campos["co_factura"]==null)?'':$campos["co_factura"],
+                            "co_solicitud_cotizacion" => $campos["co_solicitud_cotizacion"],
+                            "tx_serial_cotizacion" => $campos["tx_serial_cotizacion"]
                             
                     ));
     }else{
@@ -1098,17 +1103,26 @@ class ComprasActions extends sfActions
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $campos;
+  }
 
-    }
+  public function getDatosRequisicion($codigo){
+        
+        $c = new Criteria();
+        $c->add(Tb039RequisicionesPeer::CO_SOLICITUD,$codigo);        
+        $stmt = Tb039RequisicionesPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        return $campos['co_requisicion'];
+  }
   
   public function executeGuardar(sfWebRequest $request)
   {
 
-    $codigo = $this->getRequestParameter("co_compras");
-    $json_producto  = $this->getRequestParameter("json_producto");
-    $tb008_proveedorForm = $this->getRequestParameter('tb008_proveedor');
-    $tb052_comprasForm = $this->getRequestParameter('tb052_compras');
+    $codigo                     = $this->getRequestParameter("co_compras");
+    $co_solicitud_cotizacion    = $this->getRequestParameter("co_solicitud_cotizacion");
+    $json_producto              = $this->getRequestParameter("json_producto");
+    $tb008_proveedorForm        = $this->getRequestParameter('tb008_proveedor');
+    $tb052_comprasForm          = $this->getRequestParameter('tb052_compras');
 
     $c = new Criteria();
     //$c->add(Tb052ComprasPeer::ANIO, date('Y'));
@@ -1150,10 +1164,18 @@ class ComprasActions extends sfActions
 /*CAMPOS*/
                                         
         /*Campo tipo BIGINT */
+
+
+        if(!empty($co_solicitud_cotizacion)){
+            $tb052_comprasForm["co_requisicion"] = $this->getDatosRequisicion($co_solicitud_cotizacion);
+        }
+
         $tb052_compras->setCoRequisicion($tb052_comprasForm["co_requisicion"]);
                                                         
         /*Campo tipo BIGINT */
         $tb052_compras->setCoEnte($tb052_comprasForm["co_ente"]);
+
+        $tb052_compras->setCoSolicitudCotizacion($co_solicitud_cotizacion);
                                                         
         /*Campo tipo BIGINT */
         $tb052_compras->setCoUsuario($this->getUser()->getAttribute('codigo'));
@@ -1739,7 +1761,7 @@ class ComprasActions extends sfActions
         $limit      =   $this->getRequestParameter("limit",8);
         $start      =   $this->getRequestParameter("start",0);
                
-        if(!empty('co_cotizacion')){
+        if(!empty( $co_cotizacion )){
                 $c = new Criteria();
                 $c->clearSelectColumns();
                 $c->addSelectColumn(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION);
@@ -1762,6 +1784,8 @@ class ComprasActions extends sfActions
                 
                 $stmt = Tb207DetalleCotizacionPeer::doSelectStmt($c);
 
+
+
         }else{
 
                 $c = new Criteria();
@@ -1783,6 +1807,8 @@ class ComprasActions extends sfActions
                 $cantidadTotal = Tb053DetalleComprasPeer::doCount($c);
                 //$c->setLimit($limit)->setOffset($start);
                 $c->addAscendingOrderByColumn(Tb048ProductoPeer::TX_PRODUCTO);
+
+                
                 
                 $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
 
