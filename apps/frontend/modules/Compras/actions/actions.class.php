@@ -14,7 +14,174 @@ class ComprasActions extends sfActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->forward('Compras', 'lista');
+    //$this->forward('Compras', 'lista');
+    $codigo =  $this->getRequestParameter("co_solicitud");
+    $con = Propel::getConnection();
+    $c = new Criteria();
+    $c->clearSelectColumns();
+    $c->addSelectColumn(Tb008ProveedorPeer::CO_PROVEEDOR);
+    $c->addSelectColumn(Tb008ProveedorPeer::CO_DOCUMENTO);
+    $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
+    $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+    $c->addSelectColumn(Tb008ProveedorPeer::TX_DIRECCION);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_COMPRAS);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_REQUISICION);
+    $c->addSelectColumn(Tb052ComprasPeer::IN_RESPONSABILIDAD_SOCIAL);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_ENTE);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_USUARIO);
+    $c->addSelectColumn(Tb052ComprasPeer::FECHA_COMPRA);
+    $c->addSelectColumn(Tb052ComprasPeer::TX_OBSERVACION);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_SOLICITUD);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_TIPO_SOLICITUD);
+    $c->addSelectColumn(Tb052ComprasPeer::ANIO);
+    $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
+    $c->addSelectColumn(Tb052ComprasPeer::MONTO_SUB_TOTAL);
+    $c->addSelectColumn(Tb052ComprasPeer::NU_IVA);
+    $c->addSelectColumn(Tb052ComprasPeer::MONTO_IVA);
+    $c->addSelectColumn(Tb052ComprasPeer::NU_ORDEN_COMPRA);
+    $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_EJECUTOR);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_PROYECTO_AC);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_ACCION_ESPECIFICA);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_PARTIDA_IVA);
+    $c->addSelectColumn(Tb052ComprasPeer::CREATED_AT);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::CO_CONTRATO_COMPRAS);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::FECHA_INICIO);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::FECHA_FIN);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::FECHA_ENTREGA);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::TIEMPO_GARANTIA);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::CO_RAMO);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::MONTO);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::CO_TP_CONTRATO); 
+    $c->addSelectColumn(Tb056ContratoComprasPeer::CO_FUENTE_FINANCIAMIENTO); 
+    $c->addSelectColumn(Tb045FacturaPeer::CO_FACTURA); 
+    $c->add(Tb052ComprasPeer::CO_SOLICITUD,$codigo);
+    $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD, Tb045FacturaPeer::CO_SOLICITUD, Criteria::LEFT_JOIN);
+    $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb052ComprasPeer::CO_PROVEEDOR);
+    $c->addJoin(Tb056ContratoComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
+    $stmt = Tb052ComprasPeer::doSelectStmt($c);
+    $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if($campos["co_compras"]!=''){
+        
+        $requisicion = $this->getRequisicion($this->getRequestParameter("co_solicitud"));
+        $this->co_requisicion = $requisicion["co_requisicion"];
+        list($anio,$mes,$dia) = explode("-", $campos["created_at"]);
+
+        $this->data = json_encode(array(
+                            "co_proveedor"       => $campos["co_proveedor"],
+                            "co_documento"       => $campos["co_documento"],
+                            "tx_rif"             => $campos["tx_rif"],
+                            "tx_razon_social"    => $campos["tx_razon_social"],
+                            "tx_direccion"       => $campos["tx_direccion"],
+                            "co_compras"         => $campos["co_compras"],
+                            "co_requisicion"     => $campos["co_requisicion"],
+                            "co_solicitud"       => $campos["co_solicitud"],
+                            "co_tipo_solicitud"  => $campos["co_tipo_solicitud"],
+                            "nu_compra"          => $campos["numero_compra"],
+                            "co_usuario"         => $campos["co_usuario"],
+                            "co_ejecutor"        => $campos["co_ejecutor"],
+                            "co_proyecto"        => $campos["co_proyecto_ac"],
+                            "co_accion"          => $campos["co_accion_especifica"],
+                            "co_partida_iva"     => $campos["co_partida_iva"],
+                            "co_ente"            => $campos["co_ente"],
+                            "tx_observacion"     => $campos["tx_observacion"],
+                            "fecha_compra"       => $campos["fecha_compra"],                     
+                            "fe_registro"        => $dia.'-'.$mes.'-'.$anio,
+                            "co_contrato_compras" => $campos["co_contrato_compras"],
+                            "fecha_inicio"       => $campos["fecha_inicio"],
+                            "fecha_fin"          => $campos["fecha_fin"],
+                            "fecha_entrega"      => $campos["fecha_entrega"],
+                            "tiempo_garantia"    => $campos["tiempo_garantia"],
+                            "co_ramo"            => $campos["co_ramo"],
+                            "monto"              => $campos["monto"],
+                            "co_tp_contrato"     => $campos["co_tp_contrato"],
+                            "co_fuente_financiamiento" => $campos["co_fuente_financiamiento"],
+                            "monto_compra"       => $campos["monto_sub_total"],
+                            "co_iva_factura"     => $campos["nu_iva"],
+                            "monto_iva"          => $campos["monto_iva"],
+                            "monto_total"        => $campos["monto_total"],
+                            "nu_orden_compra"    => $campos["nu_orden_compra"],
+                            "in_responsabilidad_social" => $campos["in_responsabilidad_social"],
+                            "co_factura"         => ($campos["co_factura"]==null)?'':$campos["co_factura"]
+                            
+                    ));
+    }else{
+        
+        
+        $requisicion = $this->getRequisicion($this->getRequestParameter("co_solicitud"));
+        $this->co_requisicion = $requisicion["co_requisicion"];
+        $c = new Criteria();
+        //$c->add(Tb052ComprasPeer::ANIO, date('Y'));
+        $c->add(Tb052ComprasPeer::ANIO, $this->getUser()->getAttribute('ejercicio'));
+        $c->add(Tb052ComprasPeer::CO_TIPO_SOLICITUD,$this->getRequestParameter("co_tipo_solicitud"));
+        $total = Tb052ComprasPeer::doCount($c);
+        $correlativo = $total + 1;
+        
+        
+        $cp = new Criteria();
+        $cp->clearSelectColumns();
+        $cp->addSelectColumn(Tb008ProveedorPeer::CO_PROVEEDOR);
+        $cp->addSelectColumn(Tb008ProveedorPeer::CO_DOCUMENTO);
+        $cp->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
+        $cp->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+        $cp->addSelectColumn(Tb008ProveedorPeer::TX_DIRECCION);
+        $cp->addSelectColumn(Tb045FacturaPeer::CO_IVA_FACTURA);
+        $cp->addSelectColumn(Tb045FacturaPeer::CO_RAMO);
+        $cp->addSelectColumn(Tb045FacturaPeer::CO_FACTURA);
+        $cp->add(Tb045FacturaPeer::CO_SOLICITUD,$codigo);
+        $cp->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb045FacturaPeer::CO_PROVEEDOR);
+        $stmt = Tb008ProveedorPeer::doSelectStmt($cp);
+        $campos_proveedor = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $cm = new Criteria();
+        $cm->clearSelectColumns();
+        $cm->addSelectColumn('SUM(' .Tb045FacturaPeer::NU_TOTAL. ') as total');
+        $cm->add(Tb045FacturaPeer::CO_SOLICITUD,$codigo);
+        $stmt = Tb045FacturaPeer::doSelectStmt($cm);
+        $monto = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if(date("Y")>$this->getUser()->getAttribute('ejercicio')){
+        $nu_compra =  date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))).'-'.$correlativo;
+        }else{
+        $nu_compra = date("Ym").'-'.$correlativo;
+        }        
+        
+        $this->data = json_encode(array(
+                            "co_compras"         => "",
+                            "co_proveedor"       => $campos_proveedor["co_proveedor"],
+                            "co_requisicion"     => $requisicion["co_requisicion"],
+                            "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
+                            "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
+                            "fe_registro"        => "",
+                            "co_documento"       => $campos_proveedor["co_documento"],
+                            "nu_compra"          => $nu_compra,
+                            "co_usuario"         => "",
+                            "co_proyecto"        => "",
+                            "co_accion"          => "",
+                            "co_partida_iva"     => "",
+                            "co_ejecutor"        => "",
+                            "tx_concepto"        => "",
+                            "tx_observacion"     => "",
+                            "co_ente"            => "",
+                            "fecha_entrega"      => "",
+                            "co_factura"         => "",
+                            "tiempo_garantia"    => "",
+                            "co_tp_contrato"     => "",
+                            "co_fuente_financiamiento" => "",
+                            "monto_compra"       => 0,
+                            "monto_iva"          => 0,
+                            "monto_total"        => 0,
+                            "nu_orden_compra"    => "",
+                            "monto"              => ($monto["total"]!='')?$monto["total"]:0,
+                            "co_iva_factura"     => ($campos_proveedor["co_iva_factura"]==null)?"":$campos_proveedor["co_iva_factura"],
+                            "tx_rif"             => ($campos_proveedor["tx_rif"]==null)?"":$campos_proveedor["tx_rif"],
+                            "tx_razon_social"    => ($campos_proveedor["tx_razon_social"]==null)?"":$campos_proveedor["tx_razon_social"],
+                            "tx_direccion"       => ($campos_proveedor["tx_direccion"]==null)?"":$campos_proveedor["tx_direccion"],
+                            "co_ramo"            => ($campos_proveedor["co_ramo"]==null)?"":$campos_proveedor["co_ramo"],
+                            "co_factura"         => ($campos_proveedor["co_factura"]==null)?"":$campos_proveedor["co_factura"]
+                    ));
+    }
   }
   
   protected function getOrigenDestino($codigo){
@@ -1300,28 +1467,28 @@ class ComprasActions extends sfActions
       
         $codigo = $this->getRequestParameter("co_detalle_compras");
         $co_compras = $this->getRequestParameter("co_compras");
-	$con = Propel::getConnection();
-	try
-	{ 
-	$con->beginTransaction();
-            /*CAMPOS*/
-            $Tb053DetalleCompras = Tb053DetalleComprasPeer::retrieveByPk($codigo);			
-            $Tb053DetalleCompras->delete($con);
-            
-            $this->data = json_encode(array(
-                        "success" => true,
-                        "msg" => 'Registro Borrado con exito!'
-            ));
-            $con->commit();
-	}catch (PropelException $e)
-	{
-            $con->rollback();
-            $this->data = json_encode(array(
-                "success" => false,
-//		    "msg" =>  $e->getMessage()
-                "msg" => 'Este registro no se puede borrar'
-            ));
-	}
+    	$con = Propel::getConnection();
+    	try
+    	{ 
+    	$con->beginTransaction();
+                /*CAMPOS*/
+                $Tb053DetalleCompras = Tb053DetalleComprasPeer::retrieveByPk($codigo);			
+                $Tb053DetalleCompras->delete($con);
+                
+                $this->data = json_encode(array(
+                            "success" => true,
+                            "msg" => 'Registro Borrado con exito!'
+                ));
+                $con->commit();
+    	}catch (PropelException $e)
+    	{
+                $con->rollback();
+                $this->data = json_encode(array(
+                    "success" => false,
+    //		    "msg" =>  $e->getMessage()
+                    "msg" => 'Este registro no se puede borrar'
+                ));
+    	}
         
          $this->setTemplate('eliminar');
       
@@ -1568,32 +1735,66 @@ class ComprasActions extends sfActions
     public function executeStorelistamateriales(sfWebRequest $request) {
        
         $co_compras   =   $this->getRequestParameter("co_compras");
+        $co_cotizacion   =   $this->getRequestParameter("co_cotizacion");
         $limit      =   $this->getRequestParameter("limit",8);
         $start      =   $this->getRequestParameter("start",0);
-                       
-        $c = new Criteria();
-        $c->clearSelectColumns();
-        $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
-        $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_REQUISICION);
-        $c->addSelectColumn(Tb048ProductoPeer::CO_PRODUCTO);
-        $c->addSelectColumn(Tb048ProductoPeer::COD_PRODUCTO);
-        $c->addSelectColumn(Tb048ProductoPeer::TX_PRODUCTO);
-        $c->addSelectColumn(Tb053DetalleComprasPeer::NU_CANTIDAD);
-        $c->addSelectColumn(Tb053DetalleComprasPeer::PRECIO_UNITARIO);
-        $c->addSelectColumn(Tb053DetalleComprasPeer::DETALLE);
-        $c->addSelectColumn(Tb053DetalleComprasPeer::MONTO);
-        $c->addSelectColumn(Tb053DetalleComprasPeer::IN_EXENTO);
-        $c->addJoin(Tb053DetalleComprasPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO);
-        $c->add(Tb053DetalleComprasPeer::CO_COMPRAS,$co_compras);
-        $c->add(Tb053DetalleComprasPeer::CO_PRODUCTO,19336,  Criteria::NOT_EQUAL); //Excluye el IVA
                
-        $cantidadTotal = Tb053DetalleComprasPeer::doCount($c);
-        //$c->setLimit($limit)->setOffset($start);
-        $c->addAscendingOrderByColumn(Tb048ProductoPeer::TX_PRODUCTO);
+        if(!empty('co_cotizacion')){
+                $c = new Criteria();
+                $c->clearSelectColumns();
+                $c->addSelectColumn(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION);
+                $c->addSelectColumn(Tb207DetalleCotizacionPeer::CO_DETALLE_REQUISICION);
+                $c->addSelectColumn(Tb048ProductoPeer::CO_PRODUCTO);
+                $c->addSelectColumn(Tb048ProductoPeer::COD_PRODUCTO);
+                $c->addSelectColumn(Tb048ProductoPeer::TX_PRODUCTO);
+                $c->addSelectColumn(Tb207DetalleCotizacionPeer::NU_CANTIDAD);
+                $c->addSelectColumn(Tb207DetalleCotizacionPeer::PRECIO_UNITARIO);
+                $c->addSelectColumn(Tb207DetalleCotizacionPeer::DETALLE);
+                $c->addSelectColumn(Tb207DetalleCotizacionPeer::MONTO);
+                $c->addSelectColumn(Tb207DetalleCotizacionPeer::IN_EXENTO);
+                $c->addJoin(Tb207DetalleCotizacionPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO);
+                $c->add(Tb207DetalleCotizacionPeer::CO_COTIZACION,$co_cotizacion);
+                $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO,19336,  Criteria::NOT_EQUAL); //Excluye el IVA
+                       
+                $cantidadTotal = Tb207DetalleCotizacionPeer::doCount($c);
+                //$c->setLimit($limit)->setOffset($start);
+                $c->addAscendingOrderByColumn(Tb048ProductoPeer::TX_PRODUCTO);
+                
+                $stmt = Tb207DetalleCotizacionPeer::doSelectStmt($c);
+
+        }else{
+
+                $c = new Criteria();
+                $c->clearSelectColumns();
+                $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+                $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_REQUISICION);
+                $c->addSelectColumn(Tb048ProductoPeer::CO_PRODUCTO);
+                $c->addSelectColumn(Tb048ProductoPeer::COD_PRODUCTO);
+                $c->addSelectColumn(Tb048ProductoPeer::TX_PRODUCTO);
+                $c->addSelectColumn(Tb053DetalleComprasPeer::NU_CANTIDAD);
+                $c->addSelectColumn(Tb053DetalleComprasPeer::PRECIO_UNITARIO);
+                $c->addSelectColumn(Tb053DetalleComprasPeer::DETALLE);
+                $c->addSelectColumn(Tb053DetalleComprasPeer::MONTO);
+                $c->addSelectColumn(Tb053DetalleComprasPeer::IN_EXENTO);
+                $c->addJoin(Tb053DetalleComprasPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO);
+                $c->add(Tb053DetalleComprasPeer::CO_COMPRAS,$co_compras);
+                $c->add(Tb053DetalleComprasPeer::CO_PRODUCTO,19336,  Criteria::NOT_EQUAL); //Excluye el IVA
+                       
+                $cantidadTotal = Tb053DetalleComprasPeer::doCount($c);
+                //$c->setLimit($limit)->setOffset($start);
+                $c->addAscendingOrderByColumn(Tb048ProductoPeer::TX_PRODUCTO);
+                
+                $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
+
+        }     
         
-        $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
         $registros = array();
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+            if(isset($reg['co_detalle_cotizacion'])){
+                $reg['co_detalle_compras'] = '';
+            }
+
             $registros[] = $reg;
         }
 

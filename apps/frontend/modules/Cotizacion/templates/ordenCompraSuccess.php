@@ -8,8 +8,11 @@ this.storeCO_DOCUMENTO = this.getStoreCO_DOCUMENTO();
 this.storeCO_RAMO = this.getStoreCO_RAMO();
 this.storeCO_IVA_FACTURA = this.getStoreCO_IVA_FACTURA();
 this.storeCO_ENTE = this.getStoreCO_ENTE();
+this.storeCO_EJECUTOR = this.getStoreCO_EJECUTOR();
+this.storeCO_PROYECTO = this.getStoreCO_PROYECTO();
+this.storeCO_ACCION = this.getStoreCO_ACCION();
 this.storeCO_TPCONTRATO = this.getStoreCO_TPCONTRATO();
-this.storeCO_FUENTEFINANCIAMIENTO= this.getStoreCO_FUENTEFINANCIAMIENTO();
+this.storeCO_PARTIDA= this.getStoreCO_PARTIDA();
 this.store_lista   = this.getLista();
 
 this.Registro = Ext.data.Record.create([
@@ -22,8 +25,7 @@ this.Registro = Ext.data.Record.create([
                      {name: 'monto', type:'number'},
                      {name: 'detalle', type:'string'},
                      {name: 'co_partida', type:'number'},
-                     {name: 'co_unidad_producto', type:'number'},
-                     {name: 'in_exento',type:'string'}
+                     {name: 'co_unidad_producto', type:'number'}
                 ]);
 
 //<ClavePrimaria>
@@ -34,27 +36,27 @@ this.co_compras = new Ext.form.Hidden({
 
 
 this.co_requisicion = new Ext.form.Hidden({
-    name:'tb052_compras[co_requisicion]',
-    value:this.OBJ.co_requisicion,
-    allowBlank:false
+	name:'tb052_compras[co_requisicion]',
+	value:this.OBJ.co_requisicion,
+	allowBlank:false
 });
 
 this.co_solicitud = new Ext.form.Hidden({
-    name:'tb052_compras[co_solicitud]',
-    value:this.OBJ.co_solicitud,
-    allowBlank:false
+	name:'tb052_compras[co_solicitud]',
+	value:this.OBJ.co_solicitud,
+	allowBlank:false
 });
 
 this.co_tipo_solicitud = new Ext.form.Hidden({
-    name:'tb052_compras[co_tipo_solicitud]',
-    value:this.OBJ.co_tipo_solicitud,
-    allowBlank:false
+	name:'tb052_compras[co_tipo_solicitud]',
+	value:this.OBJ.co_tipo_solicitud,
+	allowBlank:false
 });
 
 this.co_contrato_compras = new Ext.form.Hidden({
-    name:'tb052_compras[co_contrato_compras]',
-    value:this.OBJ.co_contrato_compras,
-    allowBlank:false
+	name:'tb052_compras[co_contrato_compras]',
+	value:this.OBJ.co_contrato_compras,
+	allowBlank:false
 });
 
 this.hiddenJsonProducto  = new Ext.form.Hidden({
@@ -82,112 +84,108 @@ this.monto_total  = new Ext.form.Hidden({
         value:this.OBJ.monto_total
 });
 
-this.in_responsabilidad_social = new Ext.form.Checkbox({
-    fieldLabel:'Compromiso de Responsabilidad Social',
-        style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-    name:'tb052_compras[in_responsabilidad_social]',
-        checked:(this.OBJ.in_responsabilidad_social=='1') ? true:false
+this.co_hidden_ejecutor  = new Ext.form.Hidden({
+        name:'tb052_compras[co_hidden_ejecutor]',
+        value:this.OBJ.co_ejecutor
 });
-
 
 this.nu_compra = new Ext.form.DisplayField({
  value:"<span style='color:black;font-size:15px;'><b>N° Compra: </b>"+ComprasEditar.main.OBJ.nu_compra+"</b></span>"
 });
 
 this.co_documento = new Ext.form.ComboBox({
-    fieldLabel:'Co documento',
-    store: this.storeCO_DOCUMENTO,
-    typeAhead: true,
-    valueField: 'co_documento',
-    displayField:'inicial',
-    hiddenName:'tb008_proveedor[co_documento]',
-    forceSelection:true,
-    resizable:true,
-    triggerAction: 'all',
-    selectOnFocus: true,
-        readOnly:(this.OBJ.co_factura!='')?true:false,
-    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-    mode: 'local',
-    width:50,
-    allowBlank:false
+	fieldLabel:'Co documento',
+	store: this.storeCO_DOCUMENTO,
+	typeAhead: true,
+	valueField: 'co_documento',
+	displayField:'inicial',
+	hiddenName:'tb008_proveedor[co_documento]',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	selectOnFocus: true,
+	mode: 'local',
+	width:50,
+        readOnly:true,
+	style:'background:#c9c9c9;',
+	allowBlank:false
 });
 this.storeCO_DOCUMENTO.load();
-    paqueteComunJS.funcion.seleccionarComboByCo({
-    objCMB: this.co_documento,
-    value:  (this.OBJ.co_documento=='')?4:this.OBJ.co_documento,
-    objStore: this.storeCO_DOCUMENTO
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.co_documento,
+	value:  (this.OBJ.co_documento=='')?4:this.OBJ.co_documento,
+	objStore: this.storeCO_DOCUMENTO
 });
 
 this.tx_rif = new Ext.form.TextField({
-    name:'tb008_proveedor[tx_rif]',
-    value:this.OBJ.tx_rif,
-        readOnly:(this.OBJ.co_factura!='')?true:false,
-    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-    allowBlank:false,
-    width:130
+	name:'tb008_proveedor[tx_rif]',
+	value:this.OBJ.tx_rif,
+	allowBlank:false,
+        readOnly:true,
+	style:'background:#c9c9c9;',
+	width:130
 });
-this.co_documento.on("blur",function(){
-    if(ComprasEditar.main.tx_rif.getValue()!=''){
-    ComprasEditar.main.verificarProveedor();
-    }
-});
-
-this.tx_rif.on("blur",function(){
-    ComprasEditar.main.verificarProveedor();
-});
+//this.co_documento.on("blur",function(){
+//    if(ComprasEditar.main.tx_rif.getValue()!=''){
+//    ComprasEditar.main.verificarProveedor();
+//    }
+//});
+//
+//this.tx_rif.on("blur",function(){
+//    ComprasEditar.main.verificarProveedor();
+//});
 
 this.compositefieldCIRIF = new Ext.form.CompositeField({
 fieldLabel: 'Cedula/Rif',
-width:190,
+width:185,
 items: [
-    this.co_documento,
-    this.tx_rif,
-    ]
+	this.co_documento,
+	this.tx_rif,
+	]
 });
 
-
 this.tx_razon_social = new Ext.form.TextField({
-    fieldLabel:'Razon Social',
-    name:'tb008_proveedor[tx_razon_social]',
-    value:this.OBJ.tx_razon_social,
-        readOnly:(this.OBJ.co_factura!='')?true:false,
-    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-    allowBlank:false,
-    width:770
+	fieldLabel:'Razon Social',
+	name:'tb008_proveedor[tx_razon_social]',
+	value:this.OBJ.tx_razon_social,
+	allowBlank:false,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	width:770
 });
 
 this.tx_direccion = new Ext.form.TextField({
-    fieldLabel:'Direccion',
-    name:'tb008_proveedor[tx_direccion]',
-    value:this.OBJ.tx_direccion,
-    allowBlank:false,
-        readOnly:(this.OBJ.co_factura!='')?true:false,
-    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-    width:770
+	fieldLabel:'Direccion',
+	name:'tb008_proveedor[tx_direccion]',
+	value:this.OBJ.tx_direccion,
+	allowBlank:false,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	width:770
 });
 
 this.co_ramo = new Ext.form.ComboBox({
-    fieldLabel:'Ramo',
-    store: this.storeCO_RAMO,
-    typeAhead: true,
-    valueField: 'co_ramo',
-    displayField:'tx_ramo',
-    hiddenName:'tb052_compras[co_ramo]',
-    forceSelection:true,
-    resizable:true,
-        readOnly:(this.OBJ.co_factura!='')?true:false,
-    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-    triggerAction: 'all',
-    selectOnFocus: true,
-    mode: 'local',
-    width:415,
-    allowBlank:false,
+	fieldLabel:'Ramo',
+	store: this.storeCO_RAMO,
+	typeAhead: true,
+	valueField: 'co_ramo',
+	displayField:'tx_ramo',
+	hiddenName:'tb052_compras[co_ramo]',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	selectOnFocus: true,
+	mode: 'local',
+	width:415,
+    //readOnly:true,
+	//style:'background:#c9c9c9;',        
+	allowBlank:false,
         listeners: {
           getSelectedIndex: function() {
-            var v = this.getValue();
-            var r = this.findRecord(this.valueField || this.displayField, v);
-            return(this.storeCO_RAMO.indexOf(r));
-          }
+    var v = this.getValue();
+    var r = this.findRecord(this.valueField || this.displayField, v);
+    return(this.storeCO_RAMO.indexOf(r));
+  }
 }
 
 });
@@ -208,25 +206,27 @@ this.fieldProveedor= new Ext.form.FieldSet({
         items:[
           this.compositefieldCIRIF,
           this.tx_razon_social,
-        //  this.tx_direccion,
+          this.tx_direccion,
           //this.co_ramo
        ]
 });
 
 this.co_tp_contrato = new Ext.form.ComboBox({
-    fieldLabel:'Tipo de Contrato',
-    store: this.storeCO_TPCONTRATO,
-    typeAhead: true,
-    valueField: 'co_tp_contrato',
-    displayField:'tx_tp_contrato',
-    hiddenName:'tb052_compras[co_tp_contrato]',
-    forceSelection:true,
-    resizable:true,
-    triggerAction: 'all',
-    selectOnFocus: true,
-    mode: 'local',
-    width:415,
-    allowBlank:false
+	fieldLabel:'Tipo de Contrato',
+	store: this.storeCO_TPCONTRATO,
+	typeAhead: true,
+	valueField: 'co_tp_contrato',
+	displayField:'tx_tp_contrato',
+	hiddenName:'tb052_compras[co_tp_contrato]',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	selectOnFocus: true,
+	mode: 'local',
+	width:415,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false
 });
 this.storeCO_TPCONTRATO.load();
 paqueteComunJS.funcion.seleccionarComboByCo({
@@ -235,225 +235,143 @@ value: this.OBJ.co_tp_contrato,
 objStore: this.storeCO_TPCONTRATO
 });
 
-
 this.fecha_inicio = new Ext.form.DateField({
-    fieldLabel:'Fecha Inicio',
-    name:'tb052_compras[fecha_inicio]',
-    value:this.OBJ.fecha_inicio,
-    allowBlank:false,
-    width:100
+	fieldLabel:'Fecha Inicio',
+	name:'tb052_compras[fecha_inicio]',
+	value:this.OBJ.fecha_inicio,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false,
+	width:100
 });
 this.fecha_fin = new Ext.form.DateField({
-    fieldLabel:'Fecha Fin',
-    name:'tb052_compras[fecha_fin]',
-    value:this.OBJ.fecha_fin,
-    allowBlank:false,
-    width:100
+	fieldLabel:'Fecha Fin',
+	name:'tb052_compras[fecha_fin]',
+	value:this.OBJ.fecha_fin,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false,
+	width:100
 });
 this.fecha_entrega = new Ext.form.DateField({
-    fieldLabel:'Fecha Entrega',
-    name:'tb052_compras[fecha_entrega]',
-    value:this.OBJ.fecha_entrega,
-    allowBlank:false,
-    width:100
+	fieldLabel:'Fecha Entrega',
+	name:'tb052_compras[fecha_entrega]',
+	value:this.OBJ.fecha_entrega,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false,
+	width:100
 });
 
-this.forma_pago = new Ext.form.TextField({
-    fieldLabel:'Forma de Pago',
-    name:'tb052_compras[forma_pago]',      
-    allowBlank:false,
-    width:200
-});
 
 this.monto_contrato = new Ext.form.NumberField({
-    fieldLabel:'Monto Presupuesto',
-    name:'tb052_compras[monto]',
-        value:  this.OBJ.monto,        
-        readOnly:(this.OBJ.co_factura!='')?true:false,
-    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-    allowBlank:false,
-    width:200
-});
-
-this.Panelforma = new Ext.Panel({
-   items:[
-       {
-           layout:'column',
-           defaults:{layout:'form'},
-           items:[
-               {
-                   labelWidth:100,
-                   columnWidth:.5,                                  
-                   items:[this.monto_contrato]
-               },
-               {
-                   labelWidth:120,
-                   columnWidth:.5,                                   
-                   items:[this.forma_pago]
-               }
-           ]
-       }
-   ]
+	fieldLabel:'Monto Contrato',
+	name:'tb052_compras[monto]',
+        value: this.OBJ.monto,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false,
+	width:415
 });
 
 this.tiempo_garantia = new Ext.form.TextField({
-    fieldLabel:'Garantia',
-    name:'tb052_compras[tiempo_garantia]',
-    value:this.OBJ.tiempo_garantia,
-    width:200
-});
-
-this.forma_entrega = new Ext.form.TextField({
-    fieldLabel:'Forma de Entrega',
-    name:'tb052_compras[forma_entrega]',
-    value:this.OBJ.forma_entrega,
-        allowBlank:false,
-    width:200
-});
-
-this.Paneltiempo = new Ext.Panel({
-   items:[
-       {
-           layout:'column',
-           defaults:{layout:'form'},
-           items:[
-               {
-                   labelWidth:100,
-                   columnWidth:.5,                                  
-                   items:[this.tiempo_garantia]
-               },
-               {
-                   labelWidth:120,
-                   columnWidth:.5,                                   
-                   items:[this.forma_entrega]
-               }
-           ]
-       }
-   ]
-});
-
-this.nu_orden_compra = new Ext.form.TextField({
-    fieldLabel:'Nro. Proceso',
-    name:'tb052_compras[nu_orden_compra]',
-    value:this.OBJ.nu_orden_compra,
-        allowBlank:false,
-    width:200
-});
-
-this.tx_serial_cotizacion = new Ext.form.TextField({
-    fieldLabel:'Código',
-    name:'tb052_compras[tx_serial_cotizacion]',
-    value:this.OBJ.tx_serial_cotizacion,
-    allowBlank:false,
-    width:100,
-    readOnly:true,
-    style:'background:#c9c9c9;',
+	fieldLabel:'Garantia',
+	name:'tb052_compras[tiempo_garantia]',
+	value:this.OBJ.tiempo_garantia,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	width:415
 });
 
 this.tx_observacion = new Ext.form.TextArea({
-    fieldLabel:'Observacion',
-    name:'tb052_compras[tx_observacion]',
-    value:this.OBJ.tx_observacion,
-    allowBlank:false,
-    width:775,
-    readOnly:true,
-    style:'background:#c9c9c9;',
+	fieldLabel:'Observacion',
+	name:'tb052_compras[tx_observacion]',
+	value:this.OBJ.tx_observacion,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false,
+	width:775
 });
-
-this.buscar = new Ext.Button({
-    text:'Buscar',
-    iconCls: 'icon-buscar',
-    handler:function(){
-        this.msg = Ext.get('formularioAgregar');
-        this.msg.load({
-            url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Cotizacion/buscarPresupuestoBase',
-            scripts: true,
-            text: "Cargando.."
-        });
-    }
-});
-
-this.compositefieldPresupuestoBase = new Ext.form.CompositeField({
-fieldLabel: 'Codigo',
-width:190,
-items: [
-        this.tx_serial_cotizacion,
-        this.buscar,
-    ]
-});
-
-
-this.fieldPresupuesto= new Ext.form.FieldSet({
-        title: 'Presupuesto Base',
-        items:[   
-          this.compositefieldPresupuestoBase,
-          this.tx_observacion
-       ]
-});
-
 this.fieldContrato= new Ext.form.FieldSet({
         title: 'Datos del Contrato',
         items:[
           this.co_tp_contrato,
-          this.nu_orden_compra,
           this.fecha_inicio,
           this.fecha_fin,
           this.fecha_entrega,
-          this.in_responsabilidad_social,
-          this.Panelforma,
-          this.Paneltiempo,
-         // this.tx_observacion
+          this.monto_contrato,
+          this.tiempo_garantia,
+          this.tx_observacion
        ]
 });
 
 
 this.fecha_compra = new Ext.form.DateField({
-    fieldLabel:'Fecha Compra',
-    name:'tb052_compras[fecha_compra]',
-    value:this.OBJ.fecha_compra,
-    allowBlank:false,
-    width:100
+	fieldLabel:'Fecha Compra',
+	name:'tb052_compras[fecha_compra]',
+	value:this.OBJ.fecha_compra,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false,
+	width:100
 });
 
 this.co_iva_factura = new Ext.form.ComboBox({
-    fieldLabel:'IVA',
-    store: this.storeCO_IVA_FACTURA,
-    typeAhead: true,
-    valueField: 'nu_valor',
-    displayField:'nu_valor',
-        id:'co_iva_factura',
-    hiddenName:'tb052_compras[co_iva_factura]',
-    forceSelection:true,
-    resizable:true,
-        readOnly:(this.OBJ.co_factura!='')?true:false,
-    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-    triggerAction: 'all',
-    selectOnFocus: true,
-    mode: 'local',
-    width:50,
-    allowBlank:false
+	fieldLabel:'IVA',
+	store: this.storeCO_IVA_FACTURA,
+	typeAhead: true,
+	valueField: 'nu_valor',
+	displayField:'nu_valor',
+	hiddenName:'tb052_compras[co_iva_factura]',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	selectOnFocus: true,
+	mode: 'local',
+	width:50,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false
 });
 this.storeCO_IVA_FACTURA.load();
-    paqueteComunJS.funcion.seleccionarComboByCo({
-    objCMB: this.co_iva_factura,
-    value:  this.OBJ.co_iva_factura,
-    objStore: this.storeCO_IVA_FACTURA
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.co_iva_factura,
+	value:  this.OBJ.co_iva_factura,
+	objStore: this.storeCO_IVA_FACTURA
 });
 
+this.co_iva_factura.on('select',function(cmb,record,index){
+        ComprasEditar.main.getTotal();
+        if(record.get('nu_valor')!=0){
+        ComprasEditar.main.storeCO_PARTIDA.load({
+        params:{
+         co_accion:ComprasEditar.main.co_accion.getValue()
+
+         }});             
+        ComprasEditar.main.co_partida_iva.clearValue();
+        ComprasEditar.main.co_partida_iva.show();
+        }else{
+        ComprasEditar.main.co_partida_iva.hide();
+        ComprasEditar.main.co_partida_iva.setValue('');        
+        }
+},this);
+
 this.co_ente = new Ext.form.ComboBox({
-    fieldLabel:'Entregar En',
-    store: this.storeCO_ENTE,
-    typeAhead: true,
-    valueField: 'co_ente',
-    displayField:'tx_ente',
-    hiddenName:'tb052_compras[co_ente]',
-    forceSelection:true,
-    resizable:true,
-    triggerAction: 'all',
-    selectOnFocus: true,
-    mode: 'local',
-    width:387,
-    allowBlank:false,
+	fieldLabel:'Entregar En',
+	store: this.storeCO_ENTE,
+	typeAhead: true,
+	valueField: 'co_ente',
+	displayField:'tx_ente',
+	hiddenName:'tb052_compras[co_ente]',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	selectOnFocus: true,
+	mode: 'local',
+	width:387,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false,
         listeners: {
         getSelectedIndex: function() {
         var v = this.getValue();
@@ -463,13 +381,176 @@ this.co_ente = new Ext.form.ComboBox({
         }
 });
 this.storeCO_ENTE.load();
-    paqueteComunJS.funcion.seleccionarComboByCo({
-    objCMB: this.co_ente,
-    value:  this.OBJ.co_ente,
-    objStore: this.storeCO_ENTE
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.co_ente,
+	value:  this.OBJ.co_ente,
+	objStore: this.storeCO_ENTE
 });
 
+this.co_ejecutor = new Ext.form.ComboBox({
+	fieldLabel:'Ente Ejecutor',
+	store: this.storeCO_EJECUTOR,
+	typeAhead: true,
+	valueField: 'id',
+        id:'co_ejecutor',
+	displayField:'de_ejecutor',
+	hiddenName:'tb052_compras[co_ejecutor]',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	selectOnFocus: true,
+	mode: 'local',
+	width:775,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false,
+        listeners: {
+        getSelectedIndex: function() {
+        var v = this.getValue();
+        var r = this.findRecord(this.valueField || this.displayField, v);
+        return(this.storeCO_EJECUTOR.indexOf(r));
+         }
+        }
+});
+this.storeCO_EJECUTOR.load();
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.co_ejecutor,
+	value:  this.OBJ.co_ejecutor,
+	objStore: this.storeCO_EJECUTOR
+});
+this.co_ejecutor.on('select',function(cmb,record,index){
+        ComprasEditar.main.co_partida_iva.clearValue();
+        ComprasEditar.main.storeCO_PARTIDA.removeAll();
+        ComprasEditar.main.co_proyecto.clearValue();
+        ComprasEditar.main.co_accion.clearValue();
+        ComprasEditar.main.co_hidden_ejecutor.setValue(ComprasEditar.main.co_ejecutor.getValue());
+        ComprasEditar.main.storeCO_PROYECTO.load({params:{co_ejecutor:record.get('id')}});
+},this);
 
+this.co_proyecto = new Ext.form.ComboBox({
+	fieldLabel:'Proyecto/Ac',
+	store: this.storeCO_PROYECTO,
+	typeAhead: true,
+	valueField: 'id',
+        id:'co_proyecto',
+	displayField:'de_proyecto_ac',
+	hiddenName:'tb052_compras[co_proyecto]',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	selectOnFocus: true,
+	mode: 'local',
+	width:775,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false
+});
+if(this.OBJ.co_ejecutor!=''){
+this.storeCO_PROYECTO.load({
+    params:{co_ejecutor:this.OBJ.co_ejecutor},
+    callback: function(){
+    ComprasEditar.main.co_proyecto.setValue(ComprasEditar.main.OBJ.co_proyecto);
+}
+    });
+}
+this.co_proyecto.on('select',function(cmb,record,index){
+        ComprasEditar.main.co_accion.clearValue();
+        ComprasEditar.main.storeCO_ACCION.load({params:{co_proyecto:record.get('id')}});
+},this);
+
+this.co_accion = new Ext.form.ComboBox({
+	fieldLabel:'Accion Especifica',
+	store: this.storeCO_ACCION,
+	typeAhead: true,
+	valueField: 'id',
+        id:'co_accion',
+	displayField:'accion_especifica',
+	hiddenName:'tb052_compras[co_accion]',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	selectOnFocus: true,
+	mode: 'local',
+	width:775,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+	allowBlank:false
+});
+if(this.OBJ.co_proyecto!=''){
+this.storeCO_ACCION.load({
+    params:{co_proyecto:this.OBJ.co_proyecto},
+    callback: function(){
+    ComprasEditar.main.co_accion.setValue(ComprasEditar.main.OBJ.co_accion);
+}
+    
+        });
+}
+
+this.co_accion.on('select',function(cmb,record,index){
+        if(ComprasEditar.main.co_iva_factura.getValue()!=0){
+        ComprasEditar.main.storeCO_PARTIDA.load({
+        params:{
+         co_accion:ComprasEditar.main.co_accion.getValue(),
+             callback: function(){
+             ComprasEditar.main.co_partida_iva.setValue('');
+            }
+
+         }});    
+        ComprasEditar.main.co_partida_iva.clearValue();
+        ComprasEditar.main.storeCO_PARTIDA.removeAll();
+        ComprasEditar.main.co_partida_iva.show();
+
+        }else{
+        ComprasEditar.main.co_partida_iva.clearValue();
+        ComprasEditar.main.storeCO_PARTIDA.removeAll();
+        ComprasEditar.main.co_partida_iva.hide();          
+        }
+},this);
+
+this.co_partida_iva = new Ext.form.ComboBox({
+	fieldLabel:'Partida Impuesto',
+	store: this.storeCO_PARTIDA,
+	typeAhead: true,
+	valueField: 'id',
+	displayField:'de_partida',
+	hiddenName:'tb052_compras[co_partida_iva]',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	selectOnFocus: true,
+	mode: 'local',
+	width:775,
+        readOnly:true,
+	style:'background:#c9c9c9;',        
+        hidden:true,
+        listeners: {
+        getSelectedIndex: function() {
+        var v = this.getValue();
+        var r = this.findRecord(this.valueField || this.displayField, v);
+        return(this.storeCO_PARTIDA.indexOf(r));
+         }
+        }
+});
+
+if(this.OBJ.co_iva_factura!=0){
+ComprasEditar.main.co_partida_iva.show();
+ComprasEditar.main.storeCO_PARTIDA.load({
+params:{
+ co_accion:this.OBJ.co_accion
+
+ },
+callback: function(){
+ComprasEditar.main.co_partida_iva.setValue(ComprasEditar.main.OBJ.co_partida_iva);
+  try{
+ComprasEditar.main.co_partida_iva.selectByValue(ComprasEditar.main.OBJ.co_partida_iva);
+
+    }
+    catch(err){
+    }
+}
+        
+        });
+}
 
 this.displayfieldmonto_compra = new Ext.form.DisplayField({
  value:"<span style='font-size:12px;'><b>Sub Total Compra: </b>"+paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_compra.getValue())+"</b></span>"
@@ -485,13 +566,11 @@ this.agregar = new Ext.Button({
     text: 'Agregar',
     iconCls: 'icon-nuevo',
     handler: function () {
-        
-        if(ComprasEditar.main.co_iva_factura.getValue()=='')
-        {
-            Ext.Msg.alert("Notificación","Para agregar un producto, debe seleccionar el IVA ");
-            return;
+
+       if(ComprasEditar.main.co_accion.getValue()==''){
+            Ext.Msg.alert("Alerta","Debe Seleccionar la acción especifica antes de agregar los productos");
+            return false;
         }
-        
         this.msg = Ext.get('formularioAgregar');
         this.msg.load({
             url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/agregarProducto',
@@ -506,15 +585,20 @@ this.editar = new Ext.Button({
     text: 'Editar',
     iconCls: 'icon-editar',
     handler: function () {
-        this.msg = Ext.get('formularioEditar');
+        this.msg = Ext.get('formularioAgregar');
         this.msg.load({
             url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/editarProducto',
-            params: 'codigo=<?php echo $co_requisicion; ?>',
+            params: {
+            	codigo:ComprasEditar.main.gridPanel.getSelectionModel().getSelected().get('co_detalle_compras')
+            },
             scripts: true,
             text: "Cargando.."
         });
     }
 });
+
+this.editar.disable();
+
 this.botonEliminar = new Ext.Button({
                 text:'Eliminar',
                 iconCls: 'icon-eliminar',
@@ -528,35 +612,30 @@ this.botonEliminar.disable();
 function renderMonto(val, attr, record) {
      return paqueteComunJS.funcion.getNumeroFormateado(val);
 }
-
-
-
 this.gridPanel = new Ext.grid.GridPanel({
         title:'Lista de Materiales',
         iconCls: 'icon-libro',
         store: this.store_lista,
         loadMask:true,
-        height:300,
-        width:950,
-        autoScroll:true,
-        tbar:[this.agregar,'-',this.botonEliminar],
+        height:180,
+        width:930,
+        tbar:[this.editar],
         columns: [
         new Ext.grid.RowNumberer(),
-            {header: 'co_detalle_compras', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_detalle_compras'},
-            {header: 'co_detalle_requisicion', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_detalle_requisicion'},
+            {header: 'co_detalle_compras', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_detalle_requisicion'},
             {header: 'co_producto', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_producto'},
             {header: 'Codigo', width:80, menuDisabled:true,dataIndex: 'cod_producto'},
-            {header: 'Descripción',width:380, menuDisabled:true,dataIndex: 'tx_producto',renderer:textoLargo},
+            {header: 'Descripción',width:280, menuDisabled:true,dataIndex: 'tx_producto',renderer:textoLargo},
             {header: 'Especificaciones',width:180, menuDisabled:true,dataIndex: 'detalle',renderer:textoLargo},
             {header: 'Cantidad',width:60, menuDisabled:true,dataIndex: 'nu_cantidad'},
-            {header: 'Precio Unitario',width:100, menuDisabled:true,dataIndex: 'precio_unitario',renderer:renderMonto},
-            {header: 'Monto',width:100, menuDisabled:true,dataIndex: 'monto',renderer:renderMonto}
+            {header: 'Precio Unitario',width:150, menuDisabled:true,dataIndex: 'precio_unitario',renderer:renderMonto},
+            {header: 'Monto',width:150, menuDisabled:true,dataIndex: 'monto',renderer:renderMonto}
         ],
         stripeRows: true,
         autoScroll:true,
         stateful: true,
         listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
-            ComprasEditar.main.botonEliminar.enable();
+            ComprasEditar.main.editar.enable();
         }}
 });
 
@@ -565,8 +644,7 @@ if(this.OBJ.co_compras!=''){
     ComprasEditar.main.store_lista.baseParams.co_compras=this.OBJ.co_compras;
     this.store_lista.load({
         callback: function(){
-            ComprasEditar.main.getTotal();
-            ComprasEditar.main.getVerificarIVA();
+           // ComprasEditar.main.getTotal();
         }
     });
 
@@ -578,13 +656,17 @@ this.fieldCompra= new Ext.form.FieldSet({
           this.fecha_compra,
           this.co_iva_factura,
           this.co_ente,
+//          this.co_ejecutor,
+//          this.co_proyecto,
+//          this.co_accion,
+//          this.co_partida_iva,
           this.gridPanel
 
        ]
 });
 
 this.guardar = new Ext.Button({
-    text:'Guardar',
+    text:'Generar Orden de Compra',
     iconCls: 'icon-guardar',
     handler:function(){
         var cant = ComprasEditar.main.store_lista.getCount();
@@ -592,15 +674,16 @@ this.guardar = new Ext.Button({
             Ext.Msg.alert("Alerta","Debe Agregar al menos un Material");
             return false;
         }
-               
-        if(ComprasEditar.main.monto_contrato.getValue()!=ComprasEditar.main.monto_total.getValue()){
+
+      /*  if(ComprasEditar.main.monto_contrato.getValue()!=ComprasEditar.main.monto_total.getValue()){
             Ext.Msg.alert("Alerta","El monto del contrato no coincide con el total de la compra");
             return false;
-        }
+        }*/
+
         if(!ComprasEditar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos requeridos! Verifique");
             return false;
-        }        
+        }
 
         var list_producto = paqueteComunJS.funcion.getJsonByObjStore({
                 store:ComprasEditar.main.gridPanel.getStore()
@@ -610,7 +693,7 @@ this.guardar = new Ext.Button({
 
         ComprasEditar.main.formPanel_.getForm().submit({
             method:'POST',
-            url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/guardar',
+            url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/guardarOrdenCompra',
             waitMsg: 'Enviando datos, por favor espere..',
             waitTitle:'Enviando',
             failure: function(form, action) {
@@ -624,13 +707,12 @@ this.guardar = new Ext.Button({
                          closable: false,
                          icon: Ext.MessageBox.INFO,
                          resizable: false,
-             animEl: document.body,
+			 animEl: document.body,
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                pendienteEntidadesLista.main.store_lista.load();
-                Detalle.main.store_lista.load();
-                ComprasEditar.main.winformPanel_.close();
+
+                 ComprasEditar.main.winformPanel_.close();
              }
         });
 
@@ -650,20 +732,18 @@ this.salir = new Ext.Button({
 this.tabuladores = new Ext.TabPanel({
         resizeTabs:true, // turn on tab resizing
         minTabWidth: 115,
-        tabWidth:150,border:true,
+        tabWidth:150,border:false,
         enableTabScroll:true,
         autoWidth:true,
         deferredRender:false,
-        height:580,
-        autoScroll:true,
+        height:550,
         activeTab: 0,
         defaults: {autoScroll:true},
         items:[
                 {
                         title: 'Datos de la Compra',
-                        items:[ this.fieldPresupuesto,
-                                this.fieldProveedor,
-                                this.fieldContrato]
+                        items:[ this.fieldProveedor,
+                                this.fieldContrato,]
                 },
                 {
                         title: 'Materiales',
@@ -674,16 +754,17 @@ this.tabuladores = new Ext.TabPanel({
 
 this.formPanel_ = new Ext.form.FormPanel({
     frame:true,
-    width:990,
-    height:660,
+    width:1000,
+    height:600,
     autoScroll:true,
-    bodyStyle:'padding:0px;',
+    bodyStyle:'padding:10px;',
     items:[
 
                     this.co_compras,
                     this.co_proveedor,
                     this.co_contrato_compras,
                     this.co_tipo_solicitud,
+                    this.co_hidden_ejecutor,
                     this.co_solicitud,
                     this.co_requisicion,
                     this.nu_compra,
@@ -709,10 +790,10 @@ this.winformPanel_ = new Ext.Window({
     title:'Compras: Materiales o Bienes',
     modal:true,
     constrain:true,
-    width:1004,
+    width:1000,
     frame:true,
     closabled:true,
-    height:674,
+    height:600,
     tbar   : tbar,
     items:[
         this.formPanel_
@@ -736,22 +817,6 @@ this.winformPanel_ = new Ext.Window({
 });
 this.winformPanel_.show();
 
-},
-getVerificarIVA: function(){
-
-        var cant = paqueteComunJS.funcion.getSumaColumnaGrid({
-            store:ComprasEditar.main.store_lista,
-            campo:'monto'
-        });
-
-
-        if(cant > 0){
-             Ext.get('co_iva_factura').setStyle('background-color','#c9c9c9');
-             ComprasEditar.main.co_iva_factura.setReadOnly(true);
-        }else{
-             Ext.get('co_iva_factura').setStyle('background-color','#FFFFFF');
-             ComprasEditar.main.co_iva_factura.setReadOnly(false);
-        }
 }
 ,getStoreCO_DOCUMENTO:function(){
     this.store = new Ext.data.JsonStore({
@@ -782,7 +847,6 @@ getVerificarIVA: function(){
     root:'data',
     fields:[
                 {name: 'co_detalle_compras'},
-                {name: 'co_detalle_requisicion'},
                 {name: 'co_producto'},
                 {name: 'cod_producto'},
                 {name: 'tx_producto'},
@@ -791,7 +855,6 @@ getVerificarIVA: function(){
                 {name: 'detalle'},
                 {name: 'monto'},
                 {name: 'co_requisicion'},
-                {name: 'in_exento'}
            ]
     });
     return this.store;
@@ -810,7 +873,7 @@ eliminar:function(){
                 co_detalle_compras: co_detalle_compras
             },
             success:function(result, request ) {
-               //ComprasEditar.main.store_lista.load();
+               ComprasEditar.main.store_lista.load();
             }});
 
         }
@@ -820,45 +883,36 @@ eliminar:function(){
         }
          ComprasEditar.main.botonEliminar.disable();
          ComprasEditar.main.getTotal();
-         ComprasEditar.main.getVerificarIVA();
 },
 getTotal:function(){
 
-    this.monto = 0;
-    this.cancelar = 0;
-    this.tcancelar = 0;
-    this.totaliva = 0;
-    this.iva = 0;
-    this.iva = ComprasEditar.main.co_iva_factura.getValue();
-  
-        
-    this.monto = paqueteComunJS.funcion.getSumaColumnaGrid({
-                store:ComprasEditar.main.store_lista,
-                campo:'monto'
-                });
-    
-    
-    var monto_exento =0;
-    ComprasEditar.main.store_lista.each(function(store){
-           if(store.data.in_exento==true){      
-                monto_exento+=store.data.monto
-           }
-    });  
-      
+this.monto = 0;
+this.cancelar = 0;
+this.tcancelar = 0;
+this.totaliva = 0;
+this.iva = 0;
+this.iva = ComprasEditar.main.co_iva_factura.getValue();
+this.monto = paqueteComunJS.funcion.getSumaColumnaGrid({
+            store:ComprasEditar.main.store_lista,
+            campo:'monto'
+            });
 
-    this.cancelar = parseFloat(this.monto);
-    if(this.monto>0){
-        this.totaliva = (parseFloat(this.monto-monto_exento)*parseFloat(this.iva))/100;
-    }
 
-    this.tcancelar = parseFloat(this.cancelar) + parseFloat(this.totaliva);
-    this.tcancelar = this.tcancelar.toFixed(2);
-    ComprasEditar.main.monto_compra.setValue(this.cancelar);
-    ComprasEditar.main.monto_iva.setValue(parseFloat(this.totaliva));
-    ComprasEditar.main.monto_total.setValue(parseFloat(this.tcancelar));
-    ComprasEditar.main.displayfieldmonto_compra.setValue("<span style='font-size:12px;'><b>Sub Total Compra: </b>"+paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_compra.getValue())+"</b></span>");
-    ComprasEditar.main.displayfieldmonto_iva.setValue("<span style='font-size:12px;'><b>Iva: </b>"+paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_iva.getValue())+"</b></span>");
-    ComprasEditar.main.displayfieldmonto_total.setValue("<span style='font-size:18px;'><b>Total Compra: </b>"+paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_total.getValue())+"</b></span>");
+this.cancelar = parseFloat(this.monto);
+if(this.iva==''||this.iva==null||this.iva==0){
+this.totaliva = 0;
+}else{
+this.totaliva = (parseFloat(this.monto)*parseFloat(this.iva))/100;
+}
+
+this.tcancelar = parseFloat(this.cancelar) + parseFloat(this.totaliva);
+this.tcancelar = this.tcancelar.toFixed(2);
+ComprasEditar.main.monto_compra.setValue(this.cancelar);
+ComprasEditar.main.monto_iva.setValue(parseFloat(this.totaliva));
+ComprasEditar.main.monto_total.setValue(parseFloat(this.tcancelar));
+ComprasEditar.main.displayfieldmonto_compra.setValue("<span style='font-size:12px;'><b>Sub Total Compra: </b>"+paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_compra.getValue())+"</b></span>");
+ComprasEditar.main.displayfieldmonto_iva.setValue("<span style='font-size:12px;'><b>Iva: </b>"+paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_iva.getValue())+"</b></span>");
+ComprasEditar.main.displayfieldmonto_total.setValue("<span style='font-size:18px;'><b>Total Compra: </b>"+paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_total.getValue())+"</b></span>");
 
 
 },
@@ -883,6 +937,66 @@ getStoreCO_ENTE:function(){
     });
     return this.store;
 },
+getStoreCO_EJECUTOR:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcoejecutor',
+        root:'data',
+        fields:[
+            {name: 'id'},
+            {name: 'de_ejecutor',
+            convert:function(v,r){
+            return r.de_ejecutor;
+            }
+            }
+            ]
+    });
+    return this.store;
+},
+getStoreCO_PROYECTO:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcoproyecto',
+        root:'data',
+        fields:[
+            {name: 'id'},
+            {name: 'de_proyecto_ac',
+            convert:function(v,r){
+            return r.nu_proyecto_ac+' - '+r.de_proyecto_ac;
+            }
+            }
+            ]
+    });
+    return this.store;
+},
+getStoreCO_ACCION:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcoaccion',
+        root:'data',
+        fields:[
+            {name: 'id'},
+            {name: 'accion_especifica',
+            convert:function(v,r){
+            return r.nu_accion_especifica+' - '+r.de_accion_especifica;
+            }
+            }
+            ]
+    });
+    return this.store;
+},
+getStoreCO_PARTIDA:function(){
+    this.store = new Ext.data.JsonStore({
+        url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcopartida',
+        root:'data',
+        fields:[
+            {name: 'id'},
+            {name: 'de_partida',
+            convert:function(v,r){
+            return r.nu_partida+' - '+r.de_partida;
+            }
+            }
+            ]
+    });
+    return this.store;
+},
 getStoreCO_TPCONTRATO:function(){
     this.store = new Ext.data.JsonStore({
         url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcotpcontrato',
@@ -890,17 +1004,6 @@ getStoreCO_TPCONTRATO:function(){
         fields:[
             {name: 'co_tp_contrato'},
             {name: 'tx_tp_contrato'}
-            ]
-    });
-    return this.store;
-},
-getStoreCO_FUENTEFINANCIAMIENTO:function(){
-    this.store = new Ext.data.JsonStore({
-        url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcofuentefinanciamiento',
-        root:'data',
-        fields:[
-            {name: 'co_fuente_financiamiento'},
-            {name: 'tx_fuente_financiamiento'}
             ]
     });
     return this.store;
@@ -920,7 +1023,7 @@ verificarProveedor:function(){
                         ComprasEditar.main.co_documento.setValue("");
                         ComprasEditar.main.tx_rif.setValue("");
                         ComprasEditar.main.tx_razon_social.setValue("");
-            ComprasEditar.main.tx_direccion.setValue("");
+			ComprasEditar.main.tx_direccion.setValue("");
                         ComprasEditar.main.co_ramo.clearValue();
                         ComprasEditar.main.storeCO_RAMO.removeAll();
 
