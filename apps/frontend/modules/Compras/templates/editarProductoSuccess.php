@@ -45,9 +45,13 @@ init:function(){
                 fieldLabel:'Cantidad',
                 name:'nu_cantidad',
                 value:  this.OBJ.nu_cantidad,        
-                readOnly:true,
-                style:'background:#c9c9c9;',
+//                readOnly:true,
+//                style:'background:#c9c9c9;',
             });
+            
+            this.nu_cantidad.on("blur",function(){
+                listaProducto.main.calcularMonto();
+            });            
 
             this.precio_unitario = new Ext.form.NumberField({
                 fieldLabel:'Precio Unitario',
