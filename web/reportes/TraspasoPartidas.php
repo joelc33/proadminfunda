@@ -10,7 +10,7 @@ class PDF extends FPDF {
 
         $this->datos = $this->getConsulta();
 
-        $this->Image("imagenes/escudosanfco.png", 100, 7,20);
+        $this->Image("imagenes/escudosanfco.jpg", 100, 7,20);
 
         $this->SetFont('Arial','B',10);
         
@@ -19,15 +19,17 @@ class PDF extends FPDF {
         $this->SetY(32);
         $this->Cell(0,0,utf8_decode('REPÚBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
         $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('GOBERNACIÓN DEL ESTADO ZULIA'),0,0,'C');
+        $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
         $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');    
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');          
+        $this->Ln(6);
+        $this->Cell(0,0,utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),0,0,'C');    
         
         $this->SetFont('Arial','',8);
         $this->Ln(6);
 
         //$this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
+        $this->Cell(0,0,utf8_decode('San Francisco, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
         
         $this->Ln(10);
         $this->SetFont('Arial','B',11);        
@@ -166,9 +168,9 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',7);
          $this->ln(18);
          $this->SetX(25);   
-         $this->Row(array(utf8_decode('LCDA. YANIRA MENDEZ ZERPA'),utf8_decode('LCDA. RAISA BRICEÑO MAVARES')),0,0);
+         $this->Row(array(utf8_decode('LCDA. ISBELIA YUGURI'),utf8_decode('LCD0. AROLDO DIAZ')),0,0);
          $this->SetX(25); 
-         $this->Row(array(utf8_decode('SUB-SECRETARIA DE PRESUPUESTO'),utf8_decode('SECRETARIA DE ADMINISTRACÍON Y FINANZAS')),0,0);
+         $this->Row(array(utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN')),0,0);
          $this->SetY($Y);
          $this->SetX(115);
          //$this->MultiCell(90,20,'',1,1,'L',1);  
