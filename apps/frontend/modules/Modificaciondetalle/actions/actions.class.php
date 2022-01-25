@@ -1052,7 +1052,7 @@ class ModificaciondetalleActions extends sfActions
             //$c->addJoin(Tb085PresupuestoPeer::NU_ANIO, Tb013AnioFiscalPeer::CO_ANIO_FISCAL);
             //$c->add(Tb013AnioFiscalPeer::IN_ACTIVO,TRUE);            
             if($id_tb095_tipo_modificacion==1){
-            $c->add(Tb085PresupuestoPeer::NU_FI, $subSelect, Criteria::CUSTOM);    
+            //$c->add(Tb085PresupuestoPeer::NU_FI, $subSelect, Criteria::CUSTOM);    
             }
 
             $c->add(Tb085PresupuestoPeer::NU_ANIO, $this->getUser()->getAttribute('ejercicio'));
