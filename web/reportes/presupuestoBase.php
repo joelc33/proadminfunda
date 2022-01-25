@@ -105,7 +105,8 @@ class PDF extends FPDF {
          $this->SetY(68);
          $this->SetAligns(array("L","L"));
          $this->SetFont('Arial','',9);
-         $this->Row(array(utf8_decode('SOLICITUD: ').utf8_decode($this->datos['co_solicitud']), utf8_decode('  FECHA:  ').date("d/m/Y", strtotime($this->datos['fe_registro']))),0,0);
+         //$this->Row(array(utf8_decode('SOLICITUD: ').utf8_decode($this->datos['co_solicitud']), utf8_decode('  FECHA:  ').date("d/m/Y", strtotime($this->datos['fe_registro']))),0,0);
+         $this->Row(array('', utf8_decode('  FECHA:  ').date("d/m/Y", strtotime($this->datos['fe_registro']))),0,0);
          $this->SetWidths(array(200));
          $this->Ln(2);
          $Y = $this->GetY()+3;
@@ -176,10 +177,22 @@ class PDF extends FPDF {
         $this->MultiCell(72,0,'',1,1,'L',1);
         $this->SetY(230);
         $this->SetX(72);
-        $this->MultiCell(72,5,utf8_decode("Lcda. Milagros Arambulo"),0,'C');
+        $this->MultiCell(72,5,utf8_decode("Lcdo. Aroldo Diaz"),0,'C');
         $this->SetY(235);
         $this->SetX(72);
-        $this->MultiCell(72,5,utf8_decode("COORDINACIÓN DE COMPRAS"),0,'C');
+        $this->MultiCell(72,5,utf8_decode("COORDINACIÓN GENERAL DE ADMINISTRACIÓN"),0,'C');
+
+//        $this->SetY(230);
+//        $this->SetX(72);
+//        $this->SetFont('Arial','',9);
+//        $this->MultiCell(72,0,'',1,1,'L',1);
+//        $this->SetY(230);
+//        $this->SetX(72);
+//        $this->MultiCell(72,5,utf8_decode("Lcda. Milagros Arambulo"),0,'C');
+//        $this->SetY(235);
+//        $this->SetX(72);
+//        $this->MultiCell(72,5,utf8_decode("COORDINACIÓN DE COMPRAS"),0,'C');        
+        
         //$this->MultiCell(72,5,utf8_decode("COORDINACIÓN DE COMPRAS"),1,10,'C',0);           
 
 //         $this->ln();
