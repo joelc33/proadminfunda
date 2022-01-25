@@ -177,10 +177,10 @@ class PDF extends FPDF {
         $this->MultiCell(72,0,'',1,1,'L',1);
         $this->SetY(230);
         $this->SetX(72);
-        $this->MultiCell(72,5,utf8_decode("Lcdo. Aroldo Diaz"),0,'C');
+        //$this->MultiCell(72,5,utf8_decode("Lcdo. Aroldo Diaz"),0,'C');
         $this->SetY(235);
         $this->SetX(72);
-        $this->MultiCell(72,5,utf8_decode("COORDINACIÓN GENERAL DE ADMINISTRACIÓN"),0,'C');
+        $this->MultiCell(72,5,utf8_decode("COORDINACIÓN DE COMPRAS"),0,'C');
 
 //        $this->SetY(230);
 //        $this->SetX(72);
