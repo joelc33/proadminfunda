@@ -1473,14 +1473,14 @@ class PresupuestoActions extends sfActions
             $co_partida_ant     = $Tb053DetalleCompra->getCoPartida();
             $co_presupuesto_ant     = $Tb053DetalleCompra->getCoPresupuesto();
 
-            if($mo_disponible<$Tb053DetalleCompra->getMonto()){
-
-            $this->data = json_encode(array(
-                "success" => false,
-                "msg" =>  "El Monto Disponible de la partida es menor al monto total"
-             ));
-            
-            }else{
+//            if($mo_disponible<$Tb053DetalleCompra->getMonto()){
+//
+//            $this->data = json_encode(array(
+//                "success" => false,
+//                "msg" =>  "El Monto Disponible de la partida es menor al monto total"
+//             ));
+//            
+//            }else{
             
             $Tb053DetalleCompra->setCoPartida($co_partida)
                                ->setCoPresupuesto($co_presupuesto)
@@ -1583,7 +1583,7 @@ class PresupuestoActions extends sfActions
             
             
             
-            }
+//            }
          }catch (PropelException $e)
          {
             $con->rollback();
