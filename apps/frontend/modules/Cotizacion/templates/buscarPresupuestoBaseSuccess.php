@@ -33,7 +33,7 @@ init:function(){
         border:false,
         columns: [
         new Ext.grid.RowNumberer(),
-            {header: 'co_solicitud',hidden:true, menuDisabled:true,dataIndex: 'co_solicitud'},    
+            {header: 'Solicitud', menuDisabled:true,dataIndex: 'co_solicitud'},    
             {header: 'co_cotizacion',hidden:true, menuDisabled:true,dataIndex: 'co_cotizacion'},    
             {header: 'nu_iva',hidden:true, menuDisabled:true,dataIndex: 'nu_iva'},    
             {header: 'co_ruta_requisicion',hidden:true, menuDisabled:true,dataIndex: 'co_ruta_requisicion'},    

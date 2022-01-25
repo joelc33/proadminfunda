@@ -1114,6 +1114,20 @@ class ComprasActions extends sfActions
 
         return $campos['co_requisicion'];
   }
+
+  public function getCoPresupuestoIVA($codigo){
+        
+        $c = new Criteria();
+        $c->add(Tb206CotizacionPeer::CO_SOLICITUD,$codigo);
+        $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO,19336);
+        $c->addJoin(Tb206CotizacionPeer::CO_COTIZACION,Tb207DetalleCotizacionPeer::CO_COTIZACION);
+        $stmt = Tb207DetalleCotizacionPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $campos['co_presupuesto'];
+  }
+
+ 
   
   public function executeGuardar(sfWebRequest $request)
   {
@@ -1252,7 +1266,7 @@ class ComprasActions extends sfActions
                     $tb053_detalle_compras->setPrecioUnitario($productoForm["precio_unitario"]);
                     $tb053_detalle_compras->setMonto($productoForm["monto"]);
                     $tb053_detalle_compras->setDetalle($productoForm["detalle"]);
-                    //$tb053_detalle_compras->setCoPartida($productoForm["co_partida"]);
+                    $tb053_detalle_compras->setCoPresupuesto($productoForm["co_presupuesto"]);
                     $tb053_detalle_compras->setCoUnidadProducto($productoForm["co_unidad_producto"]);
                     $tb053_detalle_compras->setInCalcularIva(true);
                     $tb053_detalle_compras->setInExento($productoForm["in_exento"]);
@@ -1272,9 +1286,11 @@ class ComprasActions extends sfActions
         
         if($monto_iva > 0){        
             $tb053_detalle_compras = new Tb053DetalleCompras();
-            $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());                                        
+            $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
+
             $tb053_detalle_compras->setCoProducto(19336); //IMPUESTO AL VALOR AGREGADO (IVA)
             $tb053_detalle_compras->setNuCantidad(1);
+            $tb053_detalle_compras->setCoPresupuesto($this->getCoPresupuestoIVA($co_solicitud_cotizacion));
             $tb053_detalle_compras->setPrecioUnitario($productoForm["precio_unitario"]);
             $tb053_detalle_compras->setMonto(round($monto_iva,2));
             $tb053_detalle_compras->setDetalle('IMPUESTO AL VALOR AGREGADO (IVA)');
@@ -1769,6 +1785,7 @@ class ComprasActions extends sfActions
                 $c->addSelectColumn(Tb048ProductoPeer::CO_PRODUCTO);
                 $c->addSelectColumn(Tb048ProductoPeer::COD_PRODUCTO);
                 $c->addSelectColumn(Tb048ProductoPeer::TX_PRODUCTO);
+                $c->addSelectColumn(Tb207DetalleCotizacionPeer::CO_PRESUPUESTO);
                 $c->addSelectColumn(Tb207DetalleCotizacionPeer::NU_CANTIDAD);
                 $c->addSelectColumn(Tb207DetalleCotizacionPeer::PRECIO_UNITARIO);
                 $c->addSelectColumn(Tb207DetalleCotizacionPeer::DETALLE);
@@ -1792,6 +1809,7 @@ class ComprasActions extends sfActions
                 $c->clearSelectColumns();
                 $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
                 $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_REQUISICION);
+                $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRESUPUESTO);
                 $c->addSelectColumn(Tb048ProductoPeer::CO_PRODUCTO);
                 $c->addSelectColumn(Tb048ProductoPeer::COD_PRODUCTO);
                 $c->addSelectColumn(Tb048ProductoPeer::TX_PRODUCTO);

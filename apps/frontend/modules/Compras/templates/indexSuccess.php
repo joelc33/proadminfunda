@@ -22,6 +22,7 @@ this.Registro = Ext.data.Record.create([
                      {name: 'monto', type:'number'},
                      {name: 'detalle', type:'string'},
                      {name: 'co_partida', type:'number'},
+                     {name: 'co_presupuesto', type:'number'},
                      {name: 'co_unidad_producto', type:'number'},
                      {name: 'in_exento',type:'string'}
                 ]);
@@ -533,8 +534,8 @@ function renderMonto(val, attr, record) {
 }
 
 
-
-this.gridPanel = new Ext.grid.GridPanel({
+this.rowIndex;
+this.gridPanel = new Ext.grid.EditorGridPanel({
         title:'Lista de Materiales',
         iconCls: 'icon-libro',
         store: this.store_lista,
@@ -547,12 +548,57 @@ this.gridPanel = new Ext.grid.GridPanel({
         new Ext.grid.RowNumberer(),
             {header: 'co_detalle_compras', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_detalle_compras'},
             {header: 'co_detalle_requisicion', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_detalle_requisicion'},
+            {header: 'co_presupuesto', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_presupuesto'},
             {header: 'co_producto', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_producto'},
             {header: 'Codigo', width:80, menuDisabled:true,dataIndex: 'cod_producto'},
             {header: 'Descripción',width:380, menuDisabled:true,dataIndex: 'tx_producto',renderer:textoLargo},
             {header: 'Especificaciones',width:180, menuDisabled:true,dataIndex: 'detalle',renderer:textoLargo},
-            {header: 'Cantidad',width:60, menuDisabled:true,dataIndex: 'nu_cantidad'},
-            {header: 'Precio Unitario',width:100, menuDisabled:true,dataIndex: 'precio_unitario',renderer:renderMonto},
+            {header: 'Precio Unitario',width:100, menuDisabled:true,dataIndex: 'precio_unitario',renderer:renderMonto,editor: new Ext.form.NumberField({
+                allowBlank: false,
+                autoCreate: {tag: "input", type: "text", autocomplete: "off", maxlength: 400},
+                        listeners: {
+                            change: function (cmb, record, index)
+                            {
+
+                                var precio_unitario = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.precio_unitario;
+
+                                if(parseInt(this.getValue())>parseInt(precio_unitario)){                          
+                                      Ext.Msg.alert("Alerta","El precio unitario ingresado es mayor al precio el presupuesto base");
+                                      return false;
+                                }
+
+                                var monto = this.getValue()*ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_cantidad;
+                                ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.monto = monto; 
+
+                                ComprasEditar.main.getTotal();
+                                ComprasEditar.main.getVerificarIVA();
+                             
+                            }
+                        }   
+            })},
+            {header: 'Cantidad',width:60, menuDisabled:true,dataIndex: 'nu_cantidad',editor: new Ext.form.NumberField({
+                allowBlank: false,
+                autoCreate: {tag: "input", type: "text", autocomplete: "off", maxlength: 400},
+                        listeners: {
+                            change: function (cmb, record, index)
+                            {
+                                var monto = this.getValue()*ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.precio_unitario;
+
+                                var cantidad = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_cantidad;
+
+                                if(parseInt(this.getValue())>parseInt(cantidad)){                          
+                                      Ext.Msg.alert("Alerta","La cantidad ingresada es mayor a la cantidad requerida");
+                                      return false;
+                                }
+
+                                ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.monto = monto; 
+
+                                ComprasEditar.main.getTotal();
+                                ComprasEditar.main.getVerificarIVA();
+                            }
+                        }   
+                })
+             },            
             {header: 'Monto',width:100, menuDisabled:true,dataIndex: 'monto',renderer:renderMonto}
         ],
         stripeRows: true,
@@ -560,6 +606,8 @@ this.gridPanel = new Ext.grid.GridPanel({
         stateful: true,
         listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
             ComprasEditar.main.botonEliminar.enable();
+            ComprasEditar.main.rowIndex = rowIndex;
+
         }}
 });
 
@@ -788,6 +836,7 @@ getVerificarIVA: function(){
                 {name: 'co_detalle_compras'},
                 {name: 'co_detalle_requisicion'},
                 {name: 'co_producto'},
+                {name: 'co_presupuesto'},
                 {name: 'cod_producto'},
                 {name: 'tx_producto'},
                 {name: 'nu_cantidad'},
