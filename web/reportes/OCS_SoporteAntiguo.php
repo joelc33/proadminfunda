@@ -510,13 +510,13 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetX(130);
         $this->finishFlowingBlock();
 
-        $this->newFlowingBlock( 180, 5, '', 'J' );
-            $this->SetFont('Times', 'B', 9 );
-            $this->WriteFlowingBlock(utf8_decode('OTRAS ESPECIFICACIONES: '));
-            $this->SetFont( 'Times', '', 9 );
-            $this->WriteFlowingBlock('    '.utf8_decode($campo['tx_observacion']));
-            $this->SetX(15);
-        $this->finishFlowingBlock();
+//        $this->newFlowingBlock( 180, 5, '', 'J' );
+//            $this->SetFont('Times', 'B', 9 );
+//            $this->WriteFlowingBlock(utf8_decode('OTRAS ESPECIFICACIONES: '));
+//            $this->SetFont( 'Times', '', 9 );
+//            $this->WriteFlowingBlock('    '.utf8_decode($campo['tx_observacion']));
+//            $this->SetX(15);
+//        $this->finishFlowingBlock();
 
         $Y = $this->GetY();
         
@@ -544,11 +544,11 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->MultiCell(100,5,utf8_decode($this->punto['forma_entrega']),0,'L');            
             $this->SetX(15);
             $this->SetFont( 'Times', 'B', 9 );
-//            $this->MultiCell(70,5,utf8_decode('OTRAS ESPECIFICACIONES: '),0,'L');
+            $this->MultiCell(70,5,utf8_decode('OTRAS ESPECIFICACIONES: '),0,'L');
             $this->SetY($Y+25);
             $this->SetX(65);
             $this->SetFont( 'Times', '', 9 );
-            $this->MultiCell(100,5,utf8_decode(''),0,'L');            
+            $this->MultiCell(100,5,utf8_decode($campo['tx_observacion']),0,'L');            
 
        //-------------
 
@@ -596,13 +596,11 @@ class PDF_Flo extends PDF_FlowingBlock
     function getOrdenes(){
 
           $conex = new ConexionComun();
-          $sql = "select tb039.nu_requisicion,
-                         tb039.created_at,
-                         upper(tb027.tx_tipo_solicitud) as tx_tipo_solicitud,
+          $sql = "select upper(tb027.tx_tipo_solicitud) as tx_tipo_solicitud,
                          tb052.numero_compra,
                          tb052.fecha_compra,
-                         tb039.co_solicitud,
-                         upper(tb039.tx_concepto) as tx_concepto,
+                         tb052.co_solicitud,
+                         upper(tb052.tx_observacion) as tx_concepto,
                          tb052.tx_observacion,
                          UPPER(tb008.tx_razon_social) AS tx_razon_social,
                          (tb007.inicial||'-'||tb008.tx_rif) as tx_rif,
@@ -618,7 +616,6 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb001.nb_usuario,
                          tb082.de_ejecutor
                   from   tb026_solicitud as tb026
-                  left join tb039_requisiciones as tb039 on tb039.co_solicitud = tb026.co_solicitud
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud
                   left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras
                   left join tb085_presupuesto as tb085 on tb085.id = tb053.co_presupuesto
@@ -628,10 +625,10 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb027_tipo_solicitud as tb027 on tb027.co_tipo_solicitud=tb052.co_tipo_solicitud
                   left join tb088_tipo_movimiento as tb088 on tb088.id = tb052.co_tipo_movimiento
                   left join tb008_proveedor as tb008 on tb008.co_proveedor=tb052.co_proveedor
-                  left join tb001_usuario as tb001 on tb001.co_usuario = tb039.co_usuario
+                  left join tb001_usuario as tb001 on tb001.co_usuario = tb052.co_usuario
                   left join tb007_documento as tb007 on tb007.co_documento = tb008.co_documento
                   left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
-                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb039.co_solicitud
+                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud
                   where tb030.co_ruta = ".$_GET['codigo']; //$conex->decrypt($_GET['codigo']);
 
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
