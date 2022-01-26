@@ -45,7 +45,10 @@ class ComprasActions extends sfActions
     $c->addSelectColumn(Tb052ComprasPeer::CO_ACCION_ESPECIFICA);
     $c->addSelectColumn(Tb052ComprasPeer::CO_PARTIDA_IVA);
     $c->addSelectColumn(Tb052ComprasPeer::CREATED_AT);
+    $c->addSelectColumn(Tb052ComprasPeer::FORMA_ENTREGA);
+    $c->addSelectColumn(Tb052ComprasPeer::FORMA_PAGO);
     $c->addSelectColumn(Tb052ComprasPeer::CO_SOLICITUD_COTIZACION);
+    $c->addSelectColumn(Tb052ComprasPeer::TX_CONCEPTO);
     $c->addSelectColumn(Tb206CotizacionPeer::TX_SERIAL_COTIZACION);
     $c->addSelectColumn(Tb056ContratoComprasPeer::CO_CONTRATO_COMPRAS);
     $c->addSelectColumn(Tb056ContratoComprasPeer::FECHA_INICIO);
@@ -97,6 +100,7 @@ class ComprasActions extends sfActions
                             "fecha_entrega"      => $campos["fecha_entrega"],
                             "tiempo_garantia"    => $campos["tiempo_garantia"],
                             "co_ramo"            => $campos["co_ramo"],
+                            "tx_concepto"            => $campos["tx_concepto"],
                             "monto"              => $campos["monto"],
                             "co_tp_contrato"     => $campos["co_tp_contrato"],
                             "co_fuente_financiamiento" => $campos["co_fuente_financiamiento"],
@@ -106,9 +110,11 @@ class ComprasActions extends sfActions
                             "monto_total"        => $campos["monto_total"],
                             "nu_orden_compra"    => $campos["nu_orden_compra"],
                             "in_responsabilidad_social" => $campos["in_responsabilidad_social"],
-                            "co_factura"         => ($campos["co_factura"]==null)?'':$campos["co_factura"],
-                            "co_solicitud_cotizacion" => $campos["co_solicitud_cotizacion"],
-                            "tx_serial_cotizacion" => $campos["tx_serial_cotizacion"]
+                            "co_factura"                => ($campos["co_factura"]==null)?'':$campos["co_factura"],
+                            "co_solicitud_cotizacion"   => $campos["co_solicitud_cotizacion"],
+                            "tx_serial_cotizacion"      => $campos["tx_serial_cotizacion"],
+                            "forma_pago"                => $campos["forma_pago"],
+                            "forma_entrega"             => $campos["forma_entrega"],
                             
                     ));
     }else{
@@ -1209,6 +1215,8 @@ class ComprasActions extends sfActions
                                                         
         /*Campo tipo VARCHAR */
         $tb052_compras->setTxObservacion($tb052_comprasForm["tx_observacion"]);
+
+        $tb052_compras->setTxConcepto($tb052_comprasForm["tx_concepto"]);
                                                         
         /*Campo tipo BIGINT */
         $tb052_compras->setCoSolicitud($tb052_comprasForm["co_solicitud"]);

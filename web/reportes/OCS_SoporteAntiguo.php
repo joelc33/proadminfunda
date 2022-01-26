@@ -600,7 +600,7 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb052.numero_compra,
                          tb052.fecha_compra,
                          tb052.co_solicitud,
-                         upper(tb052.tx_observacion) as tx_concepto,
+                         upper(tb052.tx_concepto) as tx_concepto,
                          tb052.tx_observacion,
                          UPPER(tb008.tx_razon_social) AS tx_razon_social,
                          (tb007.inicial||'-'||tb008.tx_rif) as tx_rif,

@@ -432,15 +432,15 @@ this.fieldPresupuesto= new Ext.form.FieldSet({
 this.fieldContrato= new Ext.form.FieldSet({
         title: 'Datos de la Orden de Compra',
         items:[
-       //   this.tx_concepto,
-          this.tx_observacion,
+          this.tx_concepto,
           this.tx_observacion,
           this.co_tp_contrato,
           this.nu_orden_compra,
           this.PanelFecha,
           this.in_responsabilidad_social,
           this.Panelforma,
-          this.Paneltiempo
+          this.Paneltiempo,          
+          this.tx_observacion,
        ]
 });
 
