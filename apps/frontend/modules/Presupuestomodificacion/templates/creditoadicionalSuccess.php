@@ -160,7 +160,7 @@ this.fe_oficio = new Ext.form.DateField({
 });
 
 this.de_articulo_ley = new Ext.form.TextField({
-	fieldLabel:'Articulo / Ley',
+	fieldLabel:'Nro Oficio',
 	name:'tb096_presupuesto_modificacion[de_articulo_ley]',
 	value:this.OBJ.de_articulo_ley,
 //	allowBlank:false,
@@ -486,11 +486,11 @@ this.fieldSet1 = new Ext.form.FieldSet({
           this.de_modificacion,
           this.de_justificacion,
           //this.nu_oficio,
-          this.id_tb073_fuente_financiamiento,
-          this.id_tb068_numero_fuente_financiamiento,
+//          this.id_tb073_fuente_financiamiento,
+//          this.id_tb068_numero_fuente_financiamiento,
           this.fe_oficio,
           this.de_articulo_ley,
-          this.id_tb152_tipo_credito,
+//          this.id_tb152_tipo_credito,
           //this.id_tb083_proyecto_ac
         ]
  });

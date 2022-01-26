@@ -145,7 +145,7 @@ class PDF extends FPDF {
          $iva = $campo['monto_iva'];
          $item=$item+1;
          $i++;
-         $this->Row(array($item, utf8_decode($campo['tx_producto']),utf8_decode($campo['nu_cantidad']),utf8_decode($campo['tx_unidad_producto']),number_format($campo['precio_unitario'], 2, ',','.'),number_format($campo['monto'], 2, ',','.')),1,1);
+         $this->Row(array($item, utf8_decode($campo['tx_producto'].' - '.$campo['detalle']),utf8_decode($campo['nu_cantidad']),utf8_decode($campo['tx_unidad_producto']),number_format($campo['precio_unitario'], 2, ',','.'),number_format($campo['monto'], 2, ',','.')),1,1);
          //$SubTotal =     $SubTotal + round($campo['monto'],2);
          $SubTotal =     $SubTotal + $campo['monto'];
          $TotalIVA =     $TotalIVA + $iva;
@@ -176,7 +176,7 @@ class PDF extends FPDF {
         $this->MultiCell(72,0,'',1,1,'L',1);
         $this->SetY(230);
         $this->SetX(72);
-        $this->MultiCell(72,5,utf8_decode("Lcda. Milagros Arambulo"),0,'C');
+        //$this->MultiCell(72,5,utf8_decode("Lcda. Milagros Arambulo"),0,'C');
         $this->SetY(235);
         $this->SetX(72);
         $this->MultiCell(72,5,utf8_decode("COORDINACIÓN DE COMPRAS"),0,'C');
@@ -268,6 +268,7 @@ class PDF extends FPDF {
                          tb206.nu_iva,
                          tb048.cod_producto,
                          tb207.precio_unitario,
+                         tb207.detalle,
                          tb057.tx_unidad_producto,
                          tb207.monto,
                          tb206.monto_iva

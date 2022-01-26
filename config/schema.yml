@@ -565,6 +565,8 @@ propel:
     co_ramo: { type: BIGINT, required: false }
     forma_pago: { type: VARCHAR, required: false }
     forma_entrega: { type: VARCHAR, required: false }
+    co_solicitud_cotizacion: { type: BIGINT, required: false }
+    tx_concepto: { type: VARCHAR, required: false }
     _indexes: { fki_co_partida_presupuesto: [co_partida_presupuesto], fki_co_servicio: [co_servicio], fki_co_tipo_movimiento_compra: [co_tipo_movimiento] }
   tb053_detalle_compras:
     _attributes: { phpName: Tb053DetalleCompras }
@@ -1228,7 +1230,7 @@ propel:
     _attributes: { phpName: Tb096PresupuestoModificacion }
     id: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
     id_tb095_tipo_modificacion: { type: BIGINT, required: true, foreignTable: tb095_tipo_modificacion, foreignReference: id, onDelete: CASCADE, onUpdate: CASCADE }
-    nu_modificacion: { type: VARCHAR, required: true }
+    nu_modificacion: { type: VARCHAR, required: false }
     fe_modificacion: { type: DATE, required: false }
     de_modificacion: { type: VARCHAR, required: true }
     de_justificacion: { type: VARCHAR, required: true }
@@ -2500,6 +2502,50 @@ propel:
     co_solicitud: { type: BIGINT, required: false }
     co_orden_pago: { type: BIGINT, required: false }
     fe_desafectacion: { type: DATE, required: false }
+  tb206_cotizacion:
+    _attributes: { phpName: Tb206Cotizacion }
+    co_cotizacion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    co_requisicion: { type: BIGINT, required: false }
+    co_usuario: { type: BIGINT, required: false }
+    fecha_cotizacion: { type: DATE, required: false }
+    tx_observacion: { type: VARCHAR, required: false }
+    co_solicitud: { type: BIGINT, required: false }
+    created_at: { type: TIMESTAMP, required: false }
+    anio: { type: NUMERIC, required: false }
+    co_tipo_solicitud: { type: BIGINT, required: false }
+    nu_iva: { type: NUMERIC, size: '4', scale: '2', required: false }
+    monto_iva: { type: NUMERIC, size: '32', scale: '2', required: false }
+    monto_sub_total: { type: NUMERIC, size: '32', scale: '2', required: false }
+    monto_total: { type: NUMERIC, size: '32', scale: '2', required: false }
+    numero_cotizacion: { type: VARCHAR, required: false }
+    co_solicitud_anular: { type: BIGINT, required: false }
+    in_anular: { type: BOOLEAN, required: false }
+    co_ramo: { type: BIGINT, required: false }
+    tx_serial_cotizacion: { type: VARCHAR, required: false }
+    co_ente: { type: BIGINT, required: false }
+  tb207_detalle_cotizacion:
+    _attributes: { phpName: Tb207DetalleCotizacion }
+    co_detalle_cotizacion: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    co_cotizacion: { type: BIGINT, required: false }
+    co_producto: { type: BIGINT, required: false }
+    nu_cantidad: { type: NUMERIC, required: false }
+    precio_unitario: { type: NUMERIC, size: '32', scale: '2', required: false }
+    monto: { type: NUMERIC, size: '32', scale: '2', required: false }
+    detalle: { type: VARCHAR, required: false }
+    co_unidad_producto: { type: BIGINT, required: false }
+    in_calcular_iva: { type: BOOLEAN, required: false }
+    co_asiento_contable: { type: BIGINT, required: false }
+    in_exento: { type: BOOLEAN, required: false }
+    co_detalle_requisicion: { type: BIGINT, required: false }
+    co_factura: { type: BIGINT, required: false }
+    co_solicitud_anular: { type: BIGINT, required: false }
+    in_anular: { type: BOOLEAN, required: false }
+    in_presupuesto: { type: BOOLEAN, required: true, defaultValue: true }
+    in_bien: { type: BOOLEAN, required: false }
+    co_presupuesto: { type: BIGINT, required: false }
+    co_partida: { type: BIGINT, required: false }
+    co_proyecto_ac: { type: BIGINT, required: false }
+    co_accion_especifica: { type: BIGINT, required: false }
   tbbn003_parroquia:
     _attributes: { phpName: Tbbn003Parroquia }
     co_parroquia: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
