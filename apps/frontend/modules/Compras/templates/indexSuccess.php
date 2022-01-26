@@ -884,9 +884,11 @@ getVerificarIVA: function(){
     return this.store;
 },
 eliminar:function(){
-        var s = ComprasEditar.main.gridPanel.getSelectionModel().getSelections();
+        var s = ComprasEditar.main.gridPanel.getSelectionModel().selection;
 
-        var co_detalle_compras = ComprasEditar.main.gridPanel.getSelectionModel().getSelected().get('co_detalle_compras');
+        var co_detalle_compras = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.co_detalle_compras;
+
+        ComprasEditar.main.gridPanel.getStore().removeAt(ComprasEditar.main.rowIndex);
 
         if(co_detalle_compras!=''){
 
@@ -902,9 +904,11 @@ eliminar:function(){
 
         }
 
-        for(var i = 0, r; r = s[i]; i++){
-              ComprasEditar.main.store_lista.remove(r);
-        }
+        /*for(var i = 0, r; r = s[i]; i++){
+            
+            ComprasEditar.main.store_lista.remove(r);
+        }*/
+        
          ComprasEditar.main.botonEliminar.disable();
          ComprasEditar.main.getTotal();
          ComprasEditar.main.getVerificarIVA();
