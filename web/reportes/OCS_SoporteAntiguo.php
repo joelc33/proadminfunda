@@ -346,7 +346,7 @@ class PDF_Flo extends PDF_FlowingBlock
          foreach($this->lista_materiales as $key => $campo){
          $monto_prod =  ($campo['nu_cantidad']*$campo['precio_unitario']);
          $iva = ($monto_prod*$campo['nu_iva'])/100;
-
+         $nu_iva = $campo['nu_iva'];
          if ($j==0) {
              $this->SetX(16);
              $this->Row(array(utf8_decode($campo['tx_producto']),utf8_decode($campo['nu_cantidad']),number_format($campo['precio_unitario'], 2, ',','.'),number_format($monto_prod, 2, ',','.'),number_format($iva, 2, ',','.'),number_format(($monto_prod+$iva), 2, ',','.')),0,0);
@@ -420,7 +420,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetWidths(array(150,40));
          $this->SetFont('Times', 'BI', 9 );
          $this->Row(array(utf8_decode('Sub-Total:'),number_format($SubTotal, 2, ',','.')),0,0);
-         $this->Row(array(utf8_decode('Total I.V.A.: '),number_format($TotalIVA, 2, ',','.')),0,0);
+         $this->Row(array(utf8_decode('Total I.V.A. '.$nu_iva.' %: '),number_format($TotalIVA, 2, ',','.')),0,0);
          $this->Row(array(utf8_decode('Total Excento: '),number_format($TotalExcento, 2, ',','.')),0,0);
          $this->SetFont('Times','B',10);
          $this->Row(array('Total General',number_format($TotalGenerado, 2, ',','.')),0,0);
