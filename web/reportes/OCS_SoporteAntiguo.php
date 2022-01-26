@@ -256,6 +256,15 @@ class PDF_Flo extends PDF_FlowingBlock
 //            $this->SetY(45);
 //            $this->SetX(16);
 //        $this->finishFlowingBlock();
+        $this->newFlowingBlock( 25, 5, '', 'J' );
+            $this->SetFont('Times', 'B', 9 );
+            $this->WriteFlowingBlock(utf8_decode('RIF: '));
+            $this->SetFont( 'Times', '', 9 );
+            $this->WriteFlowingBlock($this->datos['tx_rif']);
+            $this->SetY(45);
+            $this->SetX(16);
+        $this->finishFlowingBlock();           
+            
         $Y = $this->GetY();
             $this->SetY($Y);
             $this->SetX(16);
@@ -284,15 +293,7 @@ class PDF_Flo extends PDF_FlowingBlock
 //            $this->SetX(16);
 //        $this->finishFlowingBlock();
 
-        $this->newFlowingBlock( 25, 5, '', 'J' );
-            $this->SetFont('Times', 'B', 9 );
-            $this->WriteFlowingBlock(utf8_decode('RIF: '));
-            $this->SetFont( 'Times', '', 9 );
-            $this->WriteFlowingBlock($this->datos['tx_rif']);
-            $this->SetY(45);
-            $this->SetX(16);
-        $this->finishFlowingBlock();
-        $Y = $this->GetY();
+
 
        //-------------
 //        $this->newFlowingBlock( 80, 5, '', 'J' );
