@@ -382,7 +382,7 @@ this.tx_serial_cotizacion = new Ext.form.TextField({
 });
 
 this.tx_observacion = new Ext.form.TextArea({
-    fieldLabel:'Concepto',
+    fieldLabel:'Observación',
     name:'tb052_compras[tx_observacion]',
     value:this.OBJ.tx_observacion,
     allowBlank:false,
@@ -433,7 +433,7 @@ this.fieldContrato= new Ext.form.FieldSet({
         title: 'Datos de la Orden de Compra',
         items:[
           this.tx_concepto,
-          this.tx_observacion,
+          //this.tx_observacion,
           this.co_tp_contrato,
           this.nu_orden_compra,
           this.PanelFecha,
