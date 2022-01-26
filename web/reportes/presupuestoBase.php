@@ -105,8 +105,8 @@ class PDF extends FPDF {
          $this->SetY(68);
          $this->SetAligns(array("L","L"));
          $this->SetFont('Arial','',9);
-         //$this->Row(array(utf8_decode('SOLICITUD: ').utf8_decode($this->datos['co_solicitud']), utf8_decode('  FECHA:  ').date("d/m/Y", strtotime($this->datos['fe_registro']))),0,0);
-         $this->Row(array('', utf8_decode('  FECHA:  ').date("d/m/Y", strtotime($this->datos['fe_registro']))),0,0);
+         $this->Row(array(utf8_decode('CODIGO: ').utf8_decode($this->datos['nu_orden_compra']), utf8_decode('  FECHA:  ').date("d/m/Y", strtotime($this->datos['fe_registro']))),0,0);
+         //$this->Row(array('', utf8_decode('  FECHA:  ').date("d/m/Y", strtotime($this->datos['fe_registro']))),0,0);
          $this->SetWidths(array(200));
          $this->Ln(2);
          $Y = $this->GetY()+3;
@@ -253,6 +253,7 @@ class PDF extends FPDF {
                          tb039.fe_registro,
                          tb027.tx_tipo_solicitud,
                          tb052.numero_compra,
+                         tb052.nu_orden_compra,
                          tb052.fecha_compra,
                          tb039.co_solicitud,
                          tb052.tx_observacion,
