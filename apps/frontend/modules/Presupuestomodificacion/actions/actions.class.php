@@ -1701,12 +1701,12 @@ class PresupuestomodificacionActions extends sfActions
                 $fecha = date("Y-m-d H:i:s");
                 $tb096_presupuesto_modificacion->setUpdatedAt($fecha);
                 $tb096_presupuesto_modificacion->setCoUsuario($this->getUser()->getAttribute('codigo'));
-                $tb096_presupuesto_modificacion->setIdTb068NumeroFuenteFinanciamiento($tb096_presupuesto_modificacionForm["id_tb068_numero_fuente_financiamiento"]);
+//                $tb096_presupuesto_modificacion->setIdTb068NumeroFuenteFinanciamiento($tb096_presupuesto_modificacionForm["id_tb068_numero_fuente_financiamiento"]);
                 $tb096_presupuesto_modificacion->setIdTb082EjecutorOrigen($tb096_presupuesto_modificacionForm["id_tb082_ejecutor_origen"]);
                 $tb096_presupuesto_modificacion->setIdTb082EjecutorDestino($tb096_presupuesto_modificacionForm["id_tb082_ejecutor_destino"]);
                 /*Campo tipo BIGINT */
-                $tb096_presupuesto_modificacion->setIdTb152TipoCredito($tb096_presupuesto_modificacionForm["id_tb152_tipo_credito"]);
-                $tb096_presupuesto_modificacion->setIdTb073FuenteFinanciamiento($tb096_presupuesto_modificacionForm["id_tb073_fuente_financiamiento"]);
+//                $tb096_presupuesto_modificacion->setIdTb152TipoCredito($tb096_presupuesto_modificacionForm["id_tb152_tipo_credito"]);
+//                $tb096_presupuesto_modificacion->setIdTb073FuenteFinanciamiento($tb096_presupuesto_modificacionForm["id_tb073_fuente_financiamiento"]);
                 $tb096_presupuesto_modificacion->save($con);
 
                 $c = new Criteria();
@@ -2048,57 +2048,43 @@ class PresupuestomodificacionActions extends sfActions
                         $campos12 = $stmt12->fetch(PDO::FETCH_ASSOC);
 
                         /*CAMPOS*/     
-                        $tb085_presupuesto = new Tb085Presupuesto();
-                        $tb085_presupuesto->setIdTb084AccionEspecifica($campos_destino["id_tb084_accion_especifica"]);
-                        $tb085_presupuesto->setNuPartida($campos_destino["nu_partida"]);
-                        $tb085_presupuesto->setDePartida($campos10["de_partida"]);
-                        $tb085_presupuesto->setMoInicial(0);
-                        //$tb085_presupuesto->setMoActualizado($campos_destino["mo_distribucion"]);
-                        $tb085_presupuesto->setMoActualizado(0);
-                        $tb085_presupuesto->setMoPrecomprometido(0);
-                        $tb085_presupuesto->setMoComprometido(0);
-                        $tb085_presupuesto->setMoCausado(0);
-                        $tb085_presupuesto->setMoPagado(0);
-                        //$tb085_presupuesto->setMoDisponible($campos_destino["mo_distribucion"]);
-                        $tb085_presupuesto->setMoDisponible(0);
-                        $tb085_presupuesto->setInActivo(true);
-                        $tb085_presupuesto->setInMovimiento(true);
-                        /*$tb085_presupuesto->setNuPa(substr(trim($campos_destino["nu_partida"]), 0, 3));
-                        $tb085_presupuesto->setNuGe(substr(substr(trim($campos_destino["nu_partida"]), 0, 5), 3));
-                        $tb085_presupuesto->setNuEs(substr(substr(trim($campos_destino["nu_partida"]), 0, 7), 5));
-                        $tb085_presupuesto->setNuSe(substr(substr(trim($campos_destino["nu_partida"]), 0, 9), 7));
-                        $tb085_presupuesto->setNuSse(substr(substr(trim($campos_destino["nu_partida"]), 0, 12), 9));
-                        $tb085_presupuesto->setCoPartida(substr(trim($campos_destino["nu_partida"]), 0, 12));*/
-                        $tb085_presupuesto->setNuPa($campos10["nu_pa"]);
-                        $tb085_presupuesto->setNuGe($campos10["nu_ge"]);
-                        $tb085_presupuesto->setNuEs($campos10["nu_es"]);
-                        $tb085_presupuesto->setNuSe($campos10["nu_se"]);
-                        $tb085_presupuesto->setNuSse($campos10["nu_sse"]);
-                        $tb085_presupuesto->setCoPartida($campos_destino["nu_partida"]);
-                        $tb085_presupuesto->setNuNivel(11);
-                        //$tb085_presupuesto->setNuFi(substr(substr(trim($campos_destino["nu_partida"]), 0, 17), 12));
-                        $tb085_presupuesto->setNuFi($campos12["tx_siglas"].$campos12["tx_numero_fuente"]);
-                        $tb085_presupuesto->setCoCategoria($campos11["nu_ejecutor"].'.'.$campos_destino["nu_partida"]);
-                        $tb085_presupuesto->setNuAplicacion($campos_destino["nu_aplicacion"]);
-                        //$tb085_presupuesto->setTpIngreso($campos_destino["tp_ingreso"]);
-                        //$tb085_presupuesto->setCoCuentaContable($campos_destino["co_cuenta_contable"]);
-                        $tb085_presupuesto->setTipApl($campos_destino["nu_aplicacion"]);
-                        $tb085_presupuesto->setInGenCheque(true);
-                        $tb085_presupuesto->setTipGasto($campos_destino["tip_gasto"]);
-                        //$tb085_presupuesto->setTipIng($campos_destino["tip_ing"]);
-                        //$tb085_presupuesto->setCodAmb($campos_destino["cod_amb"]);
-                        $tb085_presupuesto->setCoEnte($campos_destino["id_tb082_ejecutor_destino"]);
-                        $tb085_presupuesto->setNuAnio($campos_destino["id_tb013_anio_fiscal"]);
-                        //$tb085_presupuesto->setMoDisponibleAct($campos_destino["mo_disponible_act"]);
-                        $tb085_presupuesto->setIdTb139Aplicacion($campos_destino['id_tb139_aplicacion']);
-                        $tb085_presupuesto->setCodEnte($campos11["nu_ejecutor"]);
-                        $tb085_presupuesto->save($con);
+//                        $tb085_presupuesto = new Tb085Presupuesto();
+//                        $tb085_presupuesto->setIdTb084AccionEspecifica($campos_destino["id_tb084_accion_especifica"]);
+//                        $tb085_presupuesto->setNuPartida($campos_destino["nu_partida"]);
+//                        $tb085_presupuesto->setDePartida($campos10["de_partida"]);
+//                        $tb085_presupuesto->setMoInicial(0);
+//                        $tb085_presupuesto->setMoActualizado(0);
+//                        $tb085_presupuesto->setMoPrecomprometido(0);
+//                        $tb085_presupuesto->setMoComprometido(0);
+//                        $tb085_presupuesto->setMoCausado(0);
+//                        $tb085_presupuesto->setMoPagado(0);
+//                        $tb085_presupuesto->setMoDisponible(0);
+//                        $tb085_presupuesto->setInActivo(true);
+//                        $tb085_presupuesto->setInMovimiento(true);
+//                        $tb085_presupuesto->setNuPa($campos10["nu_pa"]);
+//                        $tb085_presupuesto->setNuGe($campos10["nu_ge"]);
+//                        $tb085_presupuesto->setNuEs($campos10["nu_es"]);
+//                        $tb085_presupuesto->setNuSe($campos10["nu_se"]);
+//                        $tb085_presupuesto->setNuSse($campos10["nu_sse"]);
+//                        $tb085_presupuesto->setCoPartida($campos_destino["nu_partida"]);
+//                        $tb085_presupuesto->setNuNivel(11);
+//                        $tb085_presupuesto->setNuFi($campos12["tx_siglas"].$campos12["tx_numero_fuente"]);
+//                        $tb085_presupuesto->setCoCategoria($campos11["nu_ejecutor"].'.'.$campos_destino["nu_partida"]);
+//                        $tb085_presupuesto->setNuAplicacion($campos_destino["nu_aplicacion"]);
+//                        $tb085_presupuesto->setTipApl($campos_destino["nu_aplicacion"]);
+//                        $tb085_presupuesto->setInGenCheque(true);
+//                        $tb085_presupuesto->setTipGasto($campos_destino["tip_gasto"]);
+//                        $tb085_presupuesto->setCoEnte($campos_destino["id_tb082_ejecutor_destino"]);
+//                        $tb085_presupuesto->setNuAnio($campos_destino["id_tb013_anio_fiscal"]);
+//                        $tb085_presupuesto->setIdTb139Aplicacion($campos_destino['id_tb139_aplicacion']);
+//                        $tb085_presupuesto->setCodEnte($campos11["nu_ejecutor"]);
+//                        $tb085_presupuesto->save($con);
 
                         $saldo_anterior = 0;
                         $saldo_nuevo = $campos_destino["mo_distribucion"];
 
                         $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
-                        $tb087_presupuesto_movimiento->setCoPartida($tb085_presupuesto->getId())
+                        $tb087_presupuesto_movimiento->setCoPartida($campos_destino["id_tb085_presupuesto"])
                                          ->setCoTipoMovimiento(7)
                                          ->setNuMonto($campos_destino["mo_distribucion"])
                                          ->setNuAnio($campos_destino["id_tb013_anio_fiscal"])
@@ -2110,7 +2096,7 @@ class PresupuestomodificacionActions extends sfActions
                                          ->save($con);
 
                         $tb097_movimiento = Tb097ModificacionDetallePeer::retrieveByPK($campos_destino["id"]);
-                        $tb097_movimiento->setIdTb085Presupuesto($tb085_presupuesto->getId());
+                        //$tb097_movimiento->setIdTb085Presupuesto($tb085_presupuesto->getId());
                         $tb097_movimiento->setInTraspaso(true);
                         $tb097_movimiento->save($con);
 
@@ -2174,7 +2160,7 @@ class PresupuestomodificacionActions extends sfActions
                   $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb096_presupuesto_modificacionForm["co_solicitud"]));
                   $ruta->setInCargarDato(true)->save($con);
 
-                  Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta()); 
+                  //Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta()); 
 
                 $con->commit();
 
