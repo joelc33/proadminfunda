@@ -137,7 +137,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(100, 150, 255));
         $this->RoundedRect(15, 12, 90, 28, 3.5, '1111', 'DF', $style);
         //$this->RoundedRect(posX, posY, ancho, alto, redondeo, 1=EsqRecta-0=EsqRedondeada(1digitosporEsquina), estiloEsquinas, estiloLinea, colorRelleno);
-        $this->Image("imagenes/escudosanfco.jpg", 16, 18,17);
+        $this->Image("imagenes/escudosanfco.jpg", 16, 16,17);
         $this->SetFont('Times','B',9);
         $this->SetTextColor(0,0,0);
         $this->SetY(20);
@@ -148,7 +148,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(20);
         $this->Row(array(utf8_decode('ESTADO ZULIA')),0,0);
         $this->SetX(20);
-        $this->Row(array(utf8_decode('MUNICIPIO SAN FRANCISCO')),0,0);
+        $this->Row(array(utf8_decode('ALCALDIA DEL MUNICIPIO SAN FRANCISCO')),0,0);
         $this->SetX(20);
         $this->Row(array(utf8_decode('RIF. G-200005297')),0,0);
 
@@ -248,14 +248,14 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->MultiCell(70,5,utf8_decode($this->datos['nu_orden_compra']),0,'L');
 
         //-------------
-        $this->newFlowingBlock( 100, 5, '', 'J' );
-            $this->SetFont('Times', 'B', 9 );
-            $this->WriteFlowingBlock(utf8_decode('UNIDAD USUARIA: '));
-            $this->SetFont( 'Times', '', 9 );
-            $this->WriteFlowingBlock(utf8_decode(utf8_decode($this->datos['tx_ente'])));
-            $this->SetY(45);
-            $this->SetX(16);
-        $this->finishFlowingBlock();
+//        $this->newFlowingBlock( 100, 5, '', 'J' );
+//            $this->SetFont('Times', 'B', 9 );
+//            $this->WriteFlowingBlock(utf8_decode('UNIDAD USUARIA: '));
+//            $this->SetFont( 'Times', '', 9 );
+//            $this->WriteFlowingBlock(utf8_decode(utf8_decode($this->datos['tx_ente'])));
+//            $this->SetY(45);
+//            $this->SetX(16);
+//        $this->finishFlowingBlock();
         $Y = $this->GetY();
             $this->SetY($Y);
             $this->SetX(16);
@@ -290,7 +290,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetFont( 'Times', '', 9 );
             $this->WriteFlowingBlock($this->datos['tx_rif']);
             $this->SetY(45);
-            $this->SetX(79);
+            $this->SetX(16);
         $this->finishFlowingBlock();
         $Y = $this->GetY();
 
@@ -418,7 +418,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetFont('Times','B',10);
          $this->SetAligns(array("R","R"));
          $this->SetWidths(array(150,40));
-         $this->SetFont('Times', 'BI', 9 );
+         $this->SetFont('Times', 'B', 9 );
          $this->Row(array(utf8_decode('Sub-Total:'),number_format($SubTotal, 2, ',','.')),0,0);
          $this->Row(array(utf8_decode('Total I.V.A. '.$nu_iva.' %: '),number_format($TotalIVA, 2, ',','.')),0,0);
          $this->Row(array(utf8_decode('Total Excento: '),number_format($TotalExcento, 2, ',','.')),0,0);
@@ -556,23 +556,26 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetY(230);
          $this->SetAligns(array("C","C", "C"));
 	 $this->SetFillColor(201, 199, 199);
-         $this->SetWidths(array(93,93));
+         $this->SetWidths(array(62,62,62));
          $this->SetFont('Arial','B',8);
          $this->SetX(15);
-         $this->Row(array(utf8_decode('COORDINACIÓN DE COMPRAS'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN')),1,1);
+         $this->Row(array(utf8_decode('COORDINACIÓN DE COMPRAS'),utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN')),1,1);
          $this->SetFillColor(255,255,255);
          $this->SetAligns(array("L", "L"));
          $Y = $this->GetY();
          $this->SetX(15);
-         $this->MultiCell(93,14,'',1,1,'L',1);
+         $this->MultiCell(62,14,'',1,1,'L',1);
          $this->SetY($Y);
-         $this->SetX(108);
-         $this->MultiCell(93,14,'',1,1,'L',1);
+         $this->SetX(77);
+         $this->MultiCell(62,14,'',1,1,'L',1);         
+         $this->SetY($Y);
+         $this->SetX(139);
+         $this->MultiCell(62,14,'',1,1,'L',1);
          $this->SetY($Y+5);
          $this->SetFont('Arial','',6);
          $this->ln(8);
          $this->SetX(15);
-         $this->Row(array('Realizado por:','Aprobado por:'),0,0);
+         $this->Row(array('Realizado por:','Revisado por:','Aprobado por:'),0,0);
 
     }
 
