@@ -262,9 +262,36 @@ this.fecha_entrega = new Ext.form.DateField({
     width:100
 });
 
+this.PanelFecha = new Ext.Panel({
+   items:[
+       {
+           layout:'column',
+           defaults:{layout:'form'},
+           items:[
+               {
+                   labelWidth:100,
+                   columnWidth:.3,                                  
+                   items:[this.fecha_inicio]
+               },
+               {
+                   labelWidth:70,
+                   columnWidth:.3,                                   
+                   items:[this.fecha_fin]
+               },
+               {
+                   labelWidth:100,
+                   columnWidth:.3,                                   
+                   items:[this.fecha_entrega ]
+               }
+           ]
+       }
+   ]
+});
+
 this.forma_pago = new Ext.form.TextField({
     fieldLabel:'Forma de Pago',
-    name:'tb052_compras[forma_pago]',      
+    name:'tb052_compras[forma_pago]', 
+    value:this.OBJ.forma_pago,     
     allowBlank:false,
     width:200
 });
@@ -355,13 +382,21 @@ this.tx_serial_cotizacion = new Ext.form.TextField({
 });
 
 this.tx_observacion = new Ext.form.TextArea({
-    fieldLabel:'Observacion',
+    fieldLabel:'Concepto',
     name:'tb052_compras[tx_observacion]',
     value:this.OBJ.tx_observacion,
     allowBlank:false,
-    width:775,
-    readOnly:true,
-    style:'background:#c9c9c9;',
+    width:775
+   // readOnly:true,
+   // style:'background:#c9c9c9;',
+});
+
+this.tx_concepto = new Ext.form.TextArea({
+    fieldLabel:'Concepto',
+    name:'tb052_compras[tx_concepto]',
+    value:this.OBJ.tx_concepto,
+    allowBlank:false,
+    width:775
 });
 
 this.buscar = new Ext.Button({
@@ -390,23 +425,22 @@ items: [
 this.fieldPresupuesto= new Ext.form.FieldSet({
         title: 'Presupuesto Base',
         items:[   
-          this.compositefieldPresupuestoBase,
-          this.tx_observacion
+          this.compositefieldPresupuestoBase
        ]
 });
 
 this.fieldContrato= new Ext.form.FieldSet({
-        title: 'Datos del Contrato',
+        title: 'Datos de la Orden de Compra',
         items:[
+       //   this.tx_concepto,
+          this.tx_observacion,
+          this.tx_observacion,
           this.co_tp_contrato,
           this.nu_orden_compra,
-          this.fecha_inicio,
-          this.fecha_fin,
-          this.fecha_entrega,
+          this.PanelFecha,
           this.in_responsabilidad_social,
           this.Panelforma,
-          this.Paneltiempo,
-         // this.tx_observacion
+          this.Paneltiempo
        ]
 });
 
