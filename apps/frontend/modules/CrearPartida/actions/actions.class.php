@@ -411,7 +411,7 @@ class CrearPartidaActions extends sfActions
                 $co_categoria = $nu_proyecto.'.'.$nu_accion_especifica.'.'.$campos["tx_partida"];
                 
                 list($nu_pa, $nu_ge,$nu_es,$nu_se,$nu_sse) = explode(".",$campos["tx_partida"]);
-                
+                $co_partida = $nu_pa.$nu_ge.$nu_es.$nu_se.$nu_sse;
                 
                 $c = new Criteria();     
                 $c->add(Tb085PresupuestoPeer::NU_PARTIDA,$campos["tx_partida"]);
@@ -445,7 +445,7 @@ class CrearPartidaActions extends sfActions
                                       ->setNuEs($nu_es)
                                       ->setNuSe($nu_se)
                                       ->setNuSse($nu_sse)
-                                      ->setCoPartida($campos["tx_partida"])
+                                      ->setCoPartida($co_partida)
                                       ->setNuNivel(5)
                                       ->setCoCategoria($co_categoria)
                                       ->setNuAplicacion($aplicacion["tx_tip_aplicacion"])
