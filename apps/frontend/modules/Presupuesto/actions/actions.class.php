@@ -1357,14 +1357,14 @@ class PresupuestoActions extends sfActions
 
             $Tb207DetalleCotizacion = Tb207DetalleCotizacionPeer::retrieveByPK($co_detalle_cotizacion);
 
-            if($mo_disponible<$Tb207DetalleCotizacion->getMonto()){
-
-                    $this->data = json_encode(array(
-                        "success" => false,
-                        "msg" =>  "El Monto Disponible de la partida es menor al monto total"
-                     ));
-            
-            }else{
+//            if($mo_disponible<$Tb207DetalleCotizacion->getMonto()){
+//
+//                    $this->data = json_encode(array(
+//                        "success" => false,
+//                        "msg" =>  "El Monto Disponible de la partida es menor al monto total"
+//                     ));
+//            
+//            }else{
 
                     $programatica = $this->getProgramatica($co_presupuesto);
 
@@ -1436,7 +1436,7 @@ class PresupuestoActions extends sfActions
                    ));
             $con->commit();
 
-            }
+//            }
          }catch (PropelException $e)
          {
             $con->rollback();
