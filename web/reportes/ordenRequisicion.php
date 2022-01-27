@@ -143,7 +143,12 @@ class PDF extends FPDF {
           $this->Row(array('','','',''),1,1);  
           $i++;
          }   
-         foreach($this->lista_materiales as $key => $campo){                    
+         foreach($this->lista_materiales as $key => $campo){
+             
+         if($this->getY()>180){
+             $this->addPage();
+
+	 }             
          $this->SetAligns(array("L"));
          $this->SetWidths(array(200));
          $this->SetFont('Arial','B',9);
