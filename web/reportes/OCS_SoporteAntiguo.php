@@ -158,7 +158,7 @@ class PDF_Flo extends PDF_FlowingBlock
       //  $this->Image("imagenes/escudo.png", 140, 13 ,30);
         $this->SetFont('Times','B',9);
         $this->SetTextColor(0,0,0);
-        $this->SetY(25);
+        $this->SetY(20);
         $this->SetX(113);
         $this->SetWidths(array(80));
         $this->SetAligns(array("C"));
