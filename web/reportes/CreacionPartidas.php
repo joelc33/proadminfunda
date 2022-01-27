@@ -116,14 +116,14 @@ class PDF extends FPDF {
          $this->SetWidths(array(85,85));
          $this->SetFont('Arial','B',8);    
          $this->SetX(25);         
-         $this->Row(array(utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('SECRETARIA GENERAL DE ADMINISTRACION')),1,1);
+         $this->Row(array(utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACION')),1,1);
          $this->SetFillColor(255,255,255);
          $Y = $this->GetY();
          $this->SetX(25);          
-         $this->MultiCell(85,35,'',1,1,'L',1);
+         $this->MultiCell(85,20,'',1,1,'L',1);
          $this->SetY($Y);
          $this->SetX(110);
-         $this->MultiCell(85,35,'',1,1,'L',1);  
+         $this->MultiCell(85,20,'',1,1,'L',1);  
 	 $this->SetY($this->GetY()+5);
          $this->ln();
          $this->SetFont('Arial','',8);          
