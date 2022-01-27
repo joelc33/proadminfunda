@@ -421,10 +421,10 @@ this.tx_partida = new Ext.form.TextField({
 	name:'tb067_creacion_partida[tx_partida]',
 	value:this.OBJ.tx_partida,
 	allowBlank:false,
-	width:100,
+	width:200,
 	readOnly:(this.OBJ.tx_partida!='')?true:false,
 	style:(this.OBJ.tx_partida!='')?'background:#c9c9c9;':'',
-        maskRe: /[0-9]/, 
+        //maskRe: /[0-9]/, 
 });
 
 this.nu_monto = new Ext.form.NumberField({
@@ -497,18 +497,18 @@ this.formPanel_ = new Ext.form.FormPanel({
 
                     this.co_creacion_partida,
                     this.co_solicitud,
-                    this.co_fuente_financiamiento,
-                    this.co_numero_fuente,
+//                    this.co_fuente_financiamiento,
+//                    this.co_numero_fuente,
                     this.co_ente_ejecutor,
                     this.co_proyecto,
                     this.co_accion_especifica,
-                    this.co_partida,
-                    this.co_aplicacion,
-                    this.co_tipo_ingreso,
-                    this.co_ambito,
-                    this.tipo_gasto,
-                    this.co_clasificacion_economica,
-                    this.co_area_estrategica,
+//                    this.co_partida,
+//                    this.co_aplicacion,
+//                    this.co_tipo_ingreso,
+//                    this.co_ambito,
+//                    this.tipo_gasto,
+//                    this.co_clasificacion_economica,
+//                    this.co_area_estrategica,
                     this.tx_descripcion,
                     this.tx_partida
             ]

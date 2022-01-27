@@ -110,10 +110,10 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
         {header: 'co_creacion_partida',hidden:true, menuDisabled:true,dataIndex: 'co_creacion_partida'},
-        {header: 'Partida Afectada', width:350,  menuDisabled:true, sortable: true,  dataIndex: 'de_partida',renderer:textoLargo},
+        //{header: 'Partida Afectada', width:350,  menuDisabled:true, sortable: true,  dataIndex: 'de_partida',renderer:textoLargo},
 //        {header: 'Monto Disponible', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'mo_disponible',renderer:renderMonto},
         {header: 'Nro. Partida', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_partida'},
-        {header: 'Descripción', width:250,  menuDisabled:true, sortable: true,  dataIndex: 'tx_descripcion',renderer:textoLargo},
+        {header: 'Descripción', width:550,  menuDisabled:true, sortable: true,  dataIndex: 'tx_descripcion',renderer:textoLargo},
         {header: 'Monto', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'nu_monto',renderer:renderMonto},
     ],
     stripeRows: true,

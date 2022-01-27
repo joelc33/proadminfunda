@@ -394,26 +394,28 @@ class CrearPartidaActions extends sfActions
                 $stmtp = Tb091PartidaPeer::doSelectStmt($cp);
                 $presupuesto = $stmtp->fetch(PDO::FETCH_ASSOC);
                 
-                $nu_fi = $this->getDatosFuenteFinanciamiento($campos["co_numero_fuente"]);
+               // $nu_fi = $this->getDatosFuenteFinanciamiento($campos["co_numero_fuente"]);
                 
               //  $ambito       = $this->getAmbito($campos["co_ambito"]);
-                $aplicacion   = $this->getAplicacion($campos["co_aplicacion"]);
-                $tipo_ingreso = $this->getTipoIngreso($campos["co_tipo_ingreso"]);
+                $aplicacion   = $this->getAplicacion(1);
+//                $tipo_ingreso = $this->getTipoIngreso($campos["co_tipo_ingreso"]);
                 
-                $nu_partida = $presupuesto["nu_pa"].$presupuesto["nu_ge"].$presupuesto["nu_es"].$presupuesto["nu_se"].$campos["tx_partida"].$nu_fi;
-                $co_partida = $presupuesto["nu_pa"].$presupuesto["nu_ge"].$presupuesto["nu_es"].$presupuesto["nu_se"].$campos["tx_partida"];
+//                $nu_partida = $presupuesto["nu_pa"].$presupuesto["nu_ge"].$presupuesto["nu_es"].$presupuesto["nu_se"].$campos["tx_partida"].$nu_fi;
+//                $co_partida = $presupuesto["nu_pa"].$presupuesto["nu_ge"].$presupuesto["nu_es"].$presupuesto["nu_se"].$campos["tx_partida"];
                 
-                $nu_sector   = $this->getSector($campos["co_proyecto"]);
+//                $nu_sector   = $this->getSector($campos["co_proyecto"]);
+                $nu_accion_especifica = $this->getAccionEspecifica($campos["co_accion_especifica"]);
                 $nu_proyecto = $this->getProyecto($campos["co_proyecto"]);
                 $nu_ejecutor   = $this->getEjecutor($campos["co_ente_ejecutor"]);
                               
-                $co_categoria = $nu_proyecto.$presupuesto["nu_pa"].'.'.$presupuesto["nu_ge"].'.'.$presupuesto["nu_es"].'.'.$presupuesto["nu_se"].'.'.$campos["tx_partida"].$nu_fi;
+                $co_categoria = $nu_proyecto.'.'.$nu_accion_especifica.'.'.$campos["tx_partida"];
+                
+                list($nu_pa, $nu_ge,$nu_es,$nu_se,$nu_sse) = explode(".",$campos["tx_partida"]);
                 
                 
                 $c = new Criteria();     
-                $c->add(Tb085PresupuestoPeer::NU_PARTIDA,$nu_partida);
+                $c->add(Tb085PresupuestoPeer::NU_PARTIDA,$campos["tx_partida"]);
                 $c->add(Tb085PresupuestoPeer::ID_TB084_ACCION_ESPECIFICA,$campos["co_accion_especifica"]);
-                //$c->add(Tb085PresupuestoPeer::NU_ANIO,date('Y'));
                 $c->add(Tb085PresupuestoPeer::NU_ANIO, $this->getUser()->getAttribute('ejercicio'));
                 $cantidad = Tb085PresupuestoPeer::doCount($c);  
                 
@@ -427,40 +429,32 @@ class CrearPartidaActions extends sfActions
                 
                     $tb085_presupuesto = New Tb085Presupuesto();
                     $tb085_presupuesto->setIdTb084AccionEspecifica($campos["co_accion_especifica"])
-                                      ->setNuPartida($nu_partida)
+                                      ->setNuPartida($campos["tx_partida"])
                                       ->setDePartida($campos["tx_descripcion"])
                                       ->setMoInicial(0)
-                                      ->setMoActualizado($campos["nu_monto"])
+                                      ->setMoActualizado(0)
                                       ->setMoPrecomprometido(0)
                                       ->setMoComprometido(0)
                                       ->setMoCausado(0)
                                       ->setMoPagado(0)
-                                      ->setMoDisponible($campos["nu_monto"])
+                                      ->setMoDisponible(0)
                                       ->setInActivo(true)
-                                      ->setInMovimiento($presupuesto["in_movimiento"])
-                                      ->setNuPa($presupuesto["nu_pa"])
-                                      ->setNuGe($presupuesto["nu_ge"])
-                                      ->setNuEs($presupuesto["nu_es"])
-                                      ->setNuSe($presupuesto["nu_se"])
-                                      ->setNuSse($campos["tx_partida"])
-                                      ->setCoPartida($co_partida)
-                                      ->setNuNivel($presupuesto["nu_nivel"])
-                                      ->setNuFi($nu_fi)
+                                      ->setInMovimiento(true)
+                                      ->setNuPa($nu_pa)
+                                      ->setNuGe($nu_ge)
+                                      ->setNuEs($nu_es)
+                                      ->setNuSe($nu_se)
+                                      ->setNuSse($nu_sse)
+                                      ->setCoPartida($campos["tx_partida"])
+                                      ->setNuNivel(5)
                                       ->setCoCategoria($co_categoria)
                                       ->setNuAplicacion($aplicacion["tx_tip_aplicacion"])
-                                      ->setTpIngreso($presupuesto["tp_ingreso"])
-                                      ->setNuSector($nu_sector)
                                       ->setCodEnte($nu_ejecutor)
                                       ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
                                       ->setCoEnte($campos["co_ente_ejecutor"])
-                                      ->setTpIngreso($tipo_ingreso["tx_tip_ingreso"])
                                       ->setTipApl($aplicacion["tx_tip_aplicacion"])
-                                      ->setTipGasto($campos["co_tipo_gasto"])
-                                      ->setCodAmb($campos["co_ambito"])
-                                      ->setInGenCheque(($aplicacion["tx_genera_cheque"]=='S')?TRUE:FALSE)
-                                      ->setIdTb139Aplicacion($campos["co_aplicacion"])
-                                      ->setCoClasificacionEconomica($campos["co_clasificacion_economica"])
-                                      ->setCoAreaEstrategica($campos["co_area_estrategica"])
+                                      ->setInGenCheque(FALSE)
+                                      ->setIdTb139Aplicacion(1)
                                       ->save($con); 
 
                 }  
@@ -508,12 +502,12 @@ class CrearPartidaActions extends sfActions
     $c = new Criteria();  
     $c->clearSelectColumns();
     $c->addSelectColumn(Tb067CreacionPartidaPeer::CO_CREACION_PARTIDA);
-    $c->addSelectColumn(Tb091PartidaPeer::CO_PARTIDA);
-    $c->addSelectColumn(Tb091PartidaPeer::DE_PARTIDA);
-    $c->addSelectColumn(Tb091PartidaPeer::NU_PA);
-    $c->addSelectColumn(Tb091PartidaPeer::NU_GE);
-    $c->addSelectColumn(Tb091PartidaPeer::NU_ES);
-    $c->addSelectColumn(Tb091PartidaPeer::NU_SE);
+//    $c->addSelectColumn(Tb091PartidaPeer::CO_PARTIDA);
+//    $c->addSelectColumn(Tb091PartidaPeer::DE_PARTIDA);
+//    $c->addSelectColumn(Tb091PartidaPeer::NU_PA);
+//    $c->addSelectColumn(Tb091PartidaPeer::NU_GE);
+//    $c->addSelectColumn(Tb091PartidaPeer::NU_ES);
+//    $c->addSelectColumn(Tb091PartidaPeer::NU_SE);
     $c->addSelectColumn(Tb067CreacionPartidaPeer::TX_PARTIDA);
     $c->addSelectColumn(Tb067CreacionPartidaPeer::NU_PARTIDA_DESAGREGADA);
     $c->addSelectColumn(Tb067CreacionPartidaPeer::TX_DESCRIPCION);
@@ -522,7 +516,7 @@ class CrearPartidaActions extends sfActions
     $c->addSelectColumn(Tb031EstatusRutaPeer::CO_ESTATUS_RUTA);
     
     
-    $c->addJoin(Tb091PartidaPeer::ID, Tb067CreacionPartidaPeer::CO_PARTIDA);
+//    $c->addJoin(Tb091PartidaPeer::ID, Tb067CreacionPartidaPeer::CO_PARTIDA);
     $c->addJoin(Tb031EstatusRutaPeer::CO_ESTATUS_RUTA, Tb067CreacionPartidaPeer::CO_ESTATUS);
     
     $c->add(Tb067CreacionPartidaPeer::CO_SOLICITUD,$co_solicitud);
@@ -537,7 +531,7 @@ class CrearPartidaActions extends sfActions
     $registros = "";
     while($res = $stmt->fetch(PDO::FETCH_ASSOC)){ 
         
-        $res["tx_partida"] = Tb085PresupuestoPeer::mascaraNomina($res["nu_partida_desagregada"]); //$res["nu_pa"].'.'.$res["nu_ge"].'.'.$res["nu_es"].'.'.$res["nu_se"].'.'.$res["tx_partida"];
+        //$res["tx_partida"] = Tb085PresupuestoPeer::mascaraNomina($res["nu_partida_desagregada"]); //$res["nu_pa"].'.'.$res["nu_ge"].'.'.$res["nu_es"].'.'.$res["nu_se"].'.'.$res["tx_partida"];
         
         $registros[] = $res;
     }
