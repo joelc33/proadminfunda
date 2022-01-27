@@ -8,28 +8,33 @@ class PDF extends FPDF {
     public $conexion;
     function Header() {
 
-        $this->Image("imagenes/escudosanfco.png", 100, 7,20);
+        $this->Image("imagenes/escudosanfco.jpg", 100, 7,20);
 
         $this->SetFont('Arial','B',10);
         $this->datos = $this->getConsulta2();
       //  
         $this->SetTextColor(0,0,0);
+        $this->SetFont('Arial','B',10);
+        $this->SetTextColor(0,0,0);
         $this->SetY(32);
-        $this->Cell(0,0,utf8_decode('REPÚBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
+        $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
         $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('GOBERNACIÓN DEL ESTADO ZULIA'),0,0,'C');
+        $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
+        $this->Ln(5);
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');        
         $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');    
-        
+        $this->Cell(0,0,utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),0,0,'C');
+        $this->Ln(8);
+        $this->SetFont('Arial','B',12);        
+        $this->Cell(0,0,utf8_decode('CREACION DE PARTIDA PRESUPUESTARIA'),0,0,'C'); 
         $this->SetFont('Arial','',8);
         $this->Ln(6);
-
         //$this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
+        $this->Cell(0,0,utf8_decode('San Francisco, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
         
         $this->Ln(10);
         $this->SetFont('Arial','B',12);        
-        $this->Cell(0,0,utf8_decode('CREACION DE PARTIDA PRESUPUESTARIA'),0,0,'C');
+        //$this->Cell(0,0,utf8_decode('CREACION DE PARTIDA PRESUPUESTARIA'),0,0,'C');
              
 
     }
@@ -72,7 +77,7 @@ class PDF extends FPDF {
          $this->SetFillColor(201, 199, 199);
          $this->SetY(70);           
          $this->SetX(25);         
-         $this->Row(array(utf8_decode('DATOS DE NUEVA PARTIDA')),1,1);
+         $this->Row(array(utf8_decode('DATOS DE LA NUEVA PARTIDA')),1,1);
 
          foreach($this->datos as $key => $campo){
              
@@ -84,7 +89,7 @@ class PDF extends FPDF {
          $this->SetFillColor(201, 199, 199);
          $this->SetY(70);           
          $this->SetX(25);         
-         $this->Row(array(utf8_decode('DATOS DE NUEVA PARTIDA')),1,1);
+         $this->Row(array(utf8_decode('DATOS DE LA NUEVA PARTIDA')),1,1);
 	 }             
              
          $this->SetFillColor(255, 255, 255);         
@@ -92,11 +97,11 @@ class PDF extends FPDF {
          $this->SetWidths(array(65, 40, 20, 45));                 
          $this->SetAligns(array("C","C","C","C"));             
          $this->SetX(25);          
-         $this->Row(array('Partida Afectada: ','Fuente Financiamiento: ','Fecha',utf8_decode('Monto de Asignación: ')),1,1);   
+         $this->Row(array('Partida: ','Programa/Actividad','Fecha',utf8_decode('Monto de Asignación: ')),1,1);   
          $this->SetX(25);
           
          $this->SetX(25); 
-         $this->Row(array($campo['tx_partida'],$campo['tx_fuente_financiamiento'],$campo['fecha_creacion'],number_format($campo['nu_monto'])),1,1); 
+         $this->Row(array($campo['tx_partida'],$campo['nu_proyecto_ac'].'/'.$campo['nu_accion_especifica'],$campo['fecha_creacion'],number_format($campo['nu_monto'])),1,1); 
          //}
          $this->SetAligns(array("C","C","C","C")); 
          $this->SetWidths(array(30, 140));    
@@ -111,7 +116,7 @@ class PDF extends FPDF {
          $this->SetWidths(array(85,85));
          $this->SetFont('Arial','B',8);    
          $this->SetX(25);         
-         $this->Row(array(utf8_decode('SUBSECRETARIA DE PRESUPUESTO'),utf8_decode('SECRETARIA DE ADMINISTRACION')),1,1);
+         $this->Row(array(utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('SECRETARIA GENERAL DE ADMINISTRACION')),1,1);
          $this->SetFillColor(255,255,255);
          $Y = $this->GetY();
          $this->SetX(25);          
@@ -149,9 +154,8 @@ class PDF extends FPDF {
     function getConsulta(){
 
         $conex = new ConexionComun();     
-        $sql = " SELECT   tb073.tx_fuente_financiamiento,
-                          (tb067.nu_partida_desagregada||'-'||tb067.tx_descripcion) as tx_descripcion, 
-                          tb091.nu_partida||'-'||tb091.de_partida as tx_partida, 
+        $sql = "SELECT 	tb067.tx_partida,tb083.nu_proyecto_ac,tb084.nu_accion_especifica,
+                          (tb067.tx_descripcion) as tx_descripcion, 
                           tb067.nu_monto, 
                           tb001.nb_usuario,                           
                           (select t.nb_usuario from tb001_usuario as t where t.co_usuario = tb067.co_usuario_cambio) as aprobador,                          
@@ -160,8 +164,8 @@ class PDF extends FPDF {
                             to_char(tb067.created_at,'mm') as mes,
                             to_char(tb067.created_at,'yyyy') as anio
                   FROM tb067_creacion_partida as tb067  
-                  left join tb073_fuente_financiamiento as tb073 on tb073.co_fuente_financiamiento = tb067.co_fuente_financiamiento
-                  left join tb091_partida as tb091 on tb091.id = tb067.co_partida
+                  left join tb083_proyecto_ac as tb083 on tb083.id = tb067.co_proyecto
+                  left join tb084_accion_especifica as tb084 on tb084.id = tb067.co_accion_especifica
                   left join tb026_solicitud as tb026 on tb026.co_solicitud = tb067.co_solicitud
                   left join tb001_usuario as tb001 on tb001.co_usuario = tb026.co_usuario
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb067.co_solicitud 
