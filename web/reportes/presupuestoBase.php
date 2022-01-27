@@ -146,7 +146,7 @@ class PDF extends FPDF {
          $iva = $campo['monto_iva'];
          $item=$item+1;
          $i++;
-         $this->Row(array($item, utf8_decode($campo['tx_producto']),utf8_decode($campo['nu_cantidad']),utf8_decode($campo['tx_unidad_producto']),number_format($campo['precio_unitario'], 2, ',','.'),number_format($campo['monto'], 2, ',','.')),1,1);
+         $this->Row(array($item, utf8_decode($campo['tx_producto'].' - '.$campo['detalle']),utf8_decode($campo['nu_cantidad']),utf8_decode($campo['tx_unidad_producto']),number_format($campo['precio_unitario'], 2, ',','.'),number_format($campo['monto'], 2, ',','.')),1,1);
          //$SubTotal =     $SubTotal + round($campo['monto'],2);
          $SubTotal =     $SubTotal + $campo['monto'];
          $TotalIVA =     $TotalIVA + $iva;
@@ -293,6 +293,7 @@ class PDF extends FPDF {
                          tb053.precio_unitario,
                          tb057.tx_unidad_producto,
                          tb053.monto,
+                         tb053.detalle,
                          tb052.monto_iva
                   FROM tb052_compras as tb052       
                   left join tb053_detalle_compras as tb053 on tb053.co_compras = tb052.co_compras and tb053.in_calcular_iva is true
