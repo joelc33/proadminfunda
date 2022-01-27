@@ -145,7 +145,7 @@ class PDF extends FPDF {
          }   
          foreach($this->lista_materiales as $key => $campo){
              
-         if($this->getY()>180){
+         if($this->getY()>220){
              $this->addPage();
 
 	 }             
