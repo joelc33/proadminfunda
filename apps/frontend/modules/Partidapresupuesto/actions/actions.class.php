@@ -646,7 +646,7 @@ class PartidapresupuestoActions extends sfActions
 
             $c->add(Tb085PresupuestoPeer::NU_ANIO, $this->getUser()->getAttribute('ejercicio'));
             
-            $c->add(Tb085PresupuestoPeer::NU_FI,'', Criteria::NOT_EQUAL);
+            //$c->add(Tb085PresupuestoPeer::NU_FI,'', Criteria::NOT_EQUAL);
             
             if($co_ejecutor!=''){
                 $c->add(Tb083ProyectoAcPeer::ID_TB082_EJECUTOR,$co_ejecutor);
