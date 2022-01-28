@@ -165,8 +165,8 @@ this.gridPanel = new Ext.grid.GridPanel({
         columns: [
         new Ext.grid.RowNumberer(),
             {header: 'co_liquidacion_pago', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_liquidacion_pago'},
-            {header: 'N° Liquidacion de Pago', width:100, menuDisabled:true,dataIndex: 'tx_serial'},
-            {header: 'Monto',width:220, menuDisabled:true,dataIndex: 'mo_pendiente',renderer:renderMonto}
+            {header: 'N° Liquidacion de Pago', width:120, menuDisabled:true,dataIndex: 'tx_serial'},
+            {header: 'Monto',width:200, menuDisabled:true,dataIndex: 'mo_pendiente',renderer:renderMonto}
         ],
         stripeRows: true,
         autoScroll:true,
