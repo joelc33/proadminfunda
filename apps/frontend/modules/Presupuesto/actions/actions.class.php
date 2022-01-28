@@ -2997,31 +2997,27 @@ class PresupuestoActions extends sfActions
             $c->add(Tb085PresupuestoPeer::ID_TB084_ACCION_ESPECIFICA,$co_accion);        
         }
         
-        if($co_partida!=''){
-            $cp = new Criteria();
-            $cp->clearSelectColumns();
-            $cp->addSelectColumn(Tb091PartidaPeer::NU_PARTIDA);
-            $cp->add(Tb091PartidaPeer::ID,$co_partida);
-            
-            $stmtp = Tb091PartidaPeer::doSelectStmt($cp);
-            while($list = $stmtp->fetch(PDO::FETCH_ASSOC)){
-                 $c->addOr(Tb085PresupuestoPeer::CO_PARTIDA,$list["nu_partida"].'%',Criteria::LIKE);
-            }
-            
-            
-           // $c->add(Tb083ProyectoAcPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
-
-           // $c->add(Tb085PresupuestoPeer::CO_CUENTA_CONTABLE,NULL,  Criteria::ISNOTNULL);
-
-           
-        }
+//        if($co_partida!=''){
+//            $cp = new Criteria();
+//            $cp->clearSelectColumns();
+//            $cp->addSelectColumn(Tb091PartidaPeer::NU_PARTIDA);
+//            $cp->add(Tb091PartidaPeer::ID,$co_partida);
+//            
+//            $stmtp = Tb091PartidaPeer::doSelectStmt($cp);
+//            while($list = $stmtp->fetch(PDO::FETCH_ASSOC)){
+//                 $c->addOr(Tb085PresupuestoPeer::CO_PARTIDA,$list["nu_partida"].'%',Criteria::LIKE);
+//            }
+//            
+//
+//           
+//        }
         
         
         $stmt = Tb085PresupuestoPeer::doSelectStmt($c);
         $registros = array();
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
             
-            $reg["nu_partida"] = Tb085PresupuestoPeer::mascaraNomina($reg["nu_partida"]);
+            //$reg["nu_partida"] = Tb085PresupuestoPeer::mascaraNomina($reg["nu_partida"]);
             
             $registros[] = $reg;
         }

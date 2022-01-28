@@ -240,11 +240,11 @@ this.fieldDatos= new Ext.form.FieldSet({
         html: this.datos
 });
 
-this.datosSolicitud  = '<p class="registro_detalle"><b>Tipo de Ayuda: </b>'+this.OBJ.tx_tipo_ayuda+'</p>';
+this.datosSolicitud  = '<p class="registro_detalle"><b>Tipo de Compromiso: </b>'+this.OBJ.tx_tipo_ayuda+'</p>';
 this.datosSolicitud+= '<p class="registro_detalle"><b>Descripción: </b>'+this.OBJ.detalle+'</p>';
 
 this.fieldDatosSolicitud= new Ext.form.FieldSet({
-        title: 'Datos de la Solicitud',
+        title: 'Datos del Compromiso',
         html:this.datosSolicitud
 });
 

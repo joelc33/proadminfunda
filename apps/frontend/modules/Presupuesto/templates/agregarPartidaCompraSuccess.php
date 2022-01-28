@@ -154,7 +154,7 @@ this.co_accion = new Ext.form.ComboBox({
 this.fieldDatosContrato= new Ext.form.FieldSet({
         title: 'Datos de la Compra',
         items: [this.de_ejecutor,
-                this.co_partida,
+                //this.co_partida,
                 this.co_proyecto,
                 this.co_accion]
 });

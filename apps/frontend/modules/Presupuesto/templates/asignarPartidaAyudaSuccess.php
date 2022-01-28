@@ -120,7 +120,7 @@ this.quitar_partida= new Ext.Button({
 });
 
 
-//this.agregar_partida.disable();
+this.agregar_partida.disable();
 this.quitar_partida.disable();
 
 this.gridPanel = new Ext.grid.GridPanel({
@@ -136,8 +136,8 @@ this.gridPanel = new Ext.grid.GridPanel({
             {header: 'co_detalle_compras', hidden: true,width:80, menuDisabled:true,dataIndex: 'co_detalle_compras'},    
             {header: 'id_partida', hidden: true,width:80, menuDisabled:true,dataIndex: 'co_partida'}, 
             {header: 'co_tipo_movimiento', hidden: true,width:80, menuDisabled:true,dataIndex: 'co_tipo_movimiento'}, 
-            {header: 'Estatus',width:130, menuDisabled:true,dataIndex: 'tx_tipo_movimiento'},    
-            {header: 'Material',width:220, menuDisabled:true,dataIndex: 'tx_producto',renderer:textoLargo},                
+//            {header: 'Estatus',width:130, menuDisabled:true,dataIndex: 'tx_tipo_movimiento'},    
+//            {header: 'Material',width:220, menuDisabled:true,dataIndex: 'tx_producto',renderer:textoLargo},                
             {header: 'Cod. Partida', width:100, menuDisabled:true,dataIndex: 'nu_partida'},
             {header: 'Partida',width:220, menuDisabled:true,dataIndex: 'de_partida',renderer:textoLargo},
             {header: 'Monto Disponible',width:180, menuDisabled:true,dataIndex: 'mo_disponible',renderer:renderMontoDisponible},
@@ -189,11 +189,11 @@ this.fieldDatos= new Ext.form.FieldSet({
         html: this.datos
 });
 
-this.datosSolicitud  = '<p class="registro_detalle"><b>Tipo de Ayuda: </b>'+this.OBJ.tx_tipo_ayuda+'</p>';
+this.datosSolicitud  = '<p class="registro_detalle"><b>Tipo de Compromiso: </b>'+this.OBJ.tx_tipo_ayuda+'</p>';
 this.datosSolicitud+= '<p class="registro_detalle"><b>Descripción: </b>'+this.OBJ.detalle+'</p>';
 
 this.fieldDatosSolicitud= new Ext.form.FieldSet({
-        title: 'Datos de la Solicitud',
+        title: 'Datos del Compromiso',
         html:this.datosSolicitud
 });
 
