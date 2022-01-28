@@ -520,10 +520,41 @@ class PDF_Flo extends PDF_FlowingBlock
 //        $this->finishFlowingBlock();
 
         $Y = $this->GetY();
-            if($this->getY()>220){
+            if($this->getY()>230){
+                
              $this->addPage();
-
-            }
+            $Y = 100; 
+             
+            $this->SetY($Y+10);
+            $this->SetX(15);
+            $this->SetFont( 'Times', 'B', 9 );
+            $this->MultiCell(50,5,utf8_decode('FORMA DE PAGO: '),0,'L');
+            $this->SetY($Y+10);
+            $this->SetX(65);
+            $this->SetFont( 'Times', '', 9 );
+            $this->MultiCell(100,5,utf8_decode($this->punto['forma_pago']),0,'L');
+            $this->SetX(15);
+            $this->SetFont( 'Times', 'B', 9 );
+            $this->MultiCell(70,5,utf8_decode('TIEMPO:'),0,'L');
+            $this->SetY($Y+15);
+            $this->SetX(65);
+            $this->SetFont( 'Times', '', 9 );
+            $this->MultiCell(100,5,utf8_decode($this->punto['fecha_inicio'].' - '.$this->punto['fecha_fin']),0,'L');            
+            $this->SetX(15);
+            $this->SetFont( 'Times', 'B', 9 );
+            $this->MultiCell(70,5,utf8_decode('FORMA DE ENTREGA: '),0,'L');
+            $this->SetY($Y+20);
+            $this->SetX(65);
+            $this->SetFont( 'Times', '', 9 );
+            $this->MultiCell(100,5,utf8_decode($this->punto['forma_entrega']),0,'L');            
+            $this->SetX(15);
+            $this->SetFont( 'Times', 'B', 9 );
+            $this->MultiCell(70,5,utf8_decode('OTRAS ESPECIFICACIONES: '),0,'L');
+            $this->SetY($Y+25);
+            $this->SetX(65);
+            $this->SetFont( 'Times', '', 9 );
+            $this->MultiCell(100,5,utf8_decode($campo['tx_observacion']),0,'L');
+            }else{
             $this->SetY($Y+10);
             $this->SetX(15);
             $this->SetFont( 'Times', 'B', 9 );
@@ -553,7 +584,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetX(65);
             $this->SetFont( 'Times', '', 9 );
             $this->MultiCell(100,5,utf8_decode($campo['tx_observacion']),0,'L');            
-
+            }
        //-------------
 
          $this->ln();
