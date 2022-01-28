@@ -520,7 +520,10 @@ class PDF_Flo extends PDF_FlowingBlock
 //        $this->finishFlowingBlock();
 
         $Y = $this->GetY();
-        
+            if($this->getY()>220){
+             $this->addPage();
+
+            }
             $this->SetY($Y+10);
             $this->SetX(15);
             $this->SetFont( 'Times', 'B', 9 );
