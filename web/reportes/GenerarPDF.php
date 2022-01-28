@@ -72,7 +72,7 @@ function getRutaId($co_solicitud, $co_tipo_solicitud, $co_proceso){
    AND tb030.co_tipo_solicitud = '.$co_tipo_solicitud.' 
    AND tb030.co_proceso = '.$co_proceso;
 
-   echo $sql; exit();
+   //echo $sql; exit();
 
    $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
    return  $datosSol[0];                          
@@ -81,10 +81,10 @@ function getRutaId($co_solicitud, $co_tipo_solicitud, $co_proceso){
 
 $datos_ruta = getRutaId( $co_solicitud, $co_tipo_solicitud, $co_proceso);
 
-$definicion =  $_SERVER["SERVER_NAME"].'/proadmin/web/reportes/'.$datos_ruta['nb_reporte_orden'].'.php?codigo='.$datos_ruta['co_ruta'];
+$definicion =  $_SERVER["SERVER_NAME"].':8081/proadmin/web/reportes/'.$datos_ruta['nb_reporte_orden'].'.php?codigo='.$datos_ruta['co_ruta'];
 
-echo $definicion;
-exit();
+//echo $definicion;
+//exit();
 
 $get_data = callAPI('GET', $definicion, false);
 $response = json_decode($get_data, true);
