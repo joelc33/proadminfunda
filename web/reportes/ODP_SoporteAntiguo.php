@@ -375,7 +375,7 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->SetY(140); 
                         
                         $this->SetX(10); 
-                        $this->Row(array('CUENTA','DEBITOS','CREDITOS','SECTOR','PROGRAMA','CUENTA','MONTO'),0,0);
+                        $this->Row(array('CUENTA','DEBITOS','CREDITOS','SEC/PRO','AE','CUENTA','MONTO'),0,0);
                         $this->SetAligns(array("L","R","R","C","C","C","R","C","C","C","C","C","C","C","R"));
                         $fila = $this->getY();                                                
                         $this->lista_asientos = $this->getAsientos($this->datos[0]['co_odp'], $this->datos[0]['co_factura']);
