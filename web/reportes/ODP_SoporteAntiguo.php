@@ -228,7 +228,7 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->SetX(109); 
                         $this->MultiCell(100,4,'FECHA DE VENCIMIENTO:          '.'31/12/'.($anio+1),0,0,'L',0);                         
                         
-                        $VALOR = '**********'.number_format($valores['nu_monto'], 2, ',','.').' Bs. D';
+                        $VALOR = '**********'.number_format($valores['nu_monto'], 2, ',','.').' Bs.';
                         $this->SetFont('Times','',9);
 //                        $this->Ln(3);
                         $this->SetWidths(array(200));
@@ -408,7 +408,7 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->RoundedRect(150, $Y2, 60, 5, 1.5, '1100', '', $style); 
                         
                         $this->SetY($Y2);
-                        $this->Row(array('BANCO','NUMERO DE CUENTA','MONTO EN Bs.D QUE CANCELA'),0,0); 
+                        $this->Row(array('BANCO','NUMERO DE CUENTA','MONTO EN Bs. QUE CANCELA'),0,0); 
                         $Y2 = $this->GetY();
                         
                         $this->SetY($Y2);
