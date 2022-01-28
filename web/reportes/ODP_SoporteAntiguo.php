@@ -375,7 +375,7 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->SetY(140); 
                         
                         $this->SetX(10); 
-                        $this->Row(array('CUENTA','DEBITOS','CREDITOS','PAC','AE','CUENTA','MONTO'),0,0);
+                        $this->Row(array('CUENTA','DEBITOS','CREDITOS','SECTOR','PROGRAMA','CUENTA','MONTO'),0,0);
                         $this->SetAligns(array("L","R","R","C","C","C","R","C","C","C","C","C","C","C","R"));
                         $fila = $this->getY();                                                
                         $this->lista_asientos = $this->getAsientos($this->datos[0]['co_odp'], $this->datos[0]['co_factura']);
@@ -856,7 +856,7 @@ class PDF_Flo extends PDF_FlowingBlock
           $sql = "select tb085.co_categoria,
                          anio,
                          nu_ejecutor as ue,
-                         tb080.nu_sector||'.'||nu_proyecto_ac as pac,
+                         nu_proyecto_ac as pac,
                          nu_accion_especifica as ae,
                          nu_pa as p,                         
                          nu_ge as g,
@@ -891,7 +891,7 @@ class PDF_Flo extends PDF_FlowingBlock
           $sql = "select tb085.co_categoria,
                          anio,
                          nu_ejecutor as ue,
-                         tb080.nu_sector||'.'||nu_proyecto_ac as pac,
+                         nu_proyecto_ac as pac,
                          nu_accion_especifica as ae,
                          nu_pa as p,                         
                          nu_ge as g,
