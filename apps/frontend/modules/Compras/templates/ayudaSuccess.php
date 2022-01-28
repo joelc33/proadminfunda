@@ -218,7 +218,7 @@ this.tx_descripcion = new Ext.form.TextField({
 });
 
 this.tx_observacion = new Ext.form.TextArea({
-	fieldLabel:'Observacion',
+	fieldLabel:'Concepto Orden de Pago',
 	name:'tb126_solicitud_ayuda[tx_observacion]',
 	value:this.OBJ.tx_observacion,
 	allowBlank:false,
