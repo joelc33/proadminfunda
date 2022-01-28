@@ -198,11 +198,11 @@ class PDF extends FPDF {
             $this->SetWidths(array(140,30, 30));
             $this->SetAligns(array("L","R","L"));
             $this->SetFont('Arial','',8);
-            $this->Row(array('','Fecha Comprob.: ',$campo1['fe_emision']),0,0);   
-            $this->Row(array('','Periodo Fiscal: ', utf8_decode('AÑO: '.$campo1['anio'].' / MES: '.$campo1['mes'])),0,0);   
-            $this->Row(array('','Comprob. Nro.: ',$campo1['anio'].'-'.$campo1['co_factura_retencion']),0,0); 
-            $this->Row(array('','Nro. Factura: ',$campo['nu_factura']),0,0); 
-            $this->Row(array('','Nro. Control: ',$campo['nu_control']),0,0); 
+//            $this->Row(array('','Fecha Comprob.: ',$campo1['fe_emision']),0,0);   
+//            $this->Row(array('','Periodo Fiscal: ', utf8_decode('AÑO: '.$campo1['anio'].' / MES: '.$campo1['mes'])),0,0);   
+//            $this->Row(array('','Comprob. Nro.: ',$campo1['anio'].'-'.$campo1['co_factura_retencion']),0,0); 
+//            $this->Row(array('','Nro. Factura: ',$campo['nu_factura']),0,0); 
+//            $this->Row(array('','Nro. Control: ',$campo['nu_control']),0,0); 
             $this->SetWidths(array(200));
             $this->SetAligns(array("C")); 
             $this->Ln(8);            
@@ -213,39 +213,79 @@ class PDF extends FPDF {
             $this->SetFont('Arial','',10);
             $texto = "";
             // Retención IVA
-            if(($campo1['co_tipo_retencion'])==92)  $texto = 'VA-ART.11: Serán responsable del pago del impuesto en calidad de agente de retención compradores o adquirientes de determinados bienes inmuebles y los recpetores de ciertos servicios, a quienes la Administración Tributaria designe como tal.';
+            if(($campo1['co_tipo_retencion'])==92)  $texto = 'Decreto con Rango, Valor y Fuerza de Ley de Reforma de la ley del Impuesto al Valor Agregado N° 1,436 del 17 de Noviembre de 2014. Articulo 11: La Administración Tributaria podra designar como responsables del pago de impuesto, en calidad de agentes de retención, a quienes por funciones publicas o por razón de sus actividades privadas intervengan en operaciones con el impuesto establecido en este Decreto con Rango, Valor y Fuerza de ley. (...)';
             // Retencion ISLR
-            if(($campo1['co_tipo_retencion'])==4)  $texto = 'Gaceta Oficial Nro. 36.206 del 12/05/1997 Decreto Nro.1808 del 23/04/1997'; 
+           // if(($campo1['co_tipo_retencion'])==4)  $texto = 'Gaceta Oficial Nro. 36.206 del 12/05/1997 Decreto Nro.1808 del 23/04/1997'; 
+            
+            if($campo1['co_tipo_retencion']==92){
             
             $this->MultiCell(200,4,utf8_decode($texto),0,1,'J',0);
-            $this->Ln(8);              
+            
+            $this->SetY(65);
+            $this->setX(180);
             $this->SetFillColor(201, 199, 199);
-            $this->SetFont('Arial','B',10);
-            $this->SetWidths(array(200));
-            $this->SetAligns(array("C"));
-            $this->Row(array(utf8_decode('SUJETO RETENIDO (PROVEEDOR / BENEFICIARIO)')),1,1);
+            $this->SetWidths(array(30,30, 30));
+            $this->SetAligns(array("C","R","L"));
+            $this->SetFont('Arial','',8);
+            $this->Row(array(utf8_decode('Fecha de Emisión ')),1,1);
             $this->SetFillColor(255, 255, 255);
-            $this->SetWidths(array(100,50,50));
-            $this->SetAligns(array("L","L","L","L"));
-            $this->SetFont('Arial','',9);
-            $this->Row(array(utf8_decode('Proveedor.: ').$campo['tx_razon_social'],utf8_decode('R.I.F.:  ').$campo['tx_rif'], 'NIT:  '),1,1);         
-            $this->SetWidths(array(200));
-            $this->Row(array(utf8_decode('Dirección: ').$campo['tx_direccion']),1,1);             
-            $this->Ln(5);
-            $this->SetWidths(array(200));
+            $this->setX(180);
+            $this->Row(array(utf8_decode($campo1['fe_emision'])),1,1);
+            
+            $this->SetY(80);
+            $this->setX(180);
+            $this->SetFillColor(201, 199, 199);
+            $this->SetWidths(array(30,30, 30));
+            $this->SetAligns(array("C","R","L"));
+            $this->SetFont('Arial','',8);
+            $this->Row(array(utf8_decode('No. Comprobante ')),1,1);
+            $this->setX(180);
+            $this->SetFillColor(255, 255, 255);
+            $this->Row(array(utf8_decode($campo1['anio'].$campo1['mes'].$campo1['co_factura_retencion'])),1,1);
+            
+            $this->SetY(95);
+            $this->setX(180);
+            $this->SetFillColor(201, 199, 199);
+            $this->SetWidths(array(30,30, 30));
+            $this->SetAligns(array("C","R","L"));
+            $this->SetFont('Arial','',8);
+            $this->Row(array(utf8_decode('Periodo Fiscal ')),1,1);
+            $this->setX(180);
+            $this->SetFillColor(255, 255, 255);
+            $this->Row(array(utf8_decode('Año: '.$campo1['anio'].' Mes: '.$campo1['mes'])),1,1);            
+            
+            //$this->MultiCell(200,4,utf8_decode($texto),0,1,'J',0);
+            $this->Ln(5); 
+            $this->SetY(65);
+            $this->SetWidths(array(160));
             $this->SetAligns(array("C"));
             $this->SetFillColor(201, 199, 199); 
             $this->SetFont('Arial','B',10);            
-            $this->Row(array(utf8_decode('AGENTE DE RETENCIÓN (EMPRESA)')),1,1);
+            $this->Row(array(utf8_decode('DATOS DEL AGENTE DE RETENCIÓN')),1,1);
             $this->SetFillColor(255, 255, 255);
             $this->SetAligns(array("L","L","L","L"));
-            $this->SetWidths(array(150,50));                 
+            $this->SetWidths(array(110,50));                 
             $this->SetFont('Arial','',9);          
             //$this->Row(array(utf8_decode('Empresa.: GOBERNACIÓN DEL EDO. ZULIA'),utf8_decode('R.I.F.:  G-200036524')),1,1);    
-            $this->Row(array(utf8_decode('Empresa.: '.$this->empresa['nb_empresa']),utf8_decode('R.I.F.: '.$this->empresa['tx_rif'])),1,1);              
-            $this->SetWidths(array(200));
+            $this->Row(array(utf8_decode('Nombre o Razón Social.: '.$this->empresa['nb_empresa']),utf8_decode('R.I.F.: '.$this->empresa['tx_rif'])),1,1);              
+            $this->SetWidths(array(160));
             //$this->Row(array(utf8_decode('Dirección: AV. BELLA VISTA EDIFICIO FEDERAL MARACAIBO EDO. ZULIA')),1,1);  
-            $this->Row(array(utf8_decode('Dirección: '.$this->empresa['tx_direccion'])),1,1); 
+            $this->Row(array(utf8_decode('Dirección: '.$this->empresa['tx_direccion'])),1,1);            
+            
+            $this->Ln(5); 
+            $this->SetFillColor(201, 199, 199);
+            $this->SetFont('Arial','B',10);
+            $this->SetWidths(array(160));
+            $this->SetAligns(array("C"));
+            $this->Row(array(utf8_decode('DATOS DEL (PROVEEDOR / BENEFICIARIO)')),1,1);
+            $this->SetFillColor(255, 255, 255);
+            $this->SetWidths(array(110,50,50));
+            $this->SetAligns(array("L","L","L","L"));
+            $this->SetFont('Arial','',9);
+            $this->Row(array(utf8_decode('Nombre o Razón Social.: ').$campo['tx_razon_social'],utf8_decode('R.I.F.:  ').$campo['tx_rif']),1,1);         
+            $this->SetWidths(array(160));
+            $this->Row(array(utf8_decode('Dirección: ').$campo['tx_direccion']),1,1);             
+ 
             $this->Ln(5);
 
             $this->SetWidths(array(200));
@@ -254,17 +294,102 @@ class PDF extends FPDF {
             $this->SetFont('Arial','B',10); 
             $this->Row(array(utf8_decode('RETENCIÓN (COMPRAS INTERNAS O IMPORTACIONES)')),1,1);
             $this->SetFillColor(255, 255, 255); 
-            $this->SetAligns(array("C","L","L","C","C"));
-            $this->SetWidths(array(60,40,100));         
+            $this->SetAligns(array("C","C","C","C","C","C","C","C"));
+            $this->SetWidths(array(25,20,20,25,25,25,25,35));         
             $this->SetFont('Arial','',9);            
-            $this->Row(array('Fecha: '.$campo['fe_emision'],'Monto Factura: '.number_format($campo['nu_total'], 2, ',','.'),'Monto Exento: '.number_format($campo['monto_excento'], 2, ',','.')),1,1);
-            $this->SetWidths(array(60,40,50,50)); 
-            $this->SetAligns(array("C","C","C","C"));             
-            $this->Row(array('Base Imponible: '.number_format($campo['nu_base_imponible'], 2, ',','.'),'IVA: '.$campo['nu_iva_factura'],'alicuota: '.$campo1['po_retencion']. ' %','Total a pagar: '.number_format($campo['total_pagar'], 2, ',','.')),1,1);
+            //$this->Row(array('Fecha: '.$campo['fe_emision'],'Monto Factura: '.number_format($campo['nu_total'], 2, ',','.'),'Monto Exento: '.number_format($campo['monto_excento'], 2, ',','.')),1,1);
+            $this->Row(array('Fecha Factura','No. Factura','No. Control','Monto Factura','Base Imponible','Porcentaje','Monto Iva','Monto Retenido'),1,1);
+            $this->SetWidths(array(25,20,20,25,25,25,25,35));
+            $this->SetAligns(array("C","C","C","C","C","C","C","C"));           
+            $this->Row(array($campo['fe_emision'],$campo['nu_factura'],$campo['nu_control'],number_format($campo['total_pagar'], 2, ',','.'),number_format($campo['nu_base_imponible'], 2, ',','.'),$campo1['po_retencion']. ' %',number_format($campo['nu_iva_factura'], 2, ',','.'),number_format($campo1['mo_retencion'], 2, ',','.')),1,1);
 
-            $this->SetWidths(array(100,100));
-            $this->SetAligns(array("R","R"));    
-            $this->Row(array(utf8_decode($campo1['tx_tipo_retencion']. ' RETENIDO'),number_format($campo1['mo_retencion'], 2, ',','.')),1,1);     
+            
+            }else{
+                
+            $this->SetY(50);
+            $this->SetFillColor(201, 199, 199);
+            $this->SetWidths(array(30,30, 30));
+            $this->SetAligns(array("C","R","L"));
+            $this->SetFont('Arial','',8);
+            $this->Row(array(utf8_decode('Fecha de Emisión ')),1,1);
+            $this->SetFillColor(255, 255, 255);
+            $this->Row(array(utf8_decode($campo1['fe_emision'])),1,1);
+            
+            $this->SetY(50);
+            $this->setX(95);
+            $this->SetFillColor(201, 199, 199);
+            $this->SetWidths(array(30,30, 30));
+            $this->SetAligns(array("C","R","L"));
+            $this->SetFont('Arial','',8);
+            $this->Row(array(utf8_decode('No. Comprobante ')),1,1);
+            $this->setX(95);
+            $this->SetFillColor(255, 255, 255);
+            $this->Row(array(utf8_decode($campo1['anio'].$campo1['mes'].$campo1['co_factura_retencion'])),1,1);
+            
+            $this->SetY(50);
+            $this->setX(180);
+            $this->SetFillColor(201, 199, 199);
+            $this->SetWidths(array(30,30, 30));
+            $this->SetAligns(array("C","R","L"));
+            $this->SetFont('Arial','',8);
+            $this->Row(array(utf8_decode('Periodo Fiscal ')),1,1);
+            $this->setX(180);
+            $this->SetFillColor(255, 255, 255);
+            $this->Row(array(utf8_decode('Año: '.$campo1['anio'].' Mes: '.$campo1['mes'])),1,1);            
+            
+            //$this->MultiCell(200,4,utf8_decode($texto),0,1,'J',0);
+            $this->Ln(5); 
+            
+            $this->SetWidths(array(200));
+            $this->SetAligns(array("C"));
+            $this->SetFillColor(201, 199, 199); 
+            $this->SetFont('Arial','B',10);            
+            $this->Row(array(utf8_decode('DATOS DEL AGENTE DE RETENCIÓN')),1,1);
+            $this->SetFillColor(255, 255, 255);
+            $this->SetAligns(array("L","L","L","L"));
+            $this->SetWidths(array(150,50));                 
+            $this->SetFont('Arial','',9);          
+            //$this->Row(array(utf8_decode('Empresa.: GOBERNACIÓN DEL EDO. ZULIA'),utf8_decode('R.I.F.:  G-200036524')),1,1);    
+            $this->Row(array(utf8_decode('Nombre o Razón Social.: '.$this->empresa['nb_empresa']),utf8_decode('R.I.F.: '.$this->empresa['tx_rif'])),1,1);              
+            $this->SetWidths(array(200));
+            //$this->Row(array(utf8_decode('Dirección: AV. BELLA VISTA EDIFICIO FEDERAL MARACAIBO EDO. ZULIA')),1,1);  
+            $this->Row(array(utf8_decode('Dirección: '.$this->empresa['tx_direccion'])),1,1);            
+            
+            $this->SetFillColor(201, 199, 199);
+            $this->SetFont('Arial','B',10);
+            $this->SetWidths(array(200));
+            $this->SetAligns(array("C"));
+            $this->Row(array(utf8_decode('DATOS DEL (PROVEEDOR / BENEFICIARIO)')),1,1);
+            $this->SetFillColor(255, 255, 255);
+            $this->SetWidths(array(150,50));
+            $this->SetAligns(array("L","L","L","L"));
+            $this->SetFont('Arial','',9);
+            $this->Row(array(utf8_decode('Nombre o Razón Social.: ').$campo['tx_razon_social'],utf8_decode('R.I.F.:  ').$campo['tx_rif']),1,1);         
+            $this->SetWidths(array(200));
+            $this->Row(array(utf8_decode('Dirección: ').$campo['tx_direccion']),1,1);             
+ 
+            $this->Ln(5);
+
+            $this->SetWidths(array(200));
+            $this->SetAligns(array("C"));
+            $this->SetFillColor(201, 199, 199);
+            $this->SetFont('Arial','B',10); 
+            $this->Row(array(utf8_decode('RETENCIÓN (COMPRAS INTERNAS O IMPORTACIONES)')),1,1);
+            $this->SetFillColor(255, 255, 255); 
+            $this->SetAligns(array("C","C","C","C","C","C","C"));
+            $this->SetWidths(array(25,25,25,30,30,30,35));         
+            $this->SetFont('Arial','',9);            
+            //$this->Row(array('Fecha: '.$campo['fe_emision'],'Monto Factura: '.number_format($campo['nu_total'], 2, ',','.'),'Monto Exento: '.number_format($campo['monto_excento'], 2, ',','.')),1,1);
+            $this->Row(array('Fecha Factura','No. Factura: ','No. Control','Monto Factura','Base Imponible','Porcentaje','Monto Retenido'),1,1);
+            $this->SetWidths(array(25,25,25,30,30,30,35));
+            $this->SetAligns(array("C","C","C","C","C","C","C"));           
+            $this->Row(array($campo['fe_emision'],$campo['nu_factura'],$campo['nu_control'],number_format($campo['total_pagar'], 2, ',','.'),number_format($campo['nu_base_imponible'], 2, ',','.'),$campo1['po_retencion']. ' %',number_format($campo1['mo_retencion'], 2, ',','.')),1,1);
+                
+                
+                
+                
+            }
+//            $this->Row(array('IVA: '.$campo['nu_iva_factura'],utf8_decode($campo1['tx_tipo_retencion']. ' RETENIDO'),number_format($campo1['mo_retencion'], 2, ',','.')),1,1);     
             
             $this->SetFont('Arial','B',10);              
             $this->Ln(40);   
@@ -355,7 +480,7 @@ class PDF extends FPDF {
                          case when(tb045.co_iva_factura = 0) then nu_total else '0' end as monto_excento,
                          to_char(tb045.fe_registro,'dd') as dia,
                          to_char(tb045.fe_registro,'mm') as mes,
-                         to_char(tb045.fe_registro,'yy') as anio
+                         to_char(tb045.fe_registro,'yyyy') as anio
                   from   tb026_solicitud as tb026
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud                                                   
                   left join tb045_factura as tb045 on tb045.co_compra = tb052.co_compras
@@ -389,10 +514,10 @@ class PDF extends FPDF {
                           mo_retencion,
                           tx_tipo_retencion,
                           tb041.co_tipo_retencion,
-                          co_factura_retencion,
+                          lpad(co_factura_retencion::text, 8, '0'::text) as co_factura_retencion,
                           to_char(tb045.fe_registro,'dd') as dia,
                           to_char(tb045.fe_registro,'mm') as mes,
-                          to_char(tb045.fe_registro,'yy') as anio
+                          to_char(tb045.fe_registro,'yyyy') as anio
                   from   tb045_factura as tb045     
                   left join tb046_factura_retencion as tb046 on tb046.co_factura = tb045.co_factura
                   left join tb041_tipo_retencion as tb041 on tb041.co_tipo_retencion = tb046.co_tipo_retencion
