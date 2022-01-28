@@ -140,9 +140,9 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
         }*/
 
-        if(!empty($this->empresa['tx_imagen_der'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
-        }
+       /* if(!empty($this->empresa['tx_imagen_der'])){
+            $this->Image($this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+        }*/
 
         $this->SetFont('Arial','B',9);
         
@@ -153,15 +153,9 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
         $this->Ln(4);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
-        $this->Ln(4);
-        $this->SetFont('Arial','',8);
-        //$this->Cell(0,0,utf8_decode('RIF.: G-20003652-4'),0,0,'C');
-        $this->Cell(0,0,utf8_decode($this->empresa['tx_rif']),0,0,'C');
-        $this->Ln(4);
-        $this->SetFont('Arial','B',9);
-        //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');
-        $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
         $this->Ln(5);
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');
+        $this->Ln(5);        
         $this->SetFont('Arial','',8);
     }
 
@@ -210,11 +204,11 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->SetX(40);
                         $this->SetY(9);
                         $this->SetFont('Times','B',12);       
-                        $this->SetX(160);
+                        $this->SetX(150);
                         $this->SetFillColor(255, 255, 255);
                         if($this->datos[0]['tx_serial']) $nu_pago = $this->datos[0]['tx_serial']; else $nu_pago = $this->datos[0]['co_odp'];
-                        $this->MultiCell(165,5,'              ORDEN DE PAGO',0,1,'J',0);
-                        $this->SetX(165);
+                        $this->MultiCell(55,5,'              ORDEN DE PAGO',0,1,'J',0);
+                        $this->SetX(155);
                         $this->MultiCell(175,5,'              '.$nu_pago,0,1,'J',0);
                         $this->Ln(2);                        
                         $this->SetFont('Times','B',10);
@@ -222,6 +216,9 @@ class PDF_Flo extends PDF_FlowingBlock
                         //$this->Cell(0,0,utf8_decode('REL:'.$this->datos[0]['anio'].'-'.$this->datos[0]['nu_orden_compra']),0,0,'C'); 
 
                         $this->SetFont('Times','B',8);
+                        $this->SetY(30); 
+                        $this->SetX(145); //
+                        $this->MultiCell(30,4,utf8_decode('SAN FRANCISCO'),0,0,'L',0);
                         $this->SetY(35); 
                         $this->SetX(144); //
                         $this->MultiCell(65,4,utf8_decode('FECHA DE EMISIÓN:                      ').date("d/m/Y", strtotime($this->datos[0]['fecha_odp'])),0,0,'L',0);                        
@@ -230,72 +227,19 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->SetX(109); 
                         $this->MultiCell(100,4,'FECHA DE VENCIMIENTO:          '.'31/12/'.($anio+1),0,0,'L',0);                         
                         
-                        $Y = $this->GetY();                        
-                        $this->RoundedRect(10, 43, 50, 5, 1.5, '1001', '', $style);
-                        $this->SetAligns(array("C"));
-                        $this->SetWidths(array(50));                        
-                        $this->Row(array('TIPO ORDEN DE PAGO'),0,0); 
-                       
-                        $Y = $this->GetY();
-                        $this->RoundedRect(10, 48, 25, 5, 1.5, '0010', '', $style); 
-                        $this->SetY($Y); 
-                        $this->RoundedRect(35, 48, 25, 5, 1.5, '0100', '', $style);
-                        $this->SetWidths(array(25,25));
-                        $this->SetAligns(array("L","L"));
-                        $this->SetFont('Times','',8);
-                        $this->SetX(30); 
-                        $this->MultiCell(5,5,'',1,0,'R',0); 
-                        $this->SetY($Y); 
-                        $this->line(56,$Y,56,$Y+5);                        
-                        $this->SetY($Y); 
-                        $this->SetX(55); 
-                        $this->line(170,$Y,170,$Y+5);
-                        $this->SetY($Y); 
-                        $this->line(205,$Y,205,$Y+5);
-                        $this->SetY($Y); 
-                        if ($this->datos[0]['co_tipo_odp']==1) $avance='X'; else $permanente='X';
-                        $this->Row(array('AVANCE:           '.$avance,'PERMANENTE: '.$permanente),0,0);  
-                        
-                        $this->SetFont('Times','B',8); 
-                        $Y = $this->GetY();                        
-                        $this->RoundedRect(150, 43, 60, 5, 1.5, '1001', '', $style);
-                        $this->SetAligns(array("C"));
-                        $this->SetWidths(array(60)); 
-                        $this->SetY(43); 
-                        $this->SetX(150);
-                        $this->Row(array('FORMA DE PAGO'),0,0);
-                        
-                        $Y = $this->GetY();
-                        $this->RoundedRect(150, 48, 25, 5, 1.5, '0010', '', $style); 
-                        $this->SetY($Y); 
-                        $this->RoundedRect(175, 48, 35, 5, 1.5, '0100', '', $style);
-                        $this->SetWidths(array(25,35));
-                        $this->SetAligns(array("L","L"));
-                        $this->SetFont('Times','',8);                         
-                        $this->SetX(150);
-                        $this->Row(array('CHEQUE: ','TRANSFERENCIA: '),0,0);                                              
-                        $this->SetAligns(array("L"));
-                        $this->SetWidths(array(150));         
-                        $this->SetFont('Times','B',10);
-                        $Y = $this->GetY();
-                        $this->SetX(10); 
-                        $this->Row(array('                                                                      '),0,0);           
-                        $this->SetY($Y - 4);
-                        $this->SetX(135);               
-                        $this->MultiCell(65,8,'',0,10,'R',0);
-                        $this->SetY($Y-3);  
-                        $this->SetX(138);
-                        $VALOR = '**********'.number_format($valores['nu_monto'], 2, ',','.').' Bs. D';
+                        $VALOR = '**********'.number_format($valores['nu_monto'], 2, ',','.').' Bs.';
                         $this->SetFont('Times','',9);
-                        $this->Ln(3);
+//                        $this->Ln(3);
                         $this->SetWidths(array(200));
                         $this->SetAligns(array("L"));
                         $montoLetra = numtoletras($valores['nu_monto'],1);
                         $this->newFlowingBlock( 195, 5, '', 'J' );
-                        $this->RoundedRect(10, 53, 200, 15, 1.5, '1111', '', $style);
+                        $this->RoundedRect(10, 68, 200, 15, 1.5, '1111', '', $style);
                         $this->SetX(10);
+                        $this->SetY(68); 
                         $this->SetFont('Times','',9);
-                        $this->WriteFlowingBlock(utf8_decode('HEMOS RECIBIDO DE LA GOBERNACIÓN DEL ESTADO ZULIA LA CANTIDAD DE:'));
+                        //$this->WriteFlowingBlock(utf8_decode('HEMOS RECIBIDO DE LA GOBERNACIÓN DEL ESTADO ZULIA LA CANTIDAD DE:'));
+                        $this->WriteFlowingBlock(utf8_decode('HEMOS RECIBIDO DE '.$this->op_reporte['titular_odp'].' LA CANTIDAD DE:'));
                         $this->SetX(10);
                         $this->SetFont('Times','',9);
                         $this->WriteFlowingBlock(utf8_decode(' '.$montoLetra));                        
@@ -307,13 +251,13 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->finishFlowingBlock();
                         $this->SetFont('Times','',9);
                         $Y = $this->GetY();
-                        $this->RoundedRect(10, 68, 200, 10, 1.5, '1111', '', $style); 
-                        $this->SetY(68); 
+                        $this->RoundedRect(10, 43, 200, 10, 1.5, '1111', '', $style); 
+                        $this->SetY(43); 
                         $this->Row(array('A FAVOR DE: '.$this->datos[0]['tx_rif'].' - '.utf8_decode($this->datos[0]['tx_razon_social']).' '.utf8_decode($this->datos[0]['rep'])),0,0); 
                         
                         $Y = $this->GetY();
-                        $this->RoundedRect(10, 78, 200, 15, 1.5, '1111', '', $style); 
-                        $this->SetY(78); 
+                        $this->RoundedRect(10, 53, 200, 15, 1.5, '1111', '', $style); 
+                        $this->SetY(53); 
                         $this->SetX(10); 
                         $this->Row(array('POR CONCEPTO DE: '.utf8_decode($this->datos[0]['tx_observacion'])),0,0);     
                         
@@ -324,47 +268,81 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->SetFillColor(201, 199, 199); 
                         
                         $Y = $this->GetY();
-                        $this->RoundedRect(10, 93, 200, 5, 1.5, '1001', '', $style); 
-                        $this->SetY(93); 
+                        $this->RoundedRect(10, 83, 200, 5, 1.5, '1001', '', $style); 
+                        $this->SetY(83); 
                         
                         $this->SetFont('Times','B',8);
                         $this->Row(array(utf8_decode('DOCUMENTOS Y RETENCIONES')),0,0);
                         $this->SetFillColor(255, 255, 255);
-                        $this->SetAligns(array("C","C","R","C","L","R","R"));
-                        $this->SetWidths(array(25,20,35,15,30,30,45));                 
+                        $this->SetAligns(array("C","C","R","R","R","R","R","R"));
+                        $this->SetWidths(array(20,15,22,30,25,30,30,28));                 
                         $this->SetFont('Times','',8);  
                         $Y = $this->GetY();
-                        $this->RoundedRect(10, 93, 200, 50, 1.5, '0110', '', $style);                         
+                        $this->RoundedRect(10, 83, 200, 50, 1.5, '1111', '', $style);                         
                         $this->SetY($Y);
                         $this->SetX(10);
-                        $this->Row(array('DOCUM.','FECHA','MONTO BASE','','RETENCIONES','MONTO','CANCELADO'),0,0);
+                        $this->Row(array('DOCUM.','FECHA','MONTO BASE','MONTO IVA '.$valor['co_iva_factura'].' %','TOTAL','RETENCIONES','MONTO','CANCELADO'),0,0);
                         
-                        $Y = $this->GetY();
-                        $this->MultiCell(200,50,'',0,0,'L',0);
-                        $this->SetY($Y);
-                        $this->SetX(10);
-                        $this->Row(array($this->datos[0]['tx_documento_odp'], date("d/m/Y", strtotime($this->datos[0]['fe_emision'])), number_format($valores['nu_monto'], 2, ',','.'),'','','0.00',number_format($valores['nu_monto'], 2, ',','.')),0,0);
-                        $j++;
 
+                        $campo1='';
+                        $this->lista_retenciones = $this->getRetenciones($this->datos[0]['co_factura']);
+                        $monto = 0;   
+                        $j=1;    
+                        if($this->lista_retenciones){                         
+                        
+                        foreach($this->lista_retenciones as $key => $campo1){    
+                        if($j==1){
+
+                                $Y = $this->GetY();
+                                //$this->MultiCell(200,50,'',0,0,'L',0);
+                                $this->SetY($Y);
+                                $this->SetAligns(array("C","C","R","R","R","R","R","R"));
+                                $this->SetX(10);
+                                $this->Row(array('Fact-'.$this->datos[0]['nu_factura'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), number_format($valor['nu_base_imponible'], 2, ',','.'),number_format($valor['nu_iva_factura'], 2, ',','.'),number_format($valor['nu_total'], 2, ',','.'),utf8_decode($campo1['tx_tipo_retencion']),number_format($campo1['mo_retencion'], 2, ',','.'),number_format($this->datos[0]['total_pagar'], 2, ',','.')),0,0);
+                                $j++;
+                            
+                            } 
+                        else
+                            {   
+                             //$this->SetX(142);
+                             $this->SetWidths(array(112,30,30,28)); 
+                             $this->SetAligns(array("L","R","R","R"));
+                             $this->Row(array('',utf8_decode($campo1['tx_tipo_retencion']),number_format($campo1['mo_retencion'], 2, ',','.'),''),0,0);
+                            }
+                         $monto = $monto + $campo1['mo_retencion'];
+                        }
+                        } else {
+
+                                $Y = $this->GetY();
+                                $this->MultiCell(200,50,'',0,0,'L',0);
+                                $this->SetY($Y);
+                                $this->SetAligns(array("C","C","C","R","R","R","R","R"));
+                                $this->SetX(10);
+                                $this->Row(array($this->datos[0]['tx_documento_odp'], date("d/m/Y", strtotime($this->datos[0]['fe_emision'])), number_format($valores['nu_monto'], 2, ',','.'),'',number_format($valores['nu_monto'], 2, ',','.'),'','',number_format($valores['nu_monto'], 2, ',','.')),0,0);
+                                $j++;                            
+                        }
                         
                         $y = $this->getY();
-                        $this->line(60, $y+1, 90, $y+1);
-                        $this->SetX(65);
+                        $this->line(98, $y+1, 122, $y+1);
+                        $this->SetX(10);
+                        $this->SetWidths(array(112));
                         $this->SetAligns(array("R"));
                         $Y = $this->GetY();
                         $this->Row(array(number_format($valores['nu_monto'], 2, ',','.')),0,0);
 
-                        $this->line(140, $y+1, 170, $y+1);         
+                        $this->line(158, $y+1, 182, $y+1);         
                         $this->SetAligns(array("R"));          
                         $this->SetY($Y);
-                        $this->SetX(140);
-                        $this->Row(array('0.00'),0,0);
+                        $this->SetWidths(array(30));
+                        $this->SetX(152);
+                        $this->Row(array(number_format($monto, 2, ',','.')),0,0);
 
-                        $this->line(180, $y+1, 210, $y+1);        ;
+                        $this->line(188, $y+1, 210, $y+1);        ;
                         $this->SetY($Y);
                         $this->SetAligns(array("R"));
-                        $this->SetX(185);
-                        $this->Row(array(number_format($valores['nu_monto'], 2, ',','.')),0,0);     
+                        $this->SetWidths(array(28));
+                        $this->SetX(182);
+                        $this->Row(array(number_format($valores['nu_monto'], 2, ',','.')),0,0);         
 
                         $this->SetX(35);
                         $this->SetWidths(array(120)); 
@@ -372,55 +350,55 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->SetFont('Times','B',8); 
                         if(count($this->datos)>1) $this->Row(array('Ver Anexos (OP con Fact. adicionales)...'),0,0);
                         
-                        $this->SetY(143);
+                        $this->SetY(133);
                         $this->SetWidths(array(100,100));
                         $this->SetAligns(array("C","C"));
                         $this->SetFillColor(201, 199, 199);
                         $this->SetFont('Times','B',8); 
                         $Y = $this->GetY();
-                        $this->RoundedRect(10, 143, 90, 5, 1.5, '0011', '', $style); 
+                        $this->RoundedRect(10, 133, 90, 5, 1.5, '0011', '', $style); 
                         $this->SetY($Y);
-                        $this->RoundedRect(100, 143, 110, 5, 1.5, '1100', '', $style); 
+                        $this->RoundedRect(100, 133, 110, 5, 1.5, '1100', '', $style); 
                         $this->SetY($Y);
                         $this->Row(array('CODIGOS CONTABLES','CATEGORIAS PRESUPUESTARIAS'),0,0);
                         $this->SetWidths(array(75,125));
                         $this->SetFillColor(255, 255, 255); 
                         $this->SetFont('Times','',8);                                                
-                        $this->SetAligns(array("L","R","R","C","C","C","C","C","C","C","C","C","C","C","R"));
-                        $this->SetWidths(array(32,29,29,1,9,8,9,8,7,5,5,6,8,9,33));
+                        $this->SetAligns(array("L","R","R","C","C","C","R","C","C","C","C","C","C","C","R"));
+                        $this->SetWidths(array(32,29,29,25,25,30,30));
                         $Y = $this->GetY();
-                        $this->RoundedRect(10, 148, 90, 50, 1.5, '0011', '', $style);  
-                        $this->RoundedRect(100, 148, 110, 50, 1.5, '1100', '', $style);    
+                        $this->RoundedRect(10, 138, 90, 50, 1.5, '0011', '', $style);  
+                        $this->RoundedRect(100, 138, 110, 50, 1.5, '1100', '', $style);    
                         
                         
-                        $this->SetY(150); 
+                        $this->SetY(140); 
                         
                         $this->SetX(10); 
-                        $this->Row(array('CUENTA','DEBITOS','CREDITOS','',utf8_decode('AÑO'),'UE','PAC','AE','P','G','E','SE','SSE','F','MONTO'),0,0);
-                        $this->SetAligns(array("L","R","R","C","C","C","C","C","C","C","C","C","C","C","R"));
+                        $this->Row(array('CUENTA','DEBITOS','CREDITOS','SEC/PRO','AE','CUENTA','MONTO'),0,0);
+                        $this->SetAligns(array("L","R","R","C","C","C","R","C","C","C","C","C","C","C","R"));
                         $fila = $this->getY();                                                
-                        $this->lista_asientos = $this->getAsientos($valor['co_solicitud']);
+                        $this->lista_asientos = $this->getAsientos($this->datos[0]['co_solicitud']);
                         $this->SetFont('Times','',8);
                         foreach($this->lista_asientos as $key => $this->campo){     
                          $this->SetX(10);
                          $this->Row(array($this->campo['tx_cuenta'],number_format($this->campo['mo_debe'], 2, ',','.'),number_format($this->campo['mo_haber'], 2, ',','.'),''),0,0);
 
                         }
-                        $Y2 = 198;
+                        $Y2 = 188;
                         $this->campo="";
                         $this->SetY($fila);
-                        $this->lista_partidas = $this->getPartidas();
+                        $this->lista_partidas = $this->getPartidas($this->datos[0]['co_factura']);
                         foreach($this->lista_partidas as $key => $campo){  
-                         $this->SetX(102); 
-                         $this->SetAligns(array("C","C","C","C","C","C","C","C","C","C","R"));
-                        $this->SetWidths(array(8,8,9,8,8,5,5,6,7,10,32));      
+                         $this->SetX(100); 
+                         $this->SetAligns(array("C","C","C","R","C","C","C","C","C","C","R"));
+                        $this->SetWidths(array(25,25,30,30));      
                         $this->SetFont('Times','',8);
-                         $this->Row(array($campo['anio'],$campo['ue'],$campo['pac'],'00'.$campo['ae'],$campo['p'],$campo['g'],$campo['e'],$campo['se'],$campo['sse'],$campo['f'],number_format($campo['monto'], 2, ',','.')),0,0);
+                         $this->Row(array($campo['pac'],$campo['ae'],$campo['nu_partida'],number_format($campo['monto'], 2, ',','.')),0,0);
                         $monto_total_partidas = $monto_total_partidas + $campo['monto'];
                         }
                         $this->SetFont('Times','B',8); 
                         $this->SetWidths(array(60,80,60));
-                        $this->SetAligns(array("C","C","C"));
+                        
                         $this->SetY($Y2);
                         $this->RoundedRect(10, $Y2, 60, 5, 1.5, '0011', '', $style); 
                         $this->SetY($Y);
@@ -429,7 +407,7 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->RoundedRect(150, $Y2, 60, 5, 1.5, '1100', '', $style); 
                         
                         $this->SetY($Y2);
-                        $this->Row(array('BANCO','NUMERO DE CUENTA','MONTO EN Bs.D QUE CANCELA'),0,0); 
+                        $this->Row(array('BANCO','NUMERO DE CUENTA','MONTO EN Bs. QUE CANCELA'),0,0); 
                         $Y2 = $this->GetY();
                         
                         $this->SetY($Y2);
@@ -440,7 +418,7 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->RoundedRect(150, $Y2, 60, 18, 1.5, '1100', '', $style);                      
                         $Y2 = $this->GetY();        
                         
-                        $this->SetY(205);
+                        $this->SetY(195);
                         $this->SetFont('Times','B',12); 
                         $this->SetAligns(array("L","R"));
                         $this->SetWidths(array(140,60));                                                
@@ -448,12 +426,12 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->SetWidths(array(60,80,60));
                         $this->SetFont('Times','B',8); 
                         
-                        $this->SetY(221);
+                        $this->SetY(211);
                         $this->SetAligns(array("C","C","C"));
-                        $this->Row(array('REVISADO POR:','ORDENADO POR:','APROBADO POR:'),0,0);                      
+                        $this->Row(array(utf8_decode('AÑO'),'ORDENADO POR:','APROBADO POR:'),0,0);                      
                         $Y2 = $this->GetY();                            
                         
-                        $this->SetY(221);
+                        $this->SetY(211);
                         $Y2 = $this->GetY();
                         $this->RoundedRect(10, $Y2, 60, 5, 1.5, '0011', '', $style); 
                         $this->SetY($Y);
@@ -463,7 +441,7 @@ class PDF_Flo extends PDF_FlowingBlock
                                   
                         
                         
-                        $this->SetY(226);
+                        $this->SetY(216);
                         $Y2 = $this->GetY(); 
                         $this->RoundedRect(10, $Y2, 60, 15, 1.5, '0011', '', $style); 
                         $this->SetY($Y);
@@ -477,18 +455,19 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->SetWidths(array(60,80,60));
                         $this->SetFont('Times','',9); 
                         
-                        $this->SetY(236);
+                        $this->SetY(226);
                         $this->SetX(10);
-                        $this->Row(array('Presupuesto','Secretaria Administracion y Finanzas','Gobernador del Zulia'));
+                        //$this->Row(array('Presupuesto','Secretaria Administracion y Finanzas','Gobernador del Zulia'));
+                        $this->Row(array('PRESUPUESTO '.$this->datos[0]['nu_anio'],'COORDINACION DE ADMINISTRACION','ALCALDE DE SAN FRANCISCO'));
                         $this->SetY($Y2); 
                         $this->SetAligns(array("C"));
                         $this->SetWidths(array(200));
                         $this->SetFont('Times','B',8);
-                        $this->SetY(241);
-                        $this->RoundedRect(10, 241, 200, 5, 1.5, '1111', '', $style);
+                        $this->SetY(231);
+                        $this->RoundedRect(10, 231, 200, 5, 1.5, '1111', '', $style);
                         $this->Row(array('RECIBE CONFORME BENEFICIARIO'),0,0); 
                         
-                        $this->SetY(246);
+                        $this->SetY(236);
                         $Y2 = $this->GetY(); 
                         $this->RoundedRect(10, $Y2, 60, 5, 1.5, '0001', '', $style); 
                         $this->SetY($Y);
@@ -504,11 +483,11 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->SetAligns(array("C","C","C","C","C"));
                         $this->SetWidths(array(60,40,40,30,30));
                         $this->SetFont('Times','B',9); 
-                        $this->SetY(246); 
+                        $this->SetY(236); 
                         $this->SetX(10);
                         $this->Row(array('NOMBRE Y APELLIDO',utf8_decode('C.I.N°'),'FIRMA','FECHA','SELLO'),0,0);
                         
-                        $this->SetY(251);
+                        $this->SetY(241);
                         $Y2 = $this->GetY(); 
                         $this->RoundedRect(10, $Y2, 60, 22, 1.5, '0010', '', $style); 
                         $this->SetY($Y);
@@ -829,6 +808,8 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb060.tx_documento_odp,
                          case when tb026.co_tipo_solicitud in (32,34) then (tb008.nb_representante_legal||'  C.I. '||tb008.nu_cedula_representante) else
                          '' end as rep,
+                         tb052.anio,
+                         tb026.id_tb013_anio_fiscal as nu_anio,
                          tb060.co_tipo_odp
                   from   tb026_solicitud as tb026
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud                                                   
@@ -876,7 +857,7 @@ class PDF_Flo extends PDF_FlowingBlock
           $sql = "select tb085.co_categoria,
                          anio,
                          nu_ejecutor as ue,
-                         tb080.nu_sector||'.'||nu_proyecto_ac as pac,
+                         nu_proyecto_ac as pac,
                          nu_accion_especifica as ae,
                          nu_pa as p,                         
                          nu_ge as g,
@@ -884,6 +865,7 @@ class PDF_Flo extends PDF_FlowingBlock
                          nu_se as se,
                          nu_sse as sse,
                          nu_fi as f,
+                         tb085.nu_partida,
                          sum(monto) as monto
                   from  tb052_compras as tb052 
                   left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras 
@@ -894,7 +876,7 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud                               
                  left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector                 
                   where tb030.co_ruta =".$_GET['codigo']." 
-                   group by 1,2,3,4,5,6,7,8,9,10,11 limit 8";
+                   group by 1,2,3,4,5,6,7,8,9,10,11,12 limit 8";
 
          // echo var_dump($sql); exit();                  
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
@@ -910,7 +892,7 @@ class PDF_Flo extends PDF_FlowingBlock
           $sql = "select tb085.co_categoria,
                          anio,
                          nu_ejecutor as ue,
-                         tb080.nu_sector||'.'||nu_proyecto_ac as pac,
+                         nu_proyecto_ac as pac,
                          nu_accion_especifica as ae,
                          nu_pa as p,                         
                          nu_ge as g,
