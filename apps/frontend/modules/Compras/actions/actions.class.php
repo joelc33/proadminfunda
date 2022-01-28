@@ -293,7 +293,7 @@ class ComprasActions extends sfActions
                             "co_compras"             => $campos["co_compras"],
                             "co_detalle_compras"     => $campos["co_detalle_compras"],
                             "co_partida"             => $campos["co_partida"],
-                            "monto"                  => $this->getMoFactura($codigo),
+                            "monto"                  => $campos["monto"],
                             "detalle"                => $campos["detalle"],
                             "co_persona"             => $campos["co_proveedor"],
                             "co_tipo_ayuda"          => $campos["co_tipo_ayuda"],
@@ -455,6 +455,7 @@ class ComprasActions extends sfActions
     
     $mo_total = $tb126_solicitud_ayudaForm["mo_ayuda"];
     
+    $solicitud = Tb026SolicitudPeer::retrieveByPk($tb126_solicitud_ayudaForm["co_solicitud"]);    
        
      $con = Propel::getConnection();
      if($codigo!=''||$codigo!=null){
@@ -462,6 +463,13 @@ class ComprasActions extends sfActions
      }else{
          $tb052_compras = new Tb052Compras();
      }
+     
+     if($co_solicitud_ayuda!=''||$co_solicitud_ayuda!=null){
+        $tb126_solicitud_ayuda = Tb126SolicitudAyudaPeer::retrieveByPK($co_solicitud_ayuda);
+     }else{
+         $tb126_solicitud_ayuda = new Tb126SolicitudAyuda();
+     }     
+     
      try
      { 
         $con->beginTransaction();        
@@ -474,7 +482,8 @@ class ComprasActions extends sfActions
         } 
         $tb052_compras->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
         $tb052_compras->setCoSolicitud($tb126_solicitud_ayudaForm["co_solicitud"]);        
-        $tb052_compras->setCoTipoSolicitud(25);                                                        
+        $tb052_compras->setCoTipoSolicitud($solicitud->getCoTipoSolicitud());
+        $tb052_compras->setCoProveedor($tb126_solicitud_ayudaForm["co_persona"]);
         //$tb052_compras->setAnio(date('Y'));
         $tb052_compras->setAnio( $this->getUser()->getAttribute('ejercicio'));      
         $tb052_compras->setNuIva(0);        
@@ -482,23 +491,32 @@ class ComprasActions extends sfActions
         $tb052_compras->setMontoSubTotal(0);        
         $tb052_compras->setMontoTotal($mo_total);        
         $tb052_compras->setCoTipoMovimiento(0);        
-        $tb052_compras->setCoEjecutor(6);         
+        $tb052_compras->setCoEjecutor(1);         
         $tb052_compras->save($con);
         
         
-        $tb126_solicitud_ayuda = Tb126SolicitudAyudaPeer::retrieveByPK($co_solicitud_ayuda);
-        if (array_key_exists("in_mostrar_partida", $tb126_solicitud_ayudaForm)){
-            $tb126_solicitud_ayuda->setInPartida(true);
-        }else{
-            $tb126_solicitud_ayuda->setInPartida(false);
-        }
-        $tb126_solicitud_ayuda->setNuResolucion($tb126_solicitud_ayudaForm["nu_resolucion"]);
-        list($dia,$mes,$anio) = explode("/",$tb126_solicitud_ayudaForm["fe_resolucion"]);
-        $tb126_solicitud_ayuda->setFeResolucion($anio.'-'.$mes.'-'.$dia);
+//        $tb126_solicitud_ayuda = Tb126SolicitudAyudaPeer::retrieveByPK($co_solicitud_ayuda);
+//        if (array_key_exists("in_mostrar_partida", $tb126_solicitud_ayudaForm)){
+//            $tb126_solicitud_ayuda->setInPartida(true);
+//        }else{
+//            $tb126_solicitud_ayuda->setInPartida(false);
+//        }
+//        $tb126_solicitud_ayuda->setNuResolucion($tb126_solicitud_ayudaForm["nu_resolucion"]);
+//        list($dia,$mes,$anio) = explode("/",$tb126_solicitud_ayudaForm["fe_resolucion"]);
+//        $tb126_solicitud_ayuda->setFeResolucion($anio.'-'.$mes.'-'.$dia);
+        
+        $tb126_solicitud_ayuda->setCoProveedor($tb126_solicitud_ayudaForm["co_persona"]);
+        $tb126_solicitud_ayuda->setCoTipoAyuda($tb126_solicitud_ayudaForm["co_tipo_ayuda"]);
+        $tb126_solicitud_ayuda->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
+        $tb126_solicitud_ayuda->setCoSolicitud($tb126_solicitud_ayudaForm["co_solicitud"]);
+        $tb126_solicitud_ayuda->setCoUsuario($tb126_solicitud_ayudaForm["co_usuario"]);
+        $tb126_solicitud_ayuda->setIdTb013AnioFiscal($this->getUser()->getAttribute('ejercicio'));
+   
         $tb126_solicitud_ayuda->setMoTotalAyuda($mo_total);
         $tb126_solicitud_ayuda->save($con);
-             
-       
+
+
+        $solicitud->setCoProveedor($tb126_solicitud_ayudaForm["co_persona"])->save($con);            
                        
         $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb126_solicitud_ayudaForm["co_solicitud"]));
         $ruta->setCoUsuario($this->getUser()->getAttribute('codigo'));
@@ -520,11 +538,13 @@ class ComprasActions extends sfActions
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
             $tb053_detalle_compras = Tb053DetalleComprasPeer::retrieveByPK($reg["co_detalle_compras"]);
             $tb053_detalle_compras->setNuCantidad(1);
-            $tb053_detalle_compras->setCoProducto(18554);
-            $tb053_detalle_compras->setCoProyectoAc(10);
-            $tb053_detalle_compras->setCoAccionEspecifica(12);        
-            $tb053_detalle_compras->setDetalle($tb126_solicitud_ayudaForm["tx_descripcion"]);
-            $tb053_detalle_compras->setCoPartida($tb126_solicitud_ayudaForm["co_partida"]);
+//            $tb053_detalle_compras->setCoProducto(18554);
+//            $tb053_detalle_compras->setCoProyectoAc(10);
+//            $tb053_detalle_compras->setCoAccionEspecifica(12);        
+            $tb053_detalle_compras->setDetalle($tb126_solicitud_ayudaForm["tx_observacion"]);
+            $tb053_detalle_compras->setPrecioUnitario($mo_total);
+            $tb053_detalle_compras->setMonto($mo_total);            
+//            $tb053_detalle_compras->setCoPartida($tb126_solicitud_ayudaForm["co_partida"]);
             $tb053_detalle_compras->save($con);
 
             $cont++;
@@ -539,13 +559,13 @@ class ComprasActions extends sfActions
                
             $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
             $tb053_detalle_compras->setNuCantidad(1);
-            $tb053_detalle_compras->setCoProducto(18554);
-            $tb053_detalle_compras->setCoProyectoAc(10);
-            $tb053_detalle_compras->setCoAccionEspecifica(12);        
-            $tb053_detalle_compras->setDetalle($tb126_solicitud_ayudaForm["tx_descripcion"]);
+//            $tb053_detalle_compras->setCoProducto(18554);
+//            $tb053_detalle_compras->setCoProyectoAc(10);
+//            $tb053_detalle_compras->setCoAccionEspecifica(12);        
+            $tb053_detalle_compras->setDetalle($tb126_solicitud_ayudaForm["tx_observacion"]);
             $tb053_detalle_compras->setPrecioUnitario($mo_total);
             $tb053_detalle_compras->setMonto($mo_total);
-            $tb053_detalle_compras->setCoPartida($tb126_solicitud_ayudaForm["co_partida"]);
+//            $tb053_detalle_compras->setCoPartida($tb126_solicitud_ayudaForm["co_partida"]);
             $tb053_detalle_compras->save($con);
         }
 

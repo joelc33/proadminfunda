@@ -42,18 +42,18 @@ this.nb_persona = new Ext.form.TextField({
 	fieldLabel:'Nombres',
 	name:'tb109_persona[nb_persona]',
 	value:this.OBJ.nb_persona,
-        readOnly:(this.OBJ.nb_persona!='')?true:false,
-	style:(this.OBJ.nb_persona!='')?'background:#c9c9c9;':'',
+//        readOnly:(this.OBJ.nb_persona!='')?true:false,
+//	style:(this.OBJ.nb_persona!='')?'background:#c9c9c9;':'',
 	allowBlank:false,
-	width:400
+	width:600
 });
 
 this.ap_persona = new Ext.form.TextField({
 	fieldLabel:'Apellidos',
 	name:'tb109_persona[ap_persona]',
 	value:this.OBJ.ap_persona,
-        readOnly:(this.OBJ.ap_persona!='')?true:false,
-	style:(this.OBJ.ap_persona!='')?'background:#c9c9c9;':'',
+//        readOnly:(this.OBJ.ap_persona!='')?true:false,
+//	style:(this.OBJ.ap_persona!='')?'background:#c9c9c9;':'',
 	allowBlank:false,
 	width:400
 });
@@ -62,8 +62,8 @@ this.nu_cedula = new Ext.form.TextField({
 	fieldLabel:'Cédula',
 	name:'tb109_persona[nu_cedula]',
 	value:this.OBJ.nu_cedula,
-        readOnly:(this.OBJ.nu_cedula!='')?true:false,
-	style:(this.OBJ.nu_cedula!='')?'background:#c9c9c9;':'',
+//        readOnly:(this.OBJ.nu_cedula!='')?true:false,
+//	style:(this.OBJ.nu_cedula!='')?'background:#c9c9c9;':'',
 	allowBlank:false,
         maskRe: /[0-9]/, 
 });
@@ -72,8 +72,8 @@ this.nu_celular = new Ext.form.TextField({
 	fieldLabel:'Nro Celular',
 	name:'tb109_persona[nu_celular]',
 	value:this.OBJ.nu_celular,
-        readOnly:(this.OBJ.nu_celular!='')?true:false,
-	style:(this.OBJ.nu_celular!='')?'background:#c9c9c9;':'',
+//        readOnly:(this.OBJ.nu_celular!='')?true:false,
+//	style:(this.OBJ.nu_celular!='')?'background:#c9c9c9;':'',
 	width:200,
         maskRe: /[0-9]/, 
 });
@@ -85,8 +85,8 @@ this.co_documento = new Ext.form.ComboBox({
 	valueField: 'co_documento',
 	displayField:'inicial',
 	hiddenName:'tb109_persona[co_documento]',
-	readOnly:(this.OBJ.co_documento!='')?true:false,
-	style:(this.OBJ.co_documento!='')?'background:#c9c9c9;':'',
+//	readOnly:(this.OBJ.co_documento!='')?true:false,
+//	style:(this.OBJ.co_documento!='')?'background:#c9c9c9;':'',
 	forceSelection:true,
 	resizable:true,
 	triggerAction: 'all',
@@ -129,14 +129,14 @@ this.fieldDatosSolicitante= new Ext.form.FieldSet({
 });
 
 this.co_tipo_ayuda = new Ext.form.ComboBox({
-	fieldLabel:'Tipo de Ayuda',
+	fieldLabel:'Tipo de Compromiso',
 	store: this.storeCO_TIPO_AYUDA,
 	typeAhead: true,
 	valueField: 'co_tipo_ayuda',
 	displayField:'tx_tipo_ayuda',
 	hiddenName:'tb126_solicitud_ayuda[co_tipo_ayuda]',
-	readOnly:(this.OBJ.co_tipo_ayuda!='')?true:false,
-	style:(this.OBJ.co_tipo_ayuda!='')?'background:#c9c9c9;':'',
+//	readOnly:(this.OBJ.co_tipo_ayuda!='')?true:false,
+//	style:(this.OBJ.co_tipo_ayuda!='')?'background:#c9c9c9;':'',
 	forceSelection:true,
 	resizable:true,
 	triggerAction: 'all',
@@ -226,17 +226,17 @@ this.tx_observacion = new Ext.form.TextArea({
 });
 
 this.fieldDatosAyuda= new Ext.form.FieldSet({
-        title: 'Datos de la Ayuda',
+        title: 'Datos del Compromiso',
         width:850,
         items:[this.co_tipo_ayuda,
                this.co_compras,
                this.co_detalle_compras,
-               this.co_partida,
-               this.in_mostrar_partida,
-               this.nu_resolucion,
-               this.fe_resolucion,
+//               this.co_partida,
+//               this.in_mostrar_partida,
+//               this.nu_resolucion,
+//               this.fe_resolucion,
                this.mo_ayuda,
-               this.tx_descripcion,
+//               this.tx_descripcion,
                this.tx_observacion]
 });
 
@@ -302,7 +302,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Registro de Ayuda',
+    title:'Registro de Compromiso',
     constrain:true,
     width:900,
     frame:true,
