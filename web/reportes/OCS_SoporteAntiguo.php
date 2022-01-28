@@ -520,7 +520,7 @@ class PDF_Flo extends PDF_FlowingBlock
 //        $this->finishFlowingBlock();
 
         $Y = $this->GetY();
-            if($this->getY()>230){
+            if($this->getY()>220){
                 
              $this->addPage();
             $Y = 100; 
