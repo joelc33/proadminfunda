@@ -2639,6 +2639,7 @@ class PresupuestoActions extends sfActions
     $c->addSelectColumn(Tb085PresupuestoPeer::DE_PARTIDA);
     $c->addSelectColumn(Tb085PresupuestoPeer::MO_DISPONIBLE);
     $c->addSelectColumn(Tb053DetalleComprasPeer::MONTO);
+    $c->addSelectColumn(Tb053DetalleComprasPeer::DETALLE);
     $c->addSelectColumn(Tb053DetalleComprasPeer::IN_CALCULAR_IVA);
     $c->addSelectColumn(Tb052ComprasPeer::NU_IVA);
     $c->addSelectColumn(Tb052ComprasPeer::CO_PROVEEDOR);
