@@ -136,7 +136,7 @@ class PDF extends FPDF {
         $this->SetFillColor(201, 199, 199);
         $this->Row(array(utf8_decode('CODIGOS CONTABLES')),1,1);
         $this->SetFillColor(255, 255, 255);    
-        $this->lista_asientos = $this->getAsientos($campo['co_factura']);
+        $this->lista_asientos = $this->getAsientos($campo['co_solicitud']);
         $this->SetWidths(array(70,80,50));        
         $this->SetAligns(array("C","R","R"));  
         $this->Row(array(utf8_decode('CUENTA'),utf8_decode('DEBITOS'),utf8_decode('CREDITOS')),1,1); 
@@ -617,7 +617,7 @@ class PDF extends FPDF {
         $sql = "select tb061.co_cuenta_contable,tb024.tx_cuenta,tb024.tx_descripcion,sum(coalesce(tb061.mo_debe,0)) as mo_debe,sum(coalesce(tb061.mo_haber,0)) as mo_haber
                   from tb061_asiento_contable as tb061                                               
                   left join tb024_cuenta_contable as tb024 on tb024.co_cuenta_contable = tb061.co_cuenta_contable 
-                  where tb061.co_factura =".$fact." and co_tipo_asiento = 1 group by tb061.co_cuenta_contable,tb024.tx_cuenta,tb024.tx_descripcion";
+                  where tb061.co_solicitud =".$fact." and co_tipo_asiento = 1 group by tb061.co_cuenta_contable,tb024.tx_cuenta,tb024.tx_descripcion";
      
         //echo $sql; exit();
 
