@@ -17,6 +17,19 @@ class CotizacionActions extends sfActions
     $this->forward('Compras', 'lista');
   }
 
+  public function getRequisicion($codigo){
+      
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb039RequisicionesPeer::CO_REQUISICION);
+        $c->add(Tb039RequisicionesPeer::CO_SOLICITUD,$codigo);        
+        $stmt = Tb039RequisicionesPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $campos;
+      
+  }
+
 
   public function executeProyecto(sfWebRequest $request)
   {
@@ -24,7 +37,10 @@ class CotizacionActions extends sfActions
             $c = new Criteria();
             $c->add(Tb206CotizacionPeer::CO_SOLICITUD,$this->getRequestParameter("co_solicitud"));        
             $stmt = Tb206CotizacionPeer::doSelectStmt($c);
-            $campos = $stmt->fetch(PDO::FETCH_ASSOC);            
+            $campos = $stmt->fetch(PDO::FETCH_ASSOC);     
+
+            $requisicion = $this->getRequisicion($this->getRequestParameter("co_solicitud"));
+            $this->co_requisicion = $requisicion["co_requisicion"];       
 
             if(!empty($campos["co_cotizacion"])){
 
@@ -71,7 +87,24 @@ class CotizacionActions extends sfActions
 
   public function executeAgregarProducto(sfWebRequest $request)
   {
-    $this->data = json_encode(array(
+    $codigo = $this->getRequestParameter("codigo");
+    if($codigo!=''||$codigo!=null){
+        $c = new Criteria();
+        $c->add(Tb039RequisicionesPeer::CO_REQUISICION,$codigo);
+        
+        $stmt = Tb039RequisicionesPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->data = json_encode(array(
+                            "co_requisicion"     => $campos["co_requisicion"],
+                            "co_tipo_solicitud"  => $campos["co_tipo_solicitud"],
+                            "co_usuario"         => $campos["co_usuario"],
+                            "co_ente"            => $campos["co_ente"],
+                            "created_at"         => $campos["created_at"],
+                            "tx_concepto"        => $campos["tx_concepto"],
+                            "tx_observacion"     => $campos["tx_observacion"],
+                    ));
+    }else{
+        $this->data = json_encode(array(
                             "co_requisicion"     => "",
                             "co_tipo_solicitud"  => "",
                             "co_usuario"         => "",
@@ -80,7 +113,7 @@ class CotizacionActions extends sfActions
                             "tx_concepto"        => "",
                             "tx_observacion"     => "",
                     ));
-    
+    }    
 
   }
 
