@@ -179,9 +179,12 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->datos = $this->getOrdenes();
          $this->SetFont('Times','B',12);
          $this->SetX(115);
-         $this->Row(array(utf8_decode('ORDEN DE '.$this->datos['tx_tipo_solicitud'])),0,0);
-
-       $this->SetFont('Times','',10);
+         if($this->datos['co_tipo_solicitud']==65){
+         $this->Row(array(utf8_decode('ORDEN DE CONTRATO')),0,0);
+         }else{
+         $this->Row(array(utf8_decode('ORDEN DE '.$this->datos['tx_tipo_solicitud'])),0,0);    
+         }
+        $this->SetFont('Times','',10);
         $Y = $this->GetY();
         $this->SetWidths(array(55,35));
         $this->SetAligns(array("L","L"));
@@ -655,6 +658,7 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb008.nu_codigo,
                          de_tipo_movimiento,
                          tb001.nb_usuario,
+                         tb027.co_tipo_solicitud,
                          tb082.de_ejecutor
                   from   tb026_solicitud as tb026
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud
