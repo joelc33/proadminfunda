@@ -1547,11 +1547,8 @@ class PresupuestoActions extends sfActions
 
 
             $Tb059CambioPartidaCompra = new Tb059CambioPartidaCompra();
-            $Tb059CambioPartidaCompra->setCoPartidaAnterior($co_partida_ant)
-                                 ->setCoPartidaActual($co_partida)
-                                 ->setCoPartidaAnterior($co_partida_ant)
+            $Tb059CambioPartidaCompra->setCoPartidaActual($co_partida)
                                  ->setCoPresupuestoActual($co_presupuesto)
-                                 ->setCoPresupuestoAnterior($co_presupuesto_ant)
                                  ->setCoDetalleCompra($co_detalle_compra)
                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                  ->setTxMotivo($tx_motivo)
