@@ -32,14 +32,14 @@ class Tb130CuentaDocumentoPeer extends BaseTb130CuentaDocumentoPeer
             
             $tx_descripcion = $campos["tx_documento"].' '. strtoupper($datos_proveedor->getTxRazonSocial());
              
-//            $tx_cuenta_gasto = $campos["tx_cuenta_gasto"].$datos_proveedor->getNuCodigo();
+            $tx_cuenta_gasto = $campos["tx_cuenta_gasto"].$datos_proveedor->getNuCodigo();
             
-            $tx_cuenta_gasto = $campos["tx_cuenta_gasto"];
+//            $tx_cuenta_gasto = $campos["tx_cuenta_gasto"];
                       
             $campos["co_cuenta_gasto_pago"]=self::getCuentaContable($tx_cuenta_gasto,$tx_descripcion);
             
-//            $tx_cuenta_odp = $campos["tx_cuenta_odp"].$datos_proveedor->getNuCodigo();  
-            $tx_cuenta_odp = $campos["tx_cuenta_odp"];
+            $tx_cuenta_odp = $campos["tx_cuenta_odp"].$datos_proveedor->getNuCodigo();  
+//            $tx_cuenta_odp = $campos["tx_cuenta_odp"];
             $campos["co_cuenta_orden_pago"]=self::getCuentaContable($tx_cuenta_odp,$tx_descripcion);
             
         }else{
