@@ -148,7 +148,7 @@ class ContabilidadActions extends sfActions
     while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
         if($reg["co_ramo"]==''){
             
-             if($reg["co_tipo_retencion"]!=4){                                  
+             if($reg["co_tipo_retencion"]!=95){                                  
                if($co_documento==1 && $monto_total>$reg["mo_minimo"]){
                     $valor = ($nu_base_imponible*($reg["nu_valor"]/100)) - $reg["nu_sustraendo"];    
                }else{  
@@ -166,7 +166,7 @@ class ContabilidadActions extends sfActions
              
         }else if($co_ramo == $reg["co_ramo"]){
             
-             if($reg["co_tipo_retencion"]!=4){
+             if($reg["co_tipo_retencion"]!=95){
                if($co_documento==1 && $monto_total>$reg["mo_minimo"]){              
                     $valor = ($nu_base_imponible*($reg["nu_valor"]/100)) - $reg["nu_sustraendo"];    
                }else{  
