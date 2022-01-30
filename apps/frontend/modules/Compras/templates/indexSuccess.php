@@ -739,7 +739,7 @@ this.tabuladores = new Ext.TabPanel({
         enableTabScroll:true,
         autoWidth:true,
         deferredRender:false,
-        height:580,
+        height:590,
         autoScroll:true,
         activeTab: 0,
         defaults: {autoScroll:true},
@@ -760,7 +760,7 @@ this.tabuladores = new Ext.TabPanel({
 this.formPanel_ = new Ext.form.FormPanel({
     frame:true,
     width:990,
-    height:660,
+    height:670,
     autoScroll:true,
     bodyStyle:'padding:0px;',
     items:[
@@ -798,7 +798,7 @@ this.winformPanel_ = new Ext.Window({
     width:1004,
     frame:true,
     closabled:true,
-    height:674,
+    height:684,
     tbar   : tbar,
     items:[
         this.formPanel_
