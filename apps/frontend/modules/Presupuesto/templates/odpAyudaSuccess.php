@@ -256,7 +256,7 @@ this.formPanel_ = new Ext.form.FormPanel({
                     this.co_solicitud,
                     this.hiddenJsonFactura,
                     this.fieldDatos,
-                    this.field_tipo_odp,
+//                    this.field_tipo_odp,
                   //  this.fieldDatosServicio,
                     this.gridPanel
             ]

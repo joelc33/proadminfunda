@@ -273,7 +273,7 @@ class PresupuestoActions extends sfActions
         $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud,$con,$this->getUser()->getAttribute('ejercicio'));
         
                 $tb060_orden_pago = Tb060OrdenPagoPeer::retrieveByPK($co_odp);
-                $tb060_orden_pago->setCoTipoOdp($this->getRequestParameter("co_tipo_odp"));
+                $tb060_orden_pago->setCoTipoOdp(1);
                 $tb060_orden_pago->setTxConcepto($tx_concepto);
                 $tb060_orden_pago->save();
 
