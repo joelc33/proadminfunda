@@ -183,7 +183,8 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->Row(array(utf8_decode('ORDEN DE CONTRATO')),0,0);
          }else{
          if($this->datos['co_tipo_solicitud']==2){
-         $this->Row(array(utf8_decode('SOPORTE DE COMPROMISO')),0,0);    
+         $this->Row(array(utf8_decode('ORDEN DE '.$this->datos['tx_tipo_solicitud'])),0,0);     
+//         $this->Row(array(utf8_decode('SOPORTE DE COMPROMISO')),0,0);    
          }else{    
          $this->Row(array(utf8_decode('ORDEN DE '.$this->datos['tx_tipo_solicitud'])),0,0);    
          }
