@@ -374,9 +374,10 @@ class PDF_Flo extends PDF_FlowingBlock
          $SubTotal =     $SubTotal + $monto_prod;
          $TotalIVA =     $TotalIVA + $iva;
          $TotalExcento=  0;
+         $monto_total = $campo['monto_total'];
         }
-
-         $TotalGenerado= $SubTotal + $TotalIVA;
+         $TotalGenerado= $monto_total;
+//         $TotalGenerado= $SubTotal + $TotalIVA;
 
 
 
@@ -689,6 +690,7 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb048.cod_producto,
                          tb053.precio_unitario,
                          tb057.tx_unidad_producto,
+                         tb052.monto_total,
                          tb053.monto
                   FROM tb052_compras as tb052
                   left join tb053_detalle_compras as tb053 on tb053.co_compras = tb052.co_compras and tb053.in_calcular_iva is true
