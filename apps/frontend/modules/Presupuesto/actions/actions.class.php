@@ -1482,8 +1482,7 @@ class PresupuestoActions extends sfActions
 //            
 //            }else{
             
-            $Tb053DetalleCompra->setCoPartida($co_partida)
-                               ->setCoPresupuesto($co_presupuesto)
+            $Tb053DetalleCompra->setCoPresupuesto($co_presupuesto)
                                ->setCoProyectoAc($co_proyecto)
                                ->setCoAccionEspecifica($co_accion)
                                ->save($con);
