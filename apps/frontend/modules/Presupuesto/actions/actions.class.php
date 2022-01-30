@@ -719,7 +719,7 @@ class PresupuestoActions extends sfActions
         $datos_detalle = $this->getDetallesCompra($campos["co_compras"]);
         $campos["co_partida"] = $datos_detalle["co_partida"];
         $campos["detalle"]    = $datos_detalle["detalle"];
-        $campos["co_solicitud"]    = $datos_detalle["co_solicitud"];
+        $campos["co_solicitud"]    = $codigo;
         
         $this->data = json_encode($campos);
   }
