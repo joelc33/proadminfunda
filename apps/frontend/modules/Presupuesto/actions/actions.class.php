@@ -2763,7 +2763,7 @@ class PresupuestoActions extends sfActions
             $reg["tx_tipo_movimiento"] = strtoupper($datos["de_tipo_movimiento"]);
         }
         
-        $reg["nu_partida"]               = ($reg["nu_partida"]==null)?'': Tb085PresupuestoPeer::mascaraNomina($reg["nu_partida"]);
+        $reg["nu_partida"]               = ($reg["nu_partida"]==null)?'':$reg["nu_partida"];
         $reg["de_partida"]               = ($reg["de_partida"]==null)?'':$reg["de_partida"];
         $reg["mo_disponible"]            = ($reg["mo_disponible"]==null)?'':$reg["mo_disponible"];
         $reg["co_partida"]               = ($reg["co_partida"]==null)?'':$reg["co_partida"];
