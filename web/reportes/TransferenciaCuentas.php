@@ -141,7 +141,7 @@ class PDF extends FPDF {
 	 $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(100,100));
          $this->SetFont('Arial','B',7); 
-         $this->Row(array(utf8_decode('COORDINACIÓN DE TESORERIA'),utf8_decode('SECRETARIA GENERAL DE ADMINISTRACIÓN')),1,1);
+         $this->Row(array(utf8_decode('COORDINACIÓN DE TESORERIA'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN')),1,1);
          $this->SetFillColor(255,255,255);
          $this->SetWidths(array(40,30,30,40));
          $this->SetAligns(array("L", "L","L","L"));
