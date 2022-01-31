@@ -241,7 +241,7 @@ class PDF extends FPDF {
             $this->Row(array(utf8_decode('No. Comprobante ')),1,1);
             $this->setX(180);
             $this->SetFillColor(255, 255, 255);
-            $this->Row(array(utf8_decode($campo1['anio'].$campo1['mes'].$campo1['co_factura_retencion'])),1,1);
+            $this->Row(array(utf8_decode($campo1['anio'].$campo1['mes'].$campo1['nu_comprobante'])),1,1);
             
             $this->SetY(95);
             $this->setX(180);
@@ -324,7 +324,7 @@ class PDF extends FPDF {
             $this->Row(array(utf8_decode('No. Comprobante ')),1,1);
             $this->setX(95);
             $this->SetFillColor(255, 255, 255);
-            $this->Row(array(utf8_decode($campo1['anio'].$campo1['mes'].$campo1['co_factura_retencion'])),1,1);
+            $this->Row(array(utf8_decode($campo1['anio'].$campo1['mes'].$campo1['nu_comprobante'])),1,1);
             
             $this->SetY(50);
             $this->setX(180);
@@ -515,6 +515,7 @@ class PDF extends FPDF {
                           tx_tipo_retencion,
                           tb041.co_tipo_retencion,
                           lpad(co_factura_retencion::text, 8, '0'::text) as co_factura_retencion,
+                          lpad(nu_comprobante::text, 8, '0'::text) as nu_comprobante,
                           to_char(tb045.fe_registro,'dd') as dia,
                           to_char(tb045.fe_registro,'mm') as mes,
                           to_char(tb045.fe_registro,'yyyy') as anio
