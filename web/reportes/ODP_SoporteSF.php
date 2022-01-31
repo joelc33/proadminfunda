@@ -227,12 +227,12 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->SetX(109); 
                         $this->MultiCell(100,4,'FECHA DE VENCIMIENTO:          '.'31/12/'.($anio+1),0,0,'L',0);                         
                         
-                        $VALOR = '**********'.number_format($valores['nu_monto'], 2, ',','.').' Bs.';
+                        $VALOR = '**********'.number_format($valores['total_pagar'], 2, ',','.').' Bs.';
                         $this->SetFont('Times','',9);
 //                        $this->Ln(3);
                         $this->SetWidths(array(200));
                         $this->SetAligns(array("L"));
-                        $montoLetra = numtoletras($valores['nu_monto'],1);
+                        $montoLetra = numtoletras($valores['total_pagar'],1);
                         $this->newFlowingBlock( 195, 5, '', 'J' );
                         $this->RoundedRect(10, 68, 200, 15, 1.5, '1111', '', $style);
                         $this->SetX(10);
