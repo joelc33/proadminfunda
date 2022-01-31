@@ -302,8 +302,8 @@ class PDF extends FPDF {
             $this->SetWidths(array(25,20,20,25,25,25,25,35));
             $this->SetAligns(array("C","C","C","C","C","C","C","C"));           
             $this->Row(array($campo['fe_emision'],$campo['nu_factura'],$campo['nu_control'],number_format($campo['nu_total'], 2, ',','.'),number_format($campo['nu_base_imponible'], 2, ',','.'),$campo['co_iva_factura']. ' %',number_format($campo['nu_iva_factura'], 2, ',','.'),number_format($campo1['mo_retencion'], 2, ',','.')),1,1);
-
-            $this->SetAligns(array("C","C","L","C","C","C","C","C"));
+            $this->Ln(2);
+            $this->SetAligns(array("C","C","C","C","C","C","C","C"));
             $this->SetWidths(array(25,25,35,25,25,25,25,35));         
             $this->SetFont('Arial','',9);            
             
