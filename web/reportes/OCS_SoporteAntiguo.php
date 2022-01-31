@@ -381,8 +381,8 @@ class PDF_Flo extends PDF_FlowingBlock
          $TotalExcento=  0;
          $monto_total = $campo['monto_total'];
         }
-//         $TotalGenerado= $monto_total;
-         $TotalGenerado= $SubTotal + $TotalIVA;
+         $TotalGenerado= $monto_total;
+//         $TotalGenerado= $SubTotal + $TotalIVA;
 
 
 
