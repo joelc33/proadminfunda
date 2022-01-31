@@ -385,13 +385,13 @@ class PDF extends FPDF {
             $this->SetFont('Arial','B',10); 
             $this->Row(array(utf8_decode('RETENCIÓN (COMPRAS INTERNAS O IMPORTACIONES)')),1,1);
             $this->SetFillColor(255, 255, 255); 
-            $this->SetAligns(array("C","C","C","C","C","C","C"));
-            $this->SetWidths(array(25,20,20,25,30,25,20,35));         
+            $this->SetAligns(array("C","C","C","C","C","C","C","C"));
+            $this->SetWidths(array(25,25,20,25,30,25,20,30));         
             $this->SetFont('Arial','',9);            
             //$this->Row(array('Fecha: '.$campo['fe_emision'],'Monto Factura: '.number_format($campo['nu_total'], 2, ',','.'),'Monto Exento: '.number_format($campo['monto_excento'], 2, ',','.')),1,1);
             $this->Row(array('Fecha Factura','No. Factura: ','No. Control','Monto Factura','Base Imponible','Porcentaje','Sustraendo','Monto Retenido'),1,1);
-            $this->SetWidths(array(25,20,20,25,30,25,20,35));
-            $this->SetAligns(array("C","C","C","C","C","C","C"));           
+            $this->SetWidths(array(25,25,20,25,30,25,20,30));
+            $this->SetAligns(array("C","C","C","C","C","C","C","C"));           
             $this->Row(array($campo['fe_emision'],$campo['nu_factura'],$campo['nu_control'],number_format($campo['nu_total'], 2, ',','.'),number_format($campo['nu_base_imponible'], 2, ',','.'),$campo1['po_retencion']. ' %','',number_format($campo1['mo_retencion'], 2, ',','.')),1,1);
                                 
                 
