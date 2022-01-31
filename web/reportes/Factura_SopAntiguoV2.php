@@ -286,7 +286,7 @@ class PDF extends FPDF {
             $this->SetWidths(array(160));
             $this->Row(array(utf8_decode('Dirección: ').$campo['tx_direccion']),1,1);             
  
-            $this->Ln(5);
+            $this->Ln(7);
 
             $this->SetWidths(array(200));
             $this->SetAligns(array("C"));
