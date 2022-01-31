@@ -301,8 +301,15 @@ class PDF extends FPDF {
             $this->Row(array('Fecha Factura','No. Factura','No. Control','Monto Factura','Base Imponible','Porcentaje','Monto Iva','Monto Retenido'),1,1);
             $this->SetWidths(array(25,20,20,25,25,25,25,35));
             $this->SetAligns(array("C","C","C","C","C","C","C","C"));           
-            $this->Row(array($campo['fe_emision'],$campo['nu_factura'],$campo['nu_control'],number_format($campo['total_pagar'], 2, ',','.'),number_format($campo['nu_base_imponible'], 2, ',','.'),$campo1['po_retencion']. ' %',number_format($campo['nu_iva_factura'], 2, ',','.'),number_format($campo1['mo_retencion'], 2, ',','.')),1,1);
+            $this->Row(array($campo['fe_emision'],$campo['nu_factura'],$campo['nu_control'],number_format($campo['nu_total'], 2, ',','.'),number_format($campo['nu_base_imponible'], 2, ',','.'),$campo['co_iva_factura']. ' %',number_format($campo['nu_iva_factura'], 2, ',','.'),number_format($campo1['mo_retencion'], 2, ',','.')),1,1);
 
+            $this->SetAligns(array("C","C","L","C","C","C","C","C"));
+            $this->SetWidths(array(25,25,35,25,25,25,25,35));         
+            $this->SetFont('Arial','',9);            
+            
+            $this->Row(array('N/D','N/C','Compras sin Credito Fiscal'),1,1);           
+            $this->Row(array('','',''),1,1);
+            
             
             }else{
                 
@@ -383,7 +390,7 @@ class PDF extends FPDF {
             $this->Row(array('Fecha Factura','No. Factura: ','No. Control','Monto Factura','Base Imponible','Porcentaje','Monto Retenido'),1,1);
             $this->SetWidths(array(25,25,25,30,30,30,35));
             $this->SetAligns(array("C","C","C","C","C","C","C"));           
-            $this->Row(array($campo['fe_emision'],$campo['nu_factura'],$campo['nu_control'],number_format($campo['total_pagar'], 2, ',','.'),number_format($campo['nu_base_imponible'], 2, ',','.'),$campo1['po_retencion']. ' %',number_format($campo1['mo_retencion'], 2, ',','.')),1,1);
+            $this->Row(array($campo['fe_emision'],$campo['nu_factura'],$campo['nu_control'],number_format($campo['nu_total'], 2, ',','.'),number_format($campo['nu_base_imponible'], 2, ',','.'),$campo1['po_retencion']. ' %',number_format($campo1['mo_retencion'], 2, ',','.')),1,1);
                 
                 
                 
