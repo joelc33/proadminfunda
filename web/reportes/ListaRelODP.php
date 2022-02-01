@@ -16,7 +16,7 @@ class PDF extends FPDF {
         $this->Cell(0,0,utf8_decode('[FCPPRA43]'),0,0,'L');
         $this->SetFont('courier','',8);
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');                          
+//        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');                          
     }
 
     function Footer() {
