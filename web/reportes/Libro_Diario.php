@@ -116,7 +116,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',8);   
          $this->Row(array($campo['co_solicitud'],$campo['fecha'],$campo['anexo'],utf8_decode($campo['tx_cuenta']),utf8_decode($campo['tx_descripcion']),utf8_decode($campo['nu_comprobante']),utf8_decode($campo['tx_tipo_asiento']),number_format($campo['mo_debe'], 2, ',','.'),number_format($campo['mo_haber'], 2, ',','.')),0,0);         
          
-         if($this->getY()>180){
+         if($this->getY()>170){
              $this->AddPage();
          //************ Anexos *****************//
          $this->SetWidths(array(20,20,15,40,115,30,40,30,30));   
