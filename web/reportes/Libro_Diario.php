@@ -125,7 +125,7 @@ class PDF extends FPDF {
          $this->SetFillColor(201, 199, 199);
          $this->Ln(6);
          $this->SetX(10);
-         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('PUB 21'),utf8_decode('CODIGO CONTABLE'),utf8_decode('CUENTA CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1);
+         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('PUB 21'),utf8_decode('CODIGO CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1);
 
 
             }
