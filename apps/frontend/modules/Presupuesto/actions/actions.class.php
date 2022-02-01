@@ -320,7 +320,7 @@ class PresupuestoActions extends sfActions
     /******JOEL MODIFICACION VALUACION***/
 
      $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA);
-     $c->add(Tb045FacturaPeer::CO_SOLICITUD,$codigo); 
+     $c->add(Tb045FacturaPeer::CO_SOLICITUD,$codigo);  
 
     /************************************/
 
