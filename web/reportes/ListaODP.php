@@ -58,7 +58,7 @@ class PDF extends FPDF {
          $this->SetFont('COURIER','',10);     
          $this->SetWidths(array(30,80,25,25,40));
          $this->SetAligns(array("C","C","C","C","R"));    
-         $this->Row(array(utf8_decode('Número OP'),'Beneficiario','Estado', 'Fecha', 'Monto'),0,0); 
+         $this->Row(array(utf8_decode('Número OP'),'Beneficiario','Estado', 'Fecha', 'Monto OP'),0,0); 
          $this->SetAligns(array("C","C","C","C","R"));   
          $this->Line(10, 40, 210, 40);        
          $this->Ln(5);
@@ -73,7 +73,7 @@ class PDF extends FPDF {
                 $this->SetFont('COURIER','',10);     
                 $this->SetWidths(array(30,80,25,25,40));
                 $this->SetAligns(array("C","C","C","C","R"));   
-                $this->Row(array(utf8_decode('Número OP'),'Beneficiario','Estado', 'Fecha', 'Monto'),0,0);                      
+                $this->Row(array(utf8_decode('Número OP'),'Beneficiario','Estado', 'Fecha', 'Monto OP'),0,0);                      
                 $this->Line(10, 35, 210, 35);                 
                 $this->Ln(5);
                 } 
