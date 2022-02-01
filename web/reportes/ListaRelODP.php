@@ -148,15 +148,18 @@ class PDF extends FPDF {
         
         $condicion ="";
         $nu_codigo = $_GET['nu_codigo'];
-        if ($_GET["co_tipo"]) $tipo  = $_GET['co_tipo'];  
-        else $tipo  = '';
+         if ($_GET['co_tipo']) {
+             $co_tipo = $_GET['co_tipo'];
+             if ($co_tipo==1) $co_tipo='APROBADAS';
+             else $co_tipo='ANULADAS';
+         }else $co_tipo = "TODOS LOS ESTADOS";
         
        // $nu_codigo = '092604';        
         $condicion .= " tb060.created_at::date >= '". $_GET["fe_inicio"]."' and ";
         $condicion .= " tb060.created_at::date <= '".$_GET["fe_fin"]."' ";
         if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
-        if ($tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
-        if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE "; 
+        if ($co_tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
+        if ($co_tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE "; 
             
         $conex = new ConexionComun(); 
                   $sql = " SELECT distinct tb008.nu_codigo, (tb008.nu_codigo||'-'||tb008.tx_razon_social) as proveedor, 
@@ -177,16 +180,19 @@ class PDF extends FPDF {
         
         $condicion ="";
 //        $nu_codigo = $_GET['nu_codigo'];
-        if ($_GET["co_tipo"]) $tipo  = $_GET['co_tipo'];  
-        else $tipo  = '';
+         if ($_GET['co_tipo']) {
+             $co_tipo = $_GET['co_tipo'];
+             if ($co_tipo==1) $co_tipo='APROBADAS';
+             else $co_tipo='ANULADAS';
+         }else $co_tipo = "TODOS LOS ESTADOS";
         
        // $nu_codigo = '092604';        
         $condicion .= " tb060.created_at::date >= '". $_GET["fe_inicio"]."' and ";
         $condicion .= " tb060.created_at::date <= '".$_GET["fe_fin"]."' ";
         $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
 //        if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
-        if ($tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
-        if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE ";         
+        if ($co_tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
+        if ($co_tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE ";         
         
         $sql = " select distinct tb060.co_solicitud, tb008.nu_codigo
         ,tb060.tx_serial
