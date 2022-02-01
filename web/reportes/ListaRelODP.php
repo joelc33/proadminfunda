@@ -147,15 +147,14 @@ class PDF extends FPDF {
     function getProveedores(){ 
         
         $condicion ="";
-        //$nu_codigo = $_GET['nu_codigo'];
+        $nu_codigo = $_GET['nu_codigo'];
         if ($_GET["co_tipo"]) $tipo  = $_GET['co_tipo'];  
         else $tipo  = '';
         
        // $nu_codigo = '092604';        
         $condicion .= " tb060.created_at::date >= '". $_GET["fe_inicio"]."' and ";
         $condicion .= " tb060.created_at::date <= '".$_GET["fe_fin"]."' ";
-        $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
-//        if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
+        if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
         if ($tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
         if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE "; 
             
@@ -177,14 +176,15 @@ class PDF extends FPDF {
         $conex = new ConexionComun(); 
         
         $condicion ="";
-        $nu_codigo = $_GET['nu_codigo'];
+//        $nu_codigo = $_GET['nu_codigo'];
         if ($_GET["co_tipo"]) $tipo  = $_GET['co_tipo'];  
         else $tipo  = '';
         
        // $nu_codigo = '092604';        
         $condicion .= " tb060.created_at::date >= '". $_GET["fe_inicio"]."' and ";
         $condicion .= " tb060.created_at::date <= '".$_GET["fe_fin"]."' ";
-        if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
+        $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
+//        if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
         if ($tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
         if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE ";         
         
