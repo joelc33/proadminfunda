@@ -93,7 +93,7 @@ class PDF extends FPDF {
          $montopag = number_format($this->datos['mo_pagar'], 2, ',','.');
          $montopagado = number_format($this->datos['mo_pagado'], 2, ',','.');
          $montopend = number_format($this->datos['mo_pendiente'], 2, ',','.');
-         $this->Row(array('Nro. Serial: '.$this->datos['tx_serial'],'Monto a Pagar: '.$montopag,'Monto Pagado: '.$montopagado,'Monto Pendiente: '.$montopend, 'Fecha: '.$this->datos['fe_emision']),1,1);                           
+         $this->Row(array('Nro. : '.$this->datos['tx_serial'],'Monto a Pagar: '.$montopag,'Monto Pagado: '.$montopagado,'Monto Pendiente: '.$montopend, 'Fecha: '.$this->datos['fe_emision']),1,1);                           
          $this->SetWidths(array(40,160));
          $montoletra = numtoletras($this->datos['mo_pagar'], 1);        
          $this->Row(array('Cantidad: ',$montoletra),1,1);                  
@@ -134,7 +134,7 @@ class PDF extends FPDF {
          $this->SetAligns(array("C","C", "C"));
 	 $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(80,80,40));
-         $this->Row(array(utf8_decode('COORDINACIÓN DE TESORERIA'),utf8_decode('SECRETARIA GENERAL DE ADMINISTRACIÓN'),utf8_decode('MÁXIMA AUTORIDAD')),1,1);
+         $this->Row(array(utf8_decode('COORDINACIÓN DE TESORERIA'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),utf8_decode('MÁXIMA AUTORIDAD')),1,1);
          $this->SetFillColor(255,255,255);
          $this->SetWidths(array(80,80,40));
          $this->SetAligns(array("L", "L","L","L"));
@@ -152,7 +152,7 @@ class PDF extends FPDF {
          $this->SetY($Y);
          $this->SetFont('Arial','',6);
          $this->ln(20);
-         $this->Row(array('Elaborado por: '.utf8_decode(strtoupper($this->datos['nb_usuario'])),'Conformado por: ','Alcalde: '),1,1);
+         //$this->Row(array('Elaborado por: '.utf8_decode(strtoupper($this->datos['nb_usuario'])),'Conformado por: ','Alcalde: '),1,1);
          $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(200));
          $this->SetAligns(array("C"));
@@ -201,7 +201,7 @@ class PDF extends FPDF {
                           tb008.nb_representante_legal,
                          tb008.tx_rif,
                          tb008.nu_cuenta_bancaria,
-                         to_char(tb062.fe_emision,'dd-mm-yyyy') as fe_emision,
+                         to_char(tb063.fe_pago,'dd-mm-yyyy') as fe_emision,
                          tb062.tx_serial,
                          tb062.mo_pagar,
                          tb062.mo_pendiente,
