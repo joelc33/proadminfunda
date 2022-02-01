@@ -143,7 +143,7 @@ class PDF extends FPDF {
 
             $this->setX(10);
             $this->SetFont( 'Arial', 'B', 7);
-            $this->SetWidths(array(105,25,20,25,12,15 ));  
+            $this->SetWidths(array(105,25,20,25,12,14 ));  
             $this->SetAligns(array("C","L","L","L","L"));
             $this->Row(array(utf8_decode('TOTAL PROCENTAJE: '.$campo1["co_iva_retencion"]), 
             number_format($nu_total, 2, ',','.'), 
@@ -169,7 +169,7 @@ class PDF extends FPDF {
                 $this->Row(array( 'RANGO DE FECHA DEL: '.$_GET["fe_inicio"].' AL: '.$_GET["fe_fin"]  ),0,0); 
                 $this->Ln(2);
                 $this->SetFont('Arial','B',7);     
-                $this->SetWidths(array(25,58,15,25,20,25,12,15 )); 
+                $this->SetWidths(array(25,58,15,25,20,25,12,14 )); 
                 $this->SetAligns(array("C","C","C","C","C","C","C"));   
                 $this->Row(array(utf8_decode('Nº'),'Orden de Pago','Beneficiario','Fecha', 'Monto Factura.', 'Base Imp.', 'Monto de Deduc.', 'Porc. %', 'Concepto'),1,0);
                 $this->SetAligns(array("C","C","L","C","L","L","L","C","C"));   
