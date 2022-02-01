@@ -84,7 +84,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
         {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},   
-        {header: 'Inicial', width:250,  menuDisabled:true, sortable: true, renderer: formatoNro, dataIndex: 'mo_inicial'}, 
+//        {header: 'Inicial', width:250,  menuDisabled:true, sortable: true, renderer: formatoNro, dataIndex: 'mo_inicial'}, 
         {header: 'Comprometido', width:250,  menuDisabled:true, sortable: true, renderer: formatoNro, dataIndex: 'mo_comprometido'},
         {header: 'Causado', width:250,  menuDisabled:true, sortable: true, renderer: formatoNro, dataIndex: 'mo_causado'},
         {header: 'Pagado', width:250,  menuDisabled:true, sortable: true, renderer: formatoNro, dataIndex: 'mo_pagado'},
