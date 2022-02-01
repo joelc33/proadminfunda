@@ -166,7 +166,7 @@ class PDF extends FPDF {
                            left join tb008_proveedor as tb008 on tb008.co_proveedor = tb026.co_proveedor    
                            where ".$condicion." order by tb008.nu_codigo asc";      
            
-         //echo var_dump($sql); exit();  
+         echo var_dump($sql); exit();  
          $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
          return  $datosSol;  
 	
