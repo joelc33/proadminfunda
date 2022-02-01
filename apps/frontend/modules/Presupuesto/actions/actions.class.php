@@ -317,7 +317,14 @@ class PresupuestoActions extends sfActions
     $c->addJoin(Tb056ContratoComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
     $c->addJoin(Tb052ComprasPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR);
     $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO);
-    $c->add(Tb052ComprasPeer::CO_SOLICITUD,$codigo);        
+    /******JOEL MODIFICACION VALUACION***/
+
+     $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA);
+     $c->add(Tb045FacturaPeer::CO_SOLICITUD,$codigo); 
+
+    /************************************/
+
+   // $c->add(Tb052ComprasPeer::CO_SOLICITUD,$codigo);        
     
     $stmt = Tb056ContratoComprasPeer::doSelectStmt($c);
     $campos = $stmt->fetch(PDO::FETCH_ASSOC);

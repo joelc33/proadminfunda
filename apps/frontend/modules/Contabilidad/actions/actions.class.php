@@ -14,7 +14,66 @@ class ContabilidadActions extends sfActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->forward('Contabilidad', 'lista');
+    $codigo = $this->getRequestParameter("co_solicitud");
+
+
+    $cc = new Criteria();
+    $cc->addSelectColumn(Tb052ComprasPeer::CO_SOLICITUD);
+    $cc->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA);
+    $cc->add(Tb045FacturaPeer::CO_SOLICITUD,$codigo);  
+    $stmtc = Tb052ComprasPeer::doSelectStmt($cc);
+    $res = $stmtc->fetch(PDO::FETCH_ASSOC);
+
+    
+    $c = new Criteria();
+    $c->clearSelectColumns();
+    $c->addSelectColumn(Tb008ProveedorPeer::CO_PROVEEDOR);
+    $c->addSelectColumn(Tb008ProveedorPeer::CO_DOCUMENTO);
+    $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+    $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
+    $c->addSelectColumn(Tb007DocumentoPeer::TIPO);
+    $c->addSelectColumn(Tb008ProveedorPeer::TX_DIRECCION);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::FECHA_INICIO);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::FECHA_FIN);
+    $c->addSelectColumn(Tb052ComprasPeer::NU_IVA); 
+    $c->addSelectColumn(Tb052ComprasPeer::TX_CONCEPTO);    
+    $c->addSelectColumn(Tb038RamoPeer::TX_RAMO);
+    $c->addSelectColumn(Tb038RamoPeer::CO_RAMO);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::MONTO);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_COMPRAS);
+    $c->addAsColumn('nu_iva_retencion', Tb044IvaRetencionPeer::NU_VALOR);
+   
+    $c->addJoin(Tb044IvaRetencionPeer::CO_IVA_RETENCION, Tb008ProveedorPeer::CO_IVA_RETENCION);
+    $c->addJoin(Tb056ContratoComprasPeer::CO_RAMO, Tb038RamoPeer::CO_RAMO,Criteria::LEFT_JOIN);
+    $c->addJoin(Tb056ContratoComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
+    $c->addJoin(Tb052ComprasPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR);
+    $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO);
+    $c->add(Tb052ComprasPeer::CO_SOLICITUD,$res["co_solicitud"]);        
+    
+    $stmt = Tb056ContratoComprasPeer::doSelectStmt($c);
+    $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+    $this->data = json_encode(array(
+        "co_proveedor"            => $campos["co_proveedor"],
+        "nu_iva_retencion"        => $campos["nu_iva_retencion"],
+        "co_compras"              => $campos["co_compras"],
+        "co_solicitud"            => $this->getRequestParameter("co_solicitud"),
+        "co_solicitud_cotizacion" => $res["co_solicitud"],
+        "co_documento"            => $campos["co_documento"],
+        "co_ramo"                 => $campos["co_ramo"],
+        "tx_razon_social"         => $campos["tx_razon_social"],
+        "tx_rif"                  => $campos["tipo"].'-'.$campos["tx_rif"],
+        "tipo"                    => $campos["tipo"],
+        "tx_direccion"            => $campos["tx_direccion"],
+        "tx_concepto"             => $campos["tx_concepto"],
+        "fe_inicio"               => $campos["fecha_inicio"],
+        "fe_fin"                  => $campos["fecha_fin"],
+        "tx_ramo"                 => $campos["tx_ramo"],
+        "monto"                   => $campos["monto"],
+        "nu_iva"                  => $campos["nu_iva"],
+        "co_solicitud_compra"     => $res["co_solicitud"],
+        "nu_orden_pago"           => $this->getNuOrdenPago($this->getRequestParameter("co_solicitud"))
+    ));
   }
   
   public function executeVerificarProveedor(sfWebRequest $request)
@@ -557,6 +616,7 @@ class ContabilidadActions extends sfActions
                                                   ->setMoTotal($lp["mo_total"])
                                                   ->setCoPresupuesto($lp["co_presupuesto"])
                                                   ->setCoRequisicion($lp["co_detalle_requisicion"])
+                                                  ->setCoDetalleCompra($lp["co_detalle_compras"])
                                                   ->setCoFactura($tb045_factura->getCoFactura())
                                                   ->save($con);
 
@@ -883,6 +943,7 @@ class ContabilidadActions extends sfActions
         $c->addSelectColumn(Tb053DetalleComprasPeer::IN_EXENTO);  
         $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRESUPUESTO);
         $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_REQUISICION);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
         $c->addJoin(Tb048ProductoPeer::CO_PRODUCTO, Tb053DetalleComprasPeer::CO_PRODUCTO);
         $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
         $c->add(Tb052ComprasPeer::CO_SOLICITUD,$co_solicitud);
@@ -898,7 +959,8 @@ class ContabilidadActions extends sfActions
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
             
             $reg["mo_total"]=0;
-            $reg["cantidad"]=$reg["nu_cantidad"]-$this->getCantProductoRestante($co_solicitud,$reg["co_detalle_requisicion"]);
+            $reg["cantidad"]=$reg["nu_cantidad"]-$this->getCantProductoRestante($co_solicitud,$reg["co_detalle_compras"]);
+            if($reg["cantidad"]>0)
             $registros[] = $reg;
         }
 
@@ -909,25 +971,40 @@ class ContabilidadActions extends sfActions
             ));
       
       
-      
-      
-      
       $this->setTemplate('storelista');
   }
+
   
-  protected function getCantProductoRestante($co_solicitud,$co_detalle_requisicion){
+  protected function getCantProductoRestante($co_solicitud,$co_detalle_compras){
         $c = new Criteria();
         $c->clearSelectColumns();
         $c->addSelectColumn('coalesce(SUM('.Tb129DetalleFacturaPeer::CANT_PRODUCTO.'),0) as cant_total');
         $c->addJoin(Tb129DetalleFacturaPeer::CO_FACTURA, Tb045FacturaPeer::CO_FACTURA);
-        $c->add(Tb045FacturaPeer::CO_SOLICITUD,$co_solicitud); 
+       // $c->add(Tb045FacturaPeer::CO_SOLICITUD,$co_solicitud); 
+        //$c->add(Tb045FacturaPeer::CO_SOLICITUD,NULL, Criteria::ISNULL); 
+        $c->add(Tb129DetalleFacturaPeer::CO_DETALLE_COMPRA,$co_detalle_compras); 
+
+       // echo $c->toString(); exit();
+
+        $stmt = Tb129DetalleFacturaPeer::doSelectStmt($c);
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $datos["cant_total"];
+  }
+
+  protected function getCantProductoRestanteValuacion($co_solicitud,$co_detalle_requisicion){
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn('coalesce(SUM('.Tb129DetalleFacturaPeer::CANT_PRODUCTO.'),0) as cant_total');
+        $c->addJoin(Tb129DetalleFacturaPeer::CO_FACTURA, Tb045FacturaPeer::CO_FACTURA);
+       // $c->add(Tb045FacturaPeer::CO_SOLICITUD,$co_solicitud); 
         $c->add(Tb045FacturaPeer::CO_SOLICITUD,NULL, Criteria::ISNULL); 
         $c->add(Tb129DetalleFacturaPeer::CO_REQUISICION,$co_detalle_requisicion); 
         $stmt = Tb129DetalleFacturaPeer::doSelectStmt($c);
         $datos = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $datos["cant_total"];
-    }
+  }  
   
   protected function getStatusODP($co_odp){
         $c = new Criteria();
@@ -937,6 +1014,54 @@ class ContabilidadActions extends sfActions
 
         return $datos["in_pagado"];
     }
+    
+    public function executeStorelistaotra(sfWebRequest $request)
+    {
+        $paginar      =   $this->getRequestParameter("paginar");            
+        $co_compra    =   $this->getRequestParameter("co_compra");
+        $co_solicitud = $this->getRequestParameter("co_solicitud");
+        
+        
+        $c = new Criteria();   
+        
+        if($co_compra!=''){
+            $c->add(Tb045FacturaPeer::IN_ANULAR,NULL, Criteria::ISNULL);
+            $c->add(Tb045FacturaPeer::CO_COMPRA,$co_compra);   
+        }
+
+        if($co_solicitud!=''){
+            $c->add(Tb045FacturaPeer::IN_ANULAR,NULL, Criteria::ISNULL);
+            $c->add(Tb045FacturaPeer::CO_SOLICITUD,$co_solicitud,Criteria::NOT_EQUAL); 
+        }
+        
+        $cantidadTotal = Tb045FacturaPeer::doCount($c);
+        
+        $c->addAscendingOrderByColumn(Tb045FacturaPeer::CO_COMPRA);
+            
+        $stmt = Tb045FacturaPeer::doSelectStmt($c);
+        
+        while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+            if($reg["fe_emision"]!=''){
+                list($anio,$mes,$dia) = explode("-",$reg["fe_emision"]);
+                $reg["fe_emision"] = $dia.'-'.$mes.'-'.$anio;
+            }
+            
+            $reg["estatus"] = $this->getStatusODP($reg["co_odp"]);
+            
+            $registros[] = $reg;
+        }
+
+
+        $this->data = json_encode(array(
+            "success"   =>  true,
+            "total"     =>  $cantidadTotal,
+            "data"      =>  $registros
+            ));
+
+        $this->setTemplate('storelista');
+    }
+
 
   public function executeStorelista(sfWebRequest $request)
   {
@@ -950,7 +1075,9 @@ class ContabilidadActions extends sfActions
     if($co_compra!=''){
         $c->add(Tb045FacturaPeer::IN_ANULAR,NULL, Criteria::ISNULL);
         $c->add(Tb045FacturaPeer::CO_COMPRA,$co_compra);   
-    }else if($co_solicitud!=''){
+    }
+
+    if($co_solicitud!=''){
         $c->add(Tb045FacturaPeer::IN_ANULAR,NULL, Criteria::ISNULL);
         $c->add(Tb045FacturaPeer::CO_SOLICITUD,$co_solicitud); 
     }
