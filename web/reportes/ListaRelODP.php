@@ -74,7 +74,7 @@ class PDF extends FPDF {
          $this->SetFont('COURIER','',9);     
          $this->SetWidths(array(15,20,20,20,20,20,20,25,25,25));
          $this->SetAligns(array("C","C","C","C","R","R","R","R","C"));   
-         $this->Row(array('Sol.', utf8_decode('Número OP'),'Rif','Fecha','Estado', 'Monto','Retencion','Desafectado','Pagado','Fecha Pago'),0,0); 
+         $this->Row(array('Sol.', utf8_decode('Número OP'),'Rif','Fecha','Estado', 'Monto OP','Retencion','Desafectado','Pagado','Fecha Pago'),0,0); 
          $this->SetAligns(array("L","C","C","C","R","R","R")); 
          //$this->Line(10, 55, 210, 55);        
          $this->Ln(3);
@@ -109,7 +109,7 @@ class PDF extends FPDF {
                 $this->SetFont('COURIER','',9);     
                 $this->SetWidths(array(15,20,20,20,20,20,20,25,25,25)); 
                 $this->SetAligns(array("C","C","C","C","R","R","R","R","C"));   
-                $this->Row(array('Sol.', utf8_decode('Número OP'),'Rif','Fecha','Estado', 'Monto','Deducido','Desafectado','Cancelado','Fecha Pago'),0,0); 
+                $this->Row(array('Sol.', utf8_decode('Número OP'),'Rif','Fecha','Estado', 'Monto OP','Retencion','Desafectado','Cancelado','Fecha Pago'),0,0); 
                 $this->SetAligns(array("L","C","C","C","R","R","R")); 
                 //$this->Line(10, 40, 210, 40);        
                 $this->Ln(3);
