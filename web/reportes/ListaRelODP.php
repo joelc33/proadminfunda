@@ -152,8 +152,8 @@ class PDF extends FPDF {
         else $tipo  = '';
         
        // $nu_codigo = '092604';        
-        $condicion .= " tb060.tb060.created_at::date >= '". $_GET["fe_inicio"]."' and ";
-        $condicion .= " tb060.tb060.created_at::date <= '".$_GET["fe_fin"]."' ";
+        $condicion .= " tb060.created_at::date >= '". $_GET["fe_inicio"]."' and ";
+        $condicion .= " tb060.created_at::date <= '".$_GET["fe_fin"]."' ";
         if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
         if ($tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
         if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE "; 
@@ -166,7 +166,7 @@ class PDF extends FPDF {
                            left join tb008_proveedor as tb008 on tb008.co_proveedor = tb026.co_proveedor    
                            where ".$condicion." order by tb008.nu_codigo asc";      
            
-         echo var_dump($sql); exit();  
+         //echo var_dump($sql); exit();  
          $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
          return  $datosSol;  
 	
@@ -181,8 +181,8 @@ class PDF extends FPDF {
         else $tipo  = '';
         
        // $nu_codigo = '092604';        
-        $condicion .= " tb060.tb060.created_at::date >= '". $_GET["fe_inicio"]."' and ";
-        $condicion .= " tb060.tb060.created_at::date <= '".$_GET["fe_fin"]."' ";
+        $condicion .= " tb060.created_at::date >= '". $_GET["fe_inicio"]."' and ";
+        $condicion .= " tb060.created_at::date <= '".$_GET["fe_fin"]."' ";
         if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
         if ($tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
         if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE ";         
