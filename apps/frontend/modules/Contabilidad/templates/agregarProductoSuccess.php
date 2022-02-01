@@ -21,6 +21,7 @@ this.gridPanel = new Ext.grid.EditorGridPanel({
         columns: [
         new Ext.grid.RowNumberer(),
             {header: 'co_detalle_factura', hidden: true,width:80, menuDisabled:true, dataIndex:'co_detalle_factura'},
+            {header: 'co_detalle_compras', hidden: true,width:80, menuDisabled:true, dataIndex:'co_detalle_compras'},
             {header: 'co_presupuesto', hidden: true,width:80, menuDisabled:true, dataIndex:'co_presupuesto'},
             {header: 'co_producto', hidden: true,width:80, menuDisabled:true, dataIndex:'co_producto'},
             {header: 'cantidad', hidden: true,width:80, menuDisabled:true, dataIndex:'cantidad'},
@@ -166,7 +167,8 @@ this.winformPanel_.show();
                 {name: 'cantidad'},
                 {name: 'in_exento'},
                 {name: 'co_presupuesto'},
-                {name: 'co_detalle_requisicion'}
+                {name: 'co_detalle_compras'},
+                {}
            ]
     });
     return this.store;      
