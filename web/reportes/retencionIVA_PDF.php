@@ -133,8 +133,8 @@ class PDF extends FPDF {
                     $this->SetWidths(array(140 ));  
                     $this->SetAligns(array("L",));   
                     $this->Row(array( 'PORCENTAJE DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
-                    $this->Ln(2);
-                    $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
+//                    $this->Ln(2);
+//                    $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
                     $this->Ln(2);
 
                     $this->SetFont('Arial','',7);     
@@ -172,8 +172,8 @@ class PDF extends FPDF {
                 $this->SetWidths(array(140 ));  
                 $this->SetAligns(array("L",));   
                 $this->Row(array('RETENCIONES ANULADAS'),0,0); 
-                $this->Ln(2);
-                $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
+//                $this->Ln(2);
+//                $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
                 $this->Ln(2);
 
                 $i = 1;
@@ -233,8 +233,8 @@ class PDF extends FPDF {
                 $this->SetWidths(array(140 ));  
                 $this->SetAligns(array("L",));   
                 $this->Row(array( 'PORCENTAJE DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
-                $this->Ln(2);
-                $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
+//                $this->Ln(2);
+//                $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
                 $this->Ln(2);
 
                 $this->SetFont('Arial','',7);     
