@@ -119,7 +119,7 @@ class PDF extends FPDF {
                 $this->SetFont('COURIER','',7);  
                 $this->SetWidths(array(15,20,20,20,20,20,20,25,25,25));
                 $this->SetAligns(array("C","C","C","C","R","R","R","R","C")); 
-                $this->Row(array($campo['co_solicitud'],$campo['tx_serial'],$campo['tx_rif'],date("d/m/Y", strtotime($campo['fecha'])),$campo['estatus'],number_format($campo['monto'], 2, ',','.'),number_format($campo['deducido'], 2, ',','.'),number_format(0, 2, ',','.'),number_format($campo['cancelado'], 2, ',','.'), date("d/m/Y", strtotime($campo['fe_pago']))),0,0);         
+                $this->Row(array($campo['co_solicitud'],$campo['tx_serial'],$campo['tx_rif'],date("d/m/Y", strtotime($campo['fecha'])),$campo['estatus'],number_format($campo['monto'], 2, ',','.'),number_format($campo['deducido'], 2, ',','.'),number_format(0, 2, ',','.'),number_format($campo['cancelado'], 2, ',','.'),$campo['fe_pago']),0,0);         
 
 
          } 
@@ -198,7 +198,7 @@ class PDF extends FPDF {
         ,(select COALESCE(sum(mo_retencion),0.00) from tb046_factura_retencion where co_odp = tb060.co_orden_pago) as deducido
         ,0.00 as desafectado
         ,(select COALESCE(sum(mo_pagado),0.00) from tb062_liquidacion_pago where co_odp = tb060.co_orden_pago) as cancelado
-        ,tb063.fe_pago
+        ,to_char(tb063.fe_pago,'dd/mm/yyyy') as fe_pago
         from tb060_orden_pago tb060
         left join tb026_solicitud tb026 on tb060.co_solicitud = tb026.co_solicitud
         left join tb008_proveedor tb008 on tb026.co_proveedor = tb008.co_proveedor
