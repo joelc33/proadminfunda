@@ -12,14 +12,14 @@ class PDF extends FPDF {
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'L');
         $this->SetFont('courier','',8);
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Secretaria de Administración'),0,0,'L');
+        $this->Cell(0,0,utf8_decode('Coordinación General de Administración'),0,0,'L');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('SubSecretaria de Presupuesto'),0,0,'L');        
+        $this->Cell(0,0,utf8_decode('Coordinación de Presupuesto'),0,0,'L');        
         $this->Ln(4);
         $this->Cell(0,0,utf8_decode('[FCPPR055]'),0,0,'L');
         $this->SetFont('courier','',8);
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R'); 
+//        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R'); 
         
    }
 
