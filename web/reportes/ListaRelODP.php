@@ -76,8 +76,8 @@ class PDF extends FPDF {
          $this->SetAligns(array("C","C","C","C","R","R","R","R","C"));   
          $this->Row(array('Sol.', utf8_decode('Número OP'),'Rif','Fecha','Estado', 'Monto','Retencion','Desafectado','Pagado','Fecha Pago'),0,0); 
          $this->SetAligns(array("L","C","C","C","R","R","R")); 
-         $this->Line(10, 55, 210, 55);        
-         $this->Ln(5);
+         //$this->Line(10, 55, 210, 55);        
+         $this->Ln(3);
          $mo_total_op = 0;
          $mo_total_ded = 0;
 
@@ -111,8 +111,8 @@ class PDF extends FPDF {
                 $this->SetAligns(array("C","C","C","C","R","R","R","R","C"));   
                 $this->Row(array('Sol.', utf8_decode('Número OP'),'Rif','Fecha','Estado', 'Monto','Deducido','Desafectado','Cancelado','Fecha Pago'),0,0); 
                 $this->SetAligns(array("L","C","C","C","R","R","R")); 
-                $this->Line(10, 40, 210, 40);        
-                $this->Ln(5);
+                //$this->Line(10, 40, 210, 40);        
+                $this->Ln(3);
                 $mo_total_op = 0;
                 $mo_total_ded = 0; 
                 } 
