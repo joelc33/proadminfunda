@@ -73,7 +73,7 @@ class PDF extends FPDF {
 //         $this->SetAligns(array("L","C","C","L","L","R","R","R")); 
 //         $this->Line(10, 65, 210, 65); 
          
-         $this->SetY(70);
+         $this->SetY(50);
          $x =  $this->getX();
          $campo='';
          $this->getX($x);
