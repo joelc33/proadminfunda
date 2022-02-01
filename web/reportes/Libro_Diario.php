@@ -114,7 +114,7 @@ class PDF extends FPDF {
          $this->SetAligns(array("C","C","C","L","L","L","C","L","R","R"));     
          $this->SetFillColor(255, 255, 255);                      
          $this->SetFont('Arial','B',8);   
-         $this->Row(array($campo['co_solicitud'],$campo['fecha'],$campo['anexo'],utf8_decode($campo['tx_cuenta']),utf8_decode($campo['desc_cuenta']),utf8_decode($campo['tx_descripcion']),utf8_decode($campo['nu_comprobante']),utf8_decode($campo['tx_tipo_asiento']),number_format($campo['mo_debe'], 2, ',','.'),number_format($campo['mo_haber'], 2, ',','.')),0,0);         
+         $this->Row(array($campo['co_solicitud'],$campo['fecha'],$campo['anexo'],utf8_decode($campo['tx_cuenta']),utf8_decode($campo['tx_descripcion']),utf8_decode($campo['nu_comprobante']),utf8_decode($campo['tx_tipo_asiento']),number_format($campo['mo_debe'], 2, ',','.'),number_format($campo['mo_haber'], 2, ',','.')),0,0);         
          
          if($this->getY()>180){
              $this->AddPage();
