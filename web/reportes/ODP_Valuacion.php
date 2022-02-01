@@ -864,20 +864,20 @@ class PDF_Flo extends PDF_FlowingBlock
                          nu_se as se,
                          nu_sse as sse,
                          nu_partida,
-                         sum(case when (tb053.in_calcular_iva) then tb053.monto else tb053.monto end) as monto
-                  from  tb053_detalle_compras as tb053 
-                  inner join tb045_factura as tb045 on (tb053.co_compras = tb045.co_compra)                  
+                         sum(tb129.mo_total) as monto
+                  from   tb045_factura as tb045 
+                  inner join tb129_detalle_factura as tb129 on (tb129.co_factura = tb045.co_factura)   
                   inner join tb052_compras as tb052 on (tb052.co_compras = tb045.co_compra)                  
-                  left join tb085_presupuesto as tb085 on tb085.id = tb053.co_presupuesto
+                  left join tb085_presupuesto as tb085 on tb085.id = tb129.co_presupuesto
                   left join tb084_accion_especifica as tb084 on tb085.id_tb084_accion_especifica = tb084.id
                   left join tb083_proyecto_ac as tb083 on tb084.id_tb083_proyecto_ac = tb083.id
                   left join tb082_ejecutor as tb082 on tb082.id = tb083.id_tb082_ejecutor
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb045.co_solicitud and tb030.in_cargar_dato is true                               
-                  left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector 
+                  left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector
                   where tb030.co_ruta =".$_GET['codigo']." and tb045.in_anular is null and tb045.co_factura =".$fact."
                   group by 1,2,3,4,5,6,7,8,9,10,11 limit 8";
 
-         // echo var_dump($sql); exit();                  
+          //echo var_dump($sql); exit();                  
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol;  
 	

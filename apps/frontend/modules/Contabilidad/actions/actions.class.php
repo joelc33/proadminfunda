@@ -56,7 +56,7 @@ class ContabilidadActions extends sfActions
     $this->data = json_encode(array(
         "co_proveedor"            => $campos["co_proveedor"],
         "nu_iva_retencion"        => $campos["nu_iva_retencion"],
-        "co_compras"              => $campos["co_compras"],
+        "co_compras"              => ($campos["co_compras"]==null)?'':$campos["co_compras"],
         "co_solicitud"            => $this->getRequestParameter("co_solicitud"),
         "co_solicitud_cotizacion" => $res["co_solicitud"],
         "co_documento"            => $campos["co_documento"],
