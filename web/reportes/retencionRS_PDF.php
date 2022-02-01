@@ -8,7 +8,7 @@ class PDF extends FPDF {
     function Header() {
 
 
-        $this->Image("imagenes/escudosanfco.png", 100, 7,20);
+        $this->Image("imagenes/escudosanfco.jpg", 100, 7,20);
 
         $this->SetFont('Arial','B',10);
         
@@ -20,14 +20,14 @@ class PDF extends FPDF {
         $this->Ln(6);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
         $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACION Y FINANZAS'),0,0,'C');
+        $this->Cell(0,0,utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),0,0,'C');
         $this->Ln(8);
         $this->SetFont('Arial','B',10);
         $this->Cell(0,0,utf8_decode('RETENCIONES RESPONSABILIDAD SOCIAL'),0,0,'C');
         $this->Ln(4);
         $this->SetFont('Arial','',8);
 
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Ln(2);
         if ($this->PageNo()>1) $this->Cell(0,10,utf8_decode('Página ').$this->PageNo(),0,0,'L');  
        
@@ -75,9 +75,9 @@ class PDF extends FPDF {
             $this->SetFont('Arial','',7);     
             $this->SetWidths(array(140 ));  
             $this->SetAligns(array("L",));   
-            $this->Row(array( 'CONCEPTO DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
-            $this->Ln(2);
-            $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
+//            $this->Row(array( 'CONCEPTO DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
+//            $this->Ln(2);
+//            $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
             $this->Ln(2);
             $this->Row(array( 'RANGO DE FECHA DEL: '.$_GET["fe_inicio"].' AL: '.$_GET["fe_fin"]  ),0,0); 
             $this->Ln(2);
@@ -120,9 +120,9 @@ class PDF extends FPDF {
                     $this->SetFont('Arial','',7);     
                     $this->SetWidths(array(140 ));  
                     $this->SetAligns(array("L",));   
-                    $this->Row(array( 'CONCEPTO DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
-                    $this->Ln(2);
-                    $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
+//                    $this->Row(array( 'CONCEPTO DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
+//                    $this->Ln(2);
+//                    $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
                     $this->Ln(2);
 
                     $this->SetFont('Arial','',7);     
@@ -157,9 +157,9 @@ class PDF extends FPDF {
                 $this->SetFont('Arial','',7);     
                 $this->SetWidths(array(140 ));  
                 $this->SetAligns(array("L",));   
-                $this->Row(array( 'CONCEPTO DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
-                $this->Ln(2);
-                $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
+//                $this->Row(array( 'CONCEPTO DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
+//                $this->Ln(2);
+//                $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
                 $this->Ln(2);
 
                 $this->SetFont('Arial','',7);     
