@@ -183,6 +183,8 @@ this.gridPanel = new Ext.grid.GridPanel({
 
 if(this.OBJ.co_compras!=''){
 
+    
+
     ContabilidadEditar.main.store_lista.baseParams.co_compra=this.OBJ.co_compras;    
     ContabilidadEditar.main.store_lista.baseParams.co_solicitud=this.OBJ.co_solicitud;
     this.store_lista.load({

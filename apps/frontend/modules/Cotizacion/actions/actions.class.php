@@ -453,6 +453,12 @@ class CotizacionActions extends sfActions
 
   }
 
+  public function executeBuscarCompra(sfWebRequest $request)
+  {
+
+
+  }
+
   public function getTxRutaReporte($co_proceso,$co_solicitud){
 
 
@@ -481,7 +487,8 @@ class CotizacionActions extends sfActions
             $c->addSelectColumn(Tb206CotizacionPeer::TX_SERIAL_COTIZACION);
             $c->addSelectColumn(Tb039RequisicionesPeer::NU_REQUISICION);
             $c->addSelectColumn(Tb206CotizacionPeer::TX_OBSERVACION);
-            $c->addJoin(Tb039RequisicionesPeer::CO_REQUISICION,Tb206CotizacionPeer::CO_REQUISICION);      
+            $c->addJoin(Tb039RequisicionesPeer::CO_REQUISICION,Tb206CotizacionPeer::CO_REQUISICION);   
+
             $c->setIgnoreCase(true);
             $cantidadTotal = Tb206CotizacionPeer::doCount($c);            
             $c->setLimit($limit)->setOffset($start);
@@ -498,8 +505,87 @@ class CotizacionActions extends sfActions
                     "tx_serial_cotizacion"  => trim($res["tx_serial_cotizacion"]),
                     "tx_observacion"        => trim($res["tx_observacion"]),
                     "nu_iva"                => round($res["nu_iva"],0),
-                    "co_ruta_requisicion"   => $this->getTxRutaReporte(1,$res["co_solicitud"]),
-                    "co_ruta_presupuesto"   => $this->getTxRutaReporte(2,$res["co_solicitud"])
+                    "co_ruta_requisicion"   => $this->getTxRutaReporte(65,$res["co_solicitud"]),
+                    "co_ruta_presupuesto"   => $this->getTxRutaReporte(64,$res["co_solicitud"])
+                );
+            }
+
+            $this->data = json_encode(array(
+                "success"   =>  true,
+                "total"     =>  $cantidadTotal,
+                "data"      =>  $registros
+            ));
+
+            $this->setTemplate('store');
+    } 
+
+    public function executeStorelistaCompra(sfWebRequest $request)
+    {
+
+            $c = new Criteria();    
+            $c->clearSelectColumns();
+            $c->addSelectColumn(Tb052ComprasPeer::CO_SOLICITUD);
+            $c->addSelectColumn(Tb052ComprasPeer::CO_COMPRAS);
+            $c->addSelectColumn(Tb052ComprasPeer::CO_SOLICITUD_COTIZACION);
+            $c->addSelectColumn(Tb206CotizacionPeer::CO_COTIZACION);
+            $c->addSelectColumn(Tb206CotizacionPeer::NU_IVA);
+            $c->addSelectColumn(Tb206CotizacionPeer::TX_SERIAL_COTIZACION);
+            $c->addSelectColumn(Tb039RequisicionesPeer::NU_REQUISICION);
+            $c->addSelectColumn(Tb206CotizacionPeer::TX_OBSERVACION);
+            $c->addSelectColumn(Tb052ComprasPeer::TX_CONCEPTO);
+            $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
+            $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+            $c->addSelectColumn(Tb007DocumentoPeer::INICIAL); 
+            $c->addSelectColumn(Tb008ProveedorPeer::CO_PROVEEDOR); 
+            $c->addSelectColumn(Tb008ProveedorPeer::CO_DOCUMENTO); 
+            $c->addSelectColumn(Tb008ProveedorPeer::TX_DIRECCION);
+            $c->addSelectColumn(Tb052ComprasPeer::NU_IVA);    
+            $c->addSelectColumn(Tb038RamoPeer::TX_RAMO);
+            $c->addSelectColumn(Tb038RamoPeer::CO_RAMO);
+            $c->addSelectColumn(Tb056ContratoComprasPeer::MONTO);
+            $c->addSelectColumn(Tb052ComprasPeer::CO_COMPRAS);
+            $c->addSelectColumn(Tb007DocumentoPeer::TIPO);
+            $c->addAsColumn('nu_iva_retencion', Tb044IvaRetencionPeer::NU_VALOR);
+
+            $c->addJoin(Tb039RequisicionesPeer::CO_REQUISICION,Tb206CotizacionPeer::CO_REQUISICION);
+            $c->addJoin(Tb206CotizacionPeer::CO_SOLICITUD,Tb052ComprasPeer::CO_SOLICITUD_COTIZACION); 
+            $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR,Tb052ComprasPeer::CO_PROVEEDOR);  
+            $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO,Tb007DocumentoPeer::CO_DOCUMENTO);   
+            $c->addJoin(Tb044IvaRetencionPeer::CO_IVA_RETENCION, Tb008ProveedorPeer::CO_IVA_RETENCION);
+            $c->addJoin(Tb056ContratoComprasPeer::CO_RAMO, Tb038RamoPeer::CO_RAMO,Criteria::LEFT_JOIN);
+            $c->addJoin(Tb056ContratoComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
+            $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO);
+
+            $c->setIgnoreCase(true);
+            $cantidadTotal = Tb206CotizacionPeer::doCount($c);            
+            $c->setLimit($limit)->setOffset($start);
+            $c->addDescendingOrderByColumn(Tb206CotizacionPeer::CO_SOLICITUD);
+                
+            $stmt = Tb206CotizacionPeer::doSelectStmt($c);
+            $registros = "";
+            while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+            $registros[] = array(
+                    "co_solicitud"          => trim($res["co_solicitud"]),
+                    "co_proveedor"          => trim($res["co_proveedor"]),
+                    "co_cotizacion"         => trim($res["co_cotizacion"]),
+                    "nu_requisicion"        => trim($res["nu_requisicion"]),
+                    "tx_serial_cotizacion"  => trim($res["tx_serial_cotizacion"]),
+                    "tx_observacion"        => trim($res["tx_concepto"]),
+                    "numero_compra"         => trim($res["numero_compra"]),
+                    "co_compras"            => trim($res["co_compras"]),
+                    "nu_iva"                => round($res["nu_iva"],0),
+                    "tx_rif"                => $res["inicial"].'-'.$res["tx_rif"],
+                    "tx_razon_social"       => $res["tx_razon_social"],
+                    "co_ruta_requisicion"   => $this->getTxRutaReporte(65,$res["co_solicitud_cotizacion"]),
+                    "co_ruta_presupuesto"   => $this->getTxRutaReporte(64,$res["co_solicitud_cotizacion"]),
+                    "co_ruta_compra"        => $this->getTxRutaReporte(11,$res["co_solicitud"]),
+                    "tipo"                  => trim($res["tipo"]),
+                    "co_ramo"               => trim($res["co_ramo"]),
+                    "tx_ramo"               => trim($res["tx_ramo"]),
+                    "nu_iva"                => trim($res["nu_iva"]),
+                    "nu_valor"              => trim($res["nu_iva_retencion"]),
+                    "co_documento"          => trim($res["co_documento"])
                 );
             }
 
