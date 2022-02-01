@@ -216,7 +216,7 @@ class PDF extends FPDF {
          tb060.tx_serial
          asc";  
            
-           echo var_dump($sql); exit();  
+          // echo var_dump($sql); exit();  
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol;  
 	
