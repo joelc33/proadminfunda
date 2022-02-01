@@ -121,7 +121,7 @@ class PDF extends FPDF {
                         case when(tb060.co_solicitud is not null) then prov1.tx_razon_social 
                         else prov2.tx_razon_social end as beneficiario , tb060.created_at as fecha , 
                         case when tb060.in_anulado = true then 'Anulada' else 
-                        case when tb060.in_pagado = true then 'Aprobada' else 'Pendiente' end end as estatus, 
+                        case when tb060.in_pagado = true then 'Pagada' else 'Pendiente' end end as estatus, 
                         tb060.mo_total as monto 
                   from tb060_orden_pago tb060 
                         left join tb026_solicitud as tb026 on (tb026.co_solicitud=tb060.co_solicitud) 
