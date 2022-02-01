@@ -524,7 +524,7 @@ class PDF extends FPDF {
                   from   tb026_solicitud as tb026
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud                                                   
                   left join tb045_factura as tb045 on tb045.co_compra = tb052.co_compras 
-                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud 
+                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb045.co_solicitud 
                   where tb045.in_anular = null and tb030.co_ruta =".$_GET['codigo']." group by tb045.co_compra";
                
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
@@ -581,7 +581,7 @@ class PDF extends FPDF {
                   left join tb001_usuario as tb001 on tb001.co_usuario = tb026.co_usuario
                   left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
                   left join tb062_liquidacion_pago as tb062 on tb062.co_solicitud = tb026.co_solicitud
-                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud 
+                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb045.co_solicitud 
                   where tb045.in_anular is null and tb030.co_ruta =".$_GET['codigo']." order by co_factura asc ";
                
 //          echo var_dump($sql);  exit();
@@ -635,7 +635,8 @@ class PDF extends FPDF {
                   left join tb084_accion_especifica as tb084 on tb085.id_tb084_accion_especifica = tb084.id
                   left join tb083_proyecto_ac as tb083 on tb084.id_tb083_proyecto_ac = tb083.id
                   left join tb082_ejecutor as tb082 on tb082.id = tb083.id_tb082_ejecutor
-                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud and tb030.in_cargar_dato is true                               
+                  left join tb045_factura as tb045 on tb045.co_compra = tb052.co_compras
+                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb045.co_solicitud and tb030.in_cargar_dato is true                               
                   where tb030.co_ruta = ".$_GET['codigo'].' group by 1, 2, 3 '; //$conex->decrypt($_GET['codigo']);
        // echo var_dump($sql); exit();
 
@@ -651,7 +652,7 @@ class PDF extends FPDF {
                       left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud 
                       left join tb053_detalle_compras as tb053 on tb053.co_compras = tb052.co_compras                                                   
                       left join tb045_factura as tb045 on tb045.co_compra = tb052.co_compras 
-                      left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud 
+                      left join tb030_ruta as tb030 on tb030.co_solicitud = tb045.co_solicitud 
                       where tb053.in_exento = true and tb030.co_ruta =".$_GET['codigo']."
                       group by tb045.co_compra";
 
