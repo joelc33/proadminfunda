@@ -111,8 +111,8 @@ class PDF extends FPDF {
         if ($_GET["co_tipo"]) $tipo  = $_GET['co_tipo'];  
         else $tipo  = '';
        
-        $condicion .= " tb060.fe_emision >= '". $_GET["fe_inicio"]."' and ";
-        $condicion .= " tb060.fe_emision <= '".$_GET["fe_fin"]."' ";
+        $condicion .= " tb060.created_at::date >= '". $_GET["fe_inicio"]."' and ";
+        $condicion .= " tb060.created_at::date <= '".$_GET["fe_fin"]."' ";
         
         if ($tipo==1) $condicion .= " and tb060.in_anulado = FALSE ";        
         if ($tipo==2)  $condicion .= " and tb060.in_anulado = TRUE ";         
