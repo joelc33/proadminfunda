@@ -143,7 +143,7 @@ class PDF extends FPDF {
 
             $this->setX(10);
             $this->SetFont( 'Arial', 'B', 7);
-            $this->SetWidths(array(105,25,25,20,12,15 ));  
+            $this->SetWidths(array(105,25,20,25,12,15 ));  
             $this->SetAligns(array("C","L","L","L","L"));
             $this->Row(array(utf8_decode('TOTAL PROCENTAJE: '.$campo1["co_iva_retencion"]), 
             number_format($nu_total, 2, ',','.'), 
