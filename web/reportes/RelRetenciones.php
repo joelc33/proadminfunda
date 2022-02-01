@@ -66,12 +66,12 @@ class PDF extends FPDF {
          $this->Row(array(utf8_decode('RETENCION:  ').$contenido),0,0); 
          $this->Row(array(utf8_decode('FECHA:      ').' UN RANGO DE FECHA DEL: '.date("d/m/Y", strtotime($_GET['fe_inicio'])).' AL '.date("d/m/Y", strtotime($_GET['fe_fin']))),0,0); 
       
-         $this->SetFont('COURIER','',9);     
-         $this->SetWidths(array(30,20,20,20,20,20,20,20,20)); 
-         $this->SetAligns(array("L","C","C","C","C","R","R","R","R"));   
-         $this->Row(array('','Orden de Pago','Beneficiario','Fecha', 'Monto Factura','Obj. de Ret.','Monto Deduc.','Nro. Cheque','Fecha'),0,0); 
-         $this->SetAligns(array("L","C","C","L","L","R","R","R")); 
-         $this->Line(10, 65, 210, 65); 
+//         $this->SetFont('COURIER','',9);     
+//         $this->SetWidths(array(30,20,20,20,20,20,20,20,20)); 
+//         $this->SetAligns(array("L","C","C","C","C","R","R","R","R"));   
+//         $this->Row(array('','Orden de Pago','Beneficiario','Fecha', 'Monto Factura','Obj. de Ret.','Monto Deduc.','Nro. Cheque','Fecha'),0,0); 
+//         $this->SetAligns(array("L","C","C","L","L","R","R","R")); 
+//         $this->Line(10, 65, 210, 65); 
          
          $this->SetY(70);
          $x =  $this->getX();
@@ -146,8 +146,8 @@ class PDF extends FPDF {
                     $this->SetWidths(array(140 ));  
                     $this->SetAligns(array("L",));   
                     $this->Row(array( 'PORCENTAJE DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
-                    $this->Ln(2);
-                    $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
+//                    $this->Ln(2);
+//                    $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
                     $this->Ln(2);
 
                     $this->SetFont('Arial','',7);     
@@ -184,8 +184,8 @@ class PDF extends FPDF {
                 $this->SetWidths(array(140 ));  
                 $this->SetAligns(array("L",));   
                 $this->Row(array( 'PORCENTAJE DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
-                $this->Ln(2);
-                $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
+//                $this->Ln(2);
+//                $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
                 $this->Ln(2);
 
                 $this->SetFont('Arial','',7);     
