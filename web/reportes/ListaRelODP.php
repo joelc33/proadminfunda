@@ -152,8 +152,8 @@ class PDF extends FPDF {
         else $tipo  = '';
         
        // $nu_codigo = '092604';        
-        $condicion .= " tb060.fe_emision >= '". $_GET["fe_inicio"]."' and ";
-        $condicion .= " tb060.fe_emision <= '".$_GET["fe_fin"]."' ";
+        $condicion .= " tb060.tb060.created_at::date >= '". $_GET["fe_inicio"]."' and ";
+        $condicion .= " tb060.tb060.created_at::date <= '".$_GET["fe_fin"]."' ";
         if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
         if ($tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
         if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE "; 
@@ -181,8 +181,8 @@ class PDF extends FPDF {
         else $tipo  = '';
         
        // $nu_codigo = '092604';        
-        $condicion .= " tb060.fe_emision >= '". $_GET["fe_inicio"]."' and ";
-        $condicion .= " tb060.fe_emision <= '".$_GET["fe_fin"]."' ";
+        $condicion .= " tb060.tb060.created_at::date >= '". $_GET["fe_inicio"]."' and ";
+        $condicion .= " tb060.tb060.created_at::date <= '".$_GET["fe_fin"]."' ";
         if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
         if ($tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
         if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE ";         
@@ -192,7 +192,7 @@ class PDF extends FPDF {
         ,tb008.tx_rif
         ,tb008.tx_razon_social
         ,tb060.created_at as fecha
-        ,case when tb060.in_anulado = true then 'Anulada' else case when tb060.in_pagado = true then 'Aprobada' else 'Pendiente' end end as estatus
+        ,case when tb060.in_anulado = true then 'Anulada' else case when tb060.in_pagado = true then 'Pagada' else 'Pendiente' end end as estatus
         ,tb060.mo_total as monto
         ,(select COALESCE(sum(mo_retencion),0.00) from tb046_factura_retencion where co_odp = tb060.co_orden_pago) as deducido
         ,0.00 as desafectado
