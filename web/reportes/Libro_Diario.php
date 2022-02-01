@@ -77,13 +77,13 @@ class PDF extends FPDF {
          
          if(count($this->lista_anexos)>0){
          //************ Anexos *****************//
-         $this->SetWidths(array(20,20,15,40,40,75,30,40,30,30)); 
+         $this->SetWidths(array(20,20,15,40,115,30,40,30,30)); 
          $this->SetAligns(array("C","C","C","L","L","L","C","L","R","R"));     
          $this->SetFont('Arial','B',8);    
          $this->SetFillColor(201, 199, 199);
          $this->Ln(6);
          $this->SetX(10);
-         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('PUB 21'),utf8_decode('CODIGO CONTABLE'),utf8_decode('CUENTA CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1); 
+         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('PUB 21'),utf8_decode('CODIGO CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1); 
        
 
          foreach($this->lista_anexos as $key => $campo){
@@ -110,7 +110,7 @@ class PDF extends FPDF {
          }
          
          $this->SetX(10);   
-         $this->SetWidths(array(20,20,15,40,40,75,30,40,30,30));  
+         $this->SetWidths(array(20,20,15,40,115,30,40,30,30));  
          $this->SetAligns(array("C","C","C","L","L","L","C","L","R","R"));     
          $this->SetFillColor(255, 255, 255);                      
          $this->SetFont('Arial','B',8);   
@@ -119,7 +119,7 @@ class PDF extends FPDF {
          if($this->getY()>180){
              $this->AddPage();
          //************ Anexos *****************//
-         $this->SetWidths(array(20,20,15,40,40,75,30,40,30,30));  
+         $this->SetWidths(array(20,20,15,40,115,30,40,30,30));   
          $this->SetAligns(array("C","C","C","L","L","L","C","L","R","R"));              
          $this->SetFont('Arial','B',8);    
          $this->SetFillColor(201, 199, 199);
