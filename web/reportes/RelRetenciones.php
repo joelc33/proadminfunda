@@ -88,7 +88,7 @@ class PDF extends FPDF {
 
                  foreach($this->datos_grupo as $key => $campo1){
 
-            $this->Ln(10);
+            $this->Ln(5);
             $this->setX(10);
             $this->SetFont('Arial','',7);     
             $this->SetWidths(array(140 ));  
