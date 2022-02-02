@@ -60,11 +60,11 @@ class PDF extends FPDF {
          $this->lista_cuentas = $this->getCuenta();         
          
          $this->SetFont('COURIER','',11);     
-         $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
-         $this->SetAligns(array("C","C","C","C","C","C","R","R","C"));   
-         $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Referencia', 'Ingreso.','Egreso.','Saldo'),1,1); 
+         $this->SetWidths(array(20,12,83,65,22,35,30,30,45));  
+         $this->SetAligns(array("C","C","C","C","C","C","R","R","R"));   
+         $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'Tipo','Referencia', 'Debe','Haber','Saldo'),0,0); 
          $this->SetAligns(array("L","L","L","L","C","C","R","R","R"));
-         $this->Line(10, 35, 350, 35);        
+         $this->Line(10, 37, 350, 37);        
          $this->Ln(2);
          $mo_ingr = 0;
          $mo_egr  = 0;
@@ -88,12 +88,12 @@ class PDF extends FPDF {
                         $this->SetFillColor(255, 255, 255); 
 
                         $this->SetFont('COURIER','',12);     
-                        $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
-                        $this->SetAligns(array("C","C","C","C","C","C","R","R","C"));
+                        $this->SetWidths(array(20,12,83,65,22,35,30,30,45));  
+                        $this->SetAligns(array("C","C","C","C","C","C","R","R","R"));
                         $this->SetX(10);
-                        $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Referencia', 'Ingreso.','Egreso.','Saldo'),0,0); 
+                        $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'Tipo','Referencia', 'Debe','Haber','Saldo'),0,0); 
                         $this->SetAligns(array("L","L","L","L","C","C","R","R","R"));
-                        $this->Line(10, 40, 350, 40);        
+                        $this->Line(10, 37, 350, 37);         
                         $this->Ln(2);
                     } 
                 $saldo_ant = $this->getSaldo();
@@ -133,16 +133,16 @@ class PDF extends FPDF {
                         $this->SetFillColor(255, 255, 255); 
 
                         $this->SetFont('COURIER','',11);     
-                        $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
-                        $this->SetAligns(array("C","C","C","C","C","C","R","R","C"));
+                        $this->SetWidths(array(20,12,83,65,22,35,30,30,45));  
+                        $this->SetAligns(array("C","C","C","C","C","C","R","R","R"));
                         $this->SetX(10);
-                        $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Referencia', 'Ingreso.','Egreso.','Saldo'),0,0); 
+                        $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'Tipo','Referencia', 'Debe','Haber','Saldo'),0,0); 
                         $this->SetAligns(array("L","L","L","L","C","C","R","R","R"));
-                        $this->Line(10, 40, 350, 40);        
+                        $this->Line(10, 37, 350, 37);         
                         $this->Ln(2);
                         } 
                         $this->SetFont('COURIER','',8);  
-                        $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
+                        $this->SetWidths(array(20,12,83,65,22,35,30,30,45)); 
                         $this->SetAligns(array("L","L","L","L","C","C","R","R","R")); 
                         
                         $saldo   = $saldo + $campo['monto_ingr'] - $campo['monto_egr'];
@@ -190,16 +190,16 @@ class PDF extends FPDF {
                         $this->SetFillColor(255, 255, 255); 
 
                         $this->SetFont('COURIER','',11);     
-                        $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
-                        $this->SetAligns(array("C","C","C","C","C","C","R","R","C"));
+                        $this->SetWidths(array(20,12,83,65,22,35,30,30,45));  
+                        $this->SetAligns(array("C","C","C","C","C","C","R","R","R"));
                         $this->SetX(10);
-                        $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Referencia', 'Ingreso.','Egreso.','Saldo'),0,0); 
+                        $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'Tipo','Referencia', 'Debe','Haber','Saldo'),0,0); 
                         $this->SetAligns(array("L","L","L","L","C","C","R","R","R"));
-                        $this->Line(10, 40, 350, 40);        
+                        $this->Line(10, 37, 350, 37);         
                         $this->Ln(2);
                         } 
                         $this->SetFont('COURIER','',8);  
-                        $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
+                        $this->SetWidths(array(20,12,83,65,22,35,30,30,45)); 
                         $this->SetAligns(array("L","L","L","L","C","C","R","R","R")); 
                         
                         $saldo   = $saldo + $campo['monto_ingr'] - $campo['monto_egr'];
