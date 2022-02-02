@@ -173,7 +173,6 @@ class PDF extends FPDF {
          $this->SetY($Y+11);
          $this->SetX(35);
          $this->SetFont('Arial','',6);
-         $this->ln(8);
          $this->Row(array('Elaborado por:','Conformado por:'),1,1);         
 
 //         $this->SetAligns(array("C","C", "C"));
