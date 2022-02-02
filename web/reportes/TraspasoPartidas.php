@@ -165,7 +165,7 @@ class PDF extends FPDF {
          $this->SetX(30);
          $this->MultiCell(75,20,'',1,1,'L',1);
          $this->SetY($Y);
-         $this->SetX(110);
+         $this->SetX(105);
          $this->MultiCell(90,20,'',1,1,'L',1);
 //         $this->SetY($Y);
 //         $this->SetX(145);
