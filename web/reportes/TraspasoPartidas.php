@@ -74,7 +74,7 @@ class PDF extends FPDF {
          $this->Ln(10);   
          $this->SetFont('Arial','',10);  
          $this->SetX(25);         
-         $inf = "De conformidad con el artículo No.".$this->datos['de_articulo_ley'].", de las Disposiciones Generales de la Ley de Presupuesto para el ejercicio fiscal ".date("Y", strtotime($this->datos['fe_modificacion'])).", se efectúa traspaso de crédito presupuestario detallado a continuación:"; 
+         $inf = "De conformidad con el artículo No. 8, de las Disposiciones Generales de la Ordenanza de Presupuesto para el ejercicio fiscal ".date("Y", strtotime($this->datos['fe_modificacion'])).", se efectúa traspaso de crédito presupuestario detallado a continuación:"; 
          $this->MultiCell(180,7,utf8_decode($inf),0,1,'J',0);  
          
          $this->Ln();
@@ -151,30 +151,52 @@ class PDF extends FPDF {
          $this->SetAligns(array("R","R","R")); 
          $this->SetX(25);         
          $this->Row(array('TOTAL',number_format($totalcred, 2, ',','.'),number_format($totaldeb, 2, ',','.')),1,1);         
-
+         
+         $this->ln(8);
          $this->SetAligns(array("C","C", "C"));
 	     $this->SetFillColor(201, 199, 199);
-         $this->SetWidths(array(90,90));
-         $this->SetFont('Arial','B',8); 
-
-         $this->SetY(230);
-         $this->SetX(25);    
-         //$this->Row(array(utf8_decode('SUBSECRETARIA DE PRESUPUESTO'),utf8_decode('SECRETARIA DE ADMINISTRACION')),1,1);         
+         $this->SetWidths(array(65,70,65));
+         $this->SetFont('Arial','B',8);
+         //$this->Row(array('UNIDAD SOLICITANTE',utf8_decode('DIRECCIÓN DE COMPRAS Y SUMINISTRO'),utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS')),1,1);  
+         $this->Row(array(utf8_decode($this->op_reporte['de_unidad']),utf8_decode($this->op_reporte['de_ubicacion_admin']),utf8_decode($this->op_reporte['de_empresa'])),1,1);       
          $this->SetFillColor(255,255,255);
+         $this->SetAligns(array("L", "L","L"));
          $Y = $this->GetY();
-         $this->SetX(25);          
-         //$this->MultiCell(90,20,'',1,1,'L',1);
-         $this->SetY($Y+10);
-         $this->SetFont('Arial','B',7);
-         $this->ln(18);
-         $this->SetX(25);   
-         $this->Row(array(utf8_decode('LCDA. ISBELIA YUGURI'),utf8_decode('LCD0. AROLDO DIAZ')),0,0);
-         $this->SetX(25); 
-         $this->Row(array(utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN')),0,0);
+         $this->MultiCell(65,14,'',1,1,'L',1);
          $this->SetY($Y);
-         $this->SetX(115);
-         //$this->MultiCell(90,20,'',1,1,'L',1);  
+         $this->SetX(75);
+         $this->MultiCell(70,14,'',1,1,'L',1);
          $this->SetY($Y);
+         $this->SetX(145);
+         $this->MultiCell(65,14,'',1,1,'L',1);
+         $this->SetY($Y+5);
+         $this->SetFont('Arial','',6);
+         $this->ln(8);
+         $this->Row(array('Solicitado por:','Registrado por:', 'Aprobado por:'),1,1);         
+
+//         $this->SetAligns(array("C","C", "C"));
+//	     $this->SetFillColor(201, 199, 199);
+//         $this->SetWidths(array(90,90));
+//         $this->SetFont('Arial','B',8); 
+//
+//         $this->SetY(230);
+//         $this->SetX(25);    
+//         //$this->Row(array(utf8_decode('SUBSECRETARIA DE PRESUPUESTO'),utf8_decode('SECRETARIA DE ADMINISTRACION')),1,1);         
+//         $this->SetFillColor(255,255,255);
+//         $Y = $this->GetY();
+//         $this->SetX(25);          
+//         //$this->MultiCell(90,20,'',1,1,'L',1);
+//         $this->SetY($Y+10);
+//         $this->SetFont('Arial','B',7);
+//         $this->ln(18);
+//         $this->SetX(25);   
+//         $this->Row(array(utf8_decode('LCDA. ISBELIA YUGURI'),utf8_decode('LCD0. AROLDO DIAZ')),0,0);
+//         $this->SetX(25); 
+//         $this->Row(array(utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN')),0,0);
+//         $this->SetY($Y);
+//         $this->SetX(115);
+//         //$this->MultiCell(90,20,'',1,1,'L',1);  
+//         $this->SetY($Y);
                  
          //$this->ln(25);
          $this->SetY(270);
