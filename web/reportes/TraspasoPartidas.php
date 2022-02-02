@@ -157,8 +157,8 @@ class PDF extends FPDF {
 	     $this->SetFillColor(201, 199, 199);
          $this->SetWidths(array(65,70,65));
          $this->SetFont('Arial','B',8);
-         //$this->Row(array('UNIDAD SOLICITANTE',utf8_decode('DIRECCIÓN DE COMPRAS Y SUMINISTRO'),utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS')),1,1);  
-         $this->Row(array(utf8_decode($this->op_reporte['de_unidad']),utf8_decode($this->op_reporte['de_ubicacion_admin']),utf8_decode($this->op_reporte['de_empresa'])),1,1);       
+         $this->SetX(25);
+         $this->Row(array(utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN')),1,1);       
          $this->SetFillColor(255,255,255);
          $this->SetAligns(array("L", "L","L"));
          $Y = $this->GetY();
