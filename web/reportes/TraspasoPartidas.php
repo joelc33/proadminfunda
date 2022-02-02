@@ -31,7 +31,7 @@ class PDF extends FPDF {
         //$this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Cell(0,0,utf8_decode('San Francisco, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
         
-        $this->Ln(10);
+        $this->Ln(12);
         $this->SetFont('Arial','B',11);        
         $this->Cell(0,0,utf8_decode('TRASPASOS DE CREDITO PRESUPUESTARIO'),0,0,'C');
     }
@@ -71,7 +71,7 @@ class PDF extends FPDF {
          $this->SetX(25);
          $this->SetFillColor(255, 255, 255);
          $this->Row(array(utf8_decode('NRO. '.$this->datos['nu_modificacion'])),0,0); 
-         $this->Ln(10);   
+         $this->Ln(15);   
          $this->SetFont('Arial','',10);  
          $this->SetX(25);         
          $inf = "De conformidad con el artículo No. 8, de las Disposiciones Generales de la Ordenanza de Presupuesto para el ejercicio fiscal ".date("Y", strtotime($this->datos['fe_modificacion'])).", se efectúa traspaso de crédito presupuestario detallado a continuación:"; 
