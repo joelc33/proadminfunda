@@ -67,7 +67,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',9);       
          $this->SetWidths(array(180));
          $this->SetAligns(array("L"));
-         $this->SetY(45);
+         $this->SetY(55);
          $this->SetX(25);
          $this->SetFillColor(255, 255, 255);
          $this->Row(array(utf8_decode('NRO. '.$this->datos['nu_modificacion'])),0,0); 
