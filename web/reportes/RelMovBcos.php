@@ -283,7 +283,7 @@ class PDF extends FPDF {
                     group by id_tb153_tipo_documento_cuenta
                     ) as q1 "; 
                         
-         //echo var_dump($sql); exit();
+         echo var_dump($sql); exit();
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol[0];  
 	
