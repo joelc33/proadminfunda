@@ -170,7 +170,7 @@ class PDF extends FPDF {
 //         $this->SetY($Y);
 //         $this->SetX(145);
 //         $this->MultiCell(65,14,'',1,1,'L',1);
-         $this->SetY($Y+11);
+         $this->SetY($Y+15);
          $this->SetX(35);
          $this->SetFont('Arial','',6);
          $this->Row(array('Elaborado por:','Conformado por:'),1,1);         
