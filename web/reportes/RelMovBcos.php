@@ -204,7 +204,7 @@ class PDF extends FPDF {
                         
                         $saldo   = $saldo + $campo['monto_ingr'] - $campo['monto_egr'];
                         $this->SetX(10); 
-                        $this->Row(array($campo['documento'],$campo['co_solicitud'],utf8_decode($campo['beneficiario']),utf8_decode($campo['tx_descripcion']),utf8_decode($campo['op']),$campo['fecha'],$campo['referencia'],number_format($campo['monto_ingr'], 2, ',','.'),number_format($campo['monto_egr'], 2, ',','.'),number_format($saldo, 2, ',','.')),0,0);         
+                        $this->Row(array($campo['fecha'],$campo['co_solicitud'],utf8_decode($campo['beneficiario']),utf8_decode($campo['tx_descripcion']),utf8_decode($campo['op']),$campo['referencia'],number_format($campo['monto_ingr'], 2, ',','.'),number_format($campo['monto_egr'], 2, ',','.'),number_format($saldo, 2, ',','.')),0,0);         
 
                         $mo_ingr = $campo['monto_ingr'] + $mo_ingr;
                         $mo_egr  = $campo['monto_egr'] + $mo_egr;
