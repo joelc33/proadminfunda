@@ -138,16 +138,39 @@ class PDF extends FPDF {
             } 
         }
          
-         $this->ln();
+         $this->ln(8);
          $this->SetAligns(array("C","C", "C"));
-	 $this->SetFillColor(201, 199, 199);
-         $this->SetWidths(array(140,60));
-         $this->SetFont('Arial','B',6);
-         $this->Row(array(utf8_decode('SECRETARIA DE PRESUPUESTO'),utf8_decode('MÁXIMA AUTORIDAD')),1,1);
+	     $this->SetFillColor(201, 199, 199);
+         $this->SetWidths(array(50,60,70));
+         $this->SetFont('Arial','B',8);
+         $this->SetX(25);
+         $this->Row(array(utf8_decode('ELABORADO POR'),utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN')),1,1);       
          $this->SetFillColor(255,255,255);
-         $this->SetWidths(array(50,40,50,60));
-         $this->SetAligns(array("L", "L","L","L"));
-         $this->Row(array('Elaborado por:'.$this->datos['nb_usuario'],'Conformado por: ','Autorizado por:','Autorizado por:'),1,1);
+         $this->SetAligns(array("L", "L","L"));
+         $Y = $this->GetY();
+         $this->SetX(25);
+         $this->MultiCell(50,20,'',1,1,'L',1);
+         $this->SetY($Y);
+         $this->SetX(75);
+         $this->MultiCell(60,20,'',1,1,'L',1);
+         $this->SetY($Y);
+         $this->SetX(135);
+         $this->MultiCell(70,20,'',1,1,'L',1);
+         $this->SetY($Y+16);
+         $this->SetX(25);
+         $this->SetFont('Arial','',6);
+         $this->Row(array('Elaborado por:','Conformado por:','Autorizado por:'),1,1);          
+        
+//         $this->ln();
+//         $this->SetAligns(array("C","C", "C"));
+//	 $this->SetFillColor(201, 199, 199);
+//         $this->SetWidths(array(140,60));
+//         $this->SetFont('Arial','B',6);
+//         $this->Row(array(utf8_decode('SECRETARIA DE PRESUPUESTO'),utf8_decode('MÁXIMA AUTORIDAD')),1,1);
+//         $this->SetFillColor(255,255,255);
+//         $this->SetWidths(array(50,40,50,60));
+//         $this->SetAligns(array("L", "L","L","L"));
+//         $this->Row(array('Elaborado por:'.$this->datos['nb_usuario'],'Conformado por: ','Autorizado por:','Autorizado por:'),1,1);
          
          $this->ln();
          
