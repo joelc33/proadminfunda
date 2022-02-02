@@ -26,7 +26,7 @@ class PDF extends FPDF {
         $this->Cell(0,0,utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),0,0,'C');    
         
         $this->SetFont('Arial','',8);
-        $this->Ln(6);
+        $this->Ln(8);
 
         //$this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Cell(0,0,utf8_decode('San Francisco, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
@@ -67,7 +67,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',9);       
          $this->SetWidths(array(180));
          $this->SetAligns(array("L"));
-         $this->SetY(65);
+         $this->SetY(45);
          $this->SetX(25);
          $this->SetFillColor(255, 255, 255);
          $this->Row(array(utf8_decode('NRO. '.$this->datos['nu_modificacion'])),0,0); 
