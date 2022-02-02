@@ -71,7 +71,7 @@ class PDF extends FPDF {
          $this->SetAligns(array("C"));
          $this->SetY(65);
          $this->SetFillColor(201, 199, 199);
-         $this->Row(array(utf8_decode('MODIFICACIONES PRESUPUESTARIAS - DOCUMENTO NRO. '.$this->datos['nu_modificacion'])),1,1);
+         $this->Row(array(utf8_decode('DOCUMENTO NRO. '.$this->datos['nu_modificacion'])),1,1);
          $this->SetFillColor(255, 255, 255);         
          $this->SetFont('Arial','',7);   
          $this->SetWidths(array(20, 30, 25, 30, 95, 30,20,25));                 
@@ -85,7 +85,7 @@ class PDF extends FPDF {
          $this->SetAligns(array("C"));      
          
          $this->SetFillColor(201, 199, 199);
-         $this->Row(array(utf8_decode('DATOS DE RAMO DE INGRESOS ORIDEN')),1,1); 
+         $this->Row(array(utf8_decode('DATOS DE RAMO DE INGRESOS')),1,1); 
          $this->SetFillColor(255, 255, 255);
          $this->SetWidths(array(45,105,50)); 
          $this->SetAligns(array("C","C","C","C","C"));              
