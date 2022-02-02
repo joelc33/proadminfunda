@@ -33,7 +33,7 @@ class PDF extends FPDF {
         $this->Ln(8);
 
         //$this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
+//        $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
 
     }
 
@@ -74,9 +74,9 @@ class PDF extends FPDF {
          $this->Row(array(utf8_decode('MODIFICACIONES PRESUPUESTARIAS - DOCUMENTO NRO. '.$this->datos['nu_modificacion'])),1,1);
          $this->SetFillColor(255, 255, 255);         
          $this->SetFont('Arial','',7);   
-         $this->SetWidths(array(20, 30, 25, 30, 20, 30,20,25));                 
+         $this->SetWidths(array(20, 30, 25, 30, 95, 30,20,25));                 
          $this->SetAligns(array("L","L","L","L","L","L"));         
-         $this->Row(array('Nro.OFICIO:',utf8_decode($this->datos['nu_oficio']),'FECHA OFICIO:',utf8_decode($this->datos['fe_oficio']), utf8_decode('ART.LEY:'), utf8_decode($this->datos['de_articulo_ley']), utf8_decode('FECHA:'), $this->datos['fe_modificacion']),1,1);                                    
+         $this->Row(array('Nro.OFICIO:',utf8_decode($this->datos['de_articulo_ley']), utf8_decode('FECHA:'), $this->datos['fe_modificacion'],''),1,1);                                    
          $this->SetWidths(array(20, 180));                 
          $this->SetAligns(array("L","L"));         
          $this->Row(array(utf8_decode('DESCRIPCIÓN:'),utf8_decode($this->datos['de_modificacion'])),1,1);                                    
@@ -85,19 +85,19 @@ class PDF extends FPDF {
          $this->SetAligns(array("C"));      
          
          $this->SetFillColor(201, 199, 199);
-         $this->Row(array(utf8_decode('DATOS DE PARTIDA ORIDEN')),1,1); 
+         $this->Row(array(utf8_decode('DATOS DE RAMO DE INGRESOS ORIDEN')),1,1); 
          $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(45,55,50,50)); 
+         $this->SetWidths(array(45,105,50)); 
          $this->SetAligns(array("C","C","C","C","C"));              
          $this->SetFont('Arial','B',6);
-         $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('CREDITO ADICIONAL'),utf8_decode('DISPONIBILIDAD')),1,1);         
+         $this->Row(array(utf8_decode('RAMO DE INGRESO'),utf8_decode('DENOMINACION'),utf8_decode('CREDITO ADICIONAL')),1,1);         
          $this->lista_traspaso_origen = $this->getTraspaso_origen();
          $totalcred = 0;
          $totaldeb  = 0;
           $this->SetAligns(array("L","L","R","R","R","R")); 
          foreach($this->lista_traspaso_origen as $key => $campo){ 
          if ($campo['credito']!=0){    
-           $this->Row(array($campo['tx_partida'],utf8_decode($campo['tx_descripcion']),number_format($campo['credito'], 2, ',','.'),number_format($campo['mo_disponible'], 2, ',','.')),1,1);                  
+           $this->Row(array($campo['tx_partida'],utf8_decode($campo['tx_descripcion']),number_format($campo['credito'], 2, ',','.')),1,1);                  
          } 
          }
          $this->SetWidths(array(200));
@@ -106,10 +106,10 @@ class PDF extends FPDF {
          $this->SetFillColor(201, 199, 199);
          $this->Row(array(utf8_decode('DETALLES DE LA MODIFICACIÓN - PARTIDAS DESTINOS')),1,1); 
          $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(45,55,50,50)); 
+         $this->SetWidths(array(45,105,50)); 
          $this->SetAligns(array("C","C","C","C","C"));              
          $this->SetFont('Arial','B',6);
-         $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('CREDITO ADICIONAL'),utf8_decode('DISPONIBILIDAD')),1,1);   
+         $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('CREDITO ADICIONAL')),1,1);   
          $this->SetFont('Arial','',6);      
          $this->lista_traspaso = $this->getTraspaso();
          $totalcred = 0;
@@ -118,7 +118,7 @@ class PDF extends FPDF {
         foreach($this->lista_traspaso as $key => $campo){ 
             if ($campo['credito']!=0){
 
-                $this->Row(array($campo['co_categoria'],$campo['de_partida'],number_format($campo['credito'], 2, ',','.'),number_format($campo['mo_disponible'], 2, ',','.')),1,1);
+                $this->Row(array($campo['co_categoria'],$campo['de_partida'],number_format($campo['credito'], 2, ',','.')),1,1);
 
                 if($this->getY()>245){
 
@@ -129,7 +129,7 @@ class PDF extends FPDF {
                     $this->SetWidths(array(45,55,50,50)); 
                     $this->SetAligns(array("C","C","C","C","C"));              
                     $this->SetFont('Arial','B',6);
-                    $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('CREDITO ADICIONAL'),utf8_decode('DISPONIBILIDAD')),1,1);   
+                    $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('CREDITO ADICIONAL')),1,1);   
                     $this->SetAligns(array("L","L","R","R","R","R"));
                     $this->SetFont('Arial','',6);
 
