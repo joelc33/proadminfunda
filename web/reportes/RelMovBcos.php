@@ -9,14 +9,14 @@ class PDF extends FPDF {
     function Header() {
         $this->SetFont('courier','B',12);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'L');
-        $this->SetFont('courier','',8);
+        $this->SetFont('courier','B',12);
 //        $this->Ln(4);
 //        $this->Cell(0,0,utf8_decode('Secretaria de Administración y Finanzas'),0,0,'L');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),0,0,'C');
-        $this->SetFont('courier','',8);
+        $this->Cell(0,0,utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),0,0,'L');
+        $this->SetFont('courier','B',12);
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');  
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'L');  
 //        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');                          
     }
 
@@ -147,7 +147,7 @@ class PDF extends FPDF {
                         
                         $saldo   = $saldo + $campo['monto_ingr'] - $campo['monto_egr'];
                         $this->SetX(10); 
-                        $this->Row(array($campo['documento'],$campo['co_solicitud'],utf8_decode($campo['beneficiario']),utf8_decode($campo['tx_descripcion']),utf8_decode($campo['op']),$campo['fecha'],$campo['referencia'],number_format($campo['monto_ingr'], 2, ',','.'),number_format($campo['monto_egr'], 2, ',','.'),number_format($saldo, 2, ',','.')),0,0);         
+                        $this->Row(array($campo['fecha'],$campo['co_solicitud'],utf8_decode($campo['beneficiario']),utf8_decode($campo['tx_descripcion']),utf8_decode($campo['op']),$campo['referencia'],number_format($campo['monto_ingr'], 2, ',','.'),number_format($campo['monto_egr'], 2, ',','.'),number_format($saldo, 2, ',','.')),0,0);         
 
                         $mo_ingr = $campo['monto_ingr'] + $mo_ingr;
                         $mo_egr  = $campo['monto_egr'] + $mo_egr;
