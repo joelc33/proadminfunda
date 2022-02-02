@@ -10,13 +10,14 @@ class PDF extends FPDF {
         $this->SetFont('courier','B',12);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'L');
         $this->SetFont('courier','',8);
+//        $this->Ln(4);
+//        $this->Cell(0,0,utf8_decode('Secretaria de Administración y Finanzas'),0,0,'L');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Secretaria de Administración y Finanzas'),0,0,'L');
-        $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('[FBANRB10]'),0,0,'L');
+        $this->Cell(0,0,utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),0,0,'C');
         $this->SetFont('courier','',8);
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');                          
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');  
+//        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');                          
     }
 
     function Footer() {
@@ -59,9 +60,9 @@ class PDF extends FPDF {
          $this->lista_cuentas = $this->getCuenta();         
          
          $this->SetFont('COURIER','',11);     
-         $this->SetWidths(array(38,12,50,65,15,22,35,30,30,45));  
+         $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
          $this->SetAligns(array("C","C","C","C","C","C","R","R","C"));   
-         $this->Row(array('Documento','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Fecha','Referencia', 'Ingreso.','Egreso.','Saldo'),0,0); 
+         $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Referencia', 'Ingreso.','Egreso.','Saldo'),0,0); 
          $this->SetAligns(array("L","L","L","L","C","C","R","R","R"));
          $this->Line(10, 40, 350, 40);        
          $this->Ln(2);
@@ -87,11 +88,11 @@ class PDF extends FPDF {
                         $this->SetFillColor(255, 255, 255); 
 
                         $this->SetFont('COURIER','',12);     
-                        $this->SetWidths(array(38,12,50,65,15,22,35,30,30,45)); 
-                        $this->SetAligns(array("C","C","C","C","C","C","C","R","R","C"));   
+                        $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
+                        $this->SetAligns(array("C","C","C","C","C","C","R","R","C"));
                         $this->SetX(10);
-                        $this->Row(array('Documento','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Fecha','Referencia', 'Ingreso.','Egreso.','Saldo'),0,0); 
-                        $this->SetAligns(array("L","L","L","L","C","C","R","R","R")); 
+                        $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Referencia', 'Ingreso.','Egreso.','Saldo'),0,0); 
+                        $this->SetAligns(array("L","L","L","L","C","C","R","R","R"));
                         $this->Line(10, 40, 350, 40);        
                         $this->Ln(2);
                     } 
@@ -132,16 +133,16 @@ class PDF extends FPDF {
                         $this->SetFillColor(255, 255, 255); 
 
                         $this->SetFont('COURIER','',11);     
-                        $this->SetWidths(array(38,12,50,65,15,22,35,30,30,45)); 
-                        $this->SetAligns(array("C","C","C","C","C","C","C","R","R","C"));  
+                        $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
+                        $this->SetAligns(array("C","C","C","C","C","C","R","R","C"));
                         $this->SetX(10);
-                        $this->Row(array('Documento','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Fecha','Referencia', 'Ingreso.','Egreso.','Saldo'),0,0); 
+                        $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Referencia', 'Ingreso.','Egreso.','Saldo'),0,0); 
                         $this->SetAligns(array("L","L","L","L","C","C","R","R","R"));
                         $this->Line(10, 40, 350, 40);        
                         $this->Ln(2);
                         } 
                         $this->SetFont('COURIER','',8);  
-                        $this->SetWidths(array(35,15,50,65,15,22,35,30,30,45)); 
+                        $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
                         $this->SetAligns(array("L","L","L","L","C","C","R","R","R")); 
                         
                         $saldo   = $saldo + $campo['monto_ingr'] - $campo['monto_egr'];
@@ -189,16 +190,16 @@ class PDF extends FPDF {
                         $this->SetFillColor(255, 255, 255); 
 
                         $this->SetFont('COURIER','',11);     
-                        $this->SetWidths(array(38,12,50,65,15,22,35,30,30,45)); 
-                        $this->SetAligns(array("C","C","C","C","C","C","C","R","R","C"));  
+                        $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
+                        $this->SetAligns(array("C","C","C","C","C","C","R","R","C"));
                         $this->SetX(10);
-                        $this->Row(array('Documento','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Fecha','Referencia', 'Ingreso.','Egreso.','Saldo'),0,0); 
+                        $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'OP','Referencia', 'Ingreso.','Egreso.','Saldo'),0,0); 
                         $this->SetAligns(array("L","L","L","L","C","C","R","R","R"));
                         $this->Line(10, 40, 350, 40);        
                         $this->Ln(2);
                         } 
                         $this->SetFont('COURIER','',8);  
-                        $this->SetWidths(array(35,15,50,65,15,22,35,30,30,45)); 
+                        $this->SetWidths(array(15,12,88,65,22,35,30,30,45));  
                         $this->SetAligns(array("L","L","L","L","C","C","R","R","R")); 
                         
                         $saldo   = $saldo + $campo['monto_ingr'] - $campo['monto_egr'];
