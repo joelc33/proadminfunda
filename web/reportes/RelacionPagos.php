@@ -52,9 +52,9 @@ class PDF extends FPDF {
          $this->Ln(2);
          
          $this->SetFont('Arial','',7);     
-         $this->SetWidths(array(15,18,15,110,20,20)); 
+         $this->SetWidths(array(20,18,15,105,20,20)); 
          $this->SetAligns(array("C","C","C","L","R","R"));   
-         $this->Row(array(utf8_decode('Nº'),'Orden de Pago','Fecha','Beneficiario', 'Monto OP','Monto Pagado'),0,0);            
+         $this->Row(array(utf8_decode('Nº Egreso'),'Orden de Pago','Fecha','Beneficiario', 'Monto OP','Monto Pagado'),0,0);            
          $this->Line(10, 45, 210, 45);        
          $this->Ln(2);
          $mo_total=0;
@@ -74,17 +74,17 @@ class PDF extends FPDF {
                         $this->Ln(2);
 
                          $this->SetFont('Arial','',7);     
-                         $this->SetWidths(array(15,18,15,110,20,20)); 
+                         $this->SetWidths(array(20,18,15,105,20,20)); 
                          $this->SetAligns(array("C","C","C","L","R","R"));   
-                         $this->Row(array(utf8_decode('Nº'),'Orden de Pago','Fecha','Beneficiario', 'Monto OP','Monto Pagado'),0,0);            
+                         $this->Row(array(utf8_decode('Nº Egreso'),'Orden de Pago','Fecha','Beneficiario', 'Monto OP','Monto Pagado'),0,0);            
                          $this->Line(10, 45, 210, 45);      
                         $this->Ln(2);
                         $mo_total=0;
                         } 
                         $this->SetFont('Arial','',6);  
-                        $this->SetWidths(array(15,18,15,110,20,20));   
+                        $this->SetWidths(array(20,18,15,105,20,20));   
                         $this->SetAligns(array("C","C","C","L","R","R")); 
-                        $this->Row(array($campo['tx_serial_pago'],$campo['tx_serial'],$campo['fe_pago'],utf8_decode($campo['beneficiario']),number_format($campo['mo_pagar'], 2, ',','.'),number_format($campo['nu_monto'], 2, ',','.')),0,0);         
+                        $this->Row(array($campo['tx_serial_pago'],$campo['tx_serial'],$campo['fe_pago'],utf8_decode($campo['beneficiario']),number_format($campo['mo_total'], 2, ',','.'),number_format($campo['nu_monto'], 2, ',','.')),0,0);         
 
                         $mo_total = $campo['nu_monto'] + $mo_total;
 
@@ -124,7 +124,7 @@ class PDF extends FPDF {
         $condicion .= " tb063.fe_pago <= '".$_GET["fe_fin"]."' ";
           $conex = new ConexionComun();     
         $sql = "SELECT tb060.co_solicitud,tb060.tx_serial, to_char(tb063.fe_pago, 'DD/MM/YYYY') as fe_pago,inicial||tx_rif||'-'||tx_razon_social as beneficiario,
-        tb060.mo_pagar,tb063.nu_monto,tb062.tx_serial as tx_serial_pago    
+        tb060.mo_total,tb063.nu_monto,tb062.tx_serial as tx_serial_pago    
         FROM tb063_pago as tb063
         inner join tb062_liquidacion_pago as tb062 ON tb063.co_liquidacion_pago = tb062.co_liquidacion_pago
         inner join tb060_orden_pago as tb060 ON tb062.co_odp = tb060.co_orden_pago
