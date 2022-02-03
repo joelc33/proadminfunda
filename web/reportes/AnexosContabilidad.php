@@ -14,9 +14,9 @@ class PDF extends FPDF {
         }
         
 
-        if(!empty($this->empresa['tx_imagen_der'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
-        }
+//        if(!empty($this->empresa['tx_imagen_der'])){
+//            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+//        }
 
         $this->SetFont('Arial','B',8);
         $this->SetTextColor(0,0,0);
