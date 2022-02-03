@@ -221,7 +221,7 @@ when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.n
 else substring(tb024.nu_cuenta_contable,1,9) end) 
 GROUP BY codigo,co_anexo_contable,tx_descripcion,tb024.nu_cuenta_contable) as q1 where saldo_actual <> 0 and substring(nu_cuenta,1,1)::integer <> 7 
 group by nu_cuenta,co_anexo_contable,codigo,tx_codigo
-order by co_anexo_contable,nu_cuenta ";
+order by nu_cuenta ";
           }else{ 
               
     $co_mes = $_GET['co_mes'];
