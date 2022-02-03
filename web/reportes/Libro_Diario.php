@@ -26,14 +26,14 @@ class PDF extends FPDF {
         $this->SetY(10);
         $this->SetX(10);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
-        //$this->Ln(4);
-        //$this->SetX(10);
-        //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');
+        $this->Ln(4);
+        $this->SetX(10);
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');
         $this->Ln(4);
         $this->SetX(10);
         $this->Cell(0,0,utf8_decode('COORDINACIÓN DE CONTABILIDAD'),0,0,'C');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+//        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
         $this->SetFont('Arial','B',10);
         $this->SetWidths(array(200));
