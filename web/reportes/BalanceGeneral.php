@@ -210,32 +210,32 @@ class PDF extends FPDF {
          $this->Row(array('TOTAL ',number_format($sub_actHacienda + $sub_actPresupuesto, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda + $sub_pasPresupuesto, 2, ',','.')),0,1);     
          $this->Ln(5);        
        //************ Cuentas del Orden *****************//
-         $this->SetFont('Arial','B',8); 
-         $this->SetWidths(array(200));
-         $this->SetAligns(array("C")); 
-         $this->SetFillColor(201, 199, 199);
-         $this->Row(array('CUENTAS DE ORDEN'),1,1); 
-         $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(70,30,60,40)); 
-         $this->SetAligns(array("C","L","R","C","L","R"));              
-         $this->SetFont('Arial','B',8); 
-         $this->Ln(3);
-         $this->lista_cuentasOrdenDeudoras = $this->getCuentasOrdenDeudoras();
-         $this->lista_cuentasOrdenAcreedoras = $this->getCuentasOrdenAcreedoras();
-        //$this->SetX(10);
-         $y = $this->GetY();
-         $this->SetAligns(array("L","R","L","R")); 
-         $this->SetY($y);    
-          foreach($this->lista_cuentasOrdenDeudoras as $key => $campo2){
-            
-         $saldo_deudora = number_format($campo2['saldo_actual'], 2, ',','.');
-         $tx_deudora = $campo2['tx_descripcion']; 
-         
-         } 
-         foreach($this->lista_cuentasOrdenAcreedoras as $key => $campo){        
-         $this->Row(array($tx_deudora,$saldo_deudora,$campo['tx_descripcion'],number_format($campo['saldo_actual'], 2, ',','.')),0,1);         
-         
-         }
+//         $this->SetFont('Arial','B',8); 
+//         $this->SetWidths(array(200));
+//         $this->SetAligns(array("C")); 
+//         $this->SetFillColor(201, 199, 199);
+//         $this->Row(array('CUENTAS DE ORDEN'),1,1); 
+//         $this->SetFillColor(255, 255, 255);
+//         $this->SetWidths(array(70,30,60,40)); 
+//         $this->SetAligns(array("C","L","R","C","L","R"));              
+//         $this->SetFont('Arial','B',8); 
+//         $this->Ln(3);
+//         $this->lista_cuentasOrdenDeudoras = $this->getCuentasOrdenDeudoras();
+//         $this->lista_cuentasOrdenAcreedoras = $this->getCuentasOrdenAcreedoras();
+//        //$this->SetX(10);
+//         $y = $this->GetY();
+//         $this->SetAligns(array("L","R","L","R")); 
+//         $this->SetY($y);    
+//          foreach($this->lista_cuentasOrdenDeudoras as $key => $campo2){
+//            
+//         $saldo_deudora = number_format($campo2['saldo_actual'], 2, ',','.');
+//         $tx_deudora = $campo2['tx_descripcion']; 
+//         
+//         } 
+//         foreach($this->lista_cuentasOrdenAcreedoras as $key => $campo){        
+//         $this->Row(array($tx_deudora,$saldo_deudora,$campo['tx_descripcion'],number_format($campo['saldo_actual'], 2, ',','.')),0,1);         
+//         
+//         }
          $this->Ln(5);
          $this->SetWidths(array(200)); 
          $this->SetAligns(array("L")); 
@@ -269,8 +269,8 @@ class PDF extends FPDF {
              
           $sql = "select *  from (SELECT  (sum(acu_deb) + sum(mes_deb) + sum(pre_deb)) - (sum(acu_cre) + sum(mes_cre) + sum(pre_cre)) as saldo_actual , codigo,descripcion as tx_descripcion
 from tb024_cuenta_contable tb024
-left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,7) end) 
-where (tb024.nu_cuenta_contable like '1%' or tb024.nu_cuenta_contable like '5040000%') GROUP BY codigo,descripcion) as q1 order by codigo";            
+left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
+where (tb024.nu_cuenta_contable like '1%') GROUP BY codigo,descripcion) as q1 order by codigo";            
         }else{
 
     $co_mes = $_GET['co_mes'];
@@ -279,8 +279,8 @@ where (tb024.nu_cuenta_contable like '1%' or tb024.nu_cuenta_contable like '5040
           $sql = "select *  from (SELECT  (sum(acu_debito) + sum(mes_debito)) - (sum(acu_credito) + sum(mes_credito)) as saldo_actual , codigo,descripcion as tx_descripcion
 from tb179_resumen_mensual_contable tb179
 inner join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb179.co_cuenta_contable)
-left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,7) end) 
-where (tb024.nu_cuenta_contable like '1%' or tb024.nu_cuenta_contable like '5040000%') and co_mes = $co_mes and nu_anio = $nu_anio and in_cierre is not true GROUP BY codigo,descripcion) as q1 order by codigo";       
+left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
+where (tb024.nu_cuenta_contable like '1%') and co_mes = $co_mes and nu_anio = $nu_anio and in_cierre is not true GROUP BY codigo,descripcion) as q1 order by codigo";       
          
         }
 
@@ -296,7 +296,7 @@ where (tb024.nu_cuenta_contable like '1%' or tb024.nu_cuenta_contable like '5040
           if($_GET['in_periodo']){
           $sql = "select *  from (SELECT  (sum(acu_deb) + sum(mes_deb) + sum(pre_deb)) - (sum(acu_cre) + sum(mes_cre) + sum(pre_cre)) as saldo_actual , codigo,descripcion as tx_descripcion
 from tb024_cuenta_contable tb024
-left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,7) end) 
+left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
 where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '5060000%' or tb024.nu_cuenta_contable like '5010201%' or tb024.nu_cuenta_contable like '6010301%') GROUP BY codigo,descripcion) as q1 order by codigo";
           }else{
     $co_mes = $_GET['co_mes'];
@@ -305,7 +305,7 @@ where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '5060
           $sql = "select *  from (SELECT  sum((acu_debito + mes_debito) - (acu_credito + mes_credito)) as saldo_actual , codigo,descripcion as tx_descripcion
         from tb179_resumen_mensual_contable tb179
         inner join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb179.co_cuenta_contable)
-        left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,7) end) 
+        left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
         where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '5060000%' or tb024.nu_cuenta_contable like '5010201%' or tb024.nu_cuenta_contable like '6010301%') 
         and co_mes = $co_mes and nu_anio = $nu_anio and in_cierre is not true GROUP BY codigo,descripcion) as q1 order by codigo";              
           }              
