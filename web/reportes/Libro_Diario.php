@@ -176,11 +176,11 @@ class PDF extends FPDF {
                 from tb061_asiento_contable tb061 
 left join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb061.co_cuenta_contable) 
 left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = 
-case when substring(tb024.nu_cuenta_contable,1,3)::integer = 112 then substring(tb024.nu_cuenta_contable,1,5)
-when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,1)
-when substring(tb024.nu_cuenta_contable,1,1)::integer = 6 then substring(tb024.nu_cuenta_contable,1,1)	
-when substring(tb024.nu_cuenta_contable,1,1)::integer = 7 then substring(tb024.nu_cuenta_contable,1,1)										 
-else substring(tb024.nu_cuenta_contable,1,3) end) 
+case when substring(tb024.nu_cuenta_contable,1,3)::integer = 122 then substring(tb024.nu_cuenta_contable,1,3)
+when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then substring(tb024.nu_cuenta_contable,1,3)
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 3 then substring(tb024.nu_cuenta_contable,1,1)	
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,1)										 
+else substring(tb024.nu_cuenta_contable,1,9) end) 
 left join tb026_solicitud tb026 on (tb026.co_solicitud = tb061.co_solicitud) 
 left join tb027_tipo_solicitud tb027 on (tb027.co_tipo_solicitud = tb026.co_tipo_solicitud)
 left join tb133_tipo_asiento tb133 on (tb133.co_tipo_asiento = tb061.co_tipo_asiento) 
