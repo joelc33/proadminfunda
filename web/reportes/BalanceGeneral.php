@@ -297,7 +297,7 @@ where (tb024.nu_cuenta_contable like '1%') and co_mes = $co_mes and nu_anio = $n
           $sql = "select *  from (SELECT  (sum(acu_deb) + sum(mes_deb) + sum(pre_deb)) - (sum(acu_cre) + sum(mes_cre) + sum(pre_cre)) as saldo_actual , codigo,descripcion as tx_descripcion
 from tb024_cuenta_contable tb024
 left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
-where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '5060000%' or tb024.nu_cuenta_contable like '5010201%' or tb024.nu_cuenta_contable like '6010301%') GROUP BY codigo,descripcion) as q1 order by codigo";
+where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '501010000%' or tb024.nu_cuenta_contable like '5010201%' or tb024.nu_cuenta_contable like '6010301%') GROUP BY codigo,descripcion) as q1 order by codigo";
           }else{
     $co_mes = $_GET['co_mes'];
     $nu_anio = $_GET['co_anio_fiscal'];
@@ -306,7 +306,7 @@ where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '5060
         from tb179_resumen_mensual_contable tb179
         inner join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb179.co_cuenta_contable)
         left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
-        where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '5060000%' or tb024.nu_cuenta_contable like '5010201%' or tb024.nu_cuenta_contable like '6010301%') 
+        where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '501010000%' or tb024.nu_cuenta_contable like '5010201%' or tb024.nu_cuenta_contable like '6010301%') 
         and co_mes = $co_mes and nu_anio = $nu_anio and in_cierre is not true GROUP BY codigo,descripcion) as q1 order by codigo";              
           }              
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
