@@ -209,16 +209,16 @@ class PDF extends FPDF {
 (SELECT  (sum(coalesce(acu_deb,0)) + sum(coalesce(mes_deb,0)) + sum(coalesce(pre_deb,0))) - (sum(coalesce(acu_cre,0)) + sum(coalesce(mes_cre,0)) + sum(coalesce(pre_cre,0))) as saldo_actual , codigo,descripcion as tx_codigo,co_anexo_contable,
 case when substring(tb024.nu_cuenta_contable,1,3)::integer = 122 then substring(tb024.nu_cuenta_contable,1,3)
 when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then substring(tb024.nu_cuenta_contable,1,3)
-when substring(tb024.nu_cuenta_contable,1,1)::integer = 3 then substring(tb024.nu_cuenta_contable,1,1)	
-when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,1)										 
-else substring(tb024.nu_cuenta_contable,1,9) end as nu_cuenta
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 3 then substring(tb024.nu_cuenta_contable,1,3)	
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,3)										 
+else substring(tb024.nu_cuenta_contable,1,15) end as nu_cuenta
 from tb024_cuenta_contable tb024
 left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = 
 case when substring(tb024.nu_cuenta_contable,1,3)::integer = 122 then substring(tb024.nu_cuenta_contable,1,3)
 when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then substring(tb024.nu_cuenta_contable,1,3)
-when substring(tb024.nu_cuenta_contable,1,1)::integer = 3 then substring(tb024.nu_cuenta_contable,1,1)	
-when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,1)										 
-else substring(tb024.nu_cuenta_contable,1,9) end) 
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 3 then substring(tb024.nu_cuenta_contable,1,3)	
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,3)										 
+else substring(tb024.nu_cuenta_contable,1,15) end) 
 GROUP BY codigo,co_anexo_contable,tx_descripcion,tb024.nu_cuenta_contable) as q1 where saldo_actual <> 0 and substring(nu_cuenta,1,1)::integer <> 7 
 group by nu_cuenta,co_anexo_contable,codigo,tx_codigo
 order by nu_cuenta ";
