@@ -23,14 +23,14 @@ class PDF extends FPDF {
         $this->SetY(10);
         $this->SetX(10);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
-        //$this->Ln(4);
-        //$this->SetX(10);
-        //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');
+        $this->Ln(4);
+        $this->SetX(10);
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');
         $this->Ln(4);
         $this->SetX(10);
         $this->Cell(0,0,utf8_decode('DIVISION DE CONTABILIDAD'),0,0,'C');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+//        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
         $this->SetFont('Arial','B',10);
         $this->SetWidths(array(200));
@@ -42,7 +42,7 @@ class PDF extends FPDF {
         $this->Cell(0,0,utf8_decode('AL PERIODO '.strtoupper(mes($this->periodo['mes'])).' '.$this->periodo['anio']. ' (ABIERTO)'),0,0,'C'); 
         $this->Ln(6);    
         }else{
-        $this->Cell(0,0,utf8_decode('AL PERIODO AGOSTO 2018 (ABIERTO)'),0,0,'C'); 
+        $this->Cell(0,0,utf8_decode('AL PERIODO DICIEMBRE 2021 (ABIERTO)'),0,0,'C'); 
         $this->Ln(6);             
         }
         }else{
@@ -207,22 +207,18 @@ class PDF extends FPDF {
           if($_GET['in_periodo']){          
       $sql = " select sum(saldo_actual) as saldo_actual,codigo,tx_codigo,co_anexo_contable,nu_cuenta,(select tx_descripcion from tb024_cuenta_contable where nu_cuenta_contable = nu_cuenta) from 
 (SELECT  (sum(coalesce(acu_deb,0)) + sum(coalesce(mes_deb,0)) + sum(coalesce(pre_deb,0))) - (sum(coalesce(acu_cre,0)) + sum(coalesce(mes_cre,0)) + sum(coalesce(pre_cre,0))) as saldo_actual , codigo,descripcion as tx_codigo,co_anexo_contable,
-case when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,3) 
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 305 then  substring(tb024.nu_cuenta_contable,1,9)
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then  substring(tb024.nu_cuenta_contable,1,5) 
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 301 then  substring(tb024.nu_cuenta_contable,1,9) 
-when substring(tb024.nu_cuenta_contable,1,5)::integer = 10101 then  substring(tb024.nu_cuenta_contable,1,20)
-when substring(tb024.nu_cuenta_contable,1,7)::integer = 1010207 then  substring(tb024.nu_cuenta_contable,1,15)
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 102 then  substring(tb024.nu_cuenta_contable,1,7) 
-when substring(tb024.nu_cuenta_contable,1,5)::integer = 20105 then  substring(tb024.nu_cuenta_contable,1,15) 
+case when substring(tb024.nu_cuenta_contable,1,3)::integer = 122 then substring(tb024.nu_cuenta_contable,1,3)
+when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then substring(tb024.nu_cuenta_contable,1,3)
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 3 then substring(tb024.nu_cuenta_contable,1,1)	
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,1)										 
 else substring(tb024.nu_cuenta_contable,1,9) end as nu_cuenta
 from tb024_cuenta_contable tb024
-left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,1) 
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 305 then  substring(tb024.nu_cuenta_contable,1,3) 
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then  substring(tb024.nu_cuenta_contable,1,3)
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 301 then  substring(tb024.nu_cuenta_contable,1,3) 
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) 
-else substring(tb024.nu_cuenta_contable,1,7) end) 
+left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = 
+case when substring(tb024.nu_cuenta_contable,1,3)::integer = 122 then substring(tb024.nu_cuenta_contable,1,3)
+when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then substring(tb024.nu_cuenta_contable,1,3)
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 3 then substring(tb024.nu_cuenta_contable,1,1)	
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,1)										 
+else substring(tb024.nu_cuenta_contable,1,9) end) 
 GROUP BY codigo,co_anexo_contable,tx_descripcion,tb024.nu_cuenta_contable) as q1 where saldo_actual <> 0 and substring(nu_cuenta,1,1)::integer <> 7 
 group by nu_cuenta,co_anexo_contable,codigo,tx_codigo
 order by co_anexo_contable,nu_cuenta ";
