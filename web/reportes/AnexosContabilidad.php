@@ -229,23 +229,18 @@ order by nu_cuenta ";
               
       $sql = " select sum(saldo_actual) as saldo_actual,codigo,tx_codigo,co_anexo_contable,nu_cuenta,(select tx_descripcion from tb024_cuenta_contable where nu_cuenta_contable = nu_cuenta) from 
 (SELECT  (sum(coalesce(acu_debito,0)) + sum(coalesce(mes_debito,0))) - (sum(coalesce(acu_credito,0)) + sum(coalesce(mes_credito,0))) as saldo_actual , codigo,descripcion as tx_codigo,co_anexo_contable,
-case when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,3) 
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 305 then  substring(tb024.nu_cuenta_contable,1,9)
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then  substring(tb024.nu_cuenta_contable,1,5) 
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 301 then  substring(tb024.nu_cuenta_contable,1,9) 
-when substring(tb024.nu_cuenta_contable,1,5)::integer = 10101 then  substring(tb024.nu_cuenta_contable,1,20)
-when substring(tb024.nu_cuenta_contable,1,7)::integer = 1010207 then  substring(tb024.nu_cuenta_contable,1,15)
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 102 then  substring(tb024.nu_cuenta_contable,1,7) 
-when substring(tb024.nu_cuenta_contable,1,5)::integer = 20105 then  substring(tb024.nu_cuenta_contable,1,15) 
-else substring(tb024.nu_cuenta_contable,1,9) end as nu_cuenta
+case when substring(tb024.nu_cuenta_contable,1,3)::integer = 122 then substring(tb024.nu_cuenta_contable,1,9)
+when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then substring(tb024.nu_cuenta_contable,1,9)
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 3 then substring(tb024.nu_cuenta_contable,1,9)	
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,9)										 
+else substring(tb024.nu_cuenta_contable,1,15) end as nu_cuenta
 from tb179_resumen_mensual_contable tb079
-left join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb079.co_cuenta_contable)
-left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,1) 
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 305 then  substring(tb024.nu_cuenta_contable,1,3) 
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then  substring(tb024.nu_cuenta_contable,1,3)
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 301 then  substring(tb024.nu_cuenta_contable,1,3) 
-when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) 
-else substring(tb024.nu_cuenta_contable,1,7) end)
+left join tb024_cuenta_contable tb024 on (tb190.nu_cuenta = 
+case when substring(tb024.nu_cuenta_contable,1,3)::integer = 122 then substring(tb024.nu_cuenta_contable,1,3)
+when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then substring(tb024.nu_cuenta_contable,1,3)
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 3 then substring(tb024.nu_cuenta_contable,1,1)	
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,1)										 
+else substring(tb024.nu_cuenta_contable,1,9) end)
 where co_mes = $co_mes and nu_anio = $nu_anio and in_cierre is not true
 GROUP BY codigo,co_anexo_contable,tx_descripcion,tb024.nu_cuenta_contable) as q1 where saldo_actual <> 0 and substring(nu_cuenta,1,1)::integer <> 7 
 group by nu_cuenta,co_anexo_contable,codigo,tx_codigo
