@@ -144,7 +144,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',7);    
          $this->SetFillColor(255, 255, 255);         
          $this->SetX(10);
-         $this->Row(array($campo['nu_cuenta'].' - '.$campo['tx_descripcion'],number_format($campo['saldo_actual'], 2, ',','.')),0,0);       
+         $this->Row(array(utf8_decode($campo['nu_cuenta'].' - '.$campo['tx_descripcion']),number_format($campo['saldo_actual'], 2, ',','.')),0,0);       
          
          if($this->getY()>250){
              $this->AddPage();
@@ -211,7 +211,7 @@ case when substring(tb024.nu_cuenta_contable,1,3)::integer = 122 then substring(
 when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then substring(tb024.nu_cuenta_contable,1,9)
 when substring(tb024.nu_cuenta_contable,1,1)::integer = 3 then substring(tb024.nu_cuenta_contable,1,9)	
 when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,9)										 
-else substring(tb024.nu_cuenta_contable,1,9) end as nu_cuenta
+else substring(tb024.nu_cuenta_contable,1,15) end as nu_cuenta
 from tb024_cuenta_contable tb024
 left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = 
 case when substring(tb024.nu_cuenta_contable,1,3)::integer = 122 then substring(tb024.nu_cuenta_contable,1,3)
