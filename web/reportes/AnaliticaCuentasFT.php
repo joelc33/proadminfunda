@@ -222,7 +222,7 @@ class PDF extends FPDF {
         $conex = new ConexionComun(); 
                   $sql = "SELECT tb024.tx_cuenta,tb024.tx_descripcion as desc_cuenta,tb024.nu_cuenta_contable,co_cuenta_contable
 from tb024_cuenta_contable tb024
-where tb024.nu_nivel between 5 and 9 and tb024.nu_cuenta_contable like '10101010500%' group by tb024.tx_cuenta,tb024.tx_descripcion,tb024.nu_cuenta_contable,co_cuenta_contable order by 1 asc";
+where tb024.nu_nivel between 4 and 9 and tb024.nu_cuenta_contable like '10101010500%' group by tb024.tx_cuenta,tb024.tx_descripcion,tb024.nu_cuenta_contable,co_cuenta_contable order by 1 asc";
          //  echo var_dump($sql); exit();  
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol;  
