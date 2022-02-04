@@ -220,7 +220,7 @@ class PDF extends FPDF {
                      group by 1 order by nu_pa asc";          
 
     
-//        echo var_dump($sql); exit();        
+        echo var_dump($sql); exit();        
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol; 
 	
