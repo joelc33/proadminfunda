@@ -68,7 +68,7 @@ class PDF extends FPDF {
         $this->SetX(10);          
 //        $this->Row(array(utf8_decode('TIPO.......:  ')),0,0);    
 
-        $this->Ln(7);       
+        $this->Ln(10);       
         $this->SetFont('courier','B',9);
         $this->SetWidths(array(10,50,35,35,35,35,20,35,20,35,20));
         $this->SetAligns(array("C","C","C","C","C","C","C","C","C","C","C"));       
