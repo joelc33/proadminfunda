@@ -208,7 +208,7 @@ class PDF extends FPDF {
     $fe_fin = $anio.'-'.$mes.'-'.$dia;
          
     $conex = new ConexionComun();     
-    $sql = "select  nu_pa,
+    $sql = "select  nu_pa||nu_ge,
                     sum(mo_inicial) as inicial, 
                     (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0)) -coalesce(sum(afectacion_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) modificado,
                     sum(mo_inicial)+ (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0)) -coalesce(sum(afectacion_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) as mo_aprobado,
