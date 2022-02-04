@@ -70,7 +70,7 @@ class PDF extends FPDF {
 
         $this->Ln(10);       
         $this->SetFont('courier','B',9);
-        $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,30));
+        $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,25));
         $this->SetAligns(array("C","C","C","C","C","C","C","C","C","C","C"));       
         $this->SetX(10); // configura la linea donde comenzara escribir en el eje de y       
         $this->Row(array('','Partida','Presupuesto Inicial','Modificado','Aprobado','Comprometido','%Comp','Disponible','Causado','%Cau','Pagado','%Pag.','Por pagar'),0,0);
@@ -140,7 +140,7 @@ class PDF extends FPDF {
          $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R","R","R"));
          $total_ley = $total_ley + $campo['inicial'];
          $partida   = $this->desc_partida($campo['nu_pa']);  
-         $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,30));
+         $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,25));
          $this->Row(array($campo['nu_pa'],$partida['de_partida'], number_format($campo['inicial'], 2, ',','.'),number_format($monto_modificado, 2, ',','.'),number_format($aprobado, 2, ',','.'),number_format($monto_comp, 2, ',','.'),number_format($monto_x100comp, 2, ',','.'),number_format($disponible, 2, ',','.'),number_format($monto_causado, 2, ',','.'),number_format($monto_x100cau, 2, ',','.'),number_format($monto_pagado, 2, ',','.'),number_format($monto_x100pag, 2, ',','.'),number_format($por_pagar, 2, ',','.')),0,0);
 
          $total       += $campo['inicial'];
@@ -158,7 +158,7 @@ class PDF extends FPDF {
          
          }
          $this->SetFont('courier','B',8);
-         $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,30));
+         $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,25));
          $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R","R","R"));
          $this->Row(array('','TOTAL RELACION........',number_format($total_ley, 2, ',','.'),number_format($total_mod, 2, ',','.'),number_format($total_aprob, 2, ',','.'),number_format($total_comp, 2, ',','.'),number_format($total_monto_x100comp, 2, ',','.'),number_format($total_disp, 2, ',','.'),number_format($total_cau, 2, ',','.'),number_format($total_monto_x100cau, 2, ',','.'),number_format($total_pag, 2, ',','.'),number_format($total_monto_x100pag, 2, ',','.'),number_format($total_xpagar, 2, ',','.')));   
       
