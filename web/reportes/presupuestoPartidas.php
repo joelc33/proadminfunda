@@ -73,7 +73,7 @@ class PDF extends FPDF {
         $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,25));
         $this->SetAligns(array("C","C","C","C","C","C","C","C","C","C","C"));       
         $this->SetX(10); // configura la linea donde comenzara escribir en el eje de y       
-        $this->Row(array('','Partida','Presupuesto Inicial','Modificado','Aprobado','Comprometido','%Comp','Disponible','Causado','%Cau','Pagado','%Pag.','Por pagar'),0,0);
+        $this->Row(array('','Partida','Presupuesto Inicial','Variaciones','Presupuesto Modificado','Comprometido','%Comp','Disponible','Causado','%Cau','Pagado','%Pag.','Por pagar'),0,0);
         $this->Line(10, 55, 350, 55);                  
         $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R","R","R"));                 
 
