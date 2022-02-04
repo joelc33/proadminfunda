@@ -57,7 +57,7 @@ class PDF extends FPDF {
          $this->SetY($Y+12);          
          $this->SetFont('courier','B',12);  
          $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
-         $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA POR PARTIDAS- AÑO FISCAL '.$anio),0,0,'C'); 
+         $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA POR PARTIDAS- '.$anio),0,0,'C'); 
          $this->Ln(2);          
          $this->SetY($Y);  
          $this->SetFont('courier','',8); 
