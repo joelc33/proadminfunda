@@ -235,7 +235,7 @@ class PDF extends FPDF {
 
             }
     
-        //echo var_dump($sql); exit();        
+        echo var_dump($sql); exit();        
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol; 
 	
