@@ -12,14 +12,14 @@ class PDF extends FPDF {
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'L');
         $this->SetFont('courier','',8);
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Secretaria de Administración'),0,0,'L');
+        $this->Cell(0,0,utf8_decode('Coordinación General de Administración'),0,0,'L');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('SubSecretaria de Presupuesto'),0,0,'L');        
+        $this->Cell(0,0,utf8_decode('Coordinación de Presupuesto'),0,0,'L');        
         $this->Ln(4);
       //  $this->Cell(0,0,utf8_decode('[FPRERB57]'),0,0,'L');
         $this->SetFont('courier','',8);
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Fecha de Emisión '.date("d").'/'.date("m").'/'.date("Y")),0,0,'R'); 
+//        $this->Cell(0,0,utf8_decode('Fecha de Emisión '.date("d").'/'.date("m").'/'.date("Y")),0,0,'R'); 
         
    }
 
@@ -66,7 +66,7 @@ class PDF extends FPDF {
         $this->SetX(10);         
         $this->Row(array(utf8_decode('PERIODO....:  '.$_GET["fe_inicio"]." hasta ".$_GET["fe_fin"])),0,0);   
         $this->SetX(10);          
-        $this->Row(array(utf8_decode('TIPO.......:  ')),0,0);    
+//        $this->Row(array(utf8_decode('TIPO.......:  ')),0,0);    
 
         $this->Ln(7);       
         $this->SetFont('courier','B',9);
