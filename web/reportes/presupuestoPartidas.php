@@ -216,7 +216,7 @@ class PDF extends FPDF {
                     coalesce(sum(causado_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0) mo_causado,
                     coalesce(sum(pagado_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$anio,3,'$fe_inicio','$fe_fin')),0) mo_pagado
                 FROM tb085_presupuesto as tb085                     
-                     where nu_anio ='$anio' and length(nu_partida) = 17 and co_partida<>''
+                     where nu_anio ='$anio' and co_partida<>''
                      group by 1 order by nu_pa asc";          
 
     
