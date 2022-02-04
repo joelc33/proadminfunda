@@ -75,7 +75,7 @@ class PDF extends FPDF {
         $this->SetX(10); // configura la linea donde comenzara escribir en el eje de y       
         $this->Row(array('','Partida','Presupuesto Inicial','Variaciones','Presupuesto Modificado','Comprometido','%Comp','Disponible','Causado','%Cau','Pagado','%Pag.','Por pagar'),0,0);
         $this->Line(10, 55, 350, 55);                  
-        $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R","R","R"));                 
+        $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R","R","R"));                 
 
          $campo='';
         
@@ -137,7 +137,7 @@ class PDF extends FPDF {
 
             
          $this->SetFont('courier','',8);
-         $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R","R","R"));
+         $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R","R","R"));
          $total_ley = $total_ley + $campo['inicial'];
          $partida   = $this->desc_partida($campo['nu_pa']);  
          $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,25));
