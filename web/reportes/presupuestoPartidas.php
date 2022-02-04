@@ -185,8 +185,8 @@ class PDF extends FPDF {
 
     $conex = new ConexionComun();     
     $sql = "   SELECT distinct de_partida
-                FROM tb085_presupuesto
-                where nu_pa = '".$cod."' and length(nu_partida) = 3"
+                FROM tb091_partida
+                where nu_partida = '".$cod."'"
             ;          
 
          //echo var_dump($sql); exit();        
