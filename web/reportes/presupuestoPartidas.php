@@ -207,8 +207,22 @@ class PDF extends FPDF {
     list($dia,$mes,$anio) = explode("-", $_GET["fe_fin"]);
     $fe_fin = $anio.'-'.$mes.'-'.$dia;
          
-    $conex = new ConexionComun();     
-    $sql = "select  nu_pa||nu_ge,
+    $conex = new ConexionComun(); 
+
+    if($anio==2021){
+    
+    $sql = "select  nu_pa||nu_ge as nu_pa,
+                    sum(mo_inicial) as inicial, 
+                    (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0)) -coalesce(sum(afectacion_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) modificado,
+                    sum(mo_inicial)+ (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0)) -coalesce(sum(afectacion_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) as mo_aprobado,
+                    coalesce(sum(comprometido_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) mo_comprometido,
+                    coalesce(sum(causado_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0) mo_causado,
+                    coalesce(sum(pagado_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$anio,3,'$fe_inicio','$fe_fin')),0) mo_pagado
+                FROM tb085_presupuesto as tb085                     
+                     where nu_anio ='$anio' and co_partida<>''
+                     group by 1 order by nu_pa asc";
+    }else{
+        $sql = "select  nu_pa||nu_ge as nu_pa,
                     sum(mo_inicial) as inicial, 
                     (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0)) -coalesce(sum(afectacion_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) modificado,
                     sum(mo_inicial)+ (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0)) -coalesce(sum(afectacion_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) as mo_aprobado,
@@ -219,8 +233,9 @@ class PDF extends FPDF {
                      where nu_anio ='$anio' and co_partida<>''
                      group by 1 order by nu_pa asc";          
 
+            }
     
-        echo var_dump($sql); exit();        
+        //echo var_dump($sql); exit();        
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol; 
 	
