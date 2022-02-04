@@ -232,7 +232,7 @@ order by nu_cuenta ";
 case when substring(tb024.nu_cuenta_contable,1,3)::integer = 122 then substring(tb024.nu_cuenta_contable,1,9)
 when substring(tb024.nu_cuenta_contable,1,3)::integer = 302 then substring(tb024.nu_cuenta_contable,1,9)
 when substring(tb024.nu_cuenta_contable,1,1)::integer = 3 then substring(tb024.nu_cuenta_contable,1,9)	
-when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,9)										 
+when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.nu_cuenta_contable,1,3)										 
 else substring(tb024.nu_cuenta_contable,1,15) end as nu_cuenta
 from tb179_resumen_mensual_contable tb079
 left join tb024_cuenta_contable tb024 on (tb190.nu_cuenta = 
