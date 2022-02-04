@@ -15,23 +15,23 @@ class PDF extends FPDF {
         }
         
 
-        if(!empty($this->empresa['tx_imagen_der'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
-        }
+//        if(!empty($this->empresa['tx_imagen_der'])){
+//            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+//        }
 
         $this->SetFont('Arial','B',8);
         $this->SetTextColor(0,0,0);
         $this->SetY(10);
         $this->SetX(10);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
-        //$this->Ln(4);
-        //$this->SetX(10);
-        //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');
+        $this->Ln(4);
+        $this->SetX(10);
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');
         $this->Ln(4);
         $this->SetX(10);
         $this->Cell(0,0,utf8_decode('DIVISION DE CONTABILIDAD'),0,0,'C');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+//        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
         $this->SetFont('Arial','B',10);
         $this->SetWidths(array(200));
@@ -220,7 +220,7 @@ class PDF extends FPDF {
         $conex = new ConexionComun(); 
                   $sql = "SELECT tb024.tx_cuenta,tb024.tx_descripcion as desc_cuenta,tb024.nu_cuenta_contable,co_cuenta_contable
 from tb024_cuenta_contable tb024
-where tb024.nu_nivel between 4 and 6 and tb024.nu_cuenta_contable like '2010504%' group by tb024.tx_cuenta,tb024.tx_descripcion,tb024.nu_cuenta_contable,co_cuenta_contable order by 1 asc";
+where tb024.nu_nivel between 4 and 6 and tb024.nu_cuenta_contable like '201050400%' group by tb024.tx_cuenta,tb024.tx_descripcion,tb024.nu_cuenta_contable,co_cuenta_contable order by 1 asc";
            //echo var_dump($sql); exit();  
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol;  
