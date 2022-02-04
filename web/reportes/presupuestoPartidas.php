@@ -215,9 +215,9 @@ class PDF extends FPDF {
                     sum(mo_inicial) as inicial, 
                     (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0)) -coalesce(sum(afectacion_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) modificado,
                     sum(mo_inicial)+ (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0)) -coalesce(sum(afectacion_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) as mo_aprobado,
-                    mo_comprometido,
-                    mo_causado,
-                    mo_pagado
+                    coalesce(sum(mo_comprometido),0) as mo_comprometido,
+                    coalesce(sum(mo_causado),0) as mo_causado,
+                    coalesce(sum(mo_pagado),0) as mo_pagado
                 FROM tb085_presupuesto as tb085                     
                      where nu_anio ='$anio' and co_partida<>''
                      group by 1 order by nu_pa asc";
@@ -235,7 +235,7 @@ class PDF extends FPDF {
 
             }
     
-        echo var_dump($sql); exit();        
+        //echo var_dump($sql); exit();        
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol; 
 	
