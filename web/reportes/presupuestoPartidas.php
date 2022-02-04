@@ -70,10 +70,10 @@ class PDF extends FPDF {
 
         $this->Ln(10);       
         $this->SetFont('courier','B',9);
-        $this->SetWidths(array(10,50,30,30,30,30,15,30,15,30,15));
+        $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,30));
         $this->SetAligns(array("C","C","C","C","C","C","C","C","C","C","C"));       
         $this->SetX(10); // configura la linea donde comenzara escribir en el eje de y       
-        $this->Row(array('','Partida','Presupuesto Inicial','Modificado','Aprobado','Comprometido','%Comp','Causado','%Cau','Pagado','%Pag.'),1,0);
+        $this->Row(array('','Partida','Presupuesto Inicial','Modificado','Aprobado','Comprometido','%Comp','Disponible','Causado','%Cau','Pagado','%Pag.','Por pagar'),1,0);
         $this->Line(10, 50, 350, 50);                  
         $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R"));                 
 
@@ -125,6 +125,8 @@ class PDF extends FPDF {
             $monto_causado         = $campo["mo_causado"];            
             $monto_pagado          = $campo["mo_pagado"];     
             $aprobado              = $campo["mo_aprobado"];
+            $disponible            = $campo["mo_aprobado"]-$campo["mo_comprometido"];
+            $por_pagar             = $campo["mo_causado"]-$campo["mo_pagado"];
             $monto_x100comp        = (($monto_comp)*100)/$aprobado ;          
             $monto_x100cau         = (($monto_causado)*100)/$aprobado ;          
             $monto_x100pag         = (($monto_pagado)*100)/$aprobado ;  
@@ -138,15 +140,17 @@ class PDF extends FPDF {
          $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R"));
          $total_ley = $total_ley + $campo['inicial'];
          $partida   = $this->desc_partida($campo['nu_pa']);  
-         $this->SetWidths(array(10,50,30,30,30,30,15,30,15,30,15));
-         $this->Row(array($campo['nu_pa'],$partida['de_partida'], number_format($campo['inicial'], 2, ',','.'),number_format($monto_modificado, 2, ',','.'),number_format($aprobado, 2, ',','.'),number_format($monto_comp, 2, ',','.'),number_format($monto_x100comp, 2, ',','.'),number_format($monto_causado, 2, ',','.'),number_format($monto_x100cau, 2, ',','.'),number_format($monto_pagado, 2, ',','.'),number_format($monto_x100pag, 2, ',','.')),1,0);
+         $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,30));
+         $this->Row(array($campo['nu_pa'],$partida['de_partida'], number_format($campo['inicial'], 2, ',','.'),number_format($monto_modificado, 2, ',','.'),number_format($aprobado, 2, ',','.'),number_format($monto_comp, 2, ',','.'),number_format($monto_x100comp, 2, ',','.'),number_format($disponible, 2, ',','.'),number_format($monto_causado, 2, ',','.'),number_format($monto_x100cau, 2, ',','.'),number_format($monto_pagado, 2, ',','.'),number_format($monto_x100pag, 2, ',','.'),number_format($por_pagar, 2, ',','.')),1,0);
 
          $total       += $campo['inicial'];
          $total_mod   += $monto_modificado;
          $total_aprob += $aprobado;
          $total_comp  += $monto_comp;
          $total_cau   += $monto_causado;
-         $total_pag   += $monto_pagado;       
+         $total_pag   += $monto_pagado;
+         $total_disp   += $disponible;
+         $total_xpagar   += $por_pagar;
          
          $total_monto_x100comp  = (($total_comp)*100)/$total_aprob ;          
          $total_monto_x100cau   = (($total_cau)*100)/$total_aprob ;           
@@ -154,9 +158,9 @@ class PDF extends FPDF {
          
          }
          $this->SetFont('courier','B',8);
-         $this->SetWidths(array(10,50,35,35,35,35,20,35,20,35,20));
+         $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,30));
          $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R"));
-         $this->Row(array('','TOTAL RELACION........',number_format($total_ley, 2, ',','.'),number_format($total_mod, 2, ',','.'),number_format($total_aprob, 2, ',','.'),number_format($total_comp, 2, ',','.'),number_format($total_monto_x100comp, 2, ',','.'),number_format($total_cau, 2, ',','.'),number_format($total_monto_x100cau, 2, ',','.'),number_format($total_pag, 2, ',','.'),number_format($total_monto_x100pag, 2, ',','.')));   
+         $this->Row(array('','TOTAL RELACION........',number_format($total_ley, 2, ',','.'),number_format($total_mod, 2, ',','.'),number_format($total_aprob, 2, ',','.'),number_format($total_comp, 2, ',','.'),number_format($total_monto_x100comp, 2, ',','.'),number_format($total_disp, 2, ',','.'),number_format($total_cau, 2, ',','.'),number_format($total_monto_x100cau, 2, ',','.'),number_format($total_pag, 2, ',','.'),number_format($total_monto_x100pag, 2, ',','.'),number_format($total_xpagar, 2, ',','.')));   
       
 
  }
