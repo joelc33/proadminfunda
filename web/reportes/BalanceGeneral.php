@@ -117,9 +117,17 @@ class PDF extends FPDF {
              
          $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($campo_pasivo['saldo_actual'], 2, ',','.')),0,1);         
          $sub_pasTesoro = $campo_pasivo['saldo_actual'] + $sub_pasTesoro;
+         if($campo_pasivo['codigo']!=199){
+         $sub_total += $campo_pasivo['saldo_actual'];    
          }
          }
-         $this->Ln(20);
+         }
+         $this->Ln(5);
+         $this->SetWidths(array(60,40,60, 40)); 
+         $this->SetAligns(array("R","R","R","R")); 
+         $this->Row(array('','',' SUB TOTAL ', number_format($sub_total, 2, ',','.')),0,1);         
+                    
+         $this->Ln(15);
          $this->SetWidths(array(60,40,60, 40)); 
          $this->SetAligns(array("R","R","R","R")); 
          $this->Row(array('TOTAL ',number_format($sub_actTesoro, 2, ',','.'),'TOTAL ', number_format($sub_pasTesoro, 2, ',','.')),0,1);         
@@ -204,7 +212,7 @@ class PDF extends FPDF {
          $sub_pasPresupuesto = $campo_pasivo['saldo_actual'] + $sub_pasPresupuesto;
          
          }
-         $this->Ln(20);
+         $this->Ln(5);
          $this->SetWidths(array(60,40,60, 40)); 
          $this->SetAligns(array("R","R","R","R")); 
          $this->Row(array('TOTAL ',number_format($sub_actHacienda + $sub_actPresupuesto, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda + $sub_pasPresupuesto, 2, ',','.')),0,1);     
