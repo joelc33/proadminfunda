@@ -70,10 +70,10 @@ class PDF extends FPDF {
 
         $this->Ln(16);       
         $this->SetFont('courier','B',9);
-        $this->SetWidths(array(90,30,30,30,30,30,30,30,30,15,25));
+        $this->SetWidths(array(45,45,30,25,25,30,30,30,25,25,20,25));
         $this->SetAligns(array("C","C","C","C","C","C","C","C","C","C","C"));       
         $this->SetX(10); // configura la linea donde comenzara escribir en el eje de y       
-        $this->Row(array('Partida','Presupuesto Inicial','Aumento',utf8_decode('Disminución'),'Presupuesto Modificado','Comprometido','Causado','Pagado','Disponible'),0,0);
+        $this->Row(array('Partida',utf8_decode('Descripción'),'Presupuesto Inicial','Aumento',utf8_decode('Disminución'),'Presupuesto Modificado','Comprometido','Disponible','Causado','Pagado','Por Pagar'),0,0);
         $this->Line(10, 55, 350, 55);                  
         $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R","R","R"));                 
 
@@ -138,11 +138,11 @@ class PDF extends FPDF {
 
             
          $this->SetFont('courier','',8);
-         $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R","R","R"));
+         $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R","R","R"));
          $total_ley = $total_ley + $campo['inicial'];
          $partida   = $this->desc_partida($campo['nu_pa']);  
-         $this->SetWidths(array(90,30,30,30,30,30,30,30,30,15,25));
-         $this->Row(array(utf8_decode($campo['de_partida']), number_format($campo['inicial'], 2, ',','.'),number_format($campo['mo_aumento'], 2, ',','.'),number_format($campo['mo_disminucion'], 2, ',','.'),number_format($campo['mo_aprobado'], 2, ',','.'),number_format($campo['mo_comprometido'], 2, ',','.'),number_format($campo['mo_causado'], 2, ',','.'),number_format($campo['mo_pagado'], 2, ',','.'),number_format($campo['mo_disponible'], 2, ',','.')),0,0);
+         $this->SetWidths(array(45,45,30,25,25,30,30,30,25,25,20,25));
+         $this->Row(array(utf8_decode($campo['co_categoria']),utf8_decode($campo['de_partida']), number_format($campo['inicial'], 2, ',','.'),number_format($campo['mo_aumento'], 2, ',','.'),number_format($campo['mo_disminucion'], 2, ',','.'),number_format($campo['mo_aprobado'], 2, ',','.'),number_format($campo['mo_comprometido'], 2, ',','.'),number_format($campo['mo_disponible'], 2, ',','.'),number_format($campo['mo_causado'], 2, ',','.'),number_format($campo['mo_pagado'], 2, ',','.'),number_format($por_pagar, 2, ',','.')),0,0);
 
          $total_aumento       += $campo['mo_aumento'];
          $total_disminucion       += $campo['mo_disminucion'];
@@ -161,8 +161,8 @@ class PDF extends FPDF {
          }
          $this->SetFont('courier','B',8);
          $this->SetWidths(array(90,30,30,30,30,30,30,30,30,15,25));
-         $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R","R","R"));
-         $this->Row(array('TOTAL RELACION........',number_format($total_ley, 2, ',','.'),number_format($total_aumento, 2, ',','.'),number_format($total_disminucion, 2, ',','.'),number_format($total_aprob, 2, ',','.'),number_format($total_comp, 2, ',','.'),number_format($total_cau, 2, ',','.'),number_format($total_pag, 2, ',','.'),number_format($total_disp, 2, ',','.')));   
+         $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R","R","R"));
+         $this->Row(array('TOTAL RELACION........',number_format($total_ley, 2, ',','.'),number_format($total_aumento, 2, ',','.'),number_format($total_disminucion, 2, ',','.'),number_format($total_aprob, 2, ',','.'),number_format($total_comp, 2, ',','.'),number_format($total_disp, 2, ',','.'),number_format($total_cau, 2, ',','.'),number_format($total_pag, 2, ',','.'),number_format($total_xpagar, 2, ',','.')));   
       
 
  }
@@ -215,31 +215,20 @@ class PDF extends FPDF {
          
     $conex = new ConexionComun(); 
 
-    if($anio==2021){
+ 
     
-    $sql = "select id,co_categoria||' - '||de_partida as de_partida, sum(mo_inicial) as inicial,
-coalesce(sum(mo_aumento),0) as mo_aumento, coalesce(sum(mo_disminucion),0) as mo_disminucion,       
-(coalesce(sum(mo_aumento),0)) -coalesce(sum(mo_disminucion),0) modificado, 
-sum(mo_inicial)+ (coalesce(sum(mo_aumento),0)) -coalesce(sum(mo_disminucion),0) as mo_aprobado, 
-coalesce(sum(mo_comprometido),0) as mo_comprometido, 
-coalesce(sum(mo_causado),0) as mo_causado, 
-coalesce(sum(mo_pagado),0) as mo_pagado,
-coalesce(sum(mo_disponible),0) as mo_disponible
-FROM tb085_presupuesto as tb085 where nu_anio ='$anio' and co_partida<>''
-                     group by 1 order by nu_pa asc,nu_ge asc";
-    }else{
-        $sql = "select  nu_pa||nu_ge as nu_pa,
-                    sum(mo_inicial) as inicial, 
-                    (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0)) -coalesce(sum(afectacion_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) modificado,
-                    sum(mo_inicial)+ (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0)) -coalesce(sum(afectacion_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) as mo_aprobado,
-                    coalesce(sum(comprometido_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$anio,1,'$fe_inicio','$fe_fin')),0) mo_comprometido,
-                    coalesce(sum(causado_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$anio,2,'$fe_inicio','$fe_fin')),0) mo_causado,
-                    coalesce(sum(pagado_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$anio,3,'$fe_inicio','$fe_fin')),0) mo_pagado
-                FROM tb085_presupuesto as tb085                     
-                     where nu_anio ='$anio' and co_partida<>''
-                     group by 1 order by nu_pa asc";          
+    $sql = "select id,co_categoria,de_partida as de_partida, sum(mo_inicial) as inicial,
+        coalesce(sum(mo_aumento),0) as mo_aumento, coalesce(sum(mo_disminucion),0) as mo_disminucion,       
+        (coalesce(sum(mo_aumento),0)) -coalesce(sum(mo_disminucion),0) modificado, 
+        sum(mo_inicial)+ (coalesce(sum(mo_aumento),0)) -coalesce(sum(mo_disminucion),0) as mo_aprobado, 
+        coalesce(sum(mo_comprometido),0) as mo_comprometido, 
+        coalesce(sum(mo_causado),0) as mo_causado, 
+        coalesce(sum(mo_pagado),0) as mo_pagado,
+        coalesce(sum(mo_disponible),0) as mo_disponible
+        FROM tb085_presupuesto as tb085 where nu_anio ='$anio' and co_partida<>''
+                     group by 1 order by id asc";
+   
 
-            }
     
         //echo var_dump($sql); exit();        
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
