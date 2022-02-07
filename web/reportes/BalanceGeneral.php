@@ -138,7 +138,7 @@ class PDF extends FPDF {
          $this->SetAligns(array("R","R","R","R")); 
          $this->Row(array('','',' SUB TOTAL ', number_format($sub_total, 2, ',','.')),0,1);         
          }           
-         $this->Ln(5);
+         $this->Ln(10);
          $this->SetWidths(array(60,40,60, 40)); 
          $this->SetAligns(array("R","R","R","R")); 
          $this->Row(array('TOTAL ',number_format($sub_actTesoro, 2, ',','.'),'TOTAL ', number_format($sub_pasTesoro, 2, ',','.')),0,1);         
