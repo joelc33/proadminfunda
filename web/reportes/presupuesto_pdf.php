@@ -107,10 +107,10 @@ class PDF extends FPDF {
 
         $this->Ln(16);       
         $this->SetFont('courier','B',9);
-        $this->SetWidths(array(90,30,30,30,30,30,30,30,30,15,25));
+        $this->SetWidths(array(45,45,30,25,25,30,30,30,25,25,20,25));
         $this->SetAligns(array("C","C","C","C","C","C","C","C","C","C","C"));       
         $this->SetX(10); // configura la linea donde comenzara escribir en el eje de y       
-        $this->Row(array('Partida','Presupuesto Inicial','Aumento',utf8_decode('Disminución'),'Presupuesto Modificado','Comprometido','Causado','Pagado','Disponible'),0,0);
+        $this->Row(array('Partida',utf8_decode('Descripción'),'Presupuesto Inicial','Aumento',utf8_decode('Disminución'),'Presupuesto Modificado','Comprometido','Disponible','Causado','Pagado','Por Pagar'),0,0);
         $this->Line(10, 53, 350, 53);                  
         $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R","R","R"));    
                 $this->Ln(2);
@@ -160,7 +160,7 @@ class PDF extends FPDF {
          
          }
          $this->SetFont('courier','B',8);
-         $this->SetWidths(array(90,30,30,30,30,30,30,30,30,15,25));
+         $this->SetWidths(array(45,45,30,25,25,30,30,30,25,25,20,25));
          $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R","R","R"));
          $this->Row(array('TOTAL RELACION........',number_format($total_ley, 2, ',','.'),number_format($total_aumento, 2, ',','.'),number_format($total_disminucion, 2, ',','.'),number_format($total_aprob, 2, ',','.'),number_format($total_comp, 2, ',','.'),number_format($total_disp, 2, ',','.'),number_format($total_cau, 2, ',','.'),number_format($total_pag, 2, ',','.'),number_format($total_xpagar, 2, ',','.')));   
       
