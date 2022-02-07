@@ -17,6 +17,8 @@ class PDF extends FPDF {
         $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
         $this->Ln(6);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
+        $this->Ln(4);
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');        
        // $this->Ln(6);
        // $this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACION Y FINANZAS'),0,0,'C');
         $this->Ln(8);
@@ -66,7 +68,7 @@ class PDF extends FPDF {
          $this->campo = $this->getComprobante(); 
 //         var_dump($this->campo['dia']);
 //         exit();
-         $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->campo['dia'].' de '.mes($this->campo['mes']).' del '.$this->campo['anio']),0,0,'R');
+         $this->Cell(0,0,utf8_decode('San Francisco, '.$this->campo['dia'].' de '.mes($this->campo['mes']).' del '.$this->campo['anio']),0,0,'R');
          $this->SetFont('Arial','B',9);
          $this->SetFillColor(255, 255, 255);
          $this->SetWidths(array(60,140));
