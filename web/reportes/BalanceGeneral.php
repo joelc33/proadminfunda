@@ -110,11 +110,21 @@ class PDF extends FPDF {
          $this->lista_pasivos = $this->getPasivos();
 //         var_dump($this->lista_pasivos);
 //         exit();
-         $this->SetY($y);    
+         $this->SetY($y);
+         $sub_total = 0;
+         $codigo = 0;
          foreach($this->lista_pasivos as $key => $campo_pasivo){
          $this->SetX(110);     
-         if($campo_pasivo['codigo']<200 && $campo_pasivo['codigo']!=''){    
+         if($campo_pasivo['codigo']<200 && $campo_pasivo['codigo']!=''){
              
+         if($campo_pasivo['codigo']==199){
+         $codigo = 1;
+         $this->SetWidths(array(60,40,60, 40)); 
+         $this->SetAligns(array("R","R","R","R")); 
+         $this->Row(array('','',' SUB TOTAL ', number_format($sub_total, 2, ',','.')),0,1);     
+         }    
+         $this->SetWidths(array(20,50,30,20,40,40)); 
+         $this->SetAligns(array("C","L","R","C","L","R"));    
          $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($campo_pasivo['saldo_actual'], 2, ',','.')),0,1);         
          $sub_pasTesoro = $campo_pasivo['saldo_actual'] + $sub_pasTesoro;
          if($campo_pasivo['codigo']!=199){
@@ -122,12 +132,13 @@ class PDF extends FPDF {
          }
          }
          }
+         if($codigo==0){
          $this->Ln(5);
          $this->SetWidths(array(60,40,60, 40)); 
          $this->SetAligns(array("R","R","R","R")); 
          $this->Row(array('','',' SUB TOTAL ', number_format($sub_total, 2, ',','.')),0,1);         
-                    
-         $this->Ln(15);
+         }           
+         $this->Ln(5);
          $this->SetWidths(array(60,40,60, 40)); 
          $this->SetAligns(array("R","R","R","R")); 
          $this->Row(array('TOTAL ',number_format($sub_actTesoro, 2, ',','.'),'TOTAL ', number_format($sub_pasTesoro, 2, ',','.')),0,1);         
