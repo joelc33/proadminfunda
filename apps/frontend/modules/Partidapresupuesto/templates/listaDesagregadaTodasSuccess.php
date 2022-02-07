@@ -241,6 +241,12 @@ this.excel = new Ext.Button({
     handler: this.onExportarPresupuesto
 });
 
+this.pdf = new Ext.Button({
+    text:'Exportar a Pdf',
+    iconCls:'icon-libro',
+    handler: this.onExportarPdf
+});
+
 this.excelDecreto = new Ext.Button({
     text:'Exportar por Decreto a XLS',
     iconCls:'icon-libro',
@@ -273,7 +279,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     height:450,
     border:false,
     tbar:[
-        this.editar,'-',this.excel,'-',this.excelDecreto,'-',this.excelSaldoInicial,'-',this.excelReporteAnalitico,'-',this.editar_aplicacion
+        this.editar,'-',this.pdf,'-',this.excel//,'-',this.excelDecreto,'-',this.excelSaldoInicial,'-',this.excelReporteAnalitico,'-',this.editar_aplicacion
     ],
     columns: [
     new Ext.grid.RowNumberer(),
@@ -288,7 +294,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
         {header: 'Causado', width:100,  menuDisabled:true, sortable: true, renderer: formatoNro, dataIndex: 'mo_causado'},
         {header: 'Pagado', width:100,  menuDisabled:true, sortable: true, renderer: formatoNro, dataIndex: 'mo_pagado'},
         {header: 'Disponible', width:150,  menuDisabled:true, sortable: true, renderer: formatoNro, dataIndex: 'mo_disponible'},
-        {header: 'Aplicación', width:350,  menuDisabled:true, sortable: true,  dataIndex: 'aplicacion'}
+//        {header: 'Aplicación', width:350,  menuDisabled:true, sortable: true,  dataIndex: 'aplicacion'}
     ],
     stripeRows: true,
     autoScroll:true,
@@ -393,6 +399,15 @@ onExportarPresupuesto : function() {
    var ejercicio = PartidapresupuestoListaDesagregada.main.ejercicio.getValue();
     
    window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/presupuesto_XLS.php?co_ejecutor='+co_ejecutor+'&co_proyecto='+co_proyecto+'&co_accion='+co_accion+'&ejercicio='+ejercicio);
+},
+onExportarPdf : function() {
+    
+   var co_ejecutor = PartidapresupuestoListaDesagregada.main.co_ejecutor.getValue();
+   var co_proyecto = PartidapresupuestoListaDesagregada.main.co_proyecto.getValue();
+   var co_accion = PartidapresupuestoListaDesagregada.main.co_accion.getValue();
+   var ejercicio = PartidapresupuestoListaDesagregada.main.ejercicio.getValue();
+    
+   window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/presupuesto_pdf.php?co_ejecutor='+co_ejecutor+'&co_proyecto='+co_proyecto+'&co_accion='+co_accion+'&ejercicio='+ejercicio);
 },
 getStoreCO_EJECUTOR:function(){
     this.store = new Ext.data.JsonStore({
