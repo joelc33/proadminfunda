@@ -107,11 +107,20 @@ class PDF extends FPDF {
                 } 
                 
                  $this->montos = $this->getMontos($campo['co_cuenta_contable']);
+                 
+                $total_saldo_anterior  += $this->montos['saldo_anterior'];
+                $total_pre_deb  += $this->montos['pre_deb'];
+                $total_pre_cre  += $this->montos['pre_cre'];
+                $total_saldo  += $this->montos['saldo'];
+                $total_saldo_actual  += $this->montos['saldo_actual'];
                 
                 $this->Row(array($campo['tx_cuenta'],$campo['desc_cuenta'],number_format($this->montos['saldo_anterior'], 2, ',','.'),number_format($this->montos['pre_deb'], 2, ',','.'),number_format($this->montos['pre_cre'], 2, ',','.'),number_format($this->montos['saldo'], 2, ',','.'),number_format($this->montos['saldo_actual'], 2, ',','.')),1,1);         
 
-         } 
-
+         }
+         
+                 $this->SetWidths(array(60,100,35,35,35,35,35)); 
+                 $this->SetAligns(array("L","R","R","R","R","R","R"));         
+                 $this->Row(array('','TOTALES',number_format($total_saldo_anterior, 2, ',','.'),number_format($total_pre_deb, 2, ',','.'),number_format($total_pre_cre, 2, ',','.'),number_format($total_saldo, 2, ',','.'),number_format($total_saldo_actual, 2, ',','.')),1,1);         
    }
 
     function ChapterTitle($num,$label) {
