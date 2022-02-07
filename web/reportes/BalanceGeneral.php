@@ -133,7 +133,7 @@ class PDF extends FPDF {
          }
          }
          if($codigo==0){
-         $this->Ln(5);
+         $this->Ln(10);
          $this->SetWidths(array(60,40,60, 40)); 
          $this->SetAligns(array("R","R","R","R")); 
          $this->Row(array('','',' SUB TOTAL ', number_format($sub_total, 2, ',','.')),0,1);         
