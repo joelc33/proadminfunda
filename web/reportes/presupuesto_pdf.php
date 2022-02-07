@@ -162,7 +162,7 @@ class PDF extends FPDF {
          $this->SetFont('courier','B',8);
          $this->SetWidths(array(45,45,30,25,25,30,30,30,25,25,20,25));
          $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R","R","R"));
-         $this->Row(array('TOTAL RELACION........',number_format($total_ley, 2, ',','.'),number_format($total_aumento, 2, ',','.'),number_format($total_disminucion, 2, ',','.'),number_format($total_aprob, 2, ',','.'),number_format($total_comp, 2, ',','.'),number_format($total_disp, 2, ',','.'),number_format($total_cau, 2, ',','.'),number_format($total_pag, 2, ',','.'),number_format($total_xpagar, 2, ',','.')));   
+         $this->Row(array('','TOTAL RELACION........',number_format($total_ley, 2, ',','.'),number_format($total_aumento, 2, ',','.'),number_format($total_disminucion, 2, ',','.'),number_format($total_aprob, 2, ',','.'),number_format($total_comp, 2, ',','.'),number_format($total_disp, 2, ',','.'),number_format($total_cau, 2, ',','.'),number_format($total_pag, 2, ',','.'),number_format($total_xpagar, 2, ',','.')));   
       
 
  }
