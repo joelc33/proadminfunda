@@ -106,7 +106,7 @@ class PDF extends FPDF {
                  $this->SetFillColor(255, 255, 255);
                 } 
                 
-                 $this->montos = $this->getMontos($campo['nu_cuenta_contable']);
+                 $this->montos = $this->getMontos($campo['co_cuenta_contable']);
                 
                 $this->Row(array($campo['tx_cuenta'],$campo['desc_cuenta'],number_format($this->montos['saldo_anterior'], 2, ',','.'),number_format($this->montos['pre_deb'], 2, ',','.'),number_format($this->montos['pre_cre'], 2, ',','.'),number_format($this->montos['saldo'], 2, ',','.'),number_format($this->montos['saldo_actual'], 2, ',','.')),1,1);         
 
@@ -143,7 +143,7 @@ class PDF extends FPDF {
         
         
         $conex = new ConexionComun(); 
-                  $sql = "SELECT tb024.tx_cuenta,tb024.tx_descripcion as desc_cuenta,tb024.nu_cuenta_contable
+                  $sql = "SELECT tb024.tx_cuenta,tb024.tx_descripcion as desc_cuenta,tb024.nu_cuenta_contable,tb024.co_cuenta_contable
 from tb024_cuenta_contable tb024
 where tb024.nu_nivel between $nivel_inicial and $nivel_final $co_cuenta group by tb024.tx_cuenta,tb024.tx_descripcion,tb024.nu_cuenta_contable order by 1 asc";
          //  echo var_dump($sql); exit();  
@@ -152,7 +152,7 @@ where tb024.nu_nivel between $nivel_inicial and $nivel_final $co_cuenta group by
 	
     } 
     
-    function getMontos($nu_cuenta){ // Nivel 1
+    function getMontos($co_cuenta){ // Nivel 1
 
 
         
@@ -160,7 +160,7 @@ where tb024.nu_nivel between $nivel_inicial and $nivel_final $co_cuenta group by
                   $sql = "SELECT sum(pre_deb) as pre_deb, sum(pre_cre) as pre_cre,sum(pre_deb)  - sum(pre_cre) as saldo, (sum(acu_deb) + sum(mes_deb)) - (sum(acu_cre) + sum(mes_cre)) as saldo_anterior,
                   (sum(acu_deb) + sum(mes_deb)) - (sum(acu_cre) + sum(mes_cre)) + (sum(pre_deb)  - sum(pre_cre)) as saldo_actual  
 from tb024_cuenta_contable tb024
-where tb024.nu_cuenta_contable like '$nu_cuenta%'";
+where tb024.co_cuenta_contable = $co_cuenta";
            //echo var_dump($sql); exit();  
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol[0];  
