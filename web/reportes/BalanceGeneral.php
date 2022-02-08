@@ -166,7 +166,11 @@ class PDF extends FPDF {
          $sub_pasHacienda  = 0;
          //$this->SetX(10);
          $y = $this->GetY();
-          $this->SetAligns(array("C","L","R")); 
+          $this->SetAligns(array("C","L","R"));
+          
+         $this->SetWidths(array(20,50,30,20,40,40)); 
+         $this->SetAligns(array("C","L","R","C","L","R")); 
+         $this->Row(array('200','Situacion Fiscal del Tesoro', number_format($situacion_fiscal, 2, ',','.')),0,1);            
          foreach($this->lista_activos as $key => $campo2){
              
          if($campo2['codigo']>=200 && $campo2['codigo']!=''){    
@@ -175,9 +179,7 @@ class PDF extends FPDF {
          $sub_actHacienda = $campo2['saldo_actual'] + $sub_actHacienda;
          }
          } 
-         $this->SetWidths(array(20,50,30,20,40,40)); 
-         $this->SetAligns(array("C","L","R","C","L","R")); 
-         $this->Row(array('200','Situacion Fiscal del Tesoro', number_format($situacion_fiscal, 2, ',','.')),0,1);         
+       
          $this->lista_pasivos = $this->getPasivos();
 //         var_dump($this->lista_pasivos);
 //         exit();
