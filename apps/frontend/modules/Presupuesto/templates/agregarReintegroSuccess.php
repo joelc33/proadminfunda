@@ -43,7 +43,7 @@ this.agregar = new Ext.Button({
     handler:function(){
         this.msg = Ext.get('formulario');
         this.msg.load({
-            url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/BuscarPartida',
+            url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/buscarPartida',
             scripts: true,
             text: "Cargando..",
         });
