@@ -138,10 +138,11 @@ class PDF extends FPDF {
          $this->SetAligns(array("R","R","R","R")); 
          $this->Row(array('','',' SUB TOTAL ', number_format($sub_total, 2, ',','.')),0,1);         
          }
-         $situacion = -1*($sub_actTesoro + $sub_pasTesoro);
+         $situacion_financiera = -1*($sub_actTesoro + $sub_pasTesoro);
+         $situacion_fiscal = ($sub_actTesoro + $sub_pasTesoro);
          $this->SetWidths(array(20,50,30,20,40,40)); 
          $this->SetAligns(array("C","L","R","C","L","R")); 
-         $this->Row(array('','','','199','Situacion Financiera del Tesoro', number_format($situacion, 2, ',','.')),0,1);
+         $this->Row(array('','','','199','Situacion Financiera del Tesoro', number_format($situacion_financiera, 2, ',','.')),0,1);
          $this->Ln(10);
          $total_pasivo = $sub_pasTesoro + $situacion;
          $this->SetWidths(array(60,40,60, 40)); 
@@ -174,6 +175,9 @@ class PDF extends FPDF {
          $sub_actHacienda = $campo2['saldo_actual'] + $sub_actHacienda;
          }
          } 
+         $this->SetWidths(array(20,50,30,20,40,40)); 
+         $this->SetAligns(array("C","L","R","C","L","R")); 
+         $this->Row(array('200','Situacion Fiscal del Tesoro', number_format($situacion_fiscal, 2, ',','.')),0,1);         
          $this->lista_pasivos = $this->getPasivos();
 //         var_dump($this->lista_pasivos);
 //         exit();
@@ -231,7 +235,7 @@ class PDF extends FPDF {
          $this->Ln(5);
          $this->SetWidths(array(60,40,60, 40)); 
          $this->SetAligns(array("R","R","R","R")); 
-         $this->Row(array('TOTAL ',number_format($sub_actHacienda + $sub_actPresupuesto, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda + $sub_pasPresupuesto, 2, ',','.')),0,1);     
+         $this->Row(array('TOTAL ',number_format($sub_actHacienda + $sub_actPresupuesto + $situacion_fiscal, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda + $sub_pasPresupuesto, 2, ',','.')),0,1);     
          $this->Ln(5);        
        //************ Cuentas del Orden *****************//
 //         $this->SetFont('Arial','B',8); 
