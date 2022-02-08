@@ -863,6 +863,23 @@ class PresupuestoActions extends sfActions
         ));
   }
   
+  public function executeReintegro(sfWebRequest $request)
+  {
+        $codigo =  $this->getRequestParameter("co_solicitud");
+
+        $this->data = json_encode(array(
+            "co_solicitud"             => $this->getRequestParameter("co_solicitud")
+        ));
+  }  
+  
+  
+    public function executeAgregarReintegro(sfWebRequest $request)
+    {              
+               
+           $this->data = json_encode(array(
+            "co_solicitud"   => $this->getRequestParameter("co_solicitud")
+        ));
+    }   
   
   public function executeNominaComprometer(sfWebRequest $request)
   {
@@ -3305,6 +3322,76 @@ class PresupuestoActions extends sfActions
       }
      
   }
+  
+    public function executeGuardarReintegro(sfWebRequest $request)
+    {
+        $co_solicitud = $this->getRequestParameter('co_solicitud');
+        $json_cuenta                 = $this->getRequestParameter('json_cuenta');
+        
+        $con = Propel::getConnection();
+        
+        try
+        { 
+          $con->beginTransaction();  
+                           
+          
+            $listaCuenta  = json_decode($json_cuenta,true);
+            
+            foreach($listaCuenta  as $v){    
+                
+                if ($v["co_reintegro_presupuesto"]==''){                    
+                    $tb201_reintegro_presupuesto = new Tb201ReintegroPresupuesto();
+                    $tb201_reintegro_presupuesto->setCoSolicitud($co_solicitud)
+                                                     ->setIdPartida($v["id_partida"])
+                                                     ->setMonto($v["monto"])
+                                                     ->setFecha($v["fecha"])
+                                                     ->setDescripcion($v["descripcion"])
+                                                     ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                                     ->setInRechazado(false)
+                                                     ->save($con);                   
+                }
+            }
+
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud)); 
+            $ruta->setInCargarDato(true)->save($con);
+            Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta()); 
+          
+          
+
+          $this->data = json_encode(array(
+                      "success" => true,
+                      "msg" => 'Proceso realizado exitosamente'
+                  ));
+          $con->commit();
+        }catch (PropelException $e)
+        {
+          $con->rollback();
+          $this->data = json_encode(array(
+              "success" => false,
+              "msg" =>  $e->getMessage()
+          ));
+        }
+    }  
+  
+  public function executeBuscarPartida(sfWebRequest $request)
+  {
+    $this->data = json_encode(array(
+        "nu_partida" => $this->getRequestParameter("nu_partida"),
+        "co_accion_especifica" => $this->getRequestParameter("co_accion_especifica"),
+        "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
+        "de_ejecutor"              => $this->getRequestParameter("de_ejecutor"),
+        "co_ejecutor"              => $this->getRequestParameter("co_ejecutor"),
+        "co_detalle_compra"        => $this->getRequestParameter("co_detalle_compras"),
+        "monto"                    => $this->getRequestParameter("monto"),
+        "tx_producto"              => $this->getRequestParameter("tx_producto"),
+        "co_clase_producto"        => 4,
+        "co_compras"               => $this->getRequestParameter("co_compras"),
+        "co_partida"               => $this->getRequestParameter("co_partida"),
+        "co_producto"              => $this->getRequestParameter("co_producto"),    
+        "co_solicitud"             => $this->getRequestParameter("co_solicitud"),
+        "co_fuente_financiamiento" => $this->getRequestParameter("co_fuente_financiamiento")
+    ));
+  }  
     
   
 }
