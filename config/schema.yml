@@ -2472,6 +2472,20 @@ propel:
     created_at: { type: TIMESTAMP, required: false }
     descripcion: { type: VARCHAR, required: false }
     in_anular: { type: BOOLEAN, required: false }
+  tb201_reintegro_presupuesto:
+    _attributes: { phpName: Tb201ReintegroPresupuesto }
+    co_reintegro_presupuesto: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
+    co_solicitud: { type: BIGINT, required: false }
+    id_partida: { type: BIGINT, required: false }
+    monto: { type: NUMERIC, size: '32', scale: '2', required: false }
+    fecha: { type: DATE, required: false }
+    co_usuario: { type: BIGINT, required: false }
+    nu_comprobante: { type: NUMERIC, required: false }
+    in_aprobado: { type: BOOLEAN, required: false }
+    in_rechazado: { type: BOOLEAN, required: false }
+    created_at: { type: TIMESTAMP, required: false }
+    descripcion: { type: VARCHAR, required: false }
+    in_anular: { type: BOOLEAN, required: false }
   tb203_consignacion_cheque:
     _attributes: { phpName: Tb203ConsignacionCheque }
     co_consignacion_cheque: { type: BIGINT, primaryKey: true, autoIncrement: true, required: true }
