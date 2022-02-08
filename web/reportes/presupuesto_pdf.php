@@ -207,17 +207,27 @@ class PDF extends FPDF {
     $periodo    = $_GET['co_periodo']; 
     $anio       = $_GET['ejercicio'];  
     
-//    list($dia,$mes,$anio) = explode("-", $_GET["fe_inicio"]);
-//    $fe_inicio = $anio.'-'.$mes.'-'.$dia;
-//
-//    list($dia,$mes,$anio) = explode("-", $_GET["fe_fin"]);
-//    $fe_fin = $anio.'-'.$mes.'-'.$dia;
+    if($_GET["co_ejecutor"]!=''){
+        $condicion .= " and tb082.id = ". $_GET["co_ejecutor"];
+    }
+    
+    if($_GET["co_proyecto"]!=''){
+        $condicion .= " and tb084.id_tb083_proyecto_ac = ". $_GET["co_proyecto"];
+    }
+    
+    if($_GET["co_accion"]!=''){
+        $condicion .= " and tb085.id_tb084_accion_especifica = '". $_GET["co_accion"]."'";
+    }
+    
+    if($_GET["ejercicio"]!=''){
+        $condicion .= " and tb085.nu_anio = '". $_GET["ejercicio"]."'";
+    }
          
     $conex = new ConexionComun(); 
 
  
     
-    $sql = "select id,co_categoria,de_partida as de_partida, sum(mo_inicial) as inicial,
+    $sql = "select tb085.id,co_categoria,de_partida as de_partida, sum(mo_inicial) as inicial,
         coalesce(sum(mo_aumento),0) as mo_aumento, coalesce(sum(mo_disminucion),0) as mo_disminucion,       
         (coalesce(sum(mo_aumento),0)) -coalesce(sum(mo_disminucion),0) modificado, 
         sum(mo_inicial)+ (coalesce(sum(mo_aumento),0)) -coalesce(sum(mo_disminucion),0) as mo_aprobado, 
@@ -225,8 +235,12 @@ class PDF extends FPDF {
         coalesce(sum(mo_causado),0) as mo_causado, 
         coalesce(sum(mo_pagado),0) as mo_pagado,
         coalesce(sum(mo_disponible),0) as mo_disponible
-        FROM tb085_presupuesto as tb085 where nu_anio ='$anio' and co_partida<>''
-                     group by 1 order by id asc";
+        FROM tb085_presupuesto as tb085 join tb084_accion_especifica tb084
+         on (tb085.id_tb084_accion_especifica = tb084.id)
+         join tb083_proyecto_ac tb083 on (tb084.id_tb083_proyecto_ac = tb083.id)
+         join tb082_ejecutor tb082 on (tb083.id_tb082_ejecutor = tb082.id)
+        where co_partida<>'' $condicion
+                     group by 1 order by tb085.id asc";
    
 
     
