@@ -188,8 +188,8 @@ class PDF extends FPDF {
          foreach($this->lista_pasivos as $key => $campo_pasivo){
          $this->SetX(110);     
          if($campo_pasivo['codigo']>200 && $campo_pasivo['codigo']!=''){    
-             
-         $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($campo_pasivo['saldo_actual'], 2, ',','.')),0,1);         
+         $saldo = -1*$campo_pasivo['saldo_actual'];    
+         $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($saldo, 2, ',','.')),0,1);         
          $sub_pasHacienda = $campo_pasivo['saldo_actual'] + $sub_pasHacienda;
          }
          }
@@ -230,15 +230,15 @@ class PDF extends FPDF {
          $this->SetY($y);    
          foreach($this->lista_presupuesto_pasivos as $key => $campo_pasivo){
          $this->SetX(110);     
-             
-         $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($campo_pasivo['saldo_actual'], 2, ',','.')),0,1);         
+         $saldo = -1*$campo_pasivo['saldo_actual'];    
+         $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($saldo, 2, ',','.')),0,1);         
          $sub_pasPresupuesto = $campo_pasivo['saldo_actual'] + $sub_pasPresupuesto;
          
          }
          $this->Ln(5);
          $this->SetWidths(array(60,40,60, 40)); 
          $this->SetAligns(array("R","R","R","R")); 
-         $this->Row(array('TOTAL ',number_format($sub_actHacienda + $sub_actPresupuesto + $situacion_fiscal, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda + $sub_pasPresupuesto, 2, ',','.')),0,1);     
+         $this->Row(array('TOTAL ',number_format($sub_actHacienda + $sub_actPresupuesto + $situacion_fiscal, 2, ',','.'),'TOTAL ', number_format(-1*($sub_pasHacienda + $sub_pasPresupuesto), 2, ',','.')),0,1);     
          $this->Ln(5);        
        //************ Cuentas del Orden *****************//
 //         $this->SetFont('Arial','B',8); 
