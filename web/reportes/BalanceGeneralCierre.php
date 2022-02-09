@@ -124,7 +124,7 @@ class PDF extends FPDF {
          
          }
          }
-         $this->Ln(10);
+         $this->Ln(5);
          $situacion_financiera = ($sub_actTesoro + $sub_pasTesoro);
          $situacion_fiscal = ($sub_actTesoro + $sub_pasTesoro);
          $this->SetWidths(array(20,50,30,20,40,40)); 
@@ -133,7 +133,7 @@ class PDF extends FPDF {
 //         $this->Ln(10);
          $total_pasivo = (-1*$sub_pasTesoro) + $situacion_financiera;         
          
-         $this->Ln(20);
+         $this->Ln(5);
          $this->SetWidths(array(60,40,60, 40)); 
          $this->SetAligns(array("R","R","R","R")); 
          $this->Row(array('TOTAL ',number_format($sub_actTesoro, 2, ',','.'),'TOTAL ', number_format($total_pasivo, 2, ',','.')),0,1);         
