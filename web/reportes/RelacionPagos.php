@@ -140,7 +140,7 @@ class PDF extends FPDF {
         inner join tb008_proveedor as tb008 on tb026.co_proveedor = tb008.co_proveedor
         inner join tb007_documento as tb007 on tb008.co_documento = tb007.co_documento
         WHERE ".$condicion." and tb060.in_anular is not true
-        order by tb063.fe_pago ASC;";
+        order by tb060.tx_serial ASC;";
                   
           //echo var_dump($sql); exit();
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
