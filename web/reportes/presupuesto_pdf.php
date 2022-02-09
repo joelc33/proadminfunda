@@ -227,7 +227,7 @@ class PDF extends FPDF {
 
  
     
-    $sql = "select tb085.id,co_categoria,de_partida as de_partida, sum(mo_inicial) as inicial,
+    $sql = "select tb083.nu_proyecto_ac,co_categoria,de_partida as de_partida, sum(mo_inicial) as inicial,
         coalesce(sum(mo_aumento),0) as mo_aumento, coalesce(sum(mo_disminucion),0) as mo_disminucion,       
         (coalesce(sum(mo_aumento),0)) -coalesce(sum(mo_disminucion),0) modificado, 
         sum(mo_inicial)+ (coalesce(sum(mo_aumento),0)) -coalesce(sum(mo_disminucion),0) as mo_aprobado, 
@@ -240,7 +240,7 @@ class PDF extends FPDF {
          join tb083_proyecto_ac tb083 on (tb084.id_tb083_proyecto_ac = tb083.id)
          join tb082_ejecutor tb082 on (tb083.id_tb082_ejecutor = tb082.id)
         where co_partida<>'' $condicion
-                     group by 1 order by tb085.id asc";
+                     group by 1,2,3 order by tb083.nu_proyecto_ac asc";
    
 
     
