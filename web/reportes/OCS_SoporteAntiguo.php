@@ -183,8 +183,8 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->Row(array(utf8_decode('ORDEN DE CONTRATO')),0,0);
          }else{
          if($this->datos['co_tipo_solicitud']==2){
-//         $this->Row(array(utf8_decode('ORDEN DE '.$this->datos['tx_tipo_solicitud'])),0,0);     
-         $this->Row(array(utf8_decode('SOPORTE DE COMPROMISO')),0,0);    
+         $this->Row(array(utf8_decode('ORDEN DE '.$this->datos['tx_tipo_solicitud'])),0,0);     
+//         $this->Row(array(utf8_decode('SOPORTE DE COMPROMISO')),0,0);    
          }else{    
          $this->Row(array(utf8_decode('ORDEN DE '.$this->datos['tx_tipo_solicitud'])),0,0);    
          }
@@ -492,8 +492,8 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->WriteFlowingBlock(utf8_decode('ENTREGA: '));
             $this->SetFont( 'Times', '', 9 );
             $this->SetX(15);
-//            if ($this->punto['fecha_entrega']=$this->punto['fecha_reg']) $inf = ' 1 dias'; else $inf = ' 8 dias ';
-            if ($this->punto['fecha_entrega']=$this->punto['fecha_reg']) $inf = ' INMEDIATA'; else $inf = '  '.$this->punto['fecha_entrega'];
+            if ($this->punto['fecha_entrega']=$this->punto['fecha_reg']) $inf = ' 1 dias'; else $inf = ' 8 dias ';
+//            if ($this->punto['fecha_entrega']=$this->punto['fecha_reg']) $inf = ' INMEDIATA'; else $inf = '  '.$this->punto['fecha_entrega'];
             $this->WriteFlowingBlock($inf);
             $this->SetX(15);
         $this->finishFlowingBlock();
