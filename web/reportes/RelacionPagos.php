@@ -58,7 +58,8 @@ class PDF extends FPDF {
          $this->Line(10, 45, 210, 45);        
          $this->Ln(2);
          $mo_total=0;
- 
+         $tx_serial='';
+         $mo_total_op=0;
                 $this->lista_pagos = $this->getPagos();             
          
                 foreach($this->lista_pagos as $key => $campo){              
@@ -87,7 +88,12 @@ class PDF extends FPDF {
                         $this->Row(array($campo['tx_serial_pago'],$campo['tx_serial'],$campo['fe_pago'],utf8_decode($campo['beneficiario']),number_format($campo['mo_total'], 2, ',','.'),number_format($campo['nu_monto'], 2, ',','.')),0,0);         
 
                         $mo_total = $campo['nu_monto'] + $mo_total;
-
+                        
+                        if($tx_serial<>$campo['tx_serial']){
+                        
+                        $mo_total_op = $campo['mo_total'] + $mo_total_op;                        
+                        }
+                        $tx_serial = $campo['tx_serial'];
                  }
                  
         
