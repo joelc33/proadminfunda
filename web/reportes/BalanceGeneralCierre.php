@@ -124,7 +124,7 @@ class PDF extends FPDF {
          
          }
          }
-         
+         $this->Ln(10);
          $situacion_financiera = ($sub_actTesoro + $sub_pasTesoro);
          $situacion_fiscal = ($sub_actTesoro + $sub_pasTesoro);
          $this->SetWidths(array(20,50,30,20,40,40)); 
