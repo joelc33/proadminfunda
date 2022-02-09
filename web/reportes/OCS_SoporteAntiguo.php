@@ -492,7 +492,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->WriteFlowingBlock(utf8_decode('ENTREGA: '));
             $this->SetFont( 'Times', '', 9 );
             $this->SetX(15);
-            if ($this->punto['fecha_entrega']=$this->punto['fecha_reg']) $inf = ' 3 dias'; else $inf = ' 8 dias ';
+            if ($this->punto['fecha_entrega']=$this->punto['fecha_reg']) $inf = ' 1 dias'; else $inf = ' 8 dias ';
 //            if ($this->punto['fecha_entrega']=$this->punto['fecha_reg']) $inf = ' INMEDIATA'; else $inf = '  '.$this->punto['fecha_entrega'];
             $this->WriteFlowingBlock($inf);
             $this->SetX(15);
