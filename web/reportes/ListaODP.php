@@ -62,7 +62,7 @@ class PDF extends FPDF {
          $this->SetAligns(array("C","C","C","C","R"));   
          $this->Line(10, 40, 210, 40);        
          $this->Ln(5);
-         
+         $total = 0;
          foreach($this->lista_op as $key => $campo){              
              
                 if($this->getY()>230)
@@ -82,8 +82,15 @@ class PDF extends FPDF {
                 $this->SetWidths(array(30,80,25,25,40));
                 $this->SetAligns(array("C","L","C","C","R"));  
                 $this->Row(array($campo['tx_serial'],$campo['beneficiario'], $campo['estatus'],date("d/m/Y", strtotime($campo['fecha'])),number_format($campo['monto'], 2, ',','.')),0,0);         
-         }
          
+                $total = $total + $campo['monto'];
+                
+                }
+                $this->SetFont('COURIER','',10);  
+                $this->SetWidths(array(30,80,25,25,40));
+                $this->SetAligns(array("C","L","C","R","R"));  
+                $this->Row(array('','', '','TOTAL',number_format($total, 2, ',','.')),0,0);         
+                  
 
    }
 
