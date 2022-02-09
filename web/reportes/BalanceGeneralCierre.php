@@ -168,74 +168,74 @@ class PDF extends FPDF {
          //$this->Row(array('TOTAL ',number_format($sub_actHacienda, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda, 2, ',','.')),0,1);     
          $this->Ln(3); 
         //************ Cuentas de Presupusto *****************//
-         $this->SetFont('Arial','B',8); 
-         $this->SetWidths(array(200));
-         $this->SetAligns(array("C")); 
-         $this->SetFillColor(201, 199, 199);
-         $this->Row(array('CUENTAS DE PRESUPUESTO'),1,1); 
-         $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(20,50,30,20,40,40)); 
-         $this->SetAligns(array("C","L","R","C","L","R"));              
-         $this->SetFont('Arial','B',8);
-         $this->Ln(3);
-         $this->Row(array(utf8_decode('Nº'),' ACTIVOS','BOLIVARES',utf8_decode('Nº'), 'PASIVOS','BOLIVARES'),0,1);     
-         $this->lista_presupuesto = $this->getPresuepuestoActivos();
-         $sub_actPresupuesto = 0;
-         $sub_pasPresupuesto  = 0;
-         //$this->SetX(10);
-         $y = $this->GetY();
-          $this->SetAligns(array("C","L","R")); 
-         foreach($this->lista_presupuesto as $key => $campo2){
-             
-         if($campo2['codigo']>=200 && $campo2['codigo']!=''){    
-             
-         $this->Row(array($campo2['codigo'],$campo2['tx_descripcion'],number_format($campo2['saldo_actual'], 2, ',','.')),0,1);         
-         $sub_actPresupuesto = $campo2['saldo_actual'] + $sub_actPresupuesto;
-         }
-         } 
-         $this->lista_presupuesto_pasivos = $this->getPresuepuestoPasivos();
-//         var_dump($this->lista_pasivos);
-//         exit();
-         $this->SetY($y);    
-         foreach($this->lista_presupuesto_pasivos as $key => $campo_pasivo){
-         $this->SetX(110);     
-             
-         $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($campo_pasivo['saldo_actual'], 2, ',','.')),0,1);         
-         $sub_pasPresupuesto = $campo_pasivo['saldo_actual'] + $sub_pasPresupuesto;
-         
-         }
-         $this->Ln(20);
-         $this->SetWidths(array(60,40,60, 40)); 
-         $this->SetAligns(array("R","R","R","R")); 
-         $this->Row(array('TOTAL ',number_format($sub_actHacienda + $sub_actPresupuesto, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda + $sub_pasPresupuesto, 2, ',','.')),0,1);     
-         $this->Ln(5);        
+//         $this->SetFont('Arial','B',8); 
+//         $this->SetWidths(array(200));
+//         $this->SetAligns(array("C")); 
+//         $this->SetFillColor(201, 199, 199);
+//         $this->Row(array('CUENTAS DE PRESUPUESTO'),1,1); 
+//         $this->SetFillColor(255, 255, 255);
+//         $this->SetWidths(array(20,50,30,20,40,40)); 
+//         $this->SetAligns(array("C","L","R","C","L","R"));              
+//         $this->SetFont('Arial','B',8);
+//         $this->Ln(3);
+//         $this->Row(array(utf8_decode('Nº'),' ACTIVOS','BOLIVARES',utf8_decode('Nº'), 'PASIVOS','BOLIVARES'),0,1);     
+//         $this->lista_presupuesto = $this->getPresuepuestoActivos();
+//         $sub_actPresupuesto = 0;
+//         $sub_pasPresupuesto  = 0;
+//         //$this->SetX(10);
+//         $y = $this->GetY();
+//          $this->SetAligns(array("C","L","R")); 
+//         foreach($this->lista_presupuesto as $key => $campo2){
+//             
+//         if($campo2['codigo']>=200 && $campo2['codigo']!=''){    
+//             
+//         $this->Row(array($campo2['codigo'],$campo2['tx_descripcion'],number_format($campo2['saldo_actual'], 2, ',','.')),0,1);         
+//         $sub_actPresupuesto = $campo2['saldo_actual'] + $sub_actPresupuesto;
+//         }
+//         } 
+//         $this->lista_presupuesto_pasivos = $this->getPresuepuestoPasivos();
+////         var_dump($this->lista_pasivos);
+////         exit();
+//         $this->SetY($y);    
+//         foreach($this->lista_presupuesto_pasivos as $key => $campo_pasivo){
+//         $this->SetX(110);     
+//             
+//         $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($campo_pasivo['saldo_actual'], 2, ',','.')),0,1);         
+//         $sub_pasPresupuesto = $campo_pasivo['saldo_actual'] + $sub_pasPresupuesto;
+//         
+//         }
+//         $this->Ln(20);
+//         $this->SetWidths(array(60,40,60, 40)); 
+//         $this->SetAligns(array("R","R","R","R")); 
+//         $this->Row(array('TOTAL ',number_format($sub_actHacienda + $sub_actPresupuesto, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda + $sub_pasPresupuesto, 2, ',','.')),0,1);     
+//         $this->Ln(5);        
        //************ Cuentas del Orden *****************//
-         $this->SetFont('Arial','B',8); 
-         $this->SetWidths(array(200));
-         $this->SetAligns(array("C")); 
-         $this->SetFillColor(201, 199, 199);
-         $this->Row(array('CUENTAS DE ORDEN'),1,1); 
-         $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(70,30,60,40)); 
-         $this->SetAligns(array("C","L","R","C","L","R"));              
-         $this->SetFont('Arial','B',8); 
-         $this->Ln(3);
-         $this->lista_cuentasOrdenDeudoras = $this->getCuentasOrdenDeudoras();
-         $this->lista_cuentasOrdenAcreedoras = $this->getCuentasOrdenAcreedoras();
-        //$this->SetX(10);
-         $y = $this->GetY();
-         $this->SetAligns(array("L","R","L","R")); 
-         $this->SetY($y);    
-          foreach($this->lista_cuentasOrdenDeudoras as $key => $campo2){
-            
-         $saldo_deudora = number_format($campo2['saldo_actual'], 2, ',','.');
-         $tx_deudora = $campo2['tx_descripcion']; 
-         
-         } 
-         foreach($this->lista_cuentasOrdenAcreedoras as $key => $campo){        
-         $this->Row(array($tx_deudora,$saldo_deudora,$campo['tx_descripcion'],number_format($campo['saldo_actual'], 2, ',','.')),0,1);         
-         
-         }
+//         $this->SetFont('Arial','B',8); 
+//         $this->SetWidths(array(200));
+//         $this->SetAligns(array("C")); 
+//         $this->SetFillColor(201, 199, 199);
+//         $this->Row(array('CUENTAS DE ORDEN'),1,1); 
+//         $this->SetFillColor(255, 255, 255);
+//         $this->SetWidths(array(70,30,60,40)); 
+//         $this->SetAligns(array("C","L","R","C","L","R"));              
+//         $this->SetFont('Arial','B',8); 
+//         $this->Ln(3);
+//         $this->lista_cuentasOrdenDeudoras = $this->getCuentasOrdenDeudoras();
+//         $this->lista_cuentasOrdenAcreedoras = $this->getCuentasOrdenAcreedoras();
+//        //$this->SetX(10);
+//         $y = $this->GetY();
+//         $this->SetAligns(array("L","R","L","R")); 
+//         $this->SetY($y);    
+//          foreach($this->lista_cuentasOrdenDeudoras as $key => $campo2){
+//            
+//         $saldo_deudora = number_format($campo2['saldo_actual'], 2, ',','.');
+//         $tx_deudora = $campo2['tx_descripcion']; 
+//         
+//         } 
+//         foreach($this->lista_cuentasOrdenAcreedoras as $key => $campo){        
+//         $this->Row(array($tx_deudora,$saldo_deudora,$campo['tx_descripcion'],number_format($campo['saldo_actual'], 2, ',','.')),0,1);         
+//         
+//         }
          $this->Ln(5);
          $this->SetWidths(array(200)); 
          $this->SetAligns(array("L")); 
@@ -292,7 +292,7 @@ where (tb024.nu_cuenta_contable like '1%')  and nu_anio <= $nu_anio GROUP BY cod
         from tb177_det_comprobante tb177
         inner join tb176_comprobante_contable tb076 on (tb076.co_comprobante_contable = tb177.co_comprobante_contable)
         inner join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb177.co_cuenta_contable)
-        left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,7) end) 
+        left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
         where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '5060000%' or tb024.nu_cuenta_contable like '5010201%' or tb024.nu_cuenta_contable like '6010301%') 
         and nu_anio <= $nu_anio 
         GROUP BY codigo,descripcion) as q1 order by codigo";              
