@@ -14,24 +14,24 @@ class PDF extends FPDF {
             $this->Image("imagenes/".$this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
         
-
-        if(!empty($this->empresa['tx_imagen_der'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
-        }
+//
+//        if(!empty($this->empresa['tx_imagen_der'])){
+//            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+//        }
 
         $this->SetFont('Arial','B',8);
         $this->SetTextColor(0,0,0);
         $this->SetY(10);
         $this->SetX(10);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
-        //$this->Ln(4);
-        //$this->SetX(10);
-        //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');
+        $this->Ln(4);
+        $this->SetX(10);
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');
         $this->Ln(4);
         $this->SetX(10);
         $this->Cell(0,0,utf8_decode('DIVISION DE CONTABILIDAD'),0,0,'C');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+//        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
         $this->SetFont('Arial','B',10);
         $this->SetWidths(array(200));
@@ -271,8 +271,8 @@ class PDF extends FPDF {
 from tb177_det_comprobante tb177
 inner join tb176_comprobante_contable tb076 on (tb076.co_comprobante_contable = tb177.co_comprobante_contable)
 inner join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb177.co_cuenta_contable)
-left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,7) end) 
-where (tb024.nu_cuenta_contable like '1%' or tb024.nu_cuenta_contable like '5040000%')  and nu_anio <= $nu_anio GROUP BY codigo,descripcion) as q1 order by codigo";       
+left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
+where (tb024.nu_cuenta_contable like '1%')  and nu_anio <= $nu_anio GROUP BY codigo,descripcion) as q1 order by codigo";       
          
        
 
