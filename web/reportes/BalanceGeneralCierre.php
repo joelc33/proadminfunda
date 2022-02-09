@@ -293,7 +293,7 @@ where (tb024.nu_cuenta_contable like '1%')  and nu_anio <= $nu_anio GROUP BY cod
         inner join tb176_comprobante_contable tb076 on (tb076.co_comprobante_contable = tb177.co_comprobante_contable)
         inner join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb177.co_cuenta_contable)
         left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
-        where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '5060000%' or tb024.nu_cuenta_contable like '5010201%' or tb024.nu_cuenta_contable like '6010301%') 
+        where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '501010000%' or tb024.nu_cuenta_contable like '5010201%' or tb024.nu_cuenta_contable like '6010301%') 
         and nu_anio <= $nu_anio 
         GROUP BY codigo,descripcion) as q1 order by codigo";              
                        
