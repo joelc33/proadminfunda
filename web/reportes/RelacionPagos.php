@@ -89,9 +89,11 @@ class PDF extends FPDF {
 
                         $mo_total = $campo['nu_monto'] + $mo_total;
                         
-                        if($tx_serial<>$campo['tx_serial']){
+                        if($tx_serial==$campo['tx_serial']){
                         
-                        $mo_total_op = $campo['mo_total'] + $mo_total_op;                        
+                                               
+                        }else{
+                        $mo_total_op = $campo['mo_total'] + $mo_total_op;    
                         }
                         $tx_serial = $campo['tx_serial'];
                  }
