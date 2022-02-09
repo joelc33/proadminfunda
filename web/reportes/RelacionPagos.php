@@ -103,7 +103,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',6);  
          $this->SetAligns(array("R","R","R","R"));
          $this->SetWidths(array(160,20,20));
-         $this->Row(array(utf8_decode('TOTAL ..: '),number_format($mo_total, 2, ',','.'),number_format($mo_total, 2, ',','.')),0,0);         
+         $this->Row(array(utf8_decode('TOTAL ..: '),number_format($mo_total_op, 2, ',','.'),number_format($mo_total, 2, ',','.')),0,0);         
    }
 
     function ChapterTitle($num,$label) {
