@@ -866,7 +866,7 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
                                         ->setFeMovimiento($v["fecha"])
                                         ->save($con);                    
                          
-                    if($tb200_cierre_contable->getCoCuentaContable()!=122224){
+                    if($tb200_cierre_contable->getCoCuentaContable()!=2643){
                     $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($tb200_cierre_contable->getCoCuentaContable());
 
                     $tb024_cuenta_contable->setPreCre(0);
@@ -1513,7 +1513,7 @@ where nu_cuenta_contable like '3%' and nu_nivel = 5 and (acu_cre + mes_cre + pre
         $sql = "select co_cuenta_contable,tx_cuenta,tx_descripcion as denominacion, coalesce((select sum((acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb)) from  tb024_cuenta_contable 
 where nu_cuenta_contable like '3%' and nu_nivel = 5 and (acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb) > 0),0) mo_credito, 0 as mo_debito,'".$fecha."' as fecha,
         '".$descripcion."' as descripcion from tb024_cuenta_contable 
-where co_cuenta_contable = 122224";
+where co_cuenta_contable = 2643";
         //var_dump($sql);        exit();
         $stmt = $con->prepare($sql);
         $stmt->execute();          
@@ -1537,9 +1537,9 @@ and (acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb) < 0
         }         
         
         $sql = "select co_cuenta_contable,tx_cuenta,tx_descripcion as denominacion, coalesce((select sum((acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb)) * -1 from  tb024_cuenta_contable 
-where nu_cuenta_contable like '4%' and nu_nivel = 5 and (acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb) < 0),0) mo_debito, 0 as mo_credito,'".$fecha."' as fecha,
+where nu_cuenta_contable like '4%' and nu_nivel in (4,5) and (acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb) < 0),0) mo_debito, 0 as mo_credito,'".$fecha."' as fecha,
         '".$descripcion."' as descripcion from tb024_cuenta_contable 
-where co_cuenta_contable = 122224";
+where co_cuenta_contable = 2643";
         //var_dump($sql);        exit();
         $stmt = $con->prepare($sql);
         $stmt->execute();          
