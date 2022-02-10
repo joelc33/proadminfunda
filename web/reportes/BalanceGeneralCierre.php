@@ -178,7 +178,7 @@ class PDF extends FPDF {
          if($campo_pasivo['codigo']>200 && $campo_pasivo['codigo']!=''){    
          $saldo = -1*$campo_pasivo['saldo_actual'];    
          $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($saldo, 2, ',','.')),0,1);         
-         $sub_pasHacienda = $campo_pasivo['saldo_actual'] + $sub_pasHacienda;
+         $sub_pasHacienda = -1*($campo_pasivo['saldo_actual'] + $sub_pasHacienda);
          }
          }
          $this->Ln(20);
