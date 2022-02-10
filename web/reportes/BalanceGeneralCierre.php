@@ -223,11 +223,11 @@ class PDF extends FPDF {
 //         $sub_pasPresupuesto = $campo_pasivo['saldo_actual'] + $sub_pasPresupuesto;
 //         
 //         }
-//         $this->Ln(20);
-//         $this->SetWidths(array(60,40,60, 40)); 
-//         $this->SetAligns(array("R","R","R","R")); 
-//         $this->Row(array('TOTAL ',number_format($sub_actHacienda + $sub_actPresupuesto, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda + $sub_pasPresupuesto, 2, ',','.')),0,1);     
-//         $this->Ln(5);        
+         $this->Ln(10);
+         $this->SetWidths(array(60,40,60, 40)); 
+         $this->SetAligns(array("R","R","R","R")); 
+         $this->Row(array('TOTAL ',number_format($sub_actTesoro + $situacion_fiscal, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda + $total_pasivo, 2, ',','.')),0,1);     
+         $this->Ln(5);        
        //************ Cuentas del Orden *****************//
 //         $this->SetFont('Arial','B',8); 
 //         $this->SetWidths(array(200));
