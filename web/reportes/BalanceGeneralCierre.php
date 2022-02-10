@@ -181,7 +181,7 @@ class PDF extends FPDF {
          $sub_pasHacienda = -1*($campo_pasivo['saldo_actual'] + $sub_pasHacienda);
          }
          }
-         $this->Ln(20);
+         $this->Ln(5);
          $this->SetWidths(array(60,40,60, 40)); 
          $this->SetAligns(array("R","R","R","R")); 
          //$this->Row(array('TOTAL ',number_format($sub_actHacienda, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda, 2, ',','.')),0,1);     
