@@ -156,6 +156,11 @@ class PDF extends FPDF {
          //$this->SetX(10);
          $y = $this->GetY();
           $this->SetAligns(array("C","L","R")); 
+          
+         $this->SetWidths(array(20,50,30,20,40,40)); 
+         $this->SetAligns(array("C","L","R","C","L","R")); 
+         $this->Row(array('200','Situacion Fiscal del Tesoro', number_format($situacion_fiscal, 2, ',','.')),0,1);           
+          
          foreach($this->lista_activos as $key => $campo2){
              
          if($campo2['codigo']>=200 && $campo2['codigo']!=''){    
@@ -171,8 +176,8 @@ class PDF extends FPDF {
          foreach($this->lista_pasivos as $key => $campo_pasivo){
          $this->SetX(110);     
          if($campo_pasivo['codigo']>200 && $campo_pasivo['codigo']!=''){    
-             
-         $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($campo_pasivo['saldo_actual'], 2, ',','.')),0,1);         
+         $saldo = -1*$campo_pasivo['saldo_actual'];    
+         $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($saldo, 2, ',','.')),0,1);         
          $sub_pasHacienda = $campo_pasivo['saldo_actual'] + $sub_pasHacienda;
          }
          }
