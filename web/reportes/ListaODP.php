@@ -63,6 +63,8 @@ class PDF extends FPDF {
          $this->Line(10, 40, 210, 40);        
          $this->Ln(5);
          $total = 0;
+         $total_anuladas = 0;
+         $total_otras = 0;
          foreach($this->lista_op as $key => $campo){              
              
                 if($this->getY()>230)
@@ -85,11 +87,21 @@ class PDF extends FPDF {
          
                 $total = $total + $campo['monto'];
                 
+                if($campo['estatus']=='Anulada'){
+                $total_anuladas = $total_anuladas + $campo['monto'];
+                }else{
+                $total_otras = $total_otras + $campo['monto'];    
+                }                
+                
                 }
                 $this->SetFont('COURIER','',10);  
                 $this->SetWidths(array(30,80,25,25,40));
                 $this->SetAligns(array("C","L","C","R","R"));  
-                $this->Row(array('','', '','TOTAL',number_format($total, 2, ',','.')),0,0);         
+                $this->Row(array('','', '','TOTAL',number_format($total, 2, ',','.')),0,0);
+                $this->Ln(5);
+                $this->Row(array('TOTAL ANULADAS',number_format($total_anuladas, 2, ',','.')),0,0);
+                $this->Ln(5);
+                $this->Row(array('TOTAL APROBADAS',number_format($total_otras, 2, ',','.')),0,0);
                   
 
    }
