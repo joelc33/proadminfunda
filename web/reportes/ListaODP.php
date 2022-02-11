@@ -99,6 +99,9 @@ class PDF extends FPDF {
                 $this->SetAligns(array("C","L","C","R","R"));  
                 $this->Row(array('','', '','TOTAL',number_format($total, 2, ',','.')),0,0);
                 $this->Ln(5);
+                $this->SetFont('COURIER','',10);  
+                $this->SetWidths(array(40,80,25,25,40));
+                $this->SetAligns(array("C","L","C","R","R"));
                 $this->Row(array('TOTAL ANULADAS',number_format($total_anuladas, 2, ',','.')),0,0);
                 $this->Ln(5);
                 $this->Row(array('TOTAL APROBADAS',number_format($total_otras, 2, ',','.')),0,0);
