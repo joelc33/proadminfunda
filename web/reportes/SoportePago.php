@@ -93,7 +93,7 @@ class PDF extends FPDF {
          $montopag = number_format($this->datos['mo_pagar'], 2, ',','.');
          $montopagado = number_format($this->datos['mo_pagado'], 2, ',','.');
          $montopend = number_format($this->datos['mo_pendiente'], 2, ',','.');
-         $this->Row(array('Nro. : '.$this->datos['tx_serial'],'Monto a Pagar: '.$montopag,'Monto Pagado: '.$montopagado,'Monto Pendiente: '.$montopend, 'Fecha: '.$this->datos['fe_emision']),1,1);                           
+         $this->Row(array('Nro. : '.$this->datos['nu_serial_pago'],'Monto a Pagar: '.$montopag,'Monto Pagado: '.$montopagado,'Monto Pendiente: '.$montopend, 'Fecha: '.$this->datos['fe_emision']),1,1);                           
          $this->SetWidths(array(40,160));
          $montoletra = numtoletras($this->datos['mo_pagar'], 1);        
          $this->Row(array('Cantidad: ',$montoletra),1,1);                  
@@ -211,6 +211,7 @@ class PDF extends FPDF {
                          to_char(tb063.fe_pago,'mm') as mes,
                          to_char(tb063.fe_pago,'yyyy') as anio,                          
                          tb001.nb_usuario,
+                         tb063.nu_serial_pago,
                          inicial                         
                    FROM tb026_solicitud as tb026     
                    left join tb039_requisiciones as tb039 on tb039.co_solicitud = tb026.co_solicitud
