@@ -595,7 +595,10 @@ class SolicitudActions extends sfActions
                 list($dia, $mes, $anio) = explode("/",$tb026_solicitudForm["fe_solicitud"]);
                 $FeEmision = $anio."-".$mes."-".$dia; 
             }else{
-                $FeEmision = date("Y-m-d"); 
+                list($dia, $mes, $anio) = explode("/",$tb026_solicitudForm["fe_solicitud"]);
+                $FeEmision = $anio."-".$mes."-".$dia;                 
+                
+//                $FeEmision = date("Y-m-d"); 
             }
             
            
