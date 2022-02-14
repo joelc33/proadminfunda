@@ -95,14 +95,23 @@ this.fe_solicitud = new Ext.form.DateField({
 	width:100
 });
 
+//this.fielset1 = new Ext.form.FieldSet({
+//    title:'Datos Personales Usuario',
+//    width:670,
+//    items:[
+//        this.usuario,
+//        <?php if($ejercicio == date("Y")){ }else{ ?>
+//        this.fe_solicitud
+//        <?php }  ?>
+//    ]
+//});
+
 this.fielset1 = new Ext.form.FieldSet({
     title:'Datos Personales Usuario',
     width:670,
     items:[
         this.usuario,
-        <?php if($ejercicio == date("Y")){ }else{ ?>
         this.fe_solicitud
-        <?php }  ?>
     ]
 });
 
