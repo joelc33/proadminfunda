@@ -1619,7 +1619,7 @@ class TesoreriaActions extends sfActions
     
     $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA,1);
     $c->addAnd(Tb030RutaPeer::IN_ACTUAL,true);
-    $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
+    //$c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
     
     
     //echo $c->toString(); exit();
