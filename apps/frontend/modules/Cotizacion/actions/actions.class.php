@@ -505,8 +505,8 @@ class CotizacionActions extends sfActions
                     "tx_serial_cotizacion"  => trim($res["tx_serial_cotizacion"]),
                     "tx_observacion"        => trim($res["tx_observacion"]),
                     "nu_iva"                => round($res["nu_iva"],0),
-                    "co_ruta_requisicion"   => $this->getTxRutaReporte(65,$res["co_solicitud"]),
-                    "co_ruta_presupuesto"   => $this->getTxRutaReporte(64,$res["co_solicitud"])
+                    "co_ruta_requisicion"   => $this->getTxRutaReporte(1,$res["co_solicitud"]),
+                    "co_ruta_presupuesto"   => $this->getTxRutaReporte(2,$res["co_solicitud"])
                 );
             }
 
@@ -577,8 +577,8 @@ class CotizacionActions extends sfActions
                     "nu_iva"                => round($res["nu_iva"],0),
                     "tx_rif"                => $res["inicial"].'-'.$res["tx_rif"],
                     "tx_razon_social"       => $res["tx_razon_social"],
-                    "co_ruta_requisicion"   => $this->getTxRutaReporte(65,$res["co_solicitud_cotizacion"]),
-                    "co_ruta_presupuesto"   => $this->getTxRutaReporte(64,$res["co_solicitud_cotizacion"]),
+                    "co_ruta_requisicion"   => $this->getTxRutaReporte(1,$res["co_solicitud_cotizacion"]),
+                    "co_ruta_presupuesto"   => $this->getTxRutaReporte(2,$res["co_solicitud_cotizacion"]),
                     "co_ruta_compra"        => $this->getTxRutaReporte(11,$res["co_solicitud"]),
                     "tipo"                  => trim($res["tipo"]),
                     "co_ramo"               => trim($res["co_ramo"]),
