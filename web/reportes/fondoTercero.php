@@ -20,21 +20,23 @@ class PDF extends FPDF {
 
         $this->SetFont('Arial','B',10);
         $this->SetTextColor(0,0,0);
-        $this->SetY(32);
+        $this->SetY(34);
         $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
         $this->Ln(6);
         $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
+        $this->Ln(6);
+        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');        
         //$this->Ln(6);
         //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACION Y FINANZAS'),0,0,'C');
         //$this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
         $this->Ln(15);
         $this->SetFont('Arial','B',10);
-        $this->Cell(0,0,utf8_decode('PAGO DE FONDO TERCERO'),0,0,'C');
-        $this->Ln(10);
+        $this->Cell(0,0,utf8_decode('PAGO DE FONDOS DE TERCEROS'),0,0,'C');
+        $this->Ln(5);
         $this->SetFont('Arial','',8);
 
         //$this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
+//        $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
         
         $this->Ln(6);
         $this->SetTextColor(0,0,0);
