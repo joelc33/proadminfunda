@@ -182,11 +182,12 @@ class PDF_Flo extends PDF_FlowingBlock
          if($this->datos['co_tipo_solicitud']==65){
          $this->Row(array(utf8_decode('ORDEN DE CONTRATO')),0,0);
          }else{
-         if($this->datos['co_tipo_solicitud']==2){
+         if($this->datos['co_tipo_solicitud']==1 ||$this->datos['co_tipo_solicitud']==2 ||$this->datos['co_tipo_solicitud']==63 ||$this->datos['co_tipo_solicitud']==64){
          $this->Row(array(utf8_decode('ORDEN DE '.$this->datos['tx_tipo_solicitud'])),0,0);     
-//         $this->Row(array(utf8_decode('SOPORTE DE COMPROMISO')),0,0);    
-         }else{    
-         $this->Row(array(utf8_decode('ORDEN DE '.$this->datos['tx_tipo_solicitud'])),0,0);    
+ 
+         }else{ 
+         $this->Row(array(utf8_decode('SOPORTE DE COMPROMISO')),0,0);                
+//         $this->Row(array(utf8_decode('ORDEN DE '.$this->datos['tx_tipo_solicitud'])),0,0);    
          }
          }
         $this->SetFont('Times','',10);
@@ -715,7 +716,7 @@ class PDF_Flo extends PDF_FlowingBlock
     {
         $conex = new ConexionComun();
         $sql ="   select distinct
-                         substr(tb085.co_categoria,1,6) as co_categoria,
+                         substr(tb085.co_categoria,1,11) as co_categoria,
                          tb085.de_partida,
                          tb085.nu_partida,
                          upper(tb052.tx_observacion) as tx_observacion,

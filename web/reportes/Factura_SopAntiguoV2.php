@@ -560,7 +560,7 @@ class PDF extends FPDF {
                          tb001.nb_usuario,
                          tb062.mo_pagar as nu_monto,
                          tb052.anio,
-                         tb052.co_solicitud,
+                         tb045.co_solicitud,
                          tb039.nu_requisicion,  
                          tb039.tx_concepto as concepto_req,
                          tb039.created_at, 
