@@ -1084,9 +1084,11 @@ class TesoreriaActions extends sfActions
        }
        
         /*ASIENTO CONTABLE*/
-      
+        if($co_tipo_solicitud == 14|| $co_tipo_solicitud == 38){
+            
+        }else{
         $co_cuenta_por_pagar = Tb130CuentaDocumentoPeer::getCoCuentaContable($co_solicitud); 
-         
+        } 
         if($co_tipo_solicitud == 14 || $co_tipo_solicitud == 38){
             //14-38Pagos de fondo a tercero 
                 
