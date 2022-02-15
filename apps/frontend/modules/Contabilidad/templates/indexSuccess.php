@@ -248,7 +248,7 @@ if(this.OBJ.co_proveedor!=''){
 
 
 this.gridPanelValuaciones = new Ext.grid.GridPanel({
-        title:'Lista de Valuaciones Cargardas para la Obra',
+        title:'Lista de Facturas Registradas',
         iconCls: 'icon-libro',
         store: this.store_lista_otra,
         loadMask:true,
@@ -365,7 +365,7 @@ items: [
 
 
 this.fieldPresupuesto= new Ext.form.FieldSet({
-        title: 'Datos de la Obra',
+        title: 'Datos de la Compra',
         items:[   
           this.compositefieldPresupuestoBase,
           this.tx_rif,

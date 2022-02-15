@@ -1290,6 +1290,7 @@ class ComprasActions extends sfActions
                     if($productoForm["co_detalle_requisicion"]!=''){
                         $tb053_detalle_compras->setCoDetalleRequisicion($productoForm["co_detalle_requisicion"]);
                     }
+
                     $tb053_detalle_compras->setNuCantidad($productoForm["nu_cantidad"]);
                     $tb053_detalle_compras->setPrecioUnitario($productoForm["precio_unitario"]);
                     $tb053_detalle_compras->setMonto($productoForm["monto"]);
@@ -1299,6 +1300,17 @@ class ComprasActions extends sfActions
                     $tb053_detalle_compras->setInCalcularIva(true);
                     $tb053_detalle_compras->setInExento($productoForm["in_exento"]);
                     $tb053_detalle_compras->save($con);
+
+                    if(!empty($productoForm["co_detalle_cotizacion"])){
+                          
+                        $wherec = new Criteria();
+                        $wherec->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_PRESU_BASE, $productoForm["co_detalle_cotizacion"]);
+
+                        $updc = new Criteria();
+                        $updc->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $tb053_detalle_compras->getCoDetalleCompras());
+                        BasePeer::doUpdate($wherec, $updc, $con);  
+
+                    }
                 }
         }
         
@@ -1324,7 +1336,18 @@ class ComprasActions extends sfActions
             $tb053_detalle_compras->setDetalle('IMPUESTO AL VALOR AGREGADO (IVA)');
             $tb053_detalle_compras->setCoPartida($tb052_comprasForm["co_partida_iva"]);
             $tb053_detalle_compras->setCoUnidadProducto(638);
-            $tb053_detalle_compras->save($con);        
+            $tb053_detalle_compras->save($con);  
+
+            if(!empty($tb052_comprasForm["tx_serial_cotizacion"])){
+                          
+              $wherec = new Criteria();
+              $wherec->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_PRESU_BASE, $this->getCoDetalleCotizacionIva($tb052_comprasForm["tx_serial_cotizacion"]));
+
+              $updc = new Criteria();
+              $updc->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $tb053_detalle_compras->getCoDetalleCompras());
+              BasePeer::doUpdate($wherec, $updc, $con);  
+
+            }      
         }
         
         if($tb052_comprasForm["co_contrato_compras"]!=''||$tb052_comprasForm["co_contrato_compras"]!=null){
@@ -1377,6 +1400,20 @@ class ComprasActions extends sfActions
         ));
       }
     }
+
+  protected function getCoDetalleCotizacionIva($tx_serial_cotizacion){
+
+        $c = new Criteria();
+        $c->addJoin(Tb206CotizacionPeer::CO_COTIZACION, Tb207DetalleCotizacionPeer::CO_COTIZACION);
+        $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO,19336);
+        $c->add(Tb206CotizacionPeer::TX_SERIAL_COTIZACION,$tx_serial_cotizacion);
+
+        $stmt = Tb207DetalleCotizacionPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $campos["co_detalle_cotizacion"];
+
+  }
     
   public function executeGuardarOrdenCompra(sfWebRequest $request)
   {
