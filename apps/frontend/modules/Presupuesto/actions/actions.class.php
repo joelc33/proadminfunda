@@ -1368,11 +1368,12 @@ class PresupuestoActions extends sfActions
         $co_detalle_cotizacion     = $this->getRequestParameter('co_detalle_cotizacion');
         $co_proyecto               = $this->getRequestParameter("co_proyecto");
         $co_accion                 = $this->getRequestParameter("co_accion");
-        $co_cotizacion                = $this->getRequestParameter("co_cotizacion");
+        $co_cotizacion             = $this->getRequestParameter("co_cotizacion");
         $co_ejecutor               = $this->getRequestParameter("co_ejecutor");
         $co_solicitud              = $this->getRequestParameter("co_solicitud");
         $mo_disponible             = $this->getRequestParameter("monto");
         $co_fuente_financiamiento  = $this->getRequestParameter("co_fuente_financiamiento");
+        $monto                     = $this->getRequestParameter("monto");
         
        
         $con = Propel::getConnection();
@@ -1383,22 +1384,57 @@ class PresupuestoActions extends sfActions
 
             $Tb207DetalleCotizacion = Tb207DetalleCotizacionPeer::retrieveByPK($co_detalle_cotizacion);
 
-//            if($mo_disponible<$Tb207DetalleCotizacion->getMonto()){
-//
-//                    $this->data = json_encode(array(
-//                        "success" => false,
-//                        "msg" =>  "El Monto Disponible de la partida es menor al monto total"
-//                     ));
-//            
-//            }else{
+            if($monto<$Tb207DetalleCotizacion->getMonto()){
+
+                    $this->data = json_encode(array(
+                        "success" => false,
+                        "msg" =>  "El Monto Disponible de la partida es menor al monto total"
+                     ));
+            
+            }else{
 
                     $programatica = $this->getProgramatica($co_presupuesto);
 
+
+                    if($Tb207DetalleCotizacion->getCoPresupuesto()!=''){
+
+
+                        $montod = $Tb207DetalleCotizacion->getMonto();
+                        $montod = $montod*(-1);
+
+                        $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
+                        $tb087_presupuesto_movimiento->setCoPartida($Tb207DetalleCotizacion->getCoPresupuesto())
+                                             ->setCoTipoMovimiento(4)
+                                             ->setNuMonto($montod)
+                                             //->setNuAnio(date('Y'))
+                                             ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
+                                             ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                             ->setCoDetallePresuBase($co_detalle_cotizacion)
+                                             ->setInActivo(true)
+                                             ->save($con);
+
+                    }
+
                         
                     $Tb207DetalleCotizacion->setCoPresupuesto($co_presupuesto)
-                                      // ->setCoProyectoAc($programatica['id_tb083_proyecto_ac'])
-                                      // ->setCoAccionEspecifica($programatica['id_tb084_accion_especifica'])
-                                       ->save($con);
+                                           ->save($con);
+
+                 //   echo $this->getUser()->getAttribute('ejercicio'); exit();
+
+
+
+
+                    $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
+                    $tb087_presupuesto_movimiento->setCoPartida($co_presupuesto)
+                                             ->setCoTipoMovimiento(1)
+                                             ->setNuMonto($Tb207DetalleCotizacion->getMonto())
+                                             //->setNuAnio(date('Y'))
+                                             ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
+                                             ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                             ->setCoDetallePresuBase($co_detalle_cotizacion)
+                                             ->setInActivo(true)
+                                             ->save($con);
+
 
                     $c = new Criteria();
                     $c->clearSelectColumns();
@@ -1425,9 +1461,7 @@ class PresupuestoActions extends sfActions
                         
                         
                        $co_cuenta_contable = $reg["co_cuenta_contable"];
-
-                       //$this->getCuentaContable($reg["id_tb084_accion_especifica"], $reg["nu_pa"], $reg["nu_ge"], $reg["nu_es"], $reg["nu_se"]);
-                       
+               
                        if($co_cuenta_contable==''){
                            $this->data = json_encode(array(
                                "success" => false,
@@ -1462,7 +1496,7 @@ class PresupuestoActions extends sfActions
                    ));
             $con->commit();
 
-//            }
+            }
          }catch (PropelException $e)
          {
             $con->rollback();
@@ -2946,6 +2980,73 @@ class PresupuestoActions extends sfActions
         ));
         
         $this->setTemplate('storelista');
+    }
+
+    public function executeQuitarPartidaPb(sfWebRequest $request){
+        
+        $co_detalle_cotizacion = $this->getRequestParameter("co_detalle_cotizacion");
+        $co_compras = $this->getRequestParameter("co_compras");
+        $co_asiento_contable = $this->getRequestParameter("co_asiento_contable");
+        
+        $con = Propel::getConnection();
+        try
+        { 
+            $con->beginTransaction();
+        
+            $tb207_detalle_cotizacion = Tb207DetalleCotizacionPeer::retrieveByPK($co_detalle_cotizacion);
+            
+            $monto = $tb207_detalle_cotizacion->getMonto();
+            $monto = $monto*(-1);
+
+            $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
+            $tb087_presupuesto_movimiento->setCoPartida($tb207_detalle_cotizacion->getCoPresupuesto())
+                                             ->setCoTipoMovimiento(4)
+                                             ->setNuMonto($monto)
+                                             //->setNuAnio(date('Y'))
+                                             ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
+                                             ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                             ->setCoDetallePresuBase($co_detalle_cotizacion)
+                                             ->setInActivo(true)
+                                             ->save($con);
+
+
+
+
+            $tb207_detalle_cotizacion->setCoPresupuesto(null)
+                                     ->save($con);   
+
+            $c = new Criteria();
+            $c->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION,$co_detalle_cotizacion);  
+            $c->addJoin(Tb206CotizacionPeer::CO_COTIZACION, Tb207DetalleCotizacionPeer::CO_COTIZACION);
+            $stmt = Tb206CotizacionPeer::doSelectStmt($c);
+            $campos = $stmt->fetch(PDO::FETCH_ASSOC);        
+            
+            
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($campos["co_solicitud"]));
+            $ruta->setInCargarDato(false)->save($con);
+                
+            $con->commit();
+            
+            
+            
+            $this->data = json_encode(array(
+                        "success" => true,
+                        "msg" => "La transacción con la partida se realizó exitosamente"
+            ));
+            
+        
+        }catch (PropelException $e)
+        {
+                    $con->rollback();
+            $this->data = json_encode(array(
+                "success" => false,
+                "msg" => $e->getMessage()
+            ));
+        }  
+        
+        
+        $this->setTemplate('cambiarEstado');
+        
     }
     
     

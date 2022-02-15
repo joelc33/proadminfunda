@@ -102,7 +102,7 @@ this.quitar_partida= new Ext.Button({
 	if(boton=="yes"){
         Ext.Ajax.request({
             method:'POST',
-            url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/quitarPartida',
+            url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/quitarPartidaPb',
             params:{
                 co_detalle_cotizacion:ContabilidadEditar.main.gridPanel.getSelectionModel().getSelected().get('co_detalle_cotizacion'),
                 co_compras:ContabilidadEditar.main.OBJ.co_compras,
