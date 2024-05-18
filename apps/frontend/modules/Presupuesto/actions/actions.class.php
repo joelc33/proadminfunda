@@ -1419,10 +1419,6 @@ class PresupuestoActions extends sfActions
                     $Tb207DetalleCotizacion->setCoPresupuesto($co_presupuesto)
                                            ->save($con);
 
-                 //   echo $this->getUser()->getAttribute('ejercicio'); exit();
-
-
-
 
                     $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
                     $tb087_presupuesto_movimiento->setCoPartida($co_presupuesto)

@@ -162,7 +162,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(113);
         $this->SetWidths(array(80));
         $this->SetAligns(array("C"));
-        $this->Row(array(utf8_decode('ALCALDIA DE SAN FRANCISCO')),0,0);
+        $this->Row(array(utf8_decode('<NOMBRE DE LA INSTITUCION>')),0,0);
 
 
 

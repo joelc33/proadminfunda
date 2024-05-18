@@ -19,7 +19,7 @@ define("SERVIDOR","10.0.0.3"); */
 
 
 define("USUARIO","postgres");
-define("CLAVE","2021cafe**");
+define("CLAVE","1234");
 define("BASEDEDATOS","administrativo");
 define("SERVIDOR","localhost");
 
@@ -139,7 +139,7 @@ class ConexionComun{
         $pdf->SetY(32);
         $pdf->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
         $pdf->Ln(6);
-        $pdf->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
+        $pdf->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
         $pdf->Ln(6);
         return $pdf;
     }

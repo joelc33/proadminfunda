@@ -2,7 +2,7 @@
 
 class Tb004MenuPeer extends BaseTb004MenuPeer
 {
-    static public function  ArmaMenu($co_rol,$nb_usuario){
+    static public function  ArmaMenu($co_rol,$co_usuario){
 
         /*
          * Se buscan las opciones de menu padre
@@ -37,6 +37,14 @@ class Tb004MenuPeer extends BaseTb004MenuPeer
 
 
                 }
+
+                /*elseif($resul->getCoMenu()==21){
+
+                   $menu.="{text: '<b>".$resul->getTxMenu().' '.$usuario."</b>',
+                                 iconCls:'".$resul->getTxIcono()."',
+                                 menu: [".self::ArmaSubmenu($co_rol,$co_usuario)."],},";
+
+                }*/
         }
 
         return $menu;
@@ -51,6 +59,70 @@ class Tb004MenuPeer extends BaseTb004MenuPeer
         $c->add(Tb005RolMenuPeer::IN_VER,'t');
         $c->addJoin(self::CO_MENU,Tb005RolMenuPeer::CO_MENU);
         return self::doCount($c);
+    }
+
+    static public function ArmaSubmenuSolicitud($co_rol,$co_usuario){
+
+
+
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+        $c->addSelectColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
+        $c->addSelectColumn(Tb032ConfiguracionRutaPeer::TX_URL);
+        $c->addSelectColumn(Tb032ConfiguracionRutaPeer::TX_MODULO);
+
+        $c->addJoin(Tb006TipoSolicitudUsuarioPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+        $c->addJoin(Tb032ConfiguracionRutaPeer::CO_TIPO_SOLICITUD,Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+        $c->add(Tb032ConfiguracionRutaPeer::NU_ORDEN,1); 
+        $c->add(Tb006TipoSolicitudUsuarioPeer::CO_USUARIO,$co_usuario); 
+        $c->add(Tb027TipoSolicitudPeer::IN_VER,true);        
+        $c->addAscendingOrderByColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
+        
+
+        //echo $c->toString(); exit();
+
+        $res = Tb027TipoSolicitudPeer::doSelectStmt($c);  
+
+        $submenu = '';
+
+        foreach($res as $result){
+
+         //  var_dump($result); exit();
+
+            $submenu.= "{
+                                    text:'".$result['tx_tipo_solicitud']."',
+                                    iconCls:'',
+                                    id:'".$result['co_tipo_solicitud']."',
+                                    leaf:true,
+                                    listeners :{
+
+                                        click: function(){
+                                            var msg = Ext.get('tabPrincipal');
+                                                msg.load({
+                                                        url: 'Solicitud/index',
+                                                        scripts: true,
+                                                        text: 'Cargando...',
+                                                        params:{
+                                                            tx_tipo_solicitud: '".$result['tx_tipo_solicitud']."',
+                                                            co_tipo_solicitud: '".$result['co_tipo_solicitud']."',
+                                                            tx_url: '".$result['tx_modulo']."/".$result['tx_url']."'
+                                                        }
+                                                });
+                                            panel_detalle.collapse();
+                                        }
+                                    }
+            },";
+            
+
+
+        }
+
+     
+        return  $submenu;
+
+
+
     }
 
     static public function ArmaSubmenu($co_padre,$co_rol,$nb_menu,$icono){

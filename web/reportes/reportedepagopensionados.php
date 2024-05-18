@@ -94,8 +94,8 @@ left join tbrh013_nomina as tbrh013 on tbrh015.co_tp_nomina = tbrh013.co_tp_nomi
     $pdf->SetXY(10,50);                                        
     $pdf->Write(5,utf8_decode('COMPAÑIA:'));
     $pdf->SetFont('arial','',8);
-    //$pdf->Write(5,utf8_decode(" ".'ALCALDIA DE SAN FRANCISCO'));
-    $pdf->Cell(60,05,"ALCALDIA DE SAN FRANCISCO",0,0,'L');
+    //$pdf->Write(5,utf8_decode(" ".'<NOMBRE DE LA INSTITUCION>'));
+    $pdf->Cell(60,05,"<NOMBRE DE LA INSTITUCION>",0,0,'L');
 
     $pdf->SetFont('arial', 'B', 8); 
     $pdf->SetXY(80,50);

@@ -1153,6 +1153,7 @@ propel:
     in_anular: { type: BOOLEAN, required: false }
     in_cerrado: { type: BOOLEAN, required: false }
     nu_monto_soberano: { type: NUMERIC, size: '32', scale: '2', required: false }
+    co_detalle_presu_base: { type: BIGINT, required: false }
     _indexes: { fki_co_compra_servicio: [co_compra_servicio], fki_co_detalle_compra: [co_detalle_compra], fki_co_tipo_movimiento: [co_tipo_movimiento], tb087_presupuesto_movimiento_co_: [co_partida] }
   tb088_tipo_movimiento:
     _attributes: { phpName: Tb088TipoMovimiento }
@@ -1578,6 +1579,7 @@ propel:
     co_requisicion: { type: BIGINT, required: false }
     co_solicitud_anular: { type: BIGINT, required: false }
     in_anular: { type: BOOLEAN, required: false }
+    co_detalle_compra: { type: BIGINT, required: false }
     _indexes: { fki_co_factura_detalle_fact: [co_factura], fki_co_odp_detalle_fact: [co_odp], fki_co_producto_detalle_fact: [co_producto] }
   tb130_cuenta_documento:
     _attributes: { phpName: Tb130CuentaDocumento }

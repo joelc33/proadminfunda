@@ -34,27 +34,27 @@ this.co_compras = new Ext.form.Hidden({
 
 
 this.co_requisicion = new Ext.form.Hidden({
-	name:'tb052_compras[co_requisicion]',
-	value:this.OBJ.co_requisicion,
-	allowBlank:false
+    name:'tb052_compras[co_requisicion]',
+    value:this.OBJ.co_requisicion,
+    allowBlank:false
 });
 
 this.co_solicitud = new Ext.form.Hidden({
-	name:'tb052_compras[co_solicitud]',
-	value:this.OBJ.co_solicitud,
-	allowBlank:false
+    name:'tb052_compras[co_solicitud]',
+    value:this.OBJ.co_solicitud,
+    allowBlank:false
 });
 
 this.co_tipo_solicitud = new Ext.form.Hidden({
-	name:'tb052_compras[co_tipo_solicitud]',
-	value:this.OBJ.co_tipo_solicitud,
-	allowBlank:false
+    name:'tb052_compras[co_tipo_solicitud]',
+    value:this.OBJ.co_tipo_solicitud,
+    allowBlank:false
 });
 
 this.co_contrato_compras = new Ext.form.Hidden({
-	name:'tb052_compras[co_contrato_compras]',
-	value:this.OBJ.co_contrato_compras,
-	allowBlank:false
+    name:'tb052_compras[co_contrato_compras]',
+    value:this.OBJ.co_contrato_compras,
+    allowBlank:false
 });
 
 this.hiddenJsonProducto  = new Ext.form.Hidden({
@@ -83,9 +83,9 @@ this.monto_total  = new Ext.form.Hidden({
 });
 
 this.in_responsabilidad_social = new Ext.form.Checkbox({
-	fieldLabel:'Compromiso de Responsabilidad Social',
+    fieldLabel:'Compromiso de Responsabilidad Social',
         style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-	name:'tb052_compras[in_responsabilidad_social]',
+    name:'tb052_compras[in_responsabilidad_social]',
         checked:(this.OBJ.in_responsabilidad_social=='1') ? true:false
 });
 
@@ -95,36 +95,36 @@ this.nu_compra = new Ext.form.DisplayField({
 });
 
 this.co_documento = new Ext.form.ComboBox({
-	fieldLabel:'Co documento',
-	store: this.storeCO_DOCUMENTO,
-	typeAhead: true,
-	valueField: 'co_documento',
-	displayField:'inicial',
-	hiddenName:'tb008_proveedor[co_documento]',
-	forceSelection:true,
-	resizable:true,
-	triggerAction: 'all',
-	selectOnFocus: true,
+    fieldLabel:'Co documento',
+    store: this.storeCO_DOCUMENTO,
+    typeAhead: true,
+    valueField: 'co_documento',
+    displayField:'inicial',
+    hiddenName:'tb008_proveedor[co_documento]',
+    forceSelection:true,
+    resizable:true,
+    triggerAction: 'all',
+    selectOnFocus: true,
         readOnly:(this.OBJ.co_factura!='')?true:false,
-	style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-	mode: 'local',
-	width:50,
-	allowBlank:false
+    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
+    mode: 'local',
+    width:50,
+    allowBlank:false
 });
 this.storeCO_DOCUMENTO.load();
-	paqueteComunJS.funcion.seleccionarComboByCo({
-	objCMB: this.co_documento,
-	value:  (this.OBJ.co_documento=='')?4:this.OBJ.co_documento,
-	objStore: this.storeCO_DOCUMENTO
+    paqueteComunJS.funcion.seleccionarComboByCo({
+    objCMB: this.co_documento,
+    value:  (this.OBJ.co_documento=='')?4:this.OBJ.co_documento,
+    objStore: this.storeCO_DOCUMENTO
 });
 
 this.tx_rif = new Ext.form.TextField({
-	name:'tb008_proveedor[tx_rif]',
-	value:this.OBJ.tx_rif,
+    name:'tb008_proveedor[tx_rif]',
+    value:this.OBJ.tx_rif,
         readOnly:(this.OBJ.co_factura!='')?true:false,
-	style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-	allowBlank:false,
-	width:130
+    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
+    allowBlank:false,
+    width:130
 });
 this.co_documento.on("blur",function(){
     if(ComprasEditar.main.tx_rif.getValue()!=''){
@@ -140,48 +140,48 @@ this.compositefieldCIRIF = new Ext.form.CompositeField({
 fieldLabel: 'Cedula/Rif',
 width:190,
 items: [
-	this.co_documento,
-	this.tx_rif,
-	]
+    this.co_documento,
+    this.tx_rif,
+    ]
 });
 
 
 this.tx_razon_social = new Ext.form.TextField({
-	fieldLabel:'Razon Social',
-	name:'tb008_proveedor[tx_razon_social]',
-	value:this.OBJ.tx_razon_social,
+    fieldLabel:'Razon Social',
+    name:'tb008_proveedor[tx_razon_social]',
+    value:this.OBJ.tx_razon_social,
         readOnly:(this.OBJ.co_factura!='')?true:false,
-	style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-	allowBlank:false,
-	width:770
+    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
+    allowBlank:false,
+    width:770
 });
 
 this.tx_direccion = new Ext.form.TextField({
-	fieldLabel:'Direccion',
-	name:'tb008_proveedor[tx_direccion]',
-	value:this.OBJ.tx_direccion,
-	allowBlank:false,
+    fieldLabel:'Direccion',
+    name:'tb008_proveedor[tx_direccion]',
+    value:this.OBJ.tx_direccion,
+    allowBlank:false,
         readOnly:(this.OBJ.co_factura!='')?true:false,
-	style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-	width:770
+    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
+    width:770
 });
 
 this.co_ramo = new Ext.form.ComboBox({
-	fieldLabel:'Ramo',
-	store: this.storeCO_RAMO,
-	typeAhead: true,
-	valueField: 'co_ramo',
-	displayField:'tx_ramo',
-	hiddenName:'tb052_compras[co_ramo]',
-	forceSelection:true,
-	resizable:true,
+    fieldLabel:'Ramo',
+    store: this.storeCO_RAMO,
+    typeAhead: true,
+    valueField: 'co_ramo',
+    displayField:'tx_ramo',
+    hiddenName:'tb052_compras[co_ramo]',
+    forceSelection:true,
+    resizable:true,
         readOnly:(this.OBJ.co_factura!='')?true:false,
-	style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-	triggerAction: 'all',
-	selectOnFocus: true,
-	mode: 'local',
-	width:415,
-	allowBlank:false,
+    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
+    triggerAction: 'all',
+    selectOnFocus: true,
+    mode: 'local',
+    width:415,
+    allowBlank:false,
         listeners: {
           getSelectedIndex: function() {
             var v = this.getValue();
@@ -208,25 +208,25 @@ this.fieldProveedor= new Ext.form.FieldSet({
         items:[
           this.compositefieldCIRIF,
           this.tx_razon_social,
-          this.tx_direccion,
+        //  this.tx_direccion,
           //this.co_ramo
        ]
 });
 
 this.co_tp_contrato = new Ext.form.ComboBox({
-	fieldLabel:'Tipo de Contrato',
-	store: this.storeCO_TPCONTRATO,
-	typeAhead: true,
-	valueField: 'co_tp_contrato',
-	displayField:'tx_tp_contrato',
-	hiddenName:'tb052_compras[co_tp_contrato]',
-	forceSelection:true,
-	resizable:true,
-	triggerAction: 'all',
-	selectOnFocus: true,
-	mode: 'local',
-	width:415,
-	allowBlank:false
+    fieldLabel:'Tipo de Contrato',
+    store: this.storeCO_TPCONTRATO,
+    typeAhead: true,
+    valueField: 'co_tp_contrato',
+    displayField:'tx_tp_contrato',
+    hiddenName:'tb052_compras[co_tp_contrato]',
+    forceSelection:true,
+    resizable:true,
+    triggerAction: 'all',
+    selectOnFocus: true,
+    mode: 'local',
+    width:415,
+    allowBlank:false
 });
 this.storeCO_TPCONTRATO.load();
 paqueteComunJS.funcion.seleccionarComboByCo({
@@ -237,42 +237,42 @@ objStore: this.storeCO_TPCONTRATO
 
 
 this.fecha_inicio = new Ext.form.DateField({
-	fieldLabel:'Fecha Inicio',
-	name:'tb052_compras[fecha_inicio]',
-	value:this.OBJ.fecha_inicio,
-	allowBlank:false,
-	width:100
+    fieldLabel:'Fecha Inicio',
+    name:'tb052_compras[fecha_inicio]',
+    value:this.OBJ.fecha_inicio,
+    allowBlank:false,
+    width:100
 });
 this.fecha_fin = new Ext.form.DateField({
-	fieldLabel:'Fecha Fin',
-	name:'tb052_compras[fecha_fin]',
-	value:this.OBJ.fecha_fin,
-	allowBlank:false,
-	width:100
+    fieldLabel:'Fecha Fin',
+    name:'tb052_compras[fecha_fin]',
+    value:this.OBJ.fecha_fin,
+    allowBlank:false,
+    width:100
 });
 this.fecha_entrega = new Ext.form.DateField({
-	fieldLabel:'Fecha Entrega',
-	name:'tb052_compras[fecha_entrega]',
-	value:this.OBJ.fecha_entrega,
-	allowBlank:false,
-	width:100
+    fieldLabel:'Fecha Entrega',
+    name:'tb052_compras[fecha_entrega]',
+    value:this.OBJ.fecha_entrega,
+    allowBlank:false,
+    width:100
 });
 
 this.forma_pago = new Ext.form.TextField({
-	fieldLabel:'Forma de Pago',
-	name:'tb052_compras[forma_pago]',      
-	allowBlank:false,
-	width:200
+    fieldLabel:'Forma de Pago',
+    name:'tb052_compras[forma_pago]',      
+    allowBlank:false,
+    width:200
 });
 
 this.monto_contrato = new Ext.form.NumberField({
-	fieldLabel:'Monto Presupuesto',
-	name:'tb052_compras[monto]',
+    fieldLabel:'Monto Presupuesto',
+    name:'tb052_compras[monto]',
         value:  this.OBJ.monto,        
         readOnly:(this.OBJ.co_factura!='')?true:false,
-	style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-	allowBlank:false,
-	width:200
+    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
+    allowBlank:false,
+    width:200
 });
 
 this.Panelforma = new Ext.Panel({
@@ -297,18 +297,18 @@ this.Panelforma = new Ext.Panel({
 });
 
 this.tiempo_garantia = new Ext.form.TextField({
-	fieldLabel:'Garantia',
-	name:'tb052_compras[tiempo_garantia]',
-	value:this.OBJ.tiempo_garantia,
-	width:200
+    fieldLabel:'Garantia',
+    name:'tb052_compras[tiempo_garantia]',
+    value:this.OBJ.tiempo_garantia,
+    width:200
 });
 
 this.forma_entrega = new Ext.form.TextField({
-	fieldLabel:'Forma de Entrega',
-	name:'tb052_compras[forma_entrega]',
-	value:this.OBJ.forma_entrega,
+    fieldLabel:'Forma de Entrega',
+    name:'tb052_compras[forma_entrega]',
+    value:this.OBJ.forma_entrega,
         allowBlank:false,
-	width:200
+    width:200
 });
 
 this.Paneltiempo = new Ext.Panel({
@@ -333,20 +333,64 @@ this.Paneltiempo = new Ext.Panel({
 });
 
 this.nu_orden_compra = new Ext.form.TextField({
-	fieldLabel:'Nro. Proceso',
-	name:'tb052_compras[nu_orden_compra]',
-	value:this.OBJ.nu_orden_compra,
+    fieldLabel:'Nro. Proceso',
+    name:'tb052_compras[nu_orden_compra]',
+    value:this.OBJ.nu_orden_compra,
         allowBlank:false,
-	width:200
+    width:200
+});
+
+this.tx_serial_cotizacion = new Ext.form.TextField({
+    fieldLabel:'Código',
+    name:'tb052_compras[tx_serial_cotizacion]',
+    value:this.OBJ.tx_serial_cotizacion,
+    allowBlank:false,
+    width:100,
+    readOnly:true,
+    style:'background:#c9c9c9;',
 });
 
 this.tx_observacion = new Ext.form.TextArea({
-	fieldLabel:'Observacion',
-	name:'tb052_compras[tx_observacion]',
-	value:this.OBJ.tx_observacion,
-	allowBlank:false,
-	width:775
+    fieldLabel:'Observacion',
+    name:'tb052_compras[tx_observacion]',
+    value:this.OBJ.tx_observacion,
+    allowBlank:false,
+    width:775,
+    readOnly:true,
+    style:'background:#c9c9c9;',
 });
+
+this.buscar = new Ext.Button({
+    text:'Buscar',
+    iconCls: 'icon-buscar',
+    handler:function(){
+        this.msg = Ext.get('formularioAgregar');
+        this.msg.load({
+            url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Cotizacion/buscarPresupuestoBase',
+            scripts: true,
+            text: "Cargando.."
+        });
+    }
+});
+
+this.compositefieldPresupuestoBase = new Ext.form.CompositeField({
+fieldLabel: 'Codigo',
+width:190,
+items: [
+        this.tx_serial_cotizacion,
+        this.buscar,
+    ]
+});
+
+
+this.fieldPresupuesto= new Ext.form.FieldSet({
+        title: 'Presupuesto Base',
+        items:[   
+          this.compositefieldPresupuestoBase,
+          this.tx_observacion
+       ]
+});
+
 this.fieldContrato= new Ext.form.FieldSet({
         title: 'Datos del Contrato',
         items:[
@@ -358,58 +402,58 @@ this.fieldContrato= new Ext.form.FieldSet({
           this.in_responsabilidad_social,
           this.Panelforma,
           this.Paneltiempo,
-          this.tx_observacion
+         // this.tx_observacion
        ]
 });
 
 
 this.fecha_compra = new Ext.form.DateField({
-	fieldLabel:'Fecha Compra',
-	name:'tb052_compras[fecha_compra]',
-	value:this.OBJ.fecha_compra,
-	allowBlank:false,
-	width:100
+    fieldLabel:'Fecha Compra',
+    name:'tb052_compras[fecha_compra]',
+    value:this.OBJ.fecha_compra,
+    allowBlank:false,
+    width:100
 });
 
 this.co_iva_factura = new Ext.form.ComboBox({
-	fieldLabel:'IVA',
-	store: this.storeCO_IVA_FACTURA,
-	typeAhead: true,
-	valueField: 'nu_valor',
-	displayField:'nu_valor',
+    fieldLabel:'IVA',
+    store: this.storeCO_IVA_FACTURA,
+    typeAhead: true,
+    valueField: 'nu_valor',
+    displayField:'nu_valor',
         id:'co_iva_factura',
-	hiddenName:'tb052_compras[co_iva_factura]',
-	forceSelection:true,
-	resizable:true,
+    hiddenName:'tb052_compras[co_iva_factura]',
+    forceSelection:true,
+    resizable:true,
         readOnly:(this.OBJ.co_factura!='')?true:false,
-	style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
-	triggerAction: 'all',
-	selectOnFocus: true,
-	mode: 'local',
-	width:50,
-	allowBlank:false
+    style:(this.OBJ.co_factura!='')?'background:#c9c9c9;':'',
+    triggerAction: 'all',
+    selectOnFocus: true,
+    mode: 'local',
+    width:50,
+    allowBlank:false
 });
 this.storeCO_IVA_FACTURA.load();
-	paqueteComunJS.funcion.seleccionarComboByCo({
-	objCMB: this.co_iva_factura,
-	value:  this.OBJ.co_iva_factura,
-	objStore: this.storeCO_IVA_FACTURA
+    paqueteComunJS.funcion.seleccionarComboByCo({
+    objCMB: this.co_iva_factura,
+    value:  this.OBJ.co_iva_factura,
+    objStore: this.storeCO_IVA_FACTURA
 });
 
 this.co_ente = new Ext.form.ComboBox({
-	fieldLabel:'Entregar En',
-	store: this.storeCO_ENTE,
-	typeAhead: true,
-	valueField: 'co_ente',
-	displayField:'tx_ente',
-	hiddenName:'tb052_compras[co_ente]',
-	forceSelection:true,
-	resizable:true,
-	triggerAction: 'all',
-	selectOnFocus: true,
-	mode: 'local',
-	width:387,
-	allowBlank:false,
+    fieldLabel:'Entregar En',
+    store: this.storeCO_ENTE,
+    typeAhead: true,
+    valueField: 'co_ente',
+    displayField:'tx_ente',
+    hiddenName:'tb052_compras[co_ente]',
+    forceSelection:true,
+    resizable:true,
+    triggerAction: 'all',
+    selectOnFocus: true,
+    mode: 'local',
+    width:387,
+    allowBlank:false,
         listeners: {
         getSelectedIndex: function() {
         var v = this.getValue();
@@ -419,10 +463,10 @@ this.co_ente = new Ext.form.ComboBox({
         }
 });
 this.storeCO_ENTE.load();
-	paqueteComunJS.funcion.seleccionarComboByCo({
-	objCMB: this.co_ente,
-	value:  this.OBJ.co_ente,
-	objStore: this.storeCO_ENTE
+    paqueteComunJS.funcion.seleccionarComboByCo({
+    objCMB: this.co_ente,
+    value:  this.OBJ.co_ente,
+    objStore: this.storeCO_ENTE
 });
 
 
@@ -484,6 +528,9 @@ this.botonEliminar.disable();
 function renderMonto(val, attr, record) {
      return paqueteComunJS.funcion.getNumeroFormateado(val);
 }
+
+
+
 this.gridPanel = new Ext.grid.GridPanel({
         title:'Lista de Materiales',
         iconCls: 'icon-libro',
@@ -577,7 +624,7 @@ this.guardar = new Ext.Button({
                          closable: false,
                          icon: Ext.MessageBox.INFO,
                          resizable: false,
-			 animEl: document.body,
+             animEl: document.body,
                          buttons: Ext.MessageBox.OK
                      });
                  }
@@ -607,14 +654,15 @@ this.tabuladores = new Ext.TabPanel({
         enableTabScroll:true,
         autoWidth:true,
         deferredRender:false,
-        height:520,
+        height:580,
         autoScroll:true,
         activeTab: 0,
         defaults: {autoScroll:true},
         items:[
                 {
                         title: 'Datos de la Compra',
-                        items:[ this.fieldProveedor,
+                        items:[ this.fieldPresupuesto,
+                                this.fieldProveedor,
                                 this.fieldContrato]
                 },
                 {
@@ -627,7 +675,7 @@ this.tabuladores = new Ext.TabPanel({
 this.formPanel_ = new Ext.form.FormPanel({
     frame:true,
     width:990,
-    height:630,
+    height:660,
     autoScroll:true,
     bodyStyle:'padding:0px;',
     items:[
@@ -664,7 +712,7 @@ this.winformPanel_ = new Ext.Window({
     width:1004,
     frame:true,
     closabled:true,
-    height:644,
+    height:674,
     tbar   : tbar,
     items:[
         this.formPanel_
@@ -872,7 +920,7 @@ verificarProveedor:function(){
                         ComprasEditar.main.co_documento.setValue("");
                         ComprasEditar.main.tx_rif.setValue("");
                         ComprasEditar.main.tx_razon_social.setValue("");
-			ComprasEditar.main.tx_direccion.setValue("");
+            ComprasEditar.main.tx_direccion.setValue("");
                         ComprasEditar.main.co_ramo.clearValue();
                         ComprasEditar.main.storeCO_RAMO.removeAll();
 

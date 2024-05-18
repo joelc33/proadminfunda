@@ -18,7 +18,7 @@ class inicioActions extends sfActions
       $this->getRequest()->setAttribute('ejercicio', $this->ejercicio);
 
       
-     $menu = Tb004MenuPeer::ArmaMenu($this->getUser()->getAttribute('rol')); 
+     $menu = Tb004MenuPeer::ArmaMenu($this->getUser()->getAttribute('rol'),$this->getUser()->getAttribute('codigo')); 
      
      $this->getRequest()->setAttribute('menu', $menu);
      $this->usuario = $this->getUser()->setAttribute('member_id', $this->nombre); 

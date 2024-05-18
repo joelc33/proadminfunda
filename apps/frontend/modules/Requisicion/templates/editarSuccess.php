@@ -147,6 +147,14 @@ this.tx_concepto = new Ext.form.TextField({
 	width:680
 });
 
+this.nu_requisicion = new Ext.form.NumberField({
+    fieldLabel:'Nro Requisición',
+    name:'tb039_requisiciones[nu_requisicion]',
+    value:this.OBJ.nu_requisicion,
+    allowBlank:false,
+    width:100
+});
+
 this.tx_observacion = new Ext.form.TextArea({
 	fieldLabel:'Observaciones',
 	name:'tb039_requisiciones[tx_observacion]',

@@ -18,7 +18,7 @@ class PDF extends FPDF {
         $this->Cell(30,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
         $this->SetY(14);
         $this->SetX(140); // configura la linea donde comenzara escribir en el eje de y
-        $this->Cell(30,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
+        $this->Cell(30,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
                
     
 

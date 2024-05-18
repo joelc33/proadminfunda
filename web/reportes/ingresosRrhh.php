@@ -17,7 +17,7 @@ class PDF extends FPDF {
         $this->SetFont('Arial','B',12);
         $this->Ln(5);
         $this->SetX(100);
-        $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'L');
+        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'L');
         $this->Ln(5);
         $this->SetX(101);
         $this->Cell(0,0,utf8_decode('OFICINA DE RECURSOS HUMANOS'),0,0,'L');

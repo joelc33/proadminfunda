@@ -8,6 +8,10 @@ init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'<?php echo $data ?>'});
 
+this.codigo;
+this.co_tipo_solicitud;
+this.co_proceso;
+
 this.storeCO_PROCESO = this.getStoreCO_PROCESO();
 
 this.storeCO_DOCUMENTO = this.getStoreCO_DOCUMENTO();
@@ -162,6 +166,45 @@ function renderRectificacion(val, attr, record) {
     }
 }
 
+this.formulario = new Ext.Button({
+                 text:'Cargar Datos',
+                 iconCls: 'icon-cambio',
+                 handler:function(){
+                     this.msg = Ext.get('formulariosolicitud');
+                     this.msg.load({
+                      url:"<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/cargarDatos",
+                      scripts: true,
+                      text: "Cargando..",
+                      params:{
+                            co_solicitud:pendienteEntidadesLista.main.codigo,
+                            co_tipo_solicitud: pendienteEntidadesLista.main.co_tipo_solicitud,
+                            co_proceso: pendienteEntidadesLista.main.co_proceso
+                      }
+                     });
+                 }
+});
+
+this.detalle = new Ext.Button({
+                 text:'Historico Solicitud',
+                 iconCls: 'icon-buscar',
+                 handler:function(){
+                     this.msg = Ext.get('formulariosolicitud');
+                     this.msg.load({
+                      url:"<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/historial",
+                      scripts: true,
+                      text: "Cargando..",
+                      params:{
+                            co_solicitud:pendienteEntidadesLista.main.codigo,
+                            co_tipo_solicitud: pendienteEntidadesLista.main.co_tipo_solicitud,
+                            co_proceso: pendienteEntidadesLista.main.co_proceso
+                      }
+                     });
+                 }
+});
+
+this.detalle.disable();
+this.formulario.disable();
+
 this.gridPanel_ = new Ext.grid.GridPanel({
 //    title:'Lista de solicitud',
     iconCls: 'icon-libro',
@@ -170,7 +213,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 //    frame:true,
     height:396,
     tbar:[
-        this.estado,'-',this.revision
+        this.estado,'-',this.formulario,'-',this.detalle,'-','-',this.revision
     ],
     columns: [
     new Ext.grid.RowNumberer(),
@@ -191,32 +234,12 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 	
          pendienteEntidadesLista.main.estado.enable();
          pendienteEntidadesLista.main.revision.enable();
-         
-         var cant_revision =  pendienteEntidadesLista.main.store_lista.getAt(rowIndex).get('cant_revision');
-                 
-         if(cant_revision>0){
-            pendienteEntidadesLista.main.estado.disable();  
-         }        
-        
-         var msg = Ext.get('detalle');
-         msg.load({
-                url: '<?php echo $_SERVER['SCRIPT_NAME']?>/Solicitud/detalleEntidades',
-                scripts: true,
-                params:
-                {
-                    codigo: pendienteEntidadesLista.main.store_lista.getAt(rowIndex).get('co_solicitud'),
-                    co_tipo_solicitud: pendienteEntidadesLista.main.store_lista.getAt(rowIndex).get('co_tipo_solicitud'),
-                    co_proceso: pendienteEntidadesLista.main.store_lista.getAt(rowIndex).get('co_proceso')
+         pendienteEntidadesLista.main.formulario.enable();
+         pendienteEntidadesLista.main.detalle.enable();
 
-                },
-                text: 'Cargando...'
-         });
-        
-    
-         if(panel_detalle.collapsed == true)
-         {
-            panel_detalle.toggleCollapse();
-         } 
+         pendienteEntidadesLista.main.codigo = pendienteEntidadesLista.main.store_lista.getAt(rowIndex).get('co_solicitud');
+         pendienteEntidadesLista.main.co_tipo_solicitud = pendienteEntidadesLista.main.store_lista.getAt(rowIndex).get('co_tipo_solicitud');
+         pendienteEntidadesLista.main.co_proceso = pendienteEntidadesLista.main.store_lista.getAt(rowIndex).get('co_proceso');
     
     }},
     bbar: new Ext.PagingToolbar({

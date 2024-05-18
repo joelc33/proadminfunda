@@ -118,7 +118,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
   
           $sql = "( SELECT tb155.co_solicitud, case when (tb063.co_forma_pago=1) then 'ND-'|| tb063.nu_pago 
                                 else tb153.nu_tipo_documento_cuenta ||'-'|| substring(tb155.nu_documento,4,20) end as documento, 
-                                case when (tb026.co_tipo_solicitud=18) then 'ALCALDIA DE SAN FRANCISCO' else UPPER(tb008.tx_razon_social) end as beneficiario, 
+                                case when (tb026.co_tipo_solicitud=18) then '<NOMBRE DE LA INSTITUCION>' else UPPER(tb008.tx_razon_social) end as beneficiario, 
                                 case when (tb026.co_tipo_solicitud=23) then tb122.tx_concepto when (tb026.co_tipo_solicitud=18) then case when (tb026.co_estatus=4) then 'TeC: '|| tb155.de_observacion else 'TeC: '|| tb026.tx_observacion end else tb155.de_observacion end as tx_descripcion,  
                                 tb154.nu_operacion as op, to_char(tb155.fe_transaccion,'dd/mm/yyyy') as fecha, 
                                 case when (tb026.co_tipo_solicitud=18) then 'OT-'||co_transferencia_cuenta else tb155.nu_transaccion end as referencia, 

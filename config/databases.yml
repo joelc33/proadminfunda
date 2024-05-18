@@ -15,7 +15,7 @@ all:
       classname:  PropelPDO
       dsn:        pgsql:dbname=administrativo;host=localhost
       username:   postgres
-      password:   2021cafe**
+      password:   1234
       encoding:   utf8
       persistent: true
       pooling:    true

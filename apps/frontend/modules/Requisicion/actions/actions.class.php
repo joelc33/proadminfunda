@@ -150,7 +150,7 @@ class RequisicionActions extends sfActions
     $stmt = Tb039RequisicionesPeer::doSelectStmt($c);
     $campos = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    if($campos["co_requisicion"]!=''){
+    if(!empty($campos["co_requisicion"])){
         
         $datos = $this->getDatosSolicitante($campos["co_usuario"]);
         
@@ -167,6 +167,8 @@ class RequisicionActions extends sfActions
                             "fe_registro"        => $dia.'-'.$mes.'-'.$anio,
                             "tx_concepto"        => $campos["tx_concepto"],
                             "tx_observacion"     => $campos["tx_observacion"],
+                            "nu_requisicion"     => $campos["nu_requisicion"],
+                            "nu_iva"             => $campos["nu_iva"],
                     ));
     }else{
         
@@ -186,7 +188,8 @@ class RequisicionActions extends sfActions
                             "co_usuario"         => $datos["co_usuario"],
                             "tx_concepto"        => "",
                             "tx_observacion"     => "",
-                            "co_ente"            =>  $datos["co_ente"] 
+                            "co_ente"            =>  $datos["co_ente"],
+                            "nu_requisicion"     => ""
                     ));
     }
 

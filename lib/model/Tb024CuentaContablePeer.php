@@ -37,7 +37,9 @@ class Tb024CuentaContablePeer extends BaseTb024CuentaContablePeer
         
     }
     
-    static public function getBuscarCuenta($proveedor,$tx_cuenta_contable){        
+    static public function getBuscarCuenta($proveedor,$tx_cuenta_contable){    
+
+        echo "cuenta"; exit();    
      
        
         $cuenta = $tx_cuenta_contable["tx_cuenta"].$proveedor["nu_codigo"];       

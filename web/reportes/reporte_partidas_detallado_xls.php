@@ -31,7 +31,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
     
         $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
         $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue('A1', 'ALCALDIA DE SAN FRANCISCO');
+                    ->setCellValue('A1', '<NOMBRE DE LA INSTITUCION>');
 
         $objPHPExcel->getActiveSheet()->getStyle('A2:G2')->getFont()->setBold(false);
         $objPHPExcel->setActiveSheetIndex(0)

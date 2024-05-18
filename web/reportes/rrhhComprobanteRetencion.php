@@ -223,7 +223,7 @@ class PDF_Flo extends PDF_FlowingBlock{
             $this->SetFont('Arial','',8);     
             $this->SetWidths(array(100, 50, 50, 20, 20, 20 ));  
             $this->SetAligns(array("L","L","L")); 
-            $this->Row(array(utf8_decode('ALCALDIA DE SAN FRANCISCO'),utf8_decode('G-20003652-4'),utf8_decode('')),0,0); 
+            $this->Row(array(utf8_decode('<NOMBRE DE LA INSTITUCION>'),utf8_decode('G-20003652-4'),utf8_decode('')),0,0); 
             $this->Ln(2);
             $this->setX(10);
             $this->SetFont('Arial','B',8);     

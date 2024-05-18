@@ -152,7 +152,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetY(12);
         $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
+        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
         /*$this->Ln(4);
         $this->SetFont('Arial','',8);
         $this->Cell(0,0,utf8_decode($this->empresa['tx_rif']),0,0,'C');

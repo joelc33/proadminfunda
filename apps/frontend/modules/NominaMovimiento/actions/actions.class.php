@@ -1517,6 +1517,8 @@ class NominaMovimientoActions extends sfActions
             $id_tbrh002_ficha = $this->getRequestParameter("id_tbrh002_ficha");
             $id_tbrh015_nom_trabajador = $this->getRequestParameter("id_tbrh015_nom_trabajador");
     
+    echo "llego"; exit();
+    
             $c = new Criteria();
             $c->setIgnoreCase(true);
             $c->clearSelectColumns();
@@ -1553,6 +1555,7 @@ class NominaMovimientoActions extends sfActions
             //$c2->addSelectColumn(Tbrh002FichaPeer::CO_FICHA);
             $c2->addSelectColumn(Tbrh015NomTrabajadorPeer::CO_FICHA);
             $c2->addSelectColumn(Tbrh015NomTrabajadorPeer::CO_NOM_TRABAJADOR);
+            $c2->addSelectColumn(Tbrh015NomTrabajadorPeer::CO_NOM_SITUACION);
             $c2->addSelectColumn(Tbrh015NomTrabajadorPeer::IN_CESTATICKET);
             $c2->addSelectColumn(Tbrh015NomTrabajadorPeer::MO_SALARIO_NORMAL);
             $c2->addSelectColumn(Tbrh015NomTrabajadorPeer::CO_CARGO_ESTRUCTURA);
@@ -1656,7 +1659,7 @@ class NominaMovimientoActions extends sfActions
                 $nom_trabajador = $res["co_nom_trabajador"];
                 $in_cestaticket = $res["in_cestaticket"];
                 $mes_antiguedad = $res["nu_mes_antiguedad"];
-                $situacion = $res["co_estatus"];
+                $situacion = $res["co_nom_situacion"];
                 $dias_egreso = $res["nu_dias_egreso"];
                 $dias_ingreso = $res["nu_dias_ingreso"];
                 $mo_salario_normal = $res["mo_salario_normal"];
@@ -1817,12 +1820,6 @@ class NominaMovimientoActions extends sfActions
 
                 }
     
-                /*$registros[] = array(
-                    "nu_concepto"     => trim($res["nu_concepto"]),
-                    "tx_concepto"     => trim($res["tx_concepto"]),
-                    "de_formula"     => $res["de_formula"],
-                    "valor"     => $valor,
-                );*/
             }
     
                     $this->data = json_encode(array(

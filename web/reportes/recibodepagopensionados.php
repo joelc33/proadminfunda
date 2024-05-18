@@ -71,8 +71,8 @@ class PDF extends FPDF {
     $this->SetXY(10,50);                                        
     $this->Write(5,utf8_decode('COMPAÑIA:'));
     $this->SetFont('arial','',8);
-    //$this->Write(5,utf8_decode(" ".'ALCALDIA DE SAN FRANCISCO'));
-    $this->Cell(60,05,"ALCALDIA DE SAN FRANCISCO",0,0,'L');
+    //$this->Write(5,utf8_decode(" ".'<NOMBRE DE LA INSTITUCION>'));
+    $this->Cell(60,05,"<NOMBRE DE LA INSTITUCION>",0,0,'L');
 
     $this->SetFont('arial', 'B', 8); 
     $this->SetXY(80,50);

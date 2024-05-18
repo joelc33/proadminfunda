@@ -22,7 +22,7 @@ class PDF extends FPDF {
         $this->SetTextColor(0,0,0);
         $this->SetY(10);
         $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'C');
+        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
         $this->Ln(4);
         $this->SetX(10);
         $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');

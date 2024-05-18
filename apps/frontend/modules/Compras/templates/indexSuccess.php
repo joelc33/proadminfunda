@@ -14,6 +14,7 @@ this.store_lista   = this.getLista();
 
 this.Registro = Ext.data.Record.create([
                      {name: 'co_detalle_requisicion', type:'number'},
+                     {name: 'co_detalle_cotizacion', type:'number'},
                      {name: 'co_producto', type:'number'},
                      {name: 'cod_producto', type: 'string'},
                      {name: 'tx_producto', type: 'string'},
@@ -581,6 +582,7 @@ this.gridPanel = new Ext.grid.EditorGridPanel({
         columns: [
         new Ext.grid.RowNumberer(),
             {header: 'co_detalle_compras', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_detalle_compras'},
+            {header: 'co_detalle_cotizacion', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_detalle_cotizacion'},
             {header: 'co_detalle_requisicion', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_detalle_requisicion'},
             {header: 'co_presupuesto', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_presupuesto'},
             {header: 'co_producto', hidden: true,width:10, menuDisabled:true,dataIndex: 'co_producto'},
@@ -869,6 +871,7 @@ getVerificarIVA: function(){
     fields:[
                 {name: 'co_detalle_compras'},
                 {name: 'co_detalle_requisicion'},
+                {name: 'co_detalle_cotizacion'},
                 {name: 'co_producto'},
                 {name: 'co_presupuesto'},
                 {name: 'cod_producto'},

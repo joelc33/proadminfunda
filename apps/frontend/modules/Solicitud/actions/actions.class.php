@@ -17,13 +17,18 @@ class SolicitudActions extends sfActions
   */
   public function executeIndex(sfWebRequest $request)
   {
+
         $this->data = json_encode(array(
-		"co_rol"         => $this->getUser()->getAttribute('rol'),
-        "co_usuario"     => $this->getUser()->getAttribute('codigo'),
-        "in_activo"     => $this->getUser()->getAttribute('in_activo'),
-    ));
-    
-    $this->getRequest()->setAttribute('in_activo', $this->getUser()->getAttribute('in_activo'));
+    		"co_rol"            => $this->getUser()->getAttribute('rol'),
+            "co_usuario"        => $this->getUser()->getAttribute('codigo'),
+            "in_activo"         => $this->getUser()->getAttribute('in_activo'),
+            "tx_tipo_solicitud" => $this->getRequestParameter("tx_tipo_solicitud"),
+            "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+            "tx_url"            => $this->getRequestParameter("tx_url"),
+
+        ));
+        
+        $this->getRequest()->setAttribute('in_activo', $this->getUser()->getAttribute('in_activo'));
   }
   
   public function executeImagen(sfWebRequest $request)
@@ -1101,6 +1106,19 @@ class SolicitudActions extends sfActions
         "total"     =>  $cantidadTotal,
         "data"      =>  $registros
         ));
+    }
+
+    public function executeHistorial(sfWebRequest $request){
+        
+        $co_solicitud = $this->getRequestParameter("co_solicitud");
+        $co_tipo_solicitud = $this->getRequestParameter("co_tipo_solicitud");
+        $co_proceso = $this->getRequestParameter("co_proceso");
+              
+        $this->data = json_encode(array(
+              "co_solicitud"       => $co_solicitud,
+              "co_tipo_solicitud"  => $co_tipo_solicitud,
+              "co_proceso"         => $co_proceso
+        ));      
     }
     
     public function executeDetalleSolicitud(sfWebRequest $request){

@@ -11,7 +11,7 @@ class PDF extends FPDF {
         $this->empresa = $this->getDatosEmpresa(1);
 
         $this->SetFont('courier','B',12);
-        $this->Cell(0,0,utf8_decode('ALCALDIA DE SAN FRANCISCO'),0,0,'L');
+        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'L');
         $this->SetFont('courier','',8);
         $this->Ln(4);
         //$this->Cell(0,0,utf8_decode('Secretaria de Administración'),0,0,'L');

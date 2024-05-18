@@ -8,6 +8,9 @@ init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'<?php echo $data ?>'});
 
+ this.codigo;
+ this.co_tipo_solicitud;
+ this.co_proceso;
 
 this.co_solicitud = new Ext.form.TextField({
 	fieldLabel:'N° Solicitud',
@@ -22,7 +25,7 @@ this.co_solicitud = new Ext.form.TextField({
 * <Form Principal que carga el Filtro>
 */
 this.formFiltroPrincipal = new Ext.form.FormPanel({
-    title:'Lista de Solicitudes Pendientes',
+    title:'Buscar '+this.OBJ.tx_tipo_solicitud,
     iconCls: 'icon-solpendiente',
     collapsible: true,
     titleCollapse: true,
@@ -90,7 +93,7 @@ this.estado= new Ext.Button({
 });
 
 this.nueva_solicitud= new Ext.Button({
-    text: 'Nueva solicitud',
+    text: 'Nueva Solicitud',
     iconCls: 'icon-nuevo',
             handler:function(){
 //                                contribuyenteLista.main.mascara.show();
@@ -125,9 +128,47 @@ this.anular = new Ext.Button({
     
 });
 
+this.formulario= new Ext.Button({
+                 text:'Cargar Datos',
+                 iconCls: 'icon-cambio',
+                 handler:function(){
+                     this.msg = Ext.get('formulariosolicitud');
+                     this.msg.load({
+                      url:"<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/cargarDatos",
+                      scripts: true,
+                      text: "Cargando..",
+                      params:{
+                            co_solicitud:solicitudLista.main.codigo,
+                            co_tipo_solicitud: solicitudLista.main.co_tipo_solicitud,
+                            co_proceso: solicitudLista.main.co_proceso
+                      }
+                     });
+                 }
+});
+
+this.detalle= new Ext.Button({
+                 text:'Historico Solicitud',
+                 iconCls: 'icon-buscar',
+                 handler:function(){
+                     this.msg = Ext.get('formulariosolicitud');
+                     this.msg.load({
+                      url:"<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/historial",
+                      scripts: true,
+                      text: "Cargando..",
+                      params:{
+                            co_solicitud:solicitudLista.main.codigo,
+                            co_tipo_solicitud: solicitudLista.main.co_tipo_solicitud,
+                            co_proceso: solicitudLista.main.co_proceso
+                      }
+                     });
+                 }
+});
+
+this.detalle.disable();
+this.formulario.disable();
 
 this.gridPanel_ = new Ext.grid.GridPanel({
-    title:'Lista de solicitud',
+    title:'Lista de Solicitudes',
     iconCls: 'icon-libro',
     store: this.store_lista,
     loadMask:true,
@@ -140,7 +181,9 @@ this.gridPanel_ = new Ext.grid.GridPanel({
         this.nueva_solicitud,'-',
         <?php 
           }
-        ?>    
+        ?> 
+        this.formulario,'-', 
+        this.detalle,'-',  
         this.estado,'-',
         this.anular
     ],
@@ -158,26 +201,14 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 	
          solicitudLista.main.estado.enable();
          solicitudLista.main.anular.enable();
-        
-         var msg = Ext.get('detalle');
-         msg.load({
-                url: '<?php echo $_SERVER['SCRIPT_NAME']?>/Solicitud/detalle',
-                scripts: true,
-                params:
-                {
-                    codigo: solicitudLista.main.store_lista.getAt(rowIndex).get('co_solicitud'),
-                    co_tipo_solicitud: solicitudLista.main.store_lista.getAt(rowIndex).get('co_tipo_solicitud'),
-                    co_proceso: solicitudLista.main.store_lista.getAt(rowIndex).get('co_proceso')
+         solicitudLista.main.formulario.enable();
+         solicitudLista.main.detalle.enable();
 
-                },
-                text: 'Cargando...'
-         });
+         solicitudLista.main.codigo = solicitudLista.main.store_lista.getAt(rowIndex).get('co_solicitud');
+         solicitudLista.main.co_tipo_solicitud = solicitudLista.main.store_lista.getAt(rowIndex).get('co_tipo_solicitud');
+         solicitudLista.main.co_proceso = solicitudLista.main.store_lista.getAt(rowIndex).get('co_proceso');
         
-    
-         if(panel_detalle.collapsed == true)
-         {
-            panel_detalle.toggleCollapse();
-         } 
+        
     
     }},
     bbar: new Ext.PagingToolbar({
@@ -275,3 +306,4 @@ Ext.onReady(solicitudLista.main.init, solicitudLista.main);
 <div id="formulariosolicitud"></div>
 <div id="filtrosolicitud"></div>
 <div id="formulariocontribuyente"></div>
+
