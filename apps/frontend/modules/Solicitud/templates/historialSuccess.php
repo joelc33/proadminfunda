@@ -39,7 +39,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
                 columns: [
                 new Ext.grid.RowNumberer(),
                     {header: 'co_ruta',hidden:true, menuDisabled:true,dataIndex: 'co_ruta'},
-                    {header: 'Proceso', width:300,  menuDisabled:true, sortable: true,  dataIndex: 'tx_proceso',renderer:textoLargo},
+                    {header: 'Unidad', width:300,  menuDisabled:true, sortable: true,  dataIndex: 'tx_proceso',renderer:textoLargo},
                     {header: 'Estatus', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_estatus'},
                     {header: 'Datos', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'in_reporte',renderer: renderDatos}
                     //{header: 'Documento', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'in_cargar_documento',renderer: renderDocumento},

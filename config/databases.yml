@@ -13,7 +13,7 @@ all:
     class:        sfPropelDatabase
     param:
       classname:  PropelPDO
-      dsn:        pgsql:dbname=administrativo;host=localhost
+      dsn:        pgsql:dbname=adminproadmin;host=localhost
       username:   postgres
       password:   1234
       encoding:   utf8

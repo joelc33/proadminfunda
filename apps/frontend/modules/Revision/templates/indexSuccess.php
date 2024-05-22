@@ -56,7 +56,7 @@ this.observacion = new Ext.form.TextArea({
 });
 
 this.co_proceso = new Ext.form.ComboBox({
-	fieldLabel:'Proceso',
+	fieldLabel:'Unidad',
 	store: this.storeCO_PROCESO,
 	typeAhead: true,
 	valueField: 'co_proceso',

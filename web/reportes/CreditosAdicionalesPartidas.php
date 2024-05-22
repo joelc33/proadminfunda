@@ -11,22 +11,29 @@ class PDF extends FPDF {
         $this->datos = $this->getConsulta();
 
         $this->empresa = $this->getDatosEmpresa(1);
-        
-        if(!empty($this->empresa['tx_imagen_cen'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+
+        if (!empty($this->empresa['tx_imagen_cen'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
         }
 
-        $this->SetFont('Arial','B',11);
-        
-      //  
-        $this->SetTextColor(0,0,0);
-        $this->SetY(32);
-        $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
-        $this->Ln(6);
-        $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
-        $this->Ln(6);
-        $this->Cell(0,0,utf8_decode($this->empresa['tx_rif']),0,0,'C');
-        $this->Ln(6);
+        $this->SetFont('Arial', 'B', 8);
+
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
+        $this->Ln(4);       
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        $this->Ln(4);
+        if (!empty($this->empresa['nb_institucion'])) 
+        {
+            $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
+            $this->Ln(4);
+        }
+        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
+        $this->Ln(12);
+        $this->SetFont('Arial', 'B', 11);
         $this->Cell(0,0,utf8_decode('MODIFICACIÓN PRESUPUESTARIA POR CRÉDITO ADICIONAL'),0,0,'C');
         
         $this->SetFont('Arial','',8);
@@ -265,7 +272,7 @@ case when (id_tb098_tipo_distribucion = 1) then
 
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion,
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,

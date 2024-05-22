@@ -146,11 +146,11 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetAligns(array("C"));
         $this->Row(array(utf8_decode('REPÚBLICA BOLIVARIANA DE VENEZUELA')),0,0);
         $this->SetX(20);
-        $this->Row(array(utf8_decode('ESTADO ZULIA')),0,0);
+        $this->Row(array(utf8_decode('GOBERNACIÓN DEL ESTADO ZULIA')),0,0);
         $this->SetX(20);
-        $this->Row(array(utf8_decode('ALCALDIA DEL MUNICIPIO SAN FRANCISCO')),0,0);
+        $this->Row(array(utf8_decode('FUNDACION MERCADOS POPULARES')),0,0);
         $this->SetX(20);
-        $this->Row(array(utf8_decode('RIF. G-200005297')),0,0);
+        $this->Row(array(utf8_decode('RIF: G-20007909-6')),0,0);
 
         //***** Primer emblema der ******//
         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(100, 150, 255));
@@ -162,7 +162,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(113);
         $this->SetWidths(array(80));
         $this->SetAligns(array("C"));
-        $this->Row(array(utf8_decode('<NOMBRE DE LA INSTITUCION>')),0,0);
+        $this->Row(array(utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS')),0,0);
 
 
 

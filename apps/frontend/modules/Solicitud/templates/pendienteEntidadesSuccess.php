@@ -25,7 +25,7 @@ this.co_solicitud = new Ext.form.TextField({
 });
 
 this.co_proceso = new Ext.form.ComboBox({
-	fieldLabel:'Proceso',
+	fieldLabel:'Unidad',
 	store: this.storeCO_PROCESO,
 	typeAhead: true,
 	valueField: 'co_proceso',
@@ -222,7 +222,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'Razon Social', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social',renderer: textoLargo},
  
     {header: 'Tipo de solicitud', width:250,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud',renderer: renderRectificacion},
-    {header: 'Proceso', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_proceso',renderer: renderRectificacion},
+    {header: 'Unidad', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_proceso',renderer: renderRectificacion},
     {header: 'Orden de Pago', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial',renderer: renderRectificacion},
   //  {header: 'Creado Por', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_login',renderer: renderRectificacion},
   //  {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'fe_creacion',renderer: renderRectificacion}

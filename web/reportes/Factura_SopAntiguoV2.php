@@ -51,30 +51,33 @@ class PDF extends FPDF {
          //$this->Image("imagenes/escudosanfco.png", 20, 7,20);  
          
          
-        if(!empty($this->empresa['tx_imagen_izq'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+         $this->empresa = $this->getDatosEmpresa(1);
+
+        if (!empty($this->empresa['tx_imagen_cen'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
         }
-        
-        /*if(!empty($this->empresa['tx_imagen_cen'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
-        }*/
 
-        /*if(!empty($this->empresa['tx_imagen_der'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
-        }*/
+        $this->SetFont('Arial', 'B', 8);
 
-         $this->SetTextColor(0,0,0);
-         $this->SetY(12);
-         $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
-         $this->Ln(4);
-         $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
-         $this->Ln(5);
-         $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C'); 
-         $this->Ln(12);
-         $this->SetFont('Arial','B',14);       
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
+        $this->Ln(4);       
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        $this->Ln(4);
+        if (!empty($this->empresa['nb_institucion'])) 
+        {
+            $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
+            $this->Ln(4);
+        }
+        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
+        $this->Ln(12);
+        $this->SetFont('Arial', 'B', 14);   
          $this->Cell(0,0,utf8_decode(' CONSIGNACIÓN '),0,0,'C');   
          
-         $this->SetY(50);
+         $this->SetY(70);
          
          $this->SetWidths(array(200));
          $this->SetAligns(array("C"));
@@ -664,7 +667,7 @@ class PDF extends FPDF {
 
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion,
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,

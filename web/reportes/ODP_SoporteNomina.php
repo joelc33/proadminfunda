@@ -144,23 +144,23 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
         }
 
-        $this->SetFont('Arial','B',9);
-        
-      //  $this->datos = $this->getTipoOrdenes();
+        $this->SetFont('Arial', 'B', 8);
 
-        $this->SetTextColor(0,0,0);
+        $this->SetTextColor(0, 0, 0);
         $this->SetY(12);
-        $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
+        $this->Ln(4);       
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
+        if (!empty($this->empresa['nb_institucion'])) 
+        {
+            $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
+            $this->Ln(4);
+        }
+        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
         $this->Ln(4);
-        $this->SetFont('Arial','',8);
-        $this->Cell(0,0,utf8_decode($this->empresa['tx_rif']),0,0,'C');
-        $this->Ln(4);
-        $this->SetFont('Arial','B',9);
-        $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
-        $this->Ln(5);
-        $this->SetFont('Arial','',8);
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
+        $this->Ln(12);
     }
 
     function Footer() {
@@ -1074,7 +1074,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion,
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,

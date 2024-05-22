@@ -20,7 +20,7 @@ define("SERVIDOR","10.0.0.3"); */
 
 define("USUARIO","postgres");
 define("CLAVE","1234");
-define("BASEDEDATOS","administrativo");
+define("BASEDEDATOS","adminproadmin");
 define("SERVIDOR","localhost");
 
 /*
