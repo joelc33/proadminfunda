@@ -13,7 +13,7 @@ this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'<?php echo $data ?>'});
  this.co_proceso;
 
 this.co_solicitud = new Ext.form.TextField({
-	fieldLabel:'N° Solicitud',
+	fieldLabel:'N° Proceso',
 	name:'co_solicitud',
         maskRe: /[0-9]/,
 	value:'',
@@ -93,7 +93,7 @@ this.estado= new Ext.Button({
 });
 
 this.nueva_solicitud= new Ext.Button({
-    text: 'Nueva Solicitud',
+    text: 'Nuevo Proceso',
     iconCls: 'icon-nuevo',
             handler:function(){
 //                                contribuyenteLista.main.mascara.show();
@@ -147,7 +147,7 @@ this.formulario= new Ext.Button({
 });
 
 this.detalle= new Ext.Button({
-                 text:'Historico Solicitud',
+                 text:'Historico Proceso',
                  iconCls: 'icon-buscar',
                  handler:function(){
                      this.msg = Ext.get('formulariosolicitud');
@@ -168,7 +168,7 @@ this.detalle.disable();
 this.formulario.disable();
 
 this.gridPanel_ = new Ext.grid.GridPanel({
-    title:'Lista de Solicitudes',
+    title:'Lista de Procesos',
     iconCls: 'icon-libro',
     store: this.store_lista,
     loadMask:true,
@@ -189,8 +189,8 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     ],
     columns: [
     new Ext.grid.RowNumberer(),
-    {header: 'N° Solicitud', width:100,menuDisabled:true,dataIndex: 'co_solicitud'}, 
-    {header: 'Tipo de solicitud', width:300,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud'},
+    {header: 'N° Proceso', width:100,menuDisabled:true,dataIndex: 'co_solicitud'}, 
+    {header: 'Tipo de Proceso', width:300,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud'},
     {header: 'Creado Por', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_login'},
     {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'fe_creacion'}
     ],

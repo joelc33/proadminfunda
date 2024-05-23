@@ -86,7 +86,7 @@ this.observacion = new Ext.form.TextArea({
 });
 
 this.fe_solicitud = new Ext.form.DateField({
-	fieldLabel:'Fecha Solicitud',
+	fieldLabel:'Fecha Proceso',
 	name:'solicitud[fe_solicitud]',
 	value:this.OBJ.fe_solicitud,
     minValue:this.OBJ.fe_ini,
@@ -116,7 +116,7 @@ this.fielset1 = new Ext.form.FieldSet({
 });
 
 this.fielset2 = new Ext.form.FieldSet({
-    title:'Datos de Solicitud',
+    title:'Datos de Proceso',
     width:670,
     items:[
         //this.co_proceso,
@@ -180,7 +180,7 @@ this.salir = new Ext.Button({
 });
 
 this.PanelSolicitud = new Ext.Panel({
-    title: 'Datos de la Solicitud',
+    title: 'Datos de la Proceso',
     width:700,
     bodyStyle:'padding:3px;',
     items:[
@@ -210,7 +210,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Formulario de Solicitudes Internas',
+    title:'Formulario de Procesos Internos',
     modal:true,
     constrain:true,
     width:715,

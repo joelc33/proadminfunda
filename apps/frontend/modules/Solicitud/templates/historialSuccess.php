@@ -30,7 +30,7 @@ function renderImagen(val, attr, record) {
 }
 
 this.gridPanel_ = new Ext.grid.GridPanel({
-                title:'Ruta del Tramite',
+                title:'Ruta del Proceso',
                 iconCls: 'icon-libro',
                 store: this.store_lista,
                 loadMask:true,
@@ -80,7 +80,7 @@ this.salir = new Ext.Button({
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Detalle de la Solicitud',
+    title:'Detalle del Proceso',
     modal:true,
     constrain:true,
     width:715,

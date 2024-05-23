@@ -17,7 +17,7 @@ this.storeCO_PROCESO = this.getStoreCO_PROCESO();
 this.storeCO_DOCUMENTO = this.getStoreCO_DOCUMENTO();
 
 this.co_solicitud = new Ext.form.TextField({
-	fieldLabel:'N° Solicitud',
+	fieldLabel:'N° Proceso',
 	name:'co_solicitud',
         maskRe: /[0-9]/,
 	value:'',
@@ -95,7 +95,7 @@ items: [
 * <Form Principal que carga el Filtro>
 */
 this.formFiltroPrincipal = new Ext.form.FormPanel({
-    title:'Lista de Solicitudes Pendientes',
+    title:'Lista de Procesos Pendientes',
     iconCls: 'icon-solpendiente',
     collapsible: true,
     titleCollapse: true,
@@ -185,7 +185,7 @@ this.formulario = new Ext.Button({
 });
 
 this.detalle = new Ext.Button({
-                 text:'Historico Solicitud',
+                 text:'Historico Proceso',
                  iconCls: 'icon-buscar',
                  handler:function(){
                      this.msg = Ext.get('formulariosolicitud');
@@ -217,11 +217,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     ],
     columns: [
     new Ext.grid.RowNumberer(),
-    {header: 'N° Solicitud', width:100,menuDisabled:true,dataIndex: 'co_solicitud',renderer: renderRectificacion}, 
+    {header: 'N° Proceso', width:100,menuDisabled:true,dataIndex: 'co_solicitud',renderer: renderRectificacion}, 
     {header: 'RIF', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_rif',renderer: renderRectificacion},
     {header: 'Razon Social', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social',renderer: textoLargo},
  
-    {header: 'Tipo de solicitud', width:250,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud',renderer: renderRectificacion},
+    {header: 'Tipo de Proceso', width:250,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud',renderer: renderRectificacion},
     {header: 'Unidad', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_proceso',renderer: renderRectificacion},
     {header: 'Orden de Pago', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial',renderer: renderRectificacion},
   //  {header: 'Creado Por', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_login',renderer: renderRectificacion},
