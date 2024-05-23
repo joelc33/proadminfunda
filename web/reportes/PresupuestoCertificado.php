@@ -14,7 +14,7 @@ class PDF extends FPDF
         $this->empresa = $this->getDatosEmpresa(1);
 
         if (!empty($this->empresa['tx_imagen_cen'])) {
-            $this->Image("imagenes/" . $this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_cen'],  $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
 
         $this->SetFont('Arial', 'B', 8);
