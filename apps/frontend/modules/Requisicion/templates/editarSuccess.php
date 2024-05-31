@@ -290,7 +290,11 @@ eliminar:function(){
                 {name: 'co_detalle_requisicion'},
                 {name: 'co_producto'},
                 {name: 'cod_producto'},
-                {name: 'tx_producto'},
+                {name: 'tx_producto',
+                    convert:function(v,r){
+                    return r.tx_producto+' - '+r.tx_observacion;
+                    }
+                },
                 {name: 'nu_cantidad'},
                 {name: 'co_requisicion'},
                 {name: 'co_unidad_producto'},

@@ -1205,6 +1205,7 @@ class PresupuestomodificacionActions extends sfActions
 
                 $this->data = json_encode(array(
                   'success' => true,
+                  'numero' => $tb096_presupuesto_modificacion->getNuModificacion(),
                   'msg' => 'Traslados realizados con Exito!.'
                 ));
   

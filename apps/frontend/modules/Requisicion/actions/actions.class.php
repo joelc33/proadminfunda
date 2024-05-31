@@ -186,7 +186,7 @@ class RequisicionActions extends sfActions
                             //"fe_registro"        => date("d-m-Y"),
                             "fe_registro"        => $dia.'-'.$mes.'-'.$anio,
                             "co_usuario"         => $datos["co_usuario"],
-                            "tx_concepto"        => "",
+                            "tx_concepto"        => $co_solicitud["tx_observacion"],
                             "tx_observacion"     => "",
                             "co_ente"            =>  $datos["co_ente"],
                             "nu_requisicion"     => ""
@@ -435,6 +435,7 @@ class RequisicionActions extends sfActions
         $c->addSelectColumn(Tb048ProductoPeer::CO_PRODUCTO);
         $c->addSelectColumn(Tb048ProductoPeer::COD_PRODUCTO);
         $c->addSelectColumn(Tb048ProductoPeer::TX_PRODUCTO);
+        $c->addSelectColumn(Tb051DetalleRequisionProductoPeer::TX_OBSERVACION);
         $c->addSelectColumn(Tb051DetalleRequisionProductoPeer::NU_CANTIDAD);
         $c->addSelectColumn(Tb057UnidadProductoPeer::TX_UNIDAD_PRODUCTO);
         
@@ -450,6 +451,8 @@ class RequisicionActions extends sfActions
         $stmt = Tb048ProductoPeer::doSelectStmt($c);
         $registros = array();
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
+            
+            $reg["tx_observacion"] = strtoupper($reg["tx_observacion"]);
             $registros[] = $reg;
         }
 
@@ -489,7 +492,7 @@ class RequisicionActions extends sfActions
         }
         
         if($producto){
-            $c->add(Tb048ProductoPeer::TX_PRODUCTO,'%'.$producto.'%',Criteria::LIKE);
+            $c->add(Tb048ProductoPeer::TX_PRODUCTO,'%'.$producto.'%',Criteria::ILIKE);
         }
         
         $cantidadTotal = Tb048ProductoPeer::doCount($c);

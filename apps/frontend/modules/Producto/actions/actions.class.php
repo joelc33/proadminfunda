@@ -65,21 +65,91 @@ class ProductoActions extends sfActions
      $con = Propel::getConnection();
      if($codigo!=''||$codigo!=null){
          $tb048_producto = Tb048ProductoPeer::retrieveByPk($codigo);
-     }else{
-         $tb048_producto = new Tb048Producto();
-     }
+         
      try
       { 
         $con->beginTransaction();
+        
        
         $tb048_productoForm = $this->getRequestParameter('tb048_producto');
 /*CAMPOS*/
-                                        
+        $c = new Criteria();       
+        $c->setIgnoreCase(true);
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb092ClaseProductoPeer::ID);
+        $c->addJoin(Tb048ProductoPeer::CO_CLASE,  Tb092ClaseProductoPeer::ID);
+        $c->add(Tb048ProductoPeer::CO_CLASE,$tb048_productoForm["co_clase"]);
+        $cantidadTotal = Tb048ProductoPeer::doCount($c); 
+        $stmt = Tb048ProductoPeer::doSelectStmt($c);
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $co_producto = $res["id"].str_pad($cantidadTotal+1,2,"0",STR_PAD_LEFT);
+        /*Campo tipo VARCHAR */
+        $tb048_producto->setTxProducto(strtoupper($tb048_productoForm["tx_producto"]));
+        if($tb048_productoForm["co_clase"]!=$tb048_producto->getCoClase()){                                                
+        /*Campo tipo VARCHAR */
+        $tb048_producto->setCodProducto($co_producto);
+        }                                                
+        /*Campo tipo BIGINT */
+        $tb048_producto->setCoClase($tb048_productoForm["co_clase"]);
+                                                        
+                                                       
+        /*Campo tipo BOOLEAN */
+        if (array_key_exists("in_ver", $tb048_productoForm)){
+            $tb048_producto->setInVer(false);
+        }else{
+            $tb048_producto->setInVer(true);
+        }
+                                
+        /*CAMPOS*/
+        $tb048_producto->save($con);
+        $this->data = json_encode(array(
+                    "success" => true,
+                    "msg" => 'Modificación realizada exitosamente'
+                ));
+        $con->commit();
+      }catch (PropelException $e)
+      {
+        $con->rollback();
+        $this->data = json_encode(array(
+            "success" => false,
+            "msg" =>  $e->getMessage()
+        ));
+      }         
+         
+         
+         
+     }else{
+         
+         
+    $tb048_producto = new Tb048Producto();
+         
+     try
+      { 
+        $con->beginTransaction();
+        
+       
+        $tb048_productoForm = $this->getRequestParameter('tb048_producto');
+/*CAMPOS*/
+        $c = new Criteria();       
+        $c->setIgnoreCase(true);
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb048ProductoPeer::COD_PRODUCTO);
+        $c->addSelectColumn(Tb092ClaseProductoPeer::ID);
+        $c->addJoin(Tb048ProductoPeer::CO_CLASE,  Tb092ClaseProductoPeer::ID);
+        $c->add(Tb048ProductoPeer::CO_CLASE,$tb048_productoForm["co_clase"]);
+        $cantidadTotal = Tb048ProductoPeer::doCount($c); 
+        $c->setLimit(1)->setOffset(0);
+        $c->addDescendingOrderByColumn(Tb048ProductoPeer::CO_PRODUCTO);        
+        $stmt = Tb048ProductoPeer::doSelectStmt($c);
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $co_producto = $tb048_productoForm["co_clase"].str_pad(substr($res["cod_producto"], -2)+1,3,"0",STR_PAD_LEFT);
         /*Campo tipo VARCHAR */
         $tb048_producto->setTxProducto(strtoupper($tb048_productoForm["tx_producto"]));
                                                         
         /*Campo tipo VARCHAR */
-        $tb048_producto->setCodProducto($tb048_productoForm["cod_producto"]);
+        $tb048_producto->setCodProducto($co_producto);
                                                         
         /*Campo tipo BIGINT */
         $tb048_producto->setCoClase($tb048_productoForm["co_clase"]);
@@ -106,7 +176,10 @@ class ProductoActions extends sfActions
             "success" => false,
             "msg" =>  $e->getMessage()
         ));
-      }
+      }         
+         
+     }
+
     }
   
 

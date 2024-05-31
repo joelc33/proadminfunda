@@ -535,10 +535,10 @@ class ModificaciondetalleActions extends sfActions
           $tb097_modificacion_detalle->setIdTb082EjecutorDestino($tb097_modificacion_detalleForm["id_tb082_ejecutor"]);
 
         /*Campo tipo BIGINT */
-        $tb097_modificacion_detalle->setIdTb139Aplicacion($tb097_modificacion_detalleForm["id_tb139_aplicacion"]);
-                                                    
-        /*Campo tipo VARCHAR */
-        $tb097_modificacion_detalle->setNuAplicacion($tb097_modificacion_detalleForm["nu_aplicacion"]);
+//        $tb097_modificacion_detalle->setIdTb139Aplicacion($tb097_modificacion_detalleForm["id_tb139_aplicacion"]);
+//                                                    
+//        /*Campo tipo VARCHAR */
+//        $tb097_modificacion_detalle->setNuAplicacion($tb097_modificacion_detalleForm["nu_aplicacion"]);
 
         /*Campo tipo VARCHAR */
         $tb097_modificacion_detalle->setMoDisponible($campos3["mo_disponible"]);

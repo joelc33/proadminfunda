@@ -311,7 +311,7 @@ this.generar = new Ext.Button({
                  }
 
                  PresupuestomodificacionEditar.main.id.setValue(action.result.codigo);
-                 PresupuestomodificacionEditar.main.nu_modificacion.setValue("<span style='color:black;font-size:15px;'><b>N° Credito: </b> "+action.result.numero+"</span>");
+                 PresupuestomodificacionEditar.main.nu_modificacion.setValue("<span style='color:black;font-size:15px;'><b>N° Traspaso: </b> "+action.result.numero+"</span>");
 
                  PresupuestomodificacionEditar.main.gridPanel_origen.enable();
                  PresupuestomodificacionEditar.main.gridPanel_destino.enable();
@@ -322,7 +322,7 @@ this.generar = new Ext.Button({
                    }
                  });*/
                  //PresupuestomodificacionEditar.main.winformPanel_.close();
-                 Detalle.main.store_lista.load();
+//                 Detalle.main.store_lista.load();
                  PresupuestomodificacionEditar.main.guardar.show();
                  PresupuestomodificacionEditar.main.generar.show();
                  PresupuestomodificacionEditar.main.crear.hide();

@@ -113,9 +113,10 @@ this.formPanel_ = new Ext.form.FormPanel({
     items:[
 
                     this.co_producto,
-                    this.cod_producto,
-                    this.tx_producto,
-                    this.co_clase
+//                    this.cod_producto,
+                    this.co_clase,
+                    this.tx_producto
+
             ]
 });
 

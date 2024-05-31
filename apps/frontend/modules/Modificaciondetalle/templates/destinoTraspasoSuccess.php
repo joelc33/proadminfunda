@@ -350,8 +350,8 @@ labelWidth: 140,
                     this.id_tb084_accion_especifica,
                     this.id_tb085_presupuesto,
                     this.mo_disponible,
-                    this.id_tb139_aplicacion,
-                    this.nu_aplicacion,
+//                    this.id_tb139_aplicacion,
+//                    this.nu_aplicacion,
                     this.mo_distribucion,
             ]
 });

@@ -91,9 +91,19 @@ this.nu_cantidad = new Ext.form.NumberField({
 this.tx_observacion = new Ext.form.TextArea({
 	fieldLabel:'Especificaciones',
 	name:'tx_observacion',
-	allowBlank:false,
 	width:600
 });
+
+this.tx_observacion.on('specialkey', function(f, event) {
+                        if(event.getKey() == event.ENTER) {
+                            listaProducto.main.tx_observacion.setValue(listaProducto.main.tx_observacion.getValue().toUpperCase());
+
+                        }
+                    }, this);
+                        
+this.tx_observacion.on('blur',function(){
+                        listaProducto.main.tx_observacion.setValue(listaProducto.main.tx_observacion.getValue().toUpperCase());
+                    }); 
 
 this.co_unidad_producto = new Ext.form.ComboBox({
 	fieldLabel:'Unidad',
@@ -187,7 +197,7 @@ this.guardar = new Ext.Button({
                     co_detalle_requisicion:'',
                     co_producto: listaProducto.main.co_producto.getValue(),
                     cod_producto:listaProducto.main.cod_producto.getValue(),
-                    tx_producto: listaProducto.main.tx_producto.getValue(),
+                    tx_producto: listaProducto.main.tx_producto.getValue()+' - '+listaProducto.main.tx_observacion.getValue(),
                     nu_cantidad: listaProducto.main.nu_cantidad.getValue(),
                     tx_observacion: listaProducto.main.tx_observacion.getValue(),
                     co_unidad_producto: listaProducto.main.co_unidad_producto.getValue(),
@@ -220,8 +230,8 @@ this.guardar = new Ext.Button({
         listaProducto.main.tx_observacion.setValue(""); 
          listaProducto.main.co_unidad_producto.setValue(""); 
         
-        listaProducto.main.store_lista.baseParams.lista_producto = list_producto;
-        listaProducto.main.store_lista.load();
+//        listaProducto.main.store_lista.baseParams.lista_producto = list_producto;
+//        listaProducto.main.store_lista.load();
         
         Ext.utiles.msg('Mensaje', "El material de agrego exitosamente");
    
