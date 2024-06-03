@@ -232,7 +232,7 @@ class RequisicionActions extends sfActions
 
             $tb039_requisiciones = new Tb039Requisiciones();
             $tb039_requisiciones->setCoUsuario($this->getUser()->getAttribute('codigo'));
-            $tb039_requisiciones->setCoEnte(1);
+            $tb039_requisiciones->setCoEnte($tb039_requisicionesForm["co_ente"]);
             $tb039_requisiciones->setCoTipoSolicitud($tb039_requisicionesForm["co_tipo_solicitud"]);
             $tb039_requisiciones->setCoSolicitud($tb039_requisicionesForm["co_solicitud"]);
 
