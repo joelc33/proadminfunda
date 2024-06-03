@@ -79,9 +79,9 @@ class FuenteFinanciamientoActions extends sfActions
                                                         
         /*Campo tipo BOOLEAN */
         if (array_key_exists("in_activo", $tb073_fuente_financiamientoForm)){
-            $tb073_fuente_financiamiento->setInActivo(false);
-        }else{
             $tb073_fuente_financiamiento->setInActivo(true);
+        }else{
+            $tb073_fuente_financiamiento->setInActivo(false);
         }
                                 
         /*CAMPOS*/
