@@ -553,6 +553,7 @@ class CrearPartidaActions extends sfActions
                     //modelo fk tb099_tipo_fuente_financiamiento.ID
     public function executeStorefkcofuentefinanciamiento(sfWebRequest $request){
         $c = new Criteria();
+        $c->add(Tb073FuenteFinanciamientoPeer::IN_ACTIVO,true);
         $stmt = Tb073FuenteFinanciamientoPeer::doSelectStmt($c);
         $registros = array();
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
