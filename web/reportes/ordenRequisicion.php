@@ -302,7 +302,7 @@ class PDF extends FPDF {
         INNER JOIN tb032_configuracion_ruta AS tb032 ON tb030.co_tipo_solicitud = tb032.co_tipo_solicitud AND tb030.co_proceso = tb032.co_proceso
         WHERE tb030.co_ruta = ".$ruta;
      
-        //echo $sql; exit();
+        echo $sql; exit();
 
         $conex = new ConexionComun(); 
 
