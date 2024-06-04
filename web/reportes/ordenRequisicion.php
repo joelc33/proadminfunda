@@ -8,7 +8,7 @@ class PDF extends FPDF {
     public $conexion;
     function Header() {
 
-        $this->empresa = $this->getDatosEmpresa(1);
+//        $this->empresa = $this->getDatosEmpresa(1);
 
 //        if (!empty($this->empresa['tx_imagen_cen'])) {
 //            $this->Image("imagenes/" . $this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
