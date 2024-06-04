@@ -128,7 +128,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','',9);
          $this->SetAligns(array("C","L","C","C"));
          $this->SetWidths(array(30,110,30,30));
-         $this->Row(array(utf8_decode($campo['cod_producto']),utf8_decode($campo['tx_producto']),utf8_decode($campo['nu_cantidad']),utf8_decode($campo['tx_unidad_producto'])),1,1);
+         $this->Row(array(utf8_decode($campo['cod_producto']),utf8_decode($campo['tx_producto']).' - '.utf8_decode($campo['tx_observacion']),utf8_decode($campo['nu_cantidad']),utf8_decode($campo['tx_unidad_producto'])),1,1);
          $i++;
         }
         while ($i<11) 
@@ -145,8 +145,8 @@ class PDF extends FPDF {
          $this->SetAligns(array("L"));
          $this->SetWidths(array(200));
          $this->SetFont('Arial','B',9);
-         if ($campo['tx_observacion'])
-             $this->Row(array(utf8_decode('ESPECIFICACIONES TÉCNICAS / CÓDIGO: '.$campo['cod_producto'].' - ').utf8_decode($campo['tx_observacion'])),1,1);
+//         if ($campo['tx_observacion'])
+//             $this->Row(array(utf8_decode('ESPECIFICACIONES TÉCNICAS / CÓDIGO: '.$campo['cod_producto'].' - ').utf8_decode($campo['tx_observacion'])),1,1);
         }
                  
          $this->ln();
@@ -313,33 +313,33 @@ class PDF extends FPDF {
 
 }
 
+//$pdf=new PDF('P','mm','letter');
+//$pdf->AliasNbPages();
+//$pdf->PrintChapter();
+//
+//$comm = new ConexionComun();
+//$ruta = $comm->getRuta();
+//
+////echo $ruta; exit();
+////rmdir($ruta);
+////mkdir($ruta, 0777, true);    
+//
+//$dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
+//
+//
+//$update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
+//
+////echo $update; exit();
+//$comm->Execute($update);    
+//
+//$pdf->Output($dir, 'F');
+
+
+
 $pdf=new PDF('P','mm','letter');
-$pdf->AliasNbPages();
-$pdf->PrintChapter();
-
-$comm = new ConexionComun();
-$ruta = $comm->getRuta();
-
-//echo $ruta; exit();
-//rmdir($ruta);
-//mkdir($ruta, 0777, true);    
-
-$dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
-
-
-$update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
-
-//echo $update; exit();
-$comm->Execute($update);    
-
-$pdf->Output($dir, 'F');
-
-
-
-/*$pdf=new PDF('P','mm','letter');
 $pdf->PrintChapter();
 $pdf->SetDisplayMode('default');
-$pdf->Output();*/
+$pdf->Output();
 
 
 ?>
