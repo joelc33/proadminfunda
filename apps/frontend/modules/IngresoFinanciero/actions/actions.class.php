@@ -634,7 +634,7 @@ class IngresoFinancieroActions extends sfActions
                     //modelo fk tb154_tipo_cuenta_movimiento.ID
     public function executeStorefkidtb154tipocuentamovimiento(sfWebRequest $request){
 
-        $condicion = array(3, 4);
+        $condicion = array(3, 4,5);
 
         $c = new Criteria();
         $c->add(Tb154TipoCuentaMovimientoPeer::ID, $condicion, Criteria::IN);
