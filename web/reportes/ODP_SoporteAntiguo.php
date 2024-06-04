@@ -147,9 +147,9 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
             $this->Ln(4);
         }
-        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
-        $this->Ln(4);
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
         $this->Ln(12);
         $this->SetFont('Arial', 'B', 14);
     }
