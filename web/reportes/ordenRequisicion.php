@@ -329,17 +329,17 @@ $dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
 
 $update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
 
-echo $update; exit();
+//echo $update; exit();
 $comm->Execute($update);    
 
 $pdf->Output($dir, 'F');
 
 
 
-$pdf=new PDF('P','mm','letter');
-$pdf->PrintChapter();
-$pdf->SetDisplayMode('default');
-$pdf->Output();
+//$pdf=new PDF('P','mm','letter');
+//$pdf->PrintChapter();
+//$pdf->SetDisplayMode('default');
+//$pdf->Output();
 
 
 ?>
