@@ -72,7 +72,7 @@ function getRutaId($co_solicitud, $co_tipo_solicitud, $co_proceso){
    AND tb030.co_tipo_solicitud = '.$co_tipo_solicitud.' 
    AND tb030.co_proceso = '.$co_proceso;
 
-   //echo $sql; exit();
+   echo $sql; exit();
 
    $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
    return  $datosSol[0];                          
