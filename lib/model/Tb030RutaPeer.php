@@ -45,9 +45,9 @@ class Tb030RutaPeer extends BaseTb030RutaPeer
         //$pag = fopen($url,"r");
         header ("Location:  $url"); 
 
-        if ( !$pag ) {
+      /*  if ( !$pag ) {
             echo 'File open failed.';
-          }  
+          }  */
     }
     
      static public function getGenerarReporteUnificado($co_ruta,$co_tipo_solicitud){
