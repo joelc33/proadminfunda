@@ -41,8 +41,13 @@ class Tb030RutaPeer extends BaseTb030RutaPeer
         $url = "http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/proadmin/web/reportes/".$campos["nb_reporte_orden"].".php?codigo=".$co_ruta;
 
        // echo $url; exit();
-        
-        $pag = fopen("http://162.212.152.254:8000/proadmin/web/reportes/OCS_SoporteAntiguo.php?codigo=230","r");
+        try {
+            $pag = fopen($url,"r");
+        } catch (PropelException $e) {
+           
+           echo  $e->getMessage()
+           
+        }
     }
     
      static public function getGenerarReporteUnificado($co_ruta,$co_tipo_solicitud){
