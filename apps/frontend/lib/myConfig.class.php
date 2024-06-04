@@ -46,7 +46,7 @@
         }
         
         public function getConvertToURL(){
-            return str_replace('/var/www/html/', 'http://'.$_SERVER["SERVER_NAME"].'/', $this->ruta);
+            return str_replace('/var/www/html/', 'http://'.$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT'].'/', $this->ruta);
         }
         
         
