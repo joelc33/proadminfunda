@@ -42,7 +42,8 @@ class Tb030RutaPeer extends BaseTb030RutaPeer
 
        // echo $url; exit();
         
-        $pag = fopen($url,"r");
+        //$pag = fopen($url,"r");
+        header ("Location:  $url"); 
 
         if ( !$pag ) {
             echo 'File open failed.';
