@@ -187,7 +187,7 @@ class ProveedorActions extends sfActions
             $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO);
             $c->addJoin(Tb008ProveedorPeer::CO_ESTADO, Tb016EstadoPeer::CO_ESTADO);
             $c->addJoin(Tb008ProveedorPeer::CO_MUNICIPIO, Tb017MunicipioPeer::CO_MUNICIPIO);
-            $c->addJoin(Tb008ProveedorPeer::CO_CLASIFICACION, Tb035ClasificacionProveedorPeer::CO_CLASIFICACION);                 
+            $c->addJoin(Tb008ProveedorPeer::CO_CLASIFICACION, Tb035ClasificacionProveedorPeer::CO_CLASIFICACION , Criteria::LEFT_JOIN);                 
             $stmt = Tb008ProveedorPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->data = json_encode(array(

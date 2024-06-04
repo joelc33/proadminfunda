@@ -977,8 +977,13 @@ class ComprasActions extends sfActions
         $tx_rif        = $this->getRequestParameter('tx_rif');
 
         $c = new Criteria();
-        $c->add(Tb008ProveedorPeer::CO_DOCUMENTO, $co_documento);
-        $c->add(Tb008ProveedorPeer::TX_RIF, $tx_rif);
+        if($co_documento!=''){
+        $c->add(Tb008ProveedorPeer::CO_DOCUMENTO, $co_documento);    
+        }
+        if($tx_rif!=''){
+        $c->add(Tb008ProveedorPeer::TX_RIF, $tx_rif);   
+        }        
+        
         $stmt = Tb008ProveedorPeer::doSelectStmt($c);
 
         $registros = $stmt->fetch(PDO::FETCH_ASSOC);
