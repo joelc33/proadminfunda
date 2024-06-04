@@ -1301,7 +1301,8 @@ class ComprasActions extends sfActions
 
             foreach ($listaProducto  as $productoForm) {
 
-                if ($productoForm["co_detalle_compras"] == '') {
+                //if ($productoForm["co_detalle_compras"] == '')
+                {
                     $tb053_detalle_compras = new Tb053DetalleCompras();
                     $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
                     $tb053_detalle_compras->setCoProducto($productoForm["co_producto"]);
