@@ -808,11 +808,16 @@ class ProveedorActions extends sfActions
     }
     
     if($tx_rif!=''){
-        $c->add(Tb008ProveedorPeer::TX_RIF,$tx_rif);
+        $c->add(Tb008ProveedorPeer::TX_RIF,'%'.$tx_rif.'%', Criteria::LIKE);
     }
-    
     if($tx_razon_social!=''){
-        $c->add(Tb008ProveedorPeer::TX_RAZON_SOCIAL,'%'.$tx_razon_social.'%', Criteria::LIKE);
+        $multiple = preg_split('/\s+/', $tx_razon_social, -1, PREG_SPLIT_NO_EMPTY); 
+
+
+          foreach ($multiple as $value) {
+              $c->add(Tb008ProveedorPeer::TX_RAZON_SOCIAL,'%'.$value.'%', Criteria::LIKE);
+          }    
+    
     }
     
     

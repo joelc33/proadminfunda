@@ -597,11 +597,14 @@ class RequisicionActions extends sfActions
         if ($codigo != '') {
             $c->add(Tb048ProductoPeer::COD_PRODUCTO, '%' . $codigo . '%', Criteria::LIKE);
         }
+        if ($producto != '') {
+        $multiple_producto = preg_split('/\s+/', $producto, -1, PREG_SPLIT_NO_EMPTY); 
 
-        if ($producto) {
-            $c->add(Tb048ProductoPeer::TX_PRODUCTO, '%' . $producto . '%', Criteria::ILIKE);
+
+          foreach ($multiple_producto as $value) {
+            $c->addOr(Tb048ProductoPeer::TX_PRODUCTO, '%' . $value . '%', Criteria::ILIKE);
+          }        
         }
-
         $cantidadTotal = Tb048ProductoPeer::doCount($c);
 
         $c->clearSelectColumns();

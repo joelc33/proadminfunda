@@ -333,10 +333,10 @@ items: [
 });
 
 this.tx_nit = new Ext.form.TextField({
-	fieldLabel:'NIT',
+	fieldLabel:'CI/RIF DE LA CUENTA',
 	name:'tb008_proveedor[tx_nit]',
 	value:this.OBJ.tx_nit,
-	width:200
+	width:100
 });
 
 this.tx_direccion = new Ext.form.TextField({
@@ -562,13 +562,7 @@ this.compositefieldfecha = new Ext.form.CompositeField({
 fieldLabel: 'Fecha Registro',
 width:600,
 items: [
-	this.fe_registro,
-        {
-           xtype: 'displayfield',
-           value: 'Fecha Vencimiento:',
-           width: 110
-        },
-	this.fe_vencimiento
+	this.fe_registro
 	]
 });
 
@@ -576,7 +570,7 @@ items: [
 this.nu_cuenta_bancaria = new Ext.form.TextField({
 	fieldLabel:'Cuenta Bancaria',
 	name:'tb008_proveedor[nu_cuenta_bancaria]',
-	width:200,
+	width:135,
         value: this.OBJ.nu_cuenta_bancaria,
         maskRe: /[0-9]/
 });
@@ -608,10 +602,16 @@ this.storeCO_BANCO.load();
 
 
 this.compositefieldBanco = new Ext.form.CompositeField({
-fieldLabel: 'Banco',
+fieldLabel: 'CI/RIF DE LA CUENTA',
 width:600,
 items: [
-	this.co_banco,
+        this.tx_nit,
+        {
+           xtype: 'displayfield',
+           value: 'Banco:',
+           width: 40
+        },
+        this.co_banco,
         {
            xtype: 'displayfield',
            value: 'Cuenta Bancaria:',
@@ -823,11 +823,10 @@ this.salir = new Ext.Button({
 
 this.fieldDatos1 = new Ext.form.FieldSet({
 	title: 'Datos del Proveedor',
-	items:[ this.compositefieldCIRIF,   
-                this.tx_nit,     
+	items:[ this.compositefieldCIRIF,        
                 this.tx_razon_social,
                 this.tx_siglas,
-                this.co_clasificacion,
+//                this.co_clasificacion,
                 this.tx_email,
                 this.tx_sitio_web,
                 this.compositefieldfecha,   
