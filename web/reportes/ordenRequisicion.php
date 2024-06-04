@@ -10,9 +10,9 @@ class PDF extends FPDF {
 
         $this->empresa = $this->getDatosEmpresa(1);
 
-        if (!empty($this->empresa['tx_imagen_cen'])) {
-            $this->Image("imagenes/" . $this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
-        }
+//        if (!empty($this->empresa['tx_imagen_cen'])) {
+//            $this->Image("imagenes/" . $this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+//        }
 
         $this->SetFont('Arial', 'B', 8);
 
@@ -285,7 +285,7 @@ class PDF extends FPDF {
         op_imagen->'derecha'->2 as derecha_w
         FROM public.tb015_empresa
         WHERE co_empresa = ".$codigo.";";
-        echo $sql; exit();
+
         $conex = new ConexionComun();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
         return  $datosSol[0];
@@ -302,7 +302,7 @@ class PDF extends FPDF {
         INNER JOIN tb032_configuracion_ruta AS tb032 ON tb030.co_tipo_solicitud = tb032.co_tipo_solicitud AND tb030.co_proceso = tb032.co_proceso
         WHERE tb030.co_ruta = ".$ruta;
      
-        echo $sql; exit();
+        //echo $sql; exit();
 
         $conex = new ConexionComun(); 
 
