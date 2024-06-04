@@ -1870,7 +1870,12 @@ class ComprasActions extends sfActions
             }
 
             if ($producto) {
-                $c->add(Tb048ProductoPeer::TX_PRODUCTO, '%' . $producto . '%', Criteria::ILIKE);
+            $multiple_producto = preg_split('/\s+/', $producto, -1, PREG_SPLIT_NO_EMPTY); 
+
+
+            foreach ($multiple_producto as $value) {
+            $c->addOr(Tb048ProductoPeer::TX_PRODUCTO, '%' . $value . '%', Criteria::ILIKE);
+            }
             }
             $c->add(Tb048ProductoPeer::IN_VER, true);
             $cantidadTotal = Tb048ProductoPeer::doCount($c);
