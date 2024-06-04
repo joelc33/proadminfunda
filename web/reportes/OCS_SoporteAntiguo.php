@@ -421,7 +421,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetFont('Times', 'B', 8);
         $this->WriteFlowingBlock(utf8_decode('GARANTIAS: '));
         $this->SetFont('Times', '', 9);
-        $this->WriteFlowingBlock('  ' . $this->punto['tiempo_garantia']);
+        $this->WriteFlowingBlock('  ' . utf8_decode($this->punto['tiempo_garantia']));
         $this->SetY($Y);
         $this->SetX(78);
         $this->finishFlowingBlock();
@@ -691,7 +691,7 @@ class PDF_Flo extends PDF_FlowingBlock
     {
 
         $conex = new ConexionComun();
-        $sql = "SELECT (substr(tx_producto,1,50)||'-'||substr(tb053.detalle,1,50)) as tx_producto,
+        $sql = "SELECT UPPER((substr(tx_producto,1,50)||'-'||substr(tb053.detalle,1,50))) as tx_producto,
                          tb053.nu_cantidad,
                          tb052.nu_iva,
                          tb048.cod_producto,
