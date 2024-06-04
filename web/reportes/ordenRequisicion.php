@@ -285,7 +285,7 @@ class PDF extends FPDF {
         op_imagen->'derecha'->2 as derecha_w
         FROM public.tb015_empresa
         WHERE co_empresa = ".$codigo.";";
-
+        echo $sql; exit();
         $conex = new ConexionComun();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
         return  $datosSol[0];
