@@ -190,8 +190,8 @@ class RequisicionActions extends sfActions
                 "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
                 "nb_solicitante"     => $datos["nb_usuario"],
                 "tx_entidad"         => $datos["tx_ente"],
-                //"fe_registro"        => date("d-m-Y"),
-                "fe_registro"        => $dia . '-' . $mes . '-' . $anio,
+                "fe_registro"        => date("Y-m-d"),
+//                "fe_registro"        => $dia . '-' . $mes . '-' . $anio,
                 "co_usuario"         => $datos["co_usuario"],
                 "tx_concepto"        => $co_solicitud["tx_observacion"],
                 "tx_observacion"     => "",
@@ -597,11 +597,14 @@ class RequisicionActions extends sfActions
         if ($codigo != '') {
             $c->add(Tb048ProductoPeer::COD_PRODUCTO, '%' . $codigo . '%', Criteria::LIKE);
         }
+        if ($producto != '') {
+        $multiple_producto = preg_split('/\s+/', $producto, -1, PREG_SPLIT_NO_EMPTY); 
 
-        if ($producto) {
-            $c->add(Tb048ProductoPeer::TX_PRODUCTO, '%' . $producto . '%', Criteria::ILIKE);
+
+          foreach ($multiple_producto as $value) {
+            $c->addOr(Tb048ProductoPeer::TX_PRODUCTO, '%' . $value . '%', Criteria::ILIKE);
+          }        
         }
-
         $cantidadTotal = Tb048ProductoPeer::doCount($c);
 
         $c->clearSelectColumns();

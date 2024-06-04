@@ -478,20 +478,20 @@ this.salir = new Ext.Button({
 });
 
 this.fieldSet1 = new Ext.form.FieldSet({
-        title: 'Datos del Traslado',
+        title: 'Datos del Cedito Adicional',
         items:[        
-          //this.id_tb082_ejecutor,
+//          this.id_tb082_ejecutor,
           this.mo_modificacion,
           this.fe_modificacion,
           this.de_modificacion,
           this.de_justificacion,
-          //this.nu_oficio,
-//          this.id_tb073_fuente_financiamiento,
-//          this.id_tb068_numero_fuente_financiamiento,
+//          this.nu_oficio,
+          this.id_tb073_fuente_financiamiento,
+          this.id_tb068_numero_fuente_financiamiento,
           this.fe_oficio,
           this.de_articulo_ley,
-//          this.id_tb152_tipo_credito,
-          //this.id_tb083_proyecto_ac
+          this.id_tb152_tipo_credito,
+//          this.id_tb083_proyecto_ac
         ]
  });
 

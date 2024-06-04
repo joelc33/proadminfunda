@@ -307,7 +307,7 @@
                     this.co_tipo_solicitud,
                     this.hiddenJsonProducto,
                     this.co_requisicion,
-                    this.fieldDatos,
+//                    this.fieldDatos,
                     this.fieldDatosRequisicion,
                     this.gridPanel
                 ]

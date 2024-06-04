@@ -334,7 +334,8 @@
             this.forma_pago = new Ext.form.TextField({
                 fieldLabel: 'Forma de Pago',
                 name: 'tb052_compras[forma_pago]',
-                value: this.OBJ.forma_pago,
+                value: 'CREDITO',
+                readOnly: true,
                 allowBlank: false,
                 width: 200
             });
@@ -343,7 +344,7 @@
                 fieldLabel: 'Monto Presupuesto',
                 name: 'tb052_compras[monto]',
                 value: this.OBJ.monto,
-                readOnly: (this.OBJ.co_factura != '') ? true : false,
+                readOnly: true,
                 style: (this.OBJ.co_factura != '') ? 'background:#c9c9c9;' : '',
                 allowBlank: false,
                 width: 200
@@ -1108,6 +1109,7 @@
             ComprasEditar.main.monto_compra.setValue(this.cancelar);
             ComprasEditar.main.monto_iva.setValue(parseFloat(this.totaliva));
             ComprasEditar.main.monto_total.setValue(parseFloat(this.tcancelar));
+            ComprasEditar.main.monto_contrato.setValue(parseFloat(this.tcancelar));
             ComprasEditar.main.displayfieldmonto_compra.setValue("<span style='font-size:12px;'><b>Sub Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_compra.getValue()) + "</b></span>");
             ComprasEditar.main.displayfieldmonto_iva.setValue("<span style='font-size:12px;'><b>Iva: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_iva.getValue()) + "</b></span>");
             ComprasEditar.main.displayfieldmonto_total.setValue("<span style='font-size:18px;'><b>Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_total.getValue()) + "</b></span>");

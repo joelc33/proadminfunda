@@ -187,7 +187,7 @@ class ProveedorActions extends sfActions
             $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO);
             $c->addJoin(Tb008ProveedorPeer::CO_ESTADO, Tb016EstadoPeer::CO_ESTADO);
             $c->addJoin(Tb008ProveedorPeer::CO_MUNICIPIO, Tb017MunicipioPeer::CO_MUNICIPIO);
-            $c->addJoin(Tb008ProveedorPeer::CO_CLASIFICACION, Tb035ClasificacionProveedorPeer::CO_CLASIFICACION);                 
+            $c->addJoin(Tb008ProveedorPeer::CO_CLASIFICACION, Tb035ClasificacionProveedorPeer::CO_CLASIFICACION , Criteria::LEFT_JOIN);                 
             $stmt = Tb008ProveedorPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->data = json_encode(array(
@@ -808,11 +808,16 @@ class ProveedorActions extends sfActions
     }
     
     if($tx_rif!=''){
-        $c->add(Tb008ProveedorPeer::TX_RIF,$tx_rif);
+        $c->add(Tb008ProveedorPeer::TX_RIF,'%'.$tx_rif.'%', Criteria::LIKE);
     }
-    
     if($tx_razon_social!=''){
-        $c->add(Tb008ProveedorPeer::TX_RAZON_SOCIAL,'%'.$tx_razon_social.'%', Criteria::LIKE);
+        $multiple = preg_split('/\s+/', $tx_razon_social, -1, PREG_SPLIT_NO_EMPTY); 
+
+
+          foreach ($multiple as $value) {
+              $c->add(Tb008ProveedorPeer::TX_RAZON_SOCIAL,'%'.$value.'%', Criteria::LIKE);
+          }    
+    
     }
     
     
