@@ -313,33 +313,33 @@ class PDF extends FPDF {
 
 }
 
-$pdf=new PDF('P','mm','letter');
-$pdf->AliasNbPages();
-$pdf->PrintChapter();
-
-$comm = new ConexionComun();
-$ruta = $comm->getRuta();
-
-//echo $ruta; exit();
-//rmdir($ruta);
-//mkdir($ruta, 0777, true);    
-
-$dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
-
-
-$update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
-
-//echo $update; exit();
-$comm->Execute($update);    
-
-$pdf->Output($dir, 'F');
-
-
-
 //$pdf=new PDF('P','mm','letter');
+//$pdf->AliasNbPages();
 //$pdf->PrintChapter();
-//$pdf->SetDisplayMode('default');
-//$pdf->Output();
+//
+//$comm = new ConexionComun();
+//$ruta = $comm->getRuta();
+//
+////echo $ruta; exit();
+////rmdir($ruta);
+////mkdir($ruta, 0777, true);    
+//
+//$dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
+//
+//
+//$update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
+//
+////echo $update; exit();
+//$comm->Execute($update);    
+//
+//$pdf->Output($dir, 'F');
+
+
+
+$pdf=new PDF('P','mm','letter');
+$pdf->PrintChapter();
+$pdf->SetDisplayMode('default');
+$pdf->Output();
 
 
 ?>
