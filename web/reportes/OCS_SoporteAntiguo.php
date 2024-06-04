@@ -170,20 +170,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetX(15);
          $this->Row(array(utf8_decode('RIF: '.$datos_empresa["tx_rif"])), 0, 0);
  
-         //***** Primer emblema der ******//
-         /*  $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(100, 150, 255));
-         $this->RoundedRect(107, 12, 94, 65, 3.5, '1111', 'DF', $style);
-       //  $this->Image("imagenes/escudo.png", 140, 13 ,30);
-         $this->SetFont('Times','B',9);
-         $this->SetTextColor(0,0,0);
-         $this->SetY(20);
-         $this->SetX(113);
-         $this->SetWidths(array(80));
-         $this->SetAligns(array("C"));
-       //  $this->Row(array(utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS')),0,0);*/
- 
- 
- 
+      
          //***** Segundo emblema izq ******//
          $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(0, 0, 0));
          $this->RoundedRect(15, 37, 90, 30, 3.5, '1111', 'DF', $style);
@@ -198,16 +185,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->SetY(15);
         $this->SetX(132);
-       /* if ($this->datos['co_tipo_solicitud'] == 65) {
-            $this->Row(array(utf8_decode('ORDEN DE CONTRATO')), 0, 0);
-        } else {
-            if ($this->datos['co_tipo_solicitud'] == 1 || $this->datos['co_tipo_solicitud'] == 2 || $this->datos['co_tipo_solicitud'] == 63 || $this->datos['co_tipo_solicitud'] == 64) {
-                $this->Row(array(utf8_decode('ORDEN DE ' . $this->datos['tx_tipo_solicitud'])), 0, 0);
-            } else {
-                $this->Row(array(utf8_decode('SOPORTE DE COMPROMISO')), 0, 0);
-                //         $this->Row(array(utf8_decode('ORDEN DE '.$this->datos['tx_tipo_solicitud'])),0,0);    
-            }
-        }*/
+      
         $this->SetFont('Times', '', 10);
         $this->SetWidths(array(55, 35));
         $this->SetAligns(array("L", "L"));
