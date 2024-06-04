@@ -19,7 +19,7 @@ class PDF extends FPDF {
         }*/
         
         if(!empty($this->empresa['tx_imagen_cen'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
 
         /*if(!empty($this->empresa['tx_imagen_der'])){
