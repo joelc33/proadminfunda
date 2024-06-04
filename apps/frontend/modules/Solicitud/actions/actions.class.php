@@ -886,6 +886,7 @@ class SolicitudActions extends sfActions
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
         $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
+        $c->addSelectColumn(Tb030RutaPeer::TX_RUTA_REPORTE);
 
         // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR,   Criteria::LEFT_JOIN);
@@ -935,6 +936,7 @@ class SolicitudActions extends sfActions
                 "tx_rif"            => $tx_rif,
                 "tx_razon_social"   => $tx_razon_social,
                 "fe_creacion"       => $dia . '-' . $mes . '-' . $anio,
+                "in_reporte"        => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
                 "cant_revision"     => $cantidad
             );
         }

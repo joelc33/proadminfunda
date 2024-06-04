@@ -404,6 +404,9 @@
                     },
                     {
                         name: 'co_ruta'
+                    },
+                    {
+                        name: 'in_reporte'
                     }
                 ]
             });
