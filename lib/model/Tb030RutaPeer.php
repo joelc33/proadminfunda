@@ -45,7 +45,7 @@ class Tb030RutaPeer extends BaseTb030RutaPeer
             $pag = fopen($url,"r");
         } catch (PropelException $e) {
            
-           echo  $e->getMessage()
+           echo  $e->getMessage();
            
         }
     }
