@@ -912,7 +912,7 @@
             this.formPanel_ = new Ext.form.FormPanel({
                 frame: true,
                 width: 990,
-                height: 670,
+                height: 674,
                 autoScroll: true,
                 bodyStyle: 'padding:0px;',
                 items: [
@@ -950,7 +950,7 @@
                 width: 1004,
                 frame: true,
                 closabled: true,
-                height: 684,
+                height: 694,
                 tbar: tbar,
                 items: [
                     this.formPanel_
