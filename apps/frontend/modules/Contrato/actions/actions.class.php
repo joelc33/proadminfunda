@@ -180,11 +180,13 @@ class ContratoActions extends sfActions
       $stmt = Tb045FacturaPeer::doSelectStmt($cm);
       $monto = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
+      /*if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
         $nu_compra =  date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . $correlativo;
       } else {
         $nu_compra = date("Ym") . '-' . $correlativo;
-      }
+      }*/
+
+      $nu_compra = '';
 
       $this->data = json_encode(array(
         "co_compras"         => "",
@@ -475,26 +477,11 @@ class ContratoActions extends sfActions
         $tb052_comprasForm["co_solicitud"]      = $resp["co_solicitud"];
       }
 
-     /* if ($tb052_comprasForm["co_tipo_solicitud"] == 1) {
-
-        if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
-          $serial = 'OC-' . date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial(2, $con, $this->getUser()->getAttribute('ejercicio'));
-        } else {
-          $serial = 'OC-' . date("Ym") . '-' . Tb137ControlSerialPeer::getSerial(2, $con, $this->getUser()->getAttribute('ejercicio'));
-        }
-      }
-      if ($tb052_comprasForm["co_tipo_solicitud"] == 2) {
-
-        if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
-          $serial = 'OS-' . date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial(2, $con, $this->getUser()->getAttribute('ejercicio'));
-        } else {
-          $serial = 'OS-' . date("Ym") . '-' . Tb137ControlSerialPeer::getSerial(3, $con, $this->getUser()->getAttribute('ejercicio'));
-        }
-      }*/
+    
       if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
-        $serial = date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial(2, $con, $this->getUser()->getAttribute('ejercicio')).$correlativo;
+        $serial = date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial(11, $con, $this->getUser()->getAttribute('ejercicio'));
       } else {
-        $serial =  date("Ym") . '-' . Tb137ControlSerialPeer::getSerial(3, $con, $this->getUser()->getAttribute('ejercicio')).$correlativo;
+        $serial =  date("Ym") . '-' . Tb137ControlSerialPeer::getSerial(11, $con, $this->getUser()->getAttribute('ejercicio'));
       }
 
       $tb052_compras->setNumeroCompra($serial);
