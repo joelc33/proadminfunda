@@ -628,7 +628,7 @@ class PDF extends FPDF {
     function getPart()
     {
         $conex = new ConexionComun();
-        $sql ="   select distinct tb083.id_tb013_anio_fiscal||'-'||tb082.nu_ejecutor||'-'||tb085.co_categoria as co_categoria,
+        $sql ="   select distinct tb083.id_tb013_anio_fiscal||tb085.co_categoria as co_categoria,
                          upper(tb052.tx_observacion) as tx_observacion,
                          de_partida,
                          sum(case when (tb053.in_calcular_iva) then tb053.monto else tb052.monto_iva end) as monto                        
