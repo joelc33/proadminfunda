@@ -250,13 +250,13 @@
                         sortable: true,
                         dataIndex: 'tx_login'
                     },
-                    {
+                   /* {
                         header: 'Fecha',
                         width: 100,
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'fe_creacion'
-                    },
+                    },*/
                     {
                         header: 'Datos',
                         width: 150,
