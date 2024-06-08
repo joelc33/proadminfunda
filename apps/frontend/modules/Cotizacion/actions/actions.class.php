@@ -487,7 +487,9 @@ class CotizacionActions extends sfActions
             $c->addSelectColumn(Tb206CotizacionPeer::TX_SERIAL_COTIZACION);
             $c->addSelectColumn(Tb039RequisicionesPeer::NU_REQUISICION);
             $c->addSelectColumn(Tb206CotizacionPeer::TX_OBSERVACION);
-            $c->addJoin(Tb039RequisicionesPeer::CO_REQUISICION,Tb206CotizacionPeer::CO_REQUISICION);   
+            $c->addSelectColumn(Tb047EntePeer::TX_ENTE);
+            $c->addJoin(Tb039RequisicionesPeer::CO_REQUISICION,Tb206CotizacionPeer::CO_REQUISICION);
+            $c->addJoin(Tb039RequisicionesPeer::CO_ENTE,Tb047EntePeer::CO_ENTE);   
 
             $c->setIgnoreCase(true);
             $cantidadTotal = Tb206CotizacionPeer::doCount($c);            
@@ -504,9 +506,10 @@ class CotizacionActions extends sfActions
                     "nu_requisicion"        => trim($res["nu_requisicion"]),
                     "tx_serial_cotizacion"  => trim($res["tx_serial_cotizacion"]),
                     "tx_observacion"        => trim($res["tx_observacion"]),
+                    "tx_ente"               => trim($res["tx_ente"]),
                     "nu_iva"                => round($res["nu_iva"],0),
-                    "co_ruta_requisicion"   => $this->getTxRutaReporte(1,$res["co_solicitud"]),
-                    "co_ruta_presupuesto"   => $this->getTxRutaReporte(2,$res["co_solicitud"])
+                    "co_ruta_requisicion"   => $this->getTxRutaReporte(65,$res["co_solicitud"]),
+                    "co_ruta_presupuesto"   => $this->getTxRutaReporte(64,$res["co_solicitud"])
                 );
             }
 

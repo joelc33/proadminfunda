@@ -39,9 +39,9 @@ init:function(){
             {header: 'co_ruta_requisicion',hidden:true, menuDisabled:true,dataIndex: 'co_ruta_requisicion'},    
             {header: 'co_ruta_presupuesto',hidden:true, menuDisabled:true,dataIndex: 'co_ruta_presupuesto'},    
             {header: 'Código Requisición', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'nu_requisicion',renderer: renderDatosRequisicion},        
-            {header: 'Código Presupuesto', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial_cotizacion',renderer: renderDatosPresupuesto},    
-            {header: 'Descripción', width:950,  menuDisabled:true, sortable: true, dataIndex: 'tx_observacion'},
-        
+            {header: 'Código Presupuesto', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial_cotizacion',renderer: renderDatosPresupuesto},
+            {header: 'Departamento', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_ente'},    
+            {header: 'Descripción', width:950,  menuDisabled:true, sortable: true, dataIndex: 'tx_observacion'},        
         ],
         listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
            /* PartidapresupuestoListaDesagregada.main.co_presupuesto.setValue(PartidapresupuestoListaDesagregada.main.store_lista.getAt(rowIndex).get('id'));
@@ -139,7 +139,8 @@ getLista: function(){
             {name: 'tx_observacion'},
             {name: 'co_ruta_requisicion'},
             {name: 'co_ruta_presupuesto'},
-            {name: 'nu_iva'}
+            {name: 'nu_iva'},
+            {name: 'tx_ente'}
            ]
     });
     return this.store;
