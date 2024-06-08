@@ -229,6 +229,7 @@ class RequisicionActions extends sfActions
                 $tb039_requisicionesForm["co_tipo_solicitud"]   = 61;
             }
 
+            
 
             $tb039_requisiciones = new Tb039Requisiciones();
             $tb039_requisiciones->setCoUsuario($this->getUser()->getAttribute('codigo'));
@@ -261,6 +262,7 @@ class RequisicionActions extends sfActions
             $tb039_requisiciones->setTxConcepto($tb039_requisicionesForm["tx_concepto"]);
             $tb039_requisiciones->setTxObservacion($tb039_requisicionesForm["tx_observacion"]);
             $tb039_requisiciones->setCoServicio($tb039_requisicionesForm["co_servicio"]);
+            $tb039_requisiciones->setCoEnte($tb039_requisicionesForm["co_ente"]);
             $tb039_requisiciones->save($con);
 
             $listaProducto  = json_decode($json_producto, true);
@@ -397,7 +399,7 @@ class RequisicionActions extends sfActions
         $c->addSelectColumn(Tb001UsuarioPeer::TX_LOGIN);
         $c->addSelectColumn(Tb026SolicitudPeer::FE_REGISTRO);
         $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);
-        //  $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
+        $c->addSelectColumn(Tb047EntePeer::TX_ENTE);
         $c->addSelectColumn(Tb039RequisicionesPeer::TX_CONCEPTO);
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
@@ -407,7 +409,8 @@ class RequisicionActions extends sfActions
         // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR,   Criteria::LEFT_JOIN);
         $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO,  Tb007DocumentoPeer::CO_DOCUMENTO,   Criteria::LEFT_JOIN);
-        // $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb060OrdenPagoPeer::CO_SOLICITUD,   Criteria::LEFT_JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb039RequisicionesPeer::CO_SOLICITUD);
+        $c->addJoin(Tb047EntePeer::CO_ENTE, Tb039RequisicionesPeer::CO_ENTE);
         $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD,  Criteria::JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD,  Criteria::JOIN);
         $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO,   Criteria::JOIN);
@@ -454,7 +457,8 @@ class RequisicionActions extends sfActions
                 "tx_rif"            => $tx_rif,
                 "tx_razon_social"   => $tx_razon_social,
                 "fe_creacion"       => $dia . '-' . $mes . '-' . $anio,
-                "cant_revision"     => $cantidad
+                "cant_revision"     => $cantidad,
+                "tx_ente"           => trim($res["tx_ente"])
             );
         }
 
@@ -470,6 +474,23 @@ class RequisicionActions extends sfActions
     {
         $c = new Criteria();
         $stmt = Tb050ServicioPeer::doSelectStmt($c);
+        $registros = array();
+        while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $registros[] = $reg;
+        }
+
+        $this->data = json_encode(array(
+            "success"   =>  true,
+            "total"     =>  count($registros),
+            "data"      =>  $registros
+        ));
+        $this->setTemplate('store');
+    }
+
+    public function executeStorefkcoente(sfWebRequest $request)
+    {
+        $c = new Criteria();
+        $stmt = Tb047EntePeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $registros[] = $reg;

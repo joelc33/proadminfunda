@@ -219,6 +219,13 @@
                         dataIndex: 'tx_concepto'
                     },
                     {
+                        header: 'Departamento',
+                        width: 200,
+                        menuDisabled: true,
+                        sortable: true,
+                        dataIndex: 'tx_ente'
+                    },
+                    {
                         header: 'Creado Por',
                         width: 150,
                         menuDisabled: true,
@@ -327,6 +334,9 @@
                     },
                     {
                         name: 'co_ruta'
+                    },
+                    {
+                        name: 'tx_ente'
                     }
                 ]
             });

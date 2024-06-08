@@ -8,6 +8,7 @@
             });
             //<Stores de fk>
             this.storeCO_TIPO_SOLICITUD = this.getStoreCO_TIPO_SOLICITUD();
+            this.storeCO_ENTE = this.getStoreCO_ENTE();
 
 
             this.cant_total = '';
@@ -18,10 +19,10 @@
                 value: this.OBJ.co_requisicion
             });
 
-            this.co_ente = new Ext.form.Hidden({
+          /*  this.co_ente = new Ext.form.Hidden({
                 name: 'tb039_requisiciones[co_ente]',
                 value: this.OBJ.co_ente
-            });
+            });*/
 
             this.co_tipo_solicitud = new Ext.form.Hidden({
                 name: 'tb039_requisiciones[co_tipo_solicitud]',
@@ -38,6 +39,31 @@
                 value: this.OBJ.fe_registro
             });
             //</ClavePrimaria>
+
+
+            this.co_departamento = new Ext.form.ComboBox({
+                fieldLabel: 'Departamento',
+                store: this.storeCO_ENTE,
+                typeAhead: true,
+                valueField: 'co_ente',
+                displayField: 'tx_ente',
+                hiddenName: 'tb039_requisiciones[co_ente]',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                emptyText: '...',
+                selectOnFocus: true,
+                mode: 'local',
+                width: 250,
+                resizable: true,
+                allowBlank: false
+            });
+            this.storeCO_ENTE.load();
+            paqueteComunJS.funcion.seleccionarComboByCo({
+                objCMB: this.co_departamento,
+                value: this.OBJ.co_ente,
+                objStore: this.storeCO_ENTE
+            });
 
             this.store_lista = this.getLista();
 
@@ -196,13 +222,10 @@
             }
 
 
-            this.datos = '<p class="registro_detalle"><b>Solicitante: </b>' + this.OBJ.nb_solicitante + '</p>';
-            this.datos += '<p class="registro_detalle"><b>Entidad: </b>' + this.OBJ.tx_entidad + '</p>';
-            this.datos += '<p class="registro_detalle"><b>Fecha: </b>' + this.OBJ.fe_registro + '</p>';
-
+           
             this.fieldDatos = new Ext.form.FieldSet({
                 title: 'Datos del Solicitante',
-                html: this.datos
+                items: [this.co_departamento]
             });
 
             this.tx_concepto = new Ext.form.TextField({
@@ -301,13 +324,13 @@
                 autoHeight: true,
                 autoScroll: true,
                 bodyStyle: 'padding:10px;',
-                items: [this.co_ente,
+                items: [
                     this.co_solicitud,
                     this.fe_registro,
                     this.co_tipo_solicitud,
                     this.hiddenJsonProducto,
                     this.co_requisicion,
-//                    this.fieldDatos,
+                    this.fieldDatos,
                     this.fieldDatosRequisicion,
                     this.gridPanel
                 ]
@@ -407,6 +430,20 @@
                     },
                     {
                         name: 'tx_tipo_solicitud'
+                    }
+                ]
+            });
+            return this.store;
+        },
+        getStoreCO_ENTE: function() {
+            this.store = new Ext.data.JsonStore({
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Requisicion/storefkcoente',
+                root: 'data',
+                fields: [{
+                        name: 'co_ente'
+                    },
+                    {
+                        name: 'tx_ente'
                     }
                 ]
             });
