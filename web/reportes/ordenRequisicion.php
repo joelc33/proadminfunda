@@ -102,8 +102,8 @@ class PDF extends FPDF {
          $this->MultiCell(200,13,'',1,1,'L',1);
          $this->SetY($Y);
          $this->SetAligns(array("J"));
-//         $this->Row(array(' UNIDAD SOLICITANTE: '.utf8_decode($this->datos['tx_ente'])),0,0);
-         $this->Row(array(' UNIDAD USUARIA: '),0,0);
+         $this->Row(array('  DEPARTAMENTO SOLICITANTE: '.utf8_decode($this->datos['tx_ente'])),0,0);
+        // $this->Row(array(' UNIDAD USUARIA: '),0,0);
          $Y = $this->GetY();
          $this->SetY($Y);
          $this->MultiCell(200,11,'',1,1,'L',1);
