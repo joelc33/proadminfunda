@@ -56,6 +56,8 @@ class CotizacionActions extends sfActions
                                     "co_ente"              => $campos["co_ente"],
                                     "co_solicitud"         => $this->getRequestParameter("co_solicitud"),
                                     "co_tipo_solicitud"    => $this->getRequestParameter("co_tipo_solicitud"),
+                                    "co_modalidad"         => $campos["co_modalidad"],
+                                    "co_tipo_cotizacion"   => $campos["co_tipo_cotizacion"],
                                     "co_iva_factura"       => round($campos["nu_iva"],0),
                     ));
 
@@ -201,6 +203,8 @@ class CotizacionActions extends sfActions
         $tb206_cotizacion->setMontoSubTotal($tb206_cotizacionForm["monto_compra"]);
         $tb206_cotizacion->setMontoTotal($tb206_cotizacionForm["monto_total"]);
         $tb206_cotizacion->setTxSerialCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
+        $tb206_cotizacion->setCoTipoCotizacion($tb206_cotizacionForm["co_tipo_cotizacion"]);
+        $tb206_cotizacion->setCoModalidad($tb206_cotizacionForm["co_tipo_modalidad"]);
         $tb206_cotizacion->save($con);
         
         $listaProducto  = json_decode($json_producto,true);
@@ -226,10 +230,7 @@ class CotizacionActions extends sfActions
                     $tb207_detalle_cotizacion->save($con);
                 }
         }
-        
-        
-        
-        
+
         $monto_iva = $tb206_cotizacionForm["monto_iva"];
         
         $wherec = new Criteria();
@@ -450,7 +451,11 @@ class CotizacionActions extends sfActions
   public function executeBuscarPresupuestoBase(sfWebRequest $request)
   {
 
-
+    $this->data = json_encode(array(
+      "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+      "co_tipo_tramite"   => $this->getRequestParameter("co_tipo_tramite")
+    ));
+   
   }
 
   public function executeBuscarCompra(sfWebRequest $request)
@@ -476,6 +481,27 @@ class CotizacionActions extends sfActions
 
   }
 
+  public function executeStorefkcotipocotizacion(sfWebRequest $request)
+  {
+
+    $c = new Criteria();
+    $c->clearSelectColumns();
+    $c->addSelectColumn(Tb208TipoCotizacionPeer::CO_TIPO_COTIZACION);
+    $c->addSelectColumn(Tb208TipoCotizacionPeer::TX_TIPO_COTIZACION);
+    $stmt = Tb208TipoCotizacionPeer::doSelectStmt($c);
+    $registros = array();
+    while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $registros[] = $reg;
+    }
+
+    $this->data = json_encode(array(
+      "success"   =>  true,
+      "total"     =>  count($registros),
+      "data"      =>  $registros
+    ));
+    $this->setTemplate('store');
+  }
+
   public function executeStorelistaPresupuestoBase(sfWebRequest $request)
   {
 
@@ -490,6 +516,15 @@ class CotizacionActions extends sfActions
             $c->addSelectColumn(Tb047EntePeer::TX_ENTE);
             $c->addJoin(Tb039RequisicionesPeer::CO_REQUISICION,Tb206CotizacionPeer::CO_REQUISICION);
             $c->addJoin(Tb039RequisicionesPeer::CO_ENTE,Tb047EntePeer::CO_ENTE);   
+            $c->addJoin(Tb206CotizacionPeer::CO_TIPO_COTIZACION,Tb208TipoCotizacionPeer::CO_TIPO_COTIZACION);
+            $c->add(Tb208TipoCotizacionPeer::CO_TIPO_SOLICITUD,$this->getRequestParameter("co_tipo_solicitud"));
+
+            if($this->getRequestParameter("co_tipo_tramite") == 64) //contrato
+            {
+              $c->add(Tb206CotizacionPeer::CO_MODALIDAD,array(2,6),Criteria::IN);
+            }else{
+              $c->add(Tb206CotizacionPeer::CO_MODALIDAD,array(2,6),Criteria::NOT_IN);
+            }
 
             $c->setIgnoreCase(true);
             $cantidadTotal = Tb206CotizacionPeer::doCount($c);            

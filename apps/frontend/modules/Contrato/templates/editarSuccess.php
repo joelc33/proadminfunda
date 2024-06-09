@@ -470,12 +470,32 @@
                 text: 'Buscar',
                 iconCls: 'icon-buscar',
                 handler: function() {
-                    this.msg = Ext.get('formularioAgregar');
-                    this.msg.load({
-                        url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Cotizacion/buscarPresupuestoBase',
-                        scripts: true,
-                        text: "Cargando.."
-                    });
+
+                    if (ComprasEditar.main.co_tipo_proceso.getValue() == null) {
+                        Ext.MessageBox.show({
+                            title: 'Mensaje',
+                            msg: 'Debe Seleccionar el Tipo de Proceso',
+                            closable: false,
+                            icon: Ext.MessageBox.INFO,
+                            resizable: false,
+                            animEl: document.body,
+                            buttons: Ext.MessageBox.OK
+                        });
+
+                    } else {
+                        this.msg = Ext.get('formularioAgregar');
+                        this.msg.load({
+                            url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Cotizacion/buscarPresupuestoBase',
+                            params:{
+                                co_tipo_solicitud: ComprasEditar.main.co_tipo_proceso.getValue(),
+                                co_tipo_tramite: 64
+                            },
+                            scripts: true,
+                            text: "Cargando.."
+                        });
+                    }
+
+
                 }
             });
 
@@ -492,8 +512,8 @@
             this.fieldPresupuesto = new Ext.form.FieldSet({
                 title: 'Presupuesto Base',
                 items: [
-                    this.compositefieldPresupuestoBase,
-                    this.co_tipo_proceso
+                    this.co_tipo_proceso,
+                    this.compositefieldPresupuestoBase
                 ]
             });
 
@@ -921,7 +941,7 @@
                     this.co_solicitud_cotizacion,
                     this.co_proveedor,
                     this.co_contrato_compras,
-               //     this.co_tipo_solicitud,
+                    //     this.co_tipo_solicitud,
                     this.co_solicitud,
                     this.co_requisicion,
                     this.nu_compra,

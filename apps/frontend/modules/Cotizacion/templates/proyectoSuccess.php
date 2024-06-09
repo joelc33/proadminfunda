@@ -9,6 +9,8 @@
             this.store_lista = this.getLista();
             this.storeCO_IVA_FACTURA = this.getStoreCO_IVA_FACTURA();
             this.storeCO_ENTE = this.getStoreCO_ENTE();
+            this.storeCO_TIPO_COTIZACION        = this.getStoreCO_TIPO_COTIZACION();
+            this.storeCO_TPCONTRATO = this.getStoreCO_TPCONTRATO();
 
             this.co_solicitud = new Ext.form.Hidden({
                 name: 'tb206_cotizacion[co_solicitud]',
@@ -115,6 +117,73 @@
                 allowBlank: false
             });
 
+            this.co_tipo_cotizacion = new Ext.form.ComboBox({
+                fieldLabel: 'Tipo',
+                store: this.storeCO_TIPO_COTIZACION,
+                typeAhead: true,
+                valueField: 'co_tipo_cotizacion',
+                displayField: 'tx_tipo_cotizacion',
+                hiddenName: 'tb008_proveedor[co_documento]',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                selectOnFocus: true,
+                mode: 'local',
+                width: 200,
+                allowBlank: false
+            });
+
+            this.storeCO_TIPO_COTIZACION.load();
+            paqueteComunJS.funcion.seleccionarComboByCo({
+                objCMB: this.co_tipo_cotizacion,
+                value: this.OBJ.co_tipo_cotizacion,
+                objStore: this.storeCO_TIPO_COTIZACION
+            });
+
+            this.co_tipo_cotizacion = new Ext.form.ComboBox({
+                fieldLabel: 'Tipo',
+                store: this.storeCO_TIPO_COTIZACION,
+                typeAhead: true,
+                valueField: 'co_tipo_cotizacion',
+                displayField: 'tx_tipo_cotizacion',
+                hiddenName: 'tb206_cotizacion[co_tipo_cotizacion]',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                selectOnFocus: true,
+                mode: 'local',
+                width: 415,
+                allowBlank: false
+            });
+            this.storeCO_TPCONTRATO.load();
+            paqueteComunJS.funcion.seleccionarComboByCo({
+                objCMB: this.co_tipo_cotizacion,
+                value: this.OBJ.co_tipo_cotizacion,
+                objStore: this.storeCO_TPCONTRATO
+            });
+
+            this.co_tipo_modalidad = new Ext.form.ComboBox({
+                fieldLabel: 'Modalidad',
+                store: this.storeCO_TPCONTRATO,
+                typeAhead: true,
+                valueField: 'co_tp_contrato',
+                displayField: 'tx_tp_contrato',
+                hiddenName: 'tb206_cotizacion[co_tipo_modalidad]',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                selectOnFocus: true,
+                mode: 'local',
+                width: 415,
+                allowBlank: false
+            });
+            this.storeCO_TPCONTRATO.load();
+            paqueteComunJS.funcion.seleccionarComboByCo({
+                objCMB: this.co_tipo_modalidad,
+                value: this.OBJ.co_modalidad,
+                objStore: this.storeCO_TPCONTRATO
+            });
+
             this.fieldDatos = new Ext.form.FieldSet({
                 title: 'Datos del Presupuesto Base',
                 items: [
@@ -123,7 +192,9 @@
                     this.co_tipo_solicitud,
                     this.co_cotizacion,
                     this.tx_serial_cotizacion,
-                    this.tx_observacion
+                    this.tx_observacion,
+                    this.co_tipo_modalidad,
+                    this.co_tipo_cotizacion
                 ]
             });
 
@@ -149,6 +220,8 @@
                 value: this.OBJ.co_iva_factura,
                 objStore: this.storeCO_IVA_FACTURA
             });
+
+           
 
             this.agregar = new Ext.Button({
                 text: 'Agregar',
@@ -506,6 +579,34 @@
                     },
                     {
                         name: 'in_exento'
+                    }
+                ]
+            });
+            return this.store;
+        },
+        getStoreCO_TPCONTRATO: function() {
+            this.store = new Ext.data.JsonStore({
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcotpcontrato',
+                root: 'data',
+                fields: [{
+                        name: 'co_tp_contrato'
+                    },
+                    {
+                        name: 'tx_tp_contrato'
+                    }
+                ]
+            });
+            return this.store;
+        },
+        getStoreCO_TIPO_COTIZACION: function() {
+            this.store = new Ext.data.JsonStore({
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Cotizacion/storefkcotipocotizacion',
+                root: 'data',
+                fields: [{
+                        name: 'co_tipo_cotizacion'
+                    },
+                    {
+                        name: 'tx_tipo_cotizacion'
                     }
                 ]
             });
