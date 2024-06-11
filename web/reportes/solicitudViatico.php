@@ -17,22 +17,27 @@ class PDF extends FPDF {
         //$this->Image("imagenes/escudosanfco.png", 100, 7,20);
 
         if(!empty($this->empresa['tx_imagen_cen'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
 
         $this->SetFont('Arial','B',8);
 
-        $this->SetTextColor(0,0,0);
-        $this->SetY(32);
-        $this->Cell(0,0,utf8_decode('REPÚBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
+        $this->Ln(4);       
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
         $this->Ln(4);
-        //$this->Cell(0,0,utf8_decode('GOBERNACIÓN DEL ESTADO ZULIA'),0,0,'C');
-        $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
+        if (!empty($this->empresa['nb_institucion'])) 
+        {
+            $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
+            $this->Ln(4);
+        }
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(4);
-        $this->SetX(25);       
-        $this->Cell(0,0,utf8_decode('[FSV-SAF-16]'),0,0,'L');  
-         $this->Ln(6);
-        $this->SetFont('Arial','B',14);
+        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
+        $this->Ln(12);
+        $this->SetFont('Arial', 'B', 14);
       
 
     }

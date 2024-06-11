@@ -113,7 +113,7 @@
             });
 
             this.anular = new Ext.Button({
-                text: 'Anular Compra',
+                text: 'Anular',
                 iconCls: 'icon-anteriores',
                 handler: function() {
 
