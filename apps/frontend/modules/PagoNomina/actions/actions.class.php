@@ -357,6 +357,8 @@ class PagoNominaActions extends sfActions
 
             list($dia, $mes, $anio) = explode("/", $tb132_pago_nomina_masivoForm["fe_pago"]);
             $fecha = $anio . "-" . $mes . "-" . $dia;
+            var_dump($fecha);
+            exit();
             $tb122_pago_nomina->setFePago($fecha);
 
 
