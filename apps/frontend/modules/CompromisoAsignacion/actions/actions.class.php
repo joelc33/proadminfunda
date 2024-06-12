@@ -512,7 +512,7 @@ class CompromisoAsignacionActions extends sfActions
         $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD,  Criteria::JOIN);
 
-        $c->addAnd(Tb027TipoSolicitudPeer::CO_PROCESO, 65);
+        $c->addAnd(Tb027TipoSolicitudPeer::CO_PROCESO, 66);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
 
         $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
