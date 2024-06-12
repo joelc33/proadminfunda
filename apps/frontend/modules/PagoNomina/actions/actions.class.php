@@ -401,18 +401,16 @@ class PagoNominaActions extends sfActions
 
             for ($i = 2; $i <= $data->sheets[0]['numRows']; $i++) {
 
-                $tx_descripcion =  utf8_decode($data->sheets[0]['cells'][$i][4]);
+                $tx_descripcion =  utf8_decode($data->sheets[0]['cells'][$i][3]);
 
 
                 $Tb132PagoNominaMasivo = new Tb132PagoNominaMasivo();
-                $Tb132PagoNominaMasivo->setTxEnte(trim($data->sheets[0]['cells'][$i][1]))
-                    ->setTxTipoMovimiento(trim($data->sheets[0]['cells'][$i][2]))
-                    ->setTxMovimiento(trim($data->sheets[0]['cells'][$i][3]))
+                $Tb132PagoNominaMasivo->setTxTipoMovimiento(trim($data->sheets[0]['cells'][$i][1]))
+                    ->setTxMovimiento(trim($data->sheets[0]['cells'][$i][2]))
                     ->setTxDescripcion(trim($tx_descripcion))
-                    ->setNuMonto(trim($data->sheets[0]['cells'][$i][5]))
-                    ->setTxCorrelativo(trim($data->sheets[0]['cells'][$i][6]))
-                    ->setTxPartida(trim($data->sheets[0]['cells'][$i][7] . $data->sheets[0]['cells'][$i][8]))
-                    ->setTxCodigoBanco(trim($data->sheets[0]['cells'][$i][9]))
+                    ->setNuMonto(trim($data->sheets[0]['cells'][$i][4]))
+                    ->setTxPartida(trim($data->sheets[0]['cells'][$i][5]))
+                    ->setTxCodigoBanco(trim($data->sheets[0]['cells'][$i][6]))
                     ->setCoSolicitud($tb132_pago_nomina_masivoForm["co_solicitud"])
                     ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->setCoPago($tb122_pago_nomina->getCoPagoNomina())
