@@ -426,8 +426,8 @@ class PagoNominaActions extends sfActions
                 $tb137_control_serial = new Tb159AportePatronalNomina();
                 $tb137_control_serial->setTxTipoNomina($tb122_pago_nomina->getTxConcepto());
                 $tb137_control_serial->setTxSerialNomina(date('Y-m') . '-' . $serial);
-                $tb137_control_serial->setMoAporte(trim($data->sheets[0]['cells'][$i][5]));
-                $tb137_control_serial->setTxTipoAporte(trim($data->sheets[0]['cells'][$i][3]));
+                $tb137_control_serial->setMoAporte(trim($data->sheets[0]['cells'][$i][4]));
+                $tb137_control_serial->setTxTipoAporte(trim($data->sheets[0]['cells'][$i][2]));
                 $tb137_control_serial->setCoSolicitud($tb132_pago_nomina_masivoForm["co_solicitud"]);
                 $tb137_control_serial->setFeAporte($fecha);
                 $tb137_control_serial->save($con);
@@ -437,7 +437,7 @@ class PagoNominaActions extends sfActions
 
                 /*********************Joel Codigo de Aporte***********************/
 
-                $mo_total += trim($data->sheets[0]['cells'][$i][5]);
+                $mo_total += trim($data->sheets[0]['cells'][$i][4]);
 
                 if ($co_ejecutor == '')
                     $co_ejecutor = Tb082EjecutorPeer::getCoEjecutor(trim($data->sheets[0]['cells'][$i][1]));
