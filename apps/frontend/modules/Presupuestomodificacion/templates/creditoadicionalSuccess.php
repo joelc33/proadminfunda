@@ -312,7 +312,7 @@ this.crear = new Ext.Button({
                          closable: false,
                          icon: Ext.MessageBox.INFO,
                          resizable: false,
-			                   animEl: document.body,
+                         animEl: document.body,
                          buttons: Ext.MessageBox.OK
                      });
                  }
@@ -329,7 +329,7 @@ this.crear = new Ext.Button({
                    }
                  });*/
                  //PresupuestomodificacionEditar.main.winformPanel_.close();
-                 Detalle.main.store_lista.load();
+//                 Detalle.main.store_lista.load();
                  PresupuestomodificacionEditar.main.guardar.show();
                  PresupuestomodificacionEditar.main.generar.show();
                  PresupuestomodificacionEditar.main.crear.hide();
@@ -390,7 +390,7 @@ this.guardar = new Ext.Button({
                    }
                  });*/
                  //PresupuestomodificacionEditar.main.winformPanel_.close();
-                 Detalle.main.store_lista.load();
+//                 Detalle.main.store_lista.load();
                  PresupuestomodificacionEditar.main.guardar.show();
                  PresupuestomodificacionEditar.main.generar.show();
                  PresupuestomodificacionEditar.main.crear.hide();
@@ -455,7 +455,7 @@ this.generar = new Ext.Button({
                    }
                  });*/
                  //PresupuestomodificacionEditar.main.winformPanel_.close();
-                 Detalle.main.store_lista.load();
+//                 Detalle.main.store_lista.load();
                  PresupuestomodificacionEditar.main.guardar.show();
                  PresupuestomodificacionEditar.main.generar.show();
                  PresupuestomodificacionEditar.main.crear.hide();

@@ -324,13 +324,15 @@ class PagoNominaActions extends sfActions
     {
 
         $codigo = $this->getRequestParameter("co_pago_nomina");
-
+        $tb132_pago_nomina_masivoForm = $this->getRequestParameter('tb132_pago_nomina_masivo');
+        
         $con = Propel::getConnection();
         if ($codigo != '' || $codigo != null) {
             $tb122_pago_nomina = Tb122PagoNominaPeer::retrieveByPk($codigo);
         } else {
             $tb122_pago_nomina = new Tb122PagoNomina();
 
+            
 
             $tb026_solicitudForm = array(
                 "co_tipo_solicitud"   => 23,
@@ -347,15 +349,16 @@ class PagoNominaActions extends sfActions
             }
 
         }
+        
+
         try {
             $con->beginTransaction();
-
-            $tb132_pago_nomina_masivoForm = $this->getRequestParameter('tb132_pago_nomina_masivo');
 
             $tb122_pago_nomina->setTxConcepto($tb132_pago_nomina_masivoForm["tx_concepto"]);
 
             list($dia, $mes, $anio) = explode("/", $tb132_pago_nomina_masivoForm["fe_pago"]);
             $fecha = $anio . "-" . $mes . "-" . $dia;
+
             $tb122_pago_nomina->setFePago($fecha);
 
 
@@ -367,6 +370,7 @@ class PagoNominaActions extends sfActions
             //$tb026_solicitud->setCoProveedor(12276); //Direccion de Recursos Humanos
             $tb026_solicitud->setCoProveedor(Tb008ProveedorPeer::getProveedorDefecto()); //Direccion de Recursos Humanos
             $tb026_solicitud->save($con);
+
 
             if ($_FILES['form-file']['tmp_name'] == '') {
                 $this->data = json_encode(array(
@@ -401,18 +405,16 @@ class PagoNominaActions extends sfActions
 
             for ($i = 2; $i <= $data->sheets[0]['numRows']; $i++) {
 
-                $tx_descripcion =  utf8_decode($data->sheets[0]['cells'][$i][4]);
+                $tx_descripcion =  utf8_decode($data->sheets[0]['cells'][$i][3]);
 
 
                 $Tb132PagoNominaMasivo = new Tb132PagoNominaMasivo();
-                $Tb132PagoNominaMasivo->setTxEnte(trim($data->sheets[0]['cells'][$i][1]))
-                    ->setTxTipoMovimiento(trim($data->sheets[0]['cells'][$i][2]))
-                    ->setTxMovimiento(trim($data->sheets[0]['cells'][$i][3]))
+                $Tb132PagoNominaMasivo->setTxTipoMovimiento(trim($data->sheets[0]['cells'][$i][1]))
+                    ->setTxMovimiento(trim($data->sheets[0]['cells'][$i][2]))
                     ->setTxDescripcion(trim($tx_descripcion))
-                    ->setNuMonto(trim($data->sheets[0]['cells'][$i][5]))
-                    ->setTxCorrelativo(trim($data->sheets[0]['cells'][$i][6]))
-                    ->setTxPartida(trim($data->sheets[0]['cells'][$i][7] . $data->sheets[0]['cells'][$i][8]))
-                    ->setTxCodigoBanco(trim($data->sheets[0]['cells'][$i][9]))
+                    ->setNuMonto(trim($data->sheets[0]['cells'][$i][4]))
+                    ->setTxPartida(trim($data->sheets[0]['cells'][$i][5]))
+                    ->setTxCodigoBanco(trim($data->sheets[0]['cells'][$i][6]))
                     ->setCoSolicitud($tb132_pago_nomina_masivoForm["co_solicitud"])
                     ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->setCoPago($tb122_pago_nomina->getCoPagoNomina())
@@ -428,8 +430,8 @@ class PagoNominaActions extends sfActions
                 $tb137_control_serial = new Tb159AportePatronalNomina();
                 $tb137_control_serial->setTxTipoNomina($tb122_pago_nomina->getTxConcepto());
                 $tb137_control_serial->setTxSerialNomina(date('Y-m') . '-' . $serial);
-                $tb137_control_serial->setMoAporte(trim($data->sheets[0]['cells'][$i][5]));
-                $tb137_control_serial->setTxTipoAporte(trim($data->sheets[0]['cells'][$i][3]));
+                $tb137_control_serial->setMoAporte(trim($data->sheets[0]['cells'][$i][4]));
+                $tb137_control_serial->setTxTipoAporte(trim($data->sheets[0]['cells'][$i][2]));
                 $tb137_control_serial->setCoSolicitud($tb132_pago_nomina_masivoForm["co_solicitud"]);
                 $tb137_control_serial->setFeAporte($fecha);
                 $tb137_control_serial->save($con);
@@ -439,7 +441,7 @@ class PagoNominaActions extends sfActions
 
                 /*********************Joel Codigo de Aporte***********************/
 
-                $mo_total += trim($data->sheets[0]['cells'][$i][5]);
+                $mo_total += trim($data->sheets[0]['cells'][$i][4]);
 
                 if ($co_ejecutor == '')
                     $co_ejecutor = Tb082EjecutorPeer::getCoEjecutor(trim($data->sheets[0]['cells'][$i][1]));
@@ -570,6 +572,7 @@ class PagoNominaActions extends sfActions
             $this->data = json_encode(array(
                 "success" => true,
                 "co_pago_nomina" => $tb122_pago_nomina->getCoPagoNomina(),
+                "co_solicitud" => $tb122_pago_nomina->getCoSolicitud(),
                 "msg" => 'Modificación realizada exitosamente '
             ));
             $con->commit();
