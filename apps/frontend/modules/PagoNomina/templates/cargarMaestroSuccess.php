@@ -209,14 +209,14 @@ this.guardar = new Ext.Button({
                  
                  PagoNominaMasivoEditar.main.co_pago_nomina.setValue(action.result.co_pago_nomina);
                  
-                 PagoNominaMasivoEditar.main.store_lista.baseParams.co_solicitud = PagoNominaMasivoEditar.main.OBJ.co_solicitud;
+                 PagoNominaMasivoEditar.main.store_lista.baseParams.co_solicitud = action.result.co_solicitud;
                  PagoNominaMasivoEditar.main.store_lista.load({
                      callback: function(){
                          PagoNominaMasivoEditar.main.getCalcular();
                      }
                  });
                  
-                 PagoNominaMasivoEditar.main.store_lista_deduccion.baseParams.co_solicitud = PagoNominaMasivoEditar.main.OBJ.co_solicitud;
+                 PagoNominaMasivoEditar.main.store_lista_deduccion.baseParams.co_solicitud = action.result.co_solicitud;
                  PagoNominaMasivoEditar.main.store_lista_deduccion.load({
                      callback: function(){
                          PagoNominaMasivoEditar.main.getCalcular();
@@ -224,7 +224,7 @@ this.guardar = new Ext.Button({
                  });
                  
                  
-                 PagoNominaMasivoEditar.main.store_lista_aporte.baseParams.co_solicitud = PagoNominaMasivoEditar.main.OBJ.co_solicitud;
+                 PagoNominaMasivoEditar.main.store_lista_aporte.baseParams.co_solicitud = action.result.co_solicitud;
                  PagoNominaMasivoEditar.main.store_lista_aporte.load({
                      callback: function(){
                          PagoNominaMasivoEditar.main.getCalcular();

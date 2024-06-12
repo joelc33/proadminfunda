@@ -570,6 +570,7 @@ class PagoNominaActions extends sfActions
             $this->data = json_encode(array(
                 "success" => true,
                 "co_pago_nomina" => $tb122_pago_nomina->getCoPagoNomina(),
+                "co_solicitud" => $tb122_pago_nomina->getCoSolicitud(),
                 "msg" => 'Modificación realizada exitosamente '
             ));
             $con->commit();
