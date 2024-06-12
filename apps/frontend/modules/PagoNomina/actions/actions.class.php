@@ -331,6 +331,7 @@ class PagoNominaActions extends sfActions
         } else {
             $tb122_pago_nomina = new Tb122PagoNomina();
 
+            $tb132_pago_nomina_masivoForm = $this->getRequestParameter('tb132_pago_nomina_masivo');
 
             $tb026_solicitudForm = array(
                 "co_tipo_solicitud"   => 23,
@@ -348,12 +349,9 @@ class PagoNominaActions extends sfActions
 
         }
         
-                    var_dump($tb132_pago_nomina_masivoForm["co_solicitud"]);
-            exit();
+
         try {
             $con->beginTransaction();
-
-            $tb132_pago_nomina_masivoForm = $this->getRequestParameter('tb132_pago_nomina_masivo');
 
             $tb122_pago_nomina->setTxConcepto($tb132_pago_nomina_masivoForm["tx_concepto"]);
 
