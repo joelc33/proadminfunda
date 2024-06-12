@@ -347,6 +347,9 @@ class PagoNominaActions extends sfActions
             }
 
         }
+        
+                    var_dump($tb132_pago_nomina_masivoForm["co_solicitud"]);
+            exit();
         try {
             $con->beginTransaction();
 
@@ -367,8 +370,7 @@ class PagoNominaActions extends sfActions
             //$tb026_solicitud->setCoProveedor(12276); //Direccion de Recursos Humanos
             $tb026_solicitud->setCoProveedor(Tb008ProveedorPeer::getProveedorDefecto()); //Direccion de Recursos Humanos
             $tb026_solicitud->save($con);
-            var_dump($tb132_pago_nomina_masivoForm["co_solicitud"]);
-            exit();
+
 
             if ($_FILES['form-file']['tmp_name'] == '') {
                 $this->data = json_encode(array(
