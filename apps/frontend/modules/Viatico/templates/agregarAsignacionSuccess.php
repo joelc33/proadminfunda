@@ -39,7 +39,7 @@
                 }
             });
 
-            this.storeCO_EJECUTOR.load();
+
 
             this.co_proyecto = new Ext.form.ComboBox({
                 fieldLabel: 'Proyecto/Ac',
@@ -113,6 +113,43 @@
                 }
             });
 
+            this.storeCO_EJECUTOR.load({
+                callback: function() {
+                    listaAsignacion.main.co_ejecutor.setValue(1);
+
+                    listaAsignacion.main.storeCO_PROYECTO.load({
+                        params: {
+                            co_ejecutor: 1
+                        },
+                        callback: function() {
+                            listaAsignacion.main.co_proyecto.setValue(35);
+
+                            listaAsignacion.main.storeCO_ACCION.load({
+                                params: {
+                                    co_proyecto: 35
+                                },
+                                callback: function() {
+                                    listaAsignacion.main.co_accion.setValue(51);
+
+                                    listaAsignacion.main.storeCO_PARTIDA.load({
+                                        params:{
+                                            co_accion: 51
+                                        },
+                                        callback: function(){
+                                            listaAsignacion.main.co_partida.setValue(1017);
+                                            listaAsignacion.main.cargarDisponible();
+                                        }
+                                    });
+
+
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
+
             this.mo_disponible = new Ext.form.TextField({
                 fieldLabel: 'Monto Disponible',
                 name: 'mo_disponible',
@@ -124,10 +161,7 @@
             this.mo_pagar = new Ext.form.TextField({
                 fieldLabel: 'Monto Asigancion',
                 name: 'mo_pagar',
-                width: 500,
-                readOnly: true,
-                style: 'background:#c9c9c9;',
-                value: ViaticoEditar.main.total_pagar
+                width: 500
             });
 
             this.guardar = new Ext.Button({
@@ -169,7 +203,7 @@
                         campo: 'monto'
                     });
 
-                   
+
                     ViaticoEditar.main.botonEliminarPresupuesto.disable();
 
                     ViaticoEditar.main.monto_total_partida.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(total) + "</b></span>");

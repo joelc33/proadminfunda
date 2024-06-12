@@ -605,7 +605,7 @@ class ComprasActions extends sfActions
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
-        //$c->addSelectColumn(Tb110CargoPeer::TX_CARGO);
+        // $c->addSelectColumn(Tb052ComprasPeer::CO_COMPRAS);
         $c->addSelectColumn(Tb109PersonaPeer::NU_CELULAR);
 
 
@@ -613,7 +613,7 @@ class ComprasActions extends sfActions
         $c->addJoin(Tb107TipoViaticoPeer::CO_TIPO_VIATICO,  Tb108ViaticoPeer::CO_TIPO_VIATICO);
         $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR,  Tb108ViaticoPeer::CO_PROVEEDOR);
         $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb109PersonaPeer::CO_PROVEEDOR);
-       // $c->addJoin(Tb109PersonaPeer::CO_CARGO, Tb110CargoPeer::CO_CARGO);
+        //  $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD,Tb108ViaticoPeer::CO_SOLICITUD);
         $c->add(Tb108ViaticoPeer::CO_SOLICITUD, $codigo);
 
         $stmt = Tb108ViaticoPeer::doSelectStmt($c);
@@ -625,9 +625,9 @@ class ComprasActions extends sfActions
         $campos["fe_hasta"]   = date('d-m-Y', strtotime($campos["fe_hasta"]));
         $campos["nu_cedula"]  = $campos["inicial"] . '-' . $campos["tx_rif"];
         $campos["nb_persona"] = $campos["tx_razon_social"];
-        $campos["co_compra"] = $this->getCoCompras($codigo);
+        $campos["co_compra"]  = $this->getCoCompras($codigo);
 
-        $datos_detalle = $this->getDetallesCompra($campos["co_compra"]);
+        $datos_detalle = $this->getDetallesCompra($campos["co_compras"]);
         $campos["co_partida"] = $datos_detalle["co_partida"];
 
         $this->data = json_encode($campos);
@@ -977,13 +977,13 @@ class ComprasActions extends sfActions
         $tx_rif        = $this->getRequestParameter('tx_rif');
 
         $c = new Criteria();
-        if($co_documento!=''){
-        $c->add(Tb008ProveedorPeer::CO_DOCUMENTO, $co_documento);    
+        if ($co_documento != '') {
+            $c->add(Tb008ProveedorPeer::CO_DOCUMENTO, $co_documento);
         }
-        if($tx_rif!=''){
-        $c->add(Tb008ProveedorPeer::TX_RIF, $tx_rif);   
-        }        
-        
+        if ($tx_rif != '') {
+            $c->add(Tb008ProveedorPeer::TX_RIF, $tx_rif);
+        }
+
         $stmt = Tb008ProveedorPeer::doSelectStmt($c);
 
         $registros = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -1019,7 +1019,7 @@ class ComprasActions extends sfActions
 
         $codigo             = $this->getRequestParameter("co_compra");
         $json_detalle       = $this->getRequestParameter("json_detalle");
-       // $co_partida         = $this->getRequestParameter("co_partida");
+        // $co_partida         = $this->getRequestParameter("co_partida");
         $co_solicitud       = $this->getRequestParameter("co_solicitud");
         $mo_total           = $this->getRequestParameter("mo_total");
         $json_asignacion  = $this->getRequestParameter("json_asignacion");
@@ -1078,13 +1078,12 @@ class ComprasActions extends sfActions
             $tb053_detalle_compras->setNuCantidad(1);
             $tb053_detalle_compras->setPrecioUnitario($mo_total);
             $tb053_detalle_compras->setMonto($mo_total);
-          //  $tb053_detalle_compras->setCoPartida($co_partida);
             $tb053_detalle_compras->save($con);
 
             $listaAsignacion  = json_decode($json_asignacion, true);
             foreach ($listaAsignacion  as $asignacionForm) {
 
-                if (empty($tb053_detalle_compras->getCoPartida())) {
+                if (empty($tb053_detalle_compras->getCoPresupuesto())) {
 
                     $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
                     $tb087_presupuesto_movimiento->setCoPartida($asignacionForm["co_partida"])
@@ -1097,27 +1096,29 @@ class ComprasActions extends sfActions
                         ->save($con);
 
 
-                        $c = new Criteria();
-                        $c->add(Tb053DetalleComprasPeer::CO_COMPRAS, $codigo);
-                        $c->add(Tb053DetalleComprasPeer::CO_PRESUPUESTO,null,Criteria::ISNOTNULL);
-                        $cant = Tb053DetalleComprasPeer::doCount($c);
-            
-                        $Tb052Compra = Tb052ComprasPeer::retrieveByPk($codigo);
-            
-                        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($Tb052Compra->getCoSolicitud()));
-            
-                        if ($cant > 0) {
-                            $ruta->setInCargarDato(true)->save($con);
-                        } else {
-                            $ruta->setInCargarDato(false)->save($con);
-                        }
+                    $c = new Criteria();
+                    $c->add(Tb053DetalleComprasPeer::CO_COMPRAS, $codigo);
+                    $c->add(Tb053DetalleComprasPeer::CO_PRESUPUESTO, null, Criteria::ISNOTNULL);
+                    $cant = Tb053DetalleComprasPeer::doCount($c);
 
-                        $ruta->save($con);
+                    $Tb052Compra = Tb052ComprasPeer::retrieveByPk($codigo);
+
+                    $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($Tb052Compra->getCoSolicitud()));
+
+                    if ($cant > 0) {
+                        $ruta->setInCargarDato(true)->save($con);
+                    } else {
+                        $ruta->setInCargarDato(false)->save($con);
+                    }
+
+                    $ruta->save($con);
+
+                    $tb053_detalle_compras->setCoPresupuesto($asignacionForm["co_partida"]);
+                    $tb053_detalle_compras->save($con);
                 }
             }
 
-            $tb053_detalle_compras->setCoPresupuesto($tb087_presupuesto_movimiento->getCoPartida());
-            $tb053_detalle_compras->save($con);
+
 
             $listaDetalle  = json_decode($json_detalle, true);
             $array_detalle = array();
@@ -1198,7 +1199,7 @@ class ComprasActions extends sfActions
         $tb052_comprasForm          = $this->getRequestParameter('tb052_compras');
 
         $tb052_comprasForm["co_tipo_solicitud"] = 1;
-        
+
         $c = new Criteria();
         //$c->add(Tb052ComprasPeer::ANIO, date('Y'));
 
@@ -1216,17 +1217,17 @@ class ComprasActions extends sfActions
             $tb026_solicitudForm = array(
                 "co_tipo_solicitud"   => 1,
                 "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-                "fe_solicitud"        => date("d/m/Y"), 
+                "fe_solicitud"        => date("d/m/Y"),
                 "observacion"         => $tb052_comprasForm["tx_observacion"],
                 "codigo"              =>  $this->getUser()->getAttribute('codigo')
             );
 
             $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm);
 
-            
 
-            if($resp["success"]==true){
-                $tb052_comprasForm["co_solicitud"]      = $resp["co_solicitud"];               
+
+            if ($resp["success"] == true) {
+                $tb052_comprasForm["co_solicitud"]      = $resp["co_solicitud"];
             }
 
             if ($tb052_comprasForm["co_tipo_solicitud"] == 1) {
@@ -1254,7 +1255,7 @@ class ComprasActions extends sfActions
 
             /*Campo tipo BIGINT */
 
-          
+
 
             if (!empty($co_solicitud_cotizacion)) {
                 $tb052_comprasForm["co_requisicion"] = $this->getDatosRequisicion($co_solicitud_cotizacion);
@@ -1327,7 +1328,7 @@ class ComprasActions extends sfActions
             /*CAMPOS*/
             $tb052_compras->save($con);
 
-           
+
 
             $listaProducto  = json_decode($json_producto, true);
             $array_producto = array();
@@ -1908,12 +1909,12 @@ class ComprasActions extends sfActions
             }
 
             if ($producto) {
-            $multiple_producto = preg_split('/\s+/', $producto, -1, PREG_SPLIT_NO_EMPTY); 
+                $multiple_producto = preg_split('/\s+/', $producto, -1, PREG_SPLIT_NO_EMPTY);
 
 
-            foreach ($multiple_producto as $value) {
-            $c->addOr(Tb048ProductoPeer::TX_PRODUCTO, '%' . $value . '%', Criteria::ILIKE);
-            }
+                foreach ($multiple_producto as $value) {
+                    $c->addOr(Tb048ProductoPeer::TX_PRODUCTO, '%' . $value . '%', Criteria::ILIKE);
+                }
             }
             $c->add(Tb048ProductoPeer::IN_VER, true);
             $cantidadTotal = Tb048ProductoPeer::doCount($c);

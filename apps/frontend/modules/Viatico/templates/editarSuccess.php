@@ -85,7 +85,7 @@
                 fieldLabel: 'Cédula',
                 name: 'tb109_persona[nu_cedula]',
                 value: this.OBJ.nu_cedula,
-                allowBlank: false,
+                allowBlank: false,             
                 maskRe: /[0-9]/,
             });
 
@@ -205,6 +205,8 @@
                 value: this.OBJ.nu_celular,
                 allowBlank: false,
                 width: 200,
+                maxLength: 10,
+                minLength: 10,
                 maskRe: /[0-9]/,
             });
 
@@ -321,7 +323,7 @@
                         ViaticoEditar.main.store_lista.baseParams = {}
                         ViaticoEditar.main.store_lista.load({
                             params: {
-                                co_tipo_viatico: this.getValue(),
+                                co_tipo_viatico: 1,
                                 co_categoria: 1
                             },
                             callback: function() {
@@ -381,8 +383,8 @@
                         ViaticoEditar.main.store_lista.baseParams = {}
                         ViaticoEditar.main.store_lista.load({
                             params: {
-                                co_categoria: this.getValue(),
-                                co_tipo_viatico: ViaticoEditar.main.co_tipo_viatico.getValue()
+                                co_categoria: 1,
+                                co_tipo_viatico: 1
                             },
                             callback: function() {
 

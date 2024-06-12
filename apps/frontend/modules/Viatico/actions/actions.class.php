@@ -245,7 +245,7 @@ class ViaticoActions extends sfActions
                 $cant_dia = $this->dateDiff($fecha_desde, $fecha_hasta);
                 $valor_ut = Tb118UnidadTributariaPeer::getUT();
 
-                $mo_total = $v["cant_ut"] * $cant_dia * $valor_ut;
+                $mo_total = 0; //$v["cant_ut"] * $cant_dia * $valor_ut;
 
                 $Tb117DetalleViatico->setCoSolicitud($tb108_viaticoForm["co_solicitud"])
                     ->setCoItemViatico($v["co_item_viatico"])
@@ -822,7 +822,7 @@ class ViaticoActions extends sfActions
     public function executeStorefkcodocumento(sfWebRequest $request)
     {
         $c = new Criteria();
-        $c->add(Tb007DocumentoPeer::CO_DOCUMENTO, array(1), Criteria::IN);
+        $c->add(Tb007DocumentoPeer::CO_DOCUMENTO, array(1,8), Criteria::IN);
         $stmt = Tb007DocumentoPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
