@@ -413,7 +413,7 @@ class CompromisoAsignacionActions extends sfActions
         $c->clearSelectColumns();
         $c->addSelectColumn(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
         $c->addSelectColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
-        $c->add(Tb027TipoSolicitudPeer::CO_PROCESO, 65);
+        $c->add(Tb027TipoSolicitudPeer::CO_PROCESO, 66);
         $stmt = Tb027TipoSolicitudPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
