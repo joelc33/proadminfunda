@@ -1201,7 +1201,7 @@ class PresupuestoActions extends sfActions
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
-        $c->addSelectColumn(Tb110CargoPeer::TX_CARGO);
+    //    $c->addSelectColumn(Tb110CargoPeer::TX_CARGO);
         $c->addSelectColumn(Tb109PersonaPeer::NU_CELULAR);       
              
         $c->addJoin(Tb108ViaticoPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD);
@@ -1209,7 +1209,7 @@ class PresupuestoActions extends sfActions
         $c->addJoin(Tb107TipoViaticoPeer::CO_TIPO_VIATICO,  Tb108ViaticoPeer::CO_TIPO_VIATICO);
         $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR,  Tb108ViaticoPeer::CO_PROVEEDOR);
         $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb109PersonaPeer::CO_PROVEEDOR);
-        $c->addJoin(Tb109PersonaPeer::CO_CARGO, Tb110CargoPeer::CO_CARGO);
+        //$c->addJoin(Tb109PersonaPeer::CO_CARGO, Tb110CargoPeer::CO_CARGO);
         $c->add(Tb108ViaticoPeer::CO_SOLICITUD,$codigo);
 
         $stmt = Tb108ViaticoPeer::doSelectStmt($c);
@@ -1374,7 +1374,7 @@ class PresupuestoActions extends sfActions
         $mo_disponible             = $this->getRequestParameter("monto");
         $co_fuente_financiamiento  = $this->getRequestParameter("co_fuente_financiamiento");
         $monto                     = $this->getRequestParameter("monto");
-        
+         
        
         $con = Propel::getConnection();
     
@@ -2350,7 +2350,7 @@ class PresupuestoActions extends sfActions
             
             if($co_tipo_movimiento==1 || $co_tipo_movimiento==6){
                 $co_tipo_movimiento = 2;
-                $mensaje = 'La partida presupuestaria se causo con exito!';
+                $mensaje = 'La Orden de Pago se generó con exito!';
                 
             }else if($co_tipo_movimiento==2){
                 $co_tipo_movimiento = 1;
@@ -2405,7 +2405,7 @@ class PresupuestoActions extends sfActions
             
             $con->commit();
             
-            //Tb060OrdenPagoPeer::generarODP($co_solicitud, $con);
+          //  Tb060OrdenPagoPeer::generarODP($co_solicitud, $con);
             
             $con->commit();
                         
