@@ -212,6 +212,12 @@
                         dataIndex: 'co_solicitud'
                     },
                     {
+                        header: 'Serial',
+                        width: 100,
+                        menuDisabled: true,
+                        dataIndex: 'numero_compra'
+                    },
+                    {
                         header: 'RIF',
                         width: 100,
                         menuDisabled: true,
@@ -351,6 +357,9 @@
                     },
                     {
                         name: 'tx_razon_social'
+                    },
+                    {
+                        name: 'numero_compra'
                     }
                 ]
             });

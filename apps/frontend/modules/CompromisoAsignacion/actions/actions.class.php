@@ -41,7 +41,7 @@ class CompromisoAsignacionActions extends sfActions
             $c->addSelectColumn(Tb146CompromisoAsignacionPeer::CO_COMPROMISO_ASIGNACION);
             $c->addSelectColumn(Tb146CompromisoAsignacionPeer::CO_PROVEEDOR);
             $c->addSelectColumn(Tb146CompromisoAsignacionPeer::TX_DESCRIPCION);
-            $c->addSelectColumn(Tb146CompromisoAsignacionPeer::NU_CANCELACION);
+            $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
             $c->addSelectColumn(Tb146CompromisoAsignacionPeer::FE_COMPROMISO);
             $c->addSelectColumn(Tb146CompromisoAsignacionPeer::NU_MONTO);
             $c->addSelectColumn(Tb052ComprasPeer::CO_EJECUTOR);
@@ -62,7 +62,7 @@ class CompromisoAsignacionActions extends sfActions
                 "co_compromiso_asignacion"     => $campos["co_compromiso_asignacion"],
                 "co_proveedor"                 => $campos["co_proveedor"],
                 "tx_descripcion"               => $campos["tx_descripcion"],
-                "nu_cancelacion"               => $campos["nu_cancelacion"],
+                "nu_cancelacion"               => $campos["numero_compra"],
                 "fe_compromiso"                => $campos["fe_compromiso"],
                 "nu_monto"                     => $campos["nu_monto"],
                 "co_solicitud"                 => $codigo,
@@ -252,14 +252,22 @@ class CompromisoAsignacionActions extends sfActions
             }
 
 
+            $cs = new Criteria();
+            $cs->add(Tb136TipoDocumentoPeer::CO_TIPO_DOCUMENTO,$tb146_compromiso_asignacionForm["co_tipo_solicitud"]);
+            $stmts = Tb136TipoDocumentoPeer::doSelectStmt($cs);
+            $resp = $stmts->fetch(PDO::FETCH_ASSOC);
+
+          
+            $sigla = $resp["tx_sigla"];
+
 
             if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
-                $serial = date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . Tb137ControlSerialPeer::getSerial(12, $con, $this->getUser()->getAttribute('ejercicio'));
+                $serial = $sigla.'-'.date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) .'-'. Tb137ControlSerialPeer::getSerial($tb146_compromiso_asignacionForm["co_tipo_solicitud"], $con, $this->getUser()->getAttribute('ejercicio'));
             } else {
-                $serial =  date("Ym") . Tb137ControlSerialPeer::getSerial(12, $con, $this->getUser()->getAttribute('ejercicio'));
+                $serial =  $sigla.'-'.date("Ym")  .'-'.  Tb137ControlSerialPeer::getSerial($tb146_compromiso_asignacionForm["co_tipo_solicitud"], $con, $this->getUser()->getAttribute('ejercicio'));
             }
 
-            $tb146_compromiso_asignacion->setNuCancelacion($serial);
+            //$tb146_compromiso_asignacion->setNuCancelacion($serial);
         }
         try {
             $con->beginTransaction();
@@ -287,6 +295,8 @@ class CompromisoAsignacionActions extends sfActions
             } else {
                 $tb052_compras->setFechaCompra(date("Y-m-d"));
             }
+
+
             $tb052_compras->setTxObservacion($tb146_compromiso_asignacionForm["tx_descripcion"]);
             $tb052_compras->setCoSolicitud($tb146_compromiso_asignacionForm["co_solicitud"]);
             $tb052_compras->setCoEjecutor($tb146_compromiso_asignacionForm["co_ejecutor"]);
@@ -298,6 +308,7 @@ class CompromisoAsignacionActions extends sfActions
             $tb052_compras->setMontoSubTotal(0);
             $tb052_compras->setMontoTotal($tb146_compromiso_asignacionForm["nu_monto"]);
             $tb052_compras->setCoTipoMovimiento(0);
+            $tb052_compras->setNumeroCompra($serial);
             $tb052_compras->save($con);
 
             $listaAsignacion  = json_decode($json_asignacion, true);
@@ -485,6 +496,7 @@ class CompromisoAsignacionActions extends sfActions
         //  $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
         $c->addSelectColumn(Tb052ComprasPeer::TX_CONCEPTO);
         $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
+        $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
@@ -530,6 +542,7 @@ class CompromisoAsignacionActions extends sfActions
                 "tx_proceso"        => trim($res["tx_proceso"]),
                 "tx_concepto"       => strtoupper(trim($res["tx_concepto"])),
                 "co_proceso"        => trim($res["co_proceso"]),
+                "numero_compra"        => trim($res["numero_compra"]),
                 "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
                 "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
                 "co_solicitud"      => trim($res["co_solicitud"]),
