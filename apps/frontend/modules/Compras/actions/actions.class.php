@@ -1058,12 +1058,11 @@ class ComprasActions extends sfActions
             $tb052_compras->setCoTipoMovimiento(0);
             $tb052_compras->save($con);
 
-
+           
             $cp = new Criteria();
             $cp->add(Tb048ProductoPeer::TX_PRODUCTO, 'VIATICO');
             $stmt = Tb048ProductoPeer::doSelectStmt($cp);
             $datos = $stmt->fetch(PDO::FETCH_ASSOC);
-
 
             $datos_detalle = $this->getDetallesCompra($tb052_compras->getCoCompras());
 
@@ -1080,6 +1079,9 @@ class ComprasActions extends sfActions
             $tb053_detalle_compras->setMonto($mo_total);
             $tb053_detalle_compras->save($con);
 
+
+            $codigo = $tb052_compras->getCoCompras();
+
             $listaAsignacion  = json_decode($json_asignacion, true);
             foreach ($listaAsignacion  as $asignacionForm) {
 
@@ -1095,12 +1097,15 @@ class ComprasActions extends sfActions
                         ->setInActivo(true)
                         ->save($con);
 
+                      
+
 
                     $c = new Criteria();
                     $c->add(Tb053DetalleComprasPeer::CO_COMPRAS, $codigo);
                     $c->add(Tb053DetalleComprasPeer::CO_PRESUPUESTO, null, Criteria::ISNOTNULL);
                     $cant = Tb053DetalleComprasPeer::doCount($c);
 
+                   
                     $Tb052Compra = Tb052ComprasPeer::retrieveByPk($codigo);
 
                     $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($Tb052Compra->getCoSolicitud()));
@@ -1118,6 +1123,7 @@ class ComprasActions extends sfActions
                 }
             }
 
+            
 
 
             $listaDetalle  = json_decode($json_detalle, true);
