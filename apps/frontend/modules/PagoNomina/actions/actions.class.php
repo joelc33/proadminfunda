@@ -324,14 +324,15 @@ class PagoNominaActions extends sfActions
     {
 
         $codigo = $this->getRequestParameter("co_pago_nomina");
-
+        $tb132_pago_nomina_masivoForm = $this->getRequestParameter('tb132_pago_nomina_masivo');
+        
         $con = Propel::getConnection();
         if ($codigo != '' || $codigo != null) {
             $tb122_pago_nomina = Tb122PagoNominaPeer::retrieveByPk($codigo);
         } else {
             $tb122_pago_nomina = new Tb122PagoNomina();
 
-            $tb132_pago_nomina_masivoForm = $this->getRequestParameter('tb132_pago_nomina_masivo');
+            
 
             $tb026_solicitudForm = array(
                 "co_tipo_solicitud"   => 23,
@@ -357,8 +358,7 @@ class PagoNominaActions extends sfActions
 
             list($dia, $mes, $anio) = explode("/", $tb132_pago_nomina_masivoForm["fe_pago"]);
             $fecha = $anio . "-" . $mes . "-" . $dia;
-            var_dump($fecha);
-            exit();
+
             $tb122_pago_nomina->setFePago($fecha);
 
 
