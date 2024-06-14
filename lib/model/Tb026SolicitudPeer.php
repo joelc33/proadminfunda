@@ -105,7 +105,7 @@ class Tb026SolicitudPeer extends BaseTb026SolicitudPeer
                 "co_solicitud" => $cod_solicitud
             );
 
-//            $con->commit();
+            $con->commit();
         } catch (PropelException $e) {
             $con->rollback();
             $data = array(
