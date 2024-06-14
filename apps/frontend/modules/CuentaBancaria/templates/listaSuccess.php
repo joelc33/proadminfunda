@@ -116,23 +116,23 @@ this.gridPanel_ = new Ext.grid.GridPanel({
         CuentaBancariaLista.main.editar.enable();
         CuentaBancariaLista.main.eliminar.enable();
     
-        var msg = Ext.get('detalle');
-        msg.load({
-                url: '<?php echo $_SERVER['SCRIPT_NAME']?>/CuentaBancaria/chequera',
-                scripts: true,
-                params:
-                {
-                    co_cuenta_bancaria: CuentaBancariaLista.main.store_lista.getAt(rowIndex).get('co_cuenta_bancaria')
-
-                },
-                text: 'Cargando...'
-        });
+//        var msg = Ext.get('detalle');
+//        msg.load({
+//                url: '<?php echo $_SERVER['SCRIPT_NAME']?>/CuentaBancaria/chequera',
+//                scripts: true,
+//                params:
+//                {
+//                    co_cuenta_bancaria: CuentaBancariaLista.main.store_lista.getAt(rowIndex).get('co_cuenta_bancaria')
+//
+//                },
+//                text: 'Cargando...'
+//        });
         
     
-        if(panel_detalle.collapsed == true)
-        {
-            panel_detalle.toggleCollapse();
-        }
+//        if(panel_detalle.collapsed == true)
+//        {
+//            panel_detalle.toggleCollapse();
+//        }
         
         
         }},

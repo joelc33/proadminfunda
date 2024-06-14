@@ -2120,6 +2120,7 @@ class TesoreriaActions extends sfActions
 
 
         $c = new Criteria();
+        $c->add(Tb010BancoPeer::IN_ENTE, TRUE);
         $stmt = Tb010BancoPeer::doSelectStmt($c);
         $registros = array();
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){

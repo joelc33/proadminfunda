@@ -69,6 +69,12 @@ class BancoActions extends sfActions
                                         
         /*Campo tipo VARCHAR */
         $tb010_banco->setTxBanco($tb010_bancoForm["tx_banco"]);
+        
+        if (array_key_exists("in_banco_empresa", $tb010_bancoForm)){
+            $tb010_banco->setInEnte(true);
+        }else{
+            $tb010_banco->setInEnte(false);
+        }        
                                 
         /*CAMPOS*/
         $tb010_banco->save($con);

@@ -20,6 +20,21 @@ this.tx_banco = new Ext.form.TextField({
 	width:300
 });
 
+
+this.in_banco_empresa = new Ext.form.TextField({
+	fieldLabel:'Banco',
+	name:'tb010_banco[in_banco_empresa]',
+	value:this.OBJ.in_banco_empresa,
+	width:300
+});
+
+this.in_banco_empresa = new Ext.form.Checkbox({
+	fieldLabel:'Banco Ente?',
+	name:'tb010_banco[in_banco_empresa]',
+	checked:(this.OBJ.in_banco_empresa=='1') ? true:false,
+	allowBlank:false
+});
+
 this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
@@ -76,6 +91,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 
                     this.co_banco,
                     this.tx_banco,
+                    this.in_banco_empresa
             ]
 });
 

@@ -2052,7 +2052,7 @@ class PresupuestomodificacionActions extends sfActions
                         $tb085_presupuesto->setNuEs($campos10["nu_es"]);
                         $tb085_presupuesto->setNuSe($campos10["nu_se"]);
                         $tb085_presupuesto->setNuSse($campos10["nu_sse"]);
-                        $tb085_presupuesto->setCoPartida($campos_destino["nu_partida"]);
+                        $tb085_presupuesto->setCoPartida($campos10["nu_partida"]);
                         $tb085_presupuesto->setNuNivel(11);
                         //$tb085_presupuesto->setNuFi(substr(substr(trim($campos_destino["nu_partida"]), 0, 17), 12));
                         $tb085_presupuesto->setNuFi($campos12["tx_siglas"].$campos12["tx_numero_fuente"]);
