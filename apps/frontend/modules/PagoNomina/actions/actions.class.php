@@ -404,8 +404,20 @@ class PagoNominaActions extends sfActions
             $data->read($_FILES['form-file']['tmp_name']);
 
             for ($i = 2; $i <= $data->sheets[0]['numRows']; $i++) {
+                
+                
+if(!is_numeric(trim($data->sheets[0]['cells'][$i][4]))){
+    $this->data = json_encode(array(
+        "success" => false,
+        "msg" => 'El monto  '.$data->sheets[0]['cells'][$i][1].' debe ser númerico linea '.$i
+    ));
+    echo $this->data;
+    return sfView::NONE;
+}                
 
                 $tx_descripcion =  utf8_decode($data->sheets[0]['cells'][$i][3]);
+                
+                
 
 
                 $Tb132PagoNominaMasivo = new Tb132PagoNominaMasivo();
