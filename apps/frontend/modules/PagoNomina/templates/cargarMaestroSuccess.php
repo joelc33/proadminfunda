@@ -208,6 +208,7 @@ this.guardar = new Ext.Button({
                  //PagoNominaMasivoEditar.main.winformPanel_.close();
                  
                  PagoNominaMasivoEditar.main.co_pago_nomina.setValue(action.result.co_pago_nomina);
+                 PagoNominaMasivoEditar.main.co_solicitud.setValue(action.result.co_solicitud);
                  
                  PagoNominaMasivoEditar.main.store_lista.baseParams.co_solicitud = action.result.co_solicitud;
                  PagoNominaMasivoEditar.main.store_lista.load({
