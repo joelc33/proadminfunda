@@ -231,6 +231,8 @@ this.guardar = new Ext.Button({
                          PagoNominaMasivoEditar.main.getCalcular();
                      }
                  });
+                 
+                 solicitudLista.store_lista.load();
              }
         });
 
