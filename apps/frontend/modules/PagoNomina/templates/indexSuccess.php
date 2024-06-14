@@ -99,7 +99,7 @@
             });
 
             this.nueva_solicitud = new Ext.Button({
-                text: 'Nueva Compra',
+                text: 'Nueva Nomina',
                 iconCls: 'icon-nuevo',
                 handler: function() {
                     //                                contribuyenteLista.main.mascara.show();
