@@ -232,7 +232,7 @@ this.guardar = new Ext.Button({
                      }
                  });
                  
-                 solicitudLista.store_lista.load();
+                 solicitudLista.main.store_lista.load();
              }
         });
 
