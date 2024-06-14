@@ -413,7 +413,7 @@ class CompromisoAsignacionActions extends sfActions
         $c->clearSelectColumns();
         $c->addSelectColumn(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
         $c->addSelectColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
-        $c->add(Tb027TipoSolicitudPeer::CO_PROCESO, 68);
+        $c->add(Tb027TipoSolicitudPeer::CO_PROCESO, 66);
         $stmt = Tb027TipoSolicitudPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -512,7 +512,7 @@ class CompromisoAsignacionActions extends sfActions
         $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD,  Criteria::JOIN);
 
-        $c->addAnd(Tb027TipoSolicitudPeer::CO_PROCESO, 68);
+        $c->addAnd(Tb027TipoSolicitudPeer::CO_PROCESO, 66);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
 
         $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
