@@ -413,7 +413,25 @@ if(!is_numeric(trim($data->sheets[0]['cells'][$i][4]))){
     ));
     echo $this->data;
     return sfView::NONE;
-}                
+}      
+
+if($data->sheets[0]['cells'][$i][1]==''){
+    $this->data = json_encode(array(
+        "success" => false,
+        "msg" => 'El tipo de concepto  '.$data->sheets[0]['cells'][$i][1].' esta vacio linea '.$i
+    ));
+    echo $this->data;
+    return sfView::NONE;
+}
+
+if($data->sheets[0]['cells'][$i][2]==''){
+    $this->data = json_encode(array(
+        "success" => false,
+        "msg" => 'El documento  '.$data->sheets[0]['cells'][$i][2].' esta vacio linea '.$i
+    ));
+    echo $this->data;
+    return sfView::NONE;
+}
 
                 $tx_descripcion =  utf8_decode($data->sheets[0]['cells'][$i][3]);
                 
