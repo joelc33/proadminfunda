@@ -99,7 +99,7 @@
             });
 
             this.nueva_solicitud = new Ext.Button({
-                text: 'Nueva Contrato',
+                text: 'Nuevo Contrato', 
                 iconCls: 'icon-nuevo',
                 handler: function() {
                     //                                contribuyenteLista.main.mascara.show();
