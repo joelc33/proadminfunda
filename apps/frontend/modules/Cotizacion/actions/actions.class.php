@@ -207,6 +207,7 @@ class CotizacionActions extends sfActions
       $tb206_cotizacion->setTxSerialCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
       $tb206_cotizacion->setCoTipoCotizacion($tb206_cotizacionForm["co_tipo_cotizacion"]);
       $tb206_cotizacion->setCoModalidad($tb206_cotizacionForm["co_tipo_modalidad"]);
+      $tb206_cotizacion->setInActivo(true);
       $tb206_cotizacion->save($con);
 
       $listaProducto  = json_decode($json_producto, true);

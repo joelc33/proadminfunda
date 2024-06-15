@@ -397,14 +397,14 @@ class ContratoActions extends sfActions
   public function getCoPresupuestoIVA($codigo)
   {
 
-      $c = new Criteria();
-      $c->add(Tb206CotizacionPeer::CO_SOLICITUD, $codigo);
-      $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336);
-      $c->addJoin(Tb206CotizacionPeer::CO_COTIZACION, Tb207DetalleCotizacionPeer::CO_COTIZACION);
-      $stmt = Tb207DetalleCotizacionPeer::doSelectStmt($c);
-      $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+    $c = new Criteria();
+    $c->add(Tb206CotizacionPeer::CO_SOLICITUD, $codigo);
+    $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336);
+    $c->addJoin(Tb206CotizacionPeer::CO_COTIZACION, Tb207DetalleCotizacionPeer::CO_COTIZACION);
+    $stmt = Tb207DetalleCotizacionPeer::doSelectStmt($c);
+    $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      return $campos['co_presupuesto'];
+    return $campos['co_presupuesto'];
   }
 
   public function getIVA($mo_iva, $codigo)
@@ -425,15 +425,15 @@ class ContratoActions extends sfActions
   protected function getCoDetalleCotizacionIva($tx_serial_cotizacion)
   {
 
-      $c = new Criteria();
-      $c->addJoin(Tb206CotizacionPeer::CO_COTIZACION, Tb207DetalleCotizacionPeer::CO_COTIZACION);
-      $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336);
-      $c->add(Tb206CotizacionPeer::TX_SERIAL_COTIZACION, $tx_serial_cotizacion);
+    $c = new Criteria();
+    $c->addJoin(Tb206CotizacionPeer::CO_COTIZACION, Tb207DetalleCotizacionPeer::CO_COTIZACION);
+    $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336);
+    $c->add(Tb206CotizacionPeer::TX_SERIAL_COTIZACION, $tx_serial_cotizacion);
 
-      $stmt = Tb207DetalleCotizacionPeer::doSelectStmt($c);
-      $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = Tb207DetalleCotizacionPeer::doSelectStmt($c);
+    $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      return $campos["co_detalle_cotizacion"];
+    return $campos["co_detalle_cotizacion"];
   }
 
   public function executeGuardar(sfWebRequest $request)
@@ -445,7 +445,7 @@ class ContratoActions extends sfActions
     $tb008_proveedorForm        = $this->getRequestParameter('tb008_proveedor');
     $tb052_comprasForm          = $this->getRequestParameter('tb052_compras');
 
-    
+
 
     $c = new Criteria();
     //$c->add(Tb052ComprasPeer::ANIO, date('Y'));
@@ -470,16 +470,20 @@ class ContratoActions extends sfActions
         "codigo"              =>  $this->getUser()->getAttribute('codigo')
       );
 
-      $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm,$con);
-
-     //var_dump($resp); exit();
-
+      $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
 
       if ($resp["success"] == true) {
-        $tb052_comprasForm["co_solicitud"]      = $resp["co_solicitud"];
+        $tb052_comprasForm["co_solicitud"] = $resp["co_solicitud"];
+      }else{
+        $this->data = json_encode(array(
+          "success" => false,
+          "msg" =>  $resp["msg"]
+        ));
+
+        return;
       }
 
-    
+
       if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
         $serial = date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial(11, $con, $this->getUser()->getAttribute('ejercicio'));
       } else {
@@ -489,7 +493,7 @@ class ContratoActions extends sfActions
       $tb052_compras->setNumeroCompra($serial);
     }
     try {
-     
+
       if (!empty($co_solicitud_cotizacion)) {
         $tb052_comprasForm["co_requisicion"] = $this->getDatosRequisicion($co_solicitud_cotizacion);
       }
@@ -562,11 +566,29 @@ class ContratoActions extends sfActions
       $tb052_compras->save($con);
 
 
+     
+
+
       //echo  $tb052_comprasForm["co_tipo_solicitud"]; exit();
 
       $listaProducto  = json_decode($json_producto, true);
       $array_producto = array();
       $i = 0;
+
+      $dc = new Criteria();
+      $dc->add(Tb053DetalleComprasPeer::CO_COMPRAS, $tb052_compras->getCoCompras());
+      $stmt = Tb053DetalleComprasPeer::doSelectStmt($dc);
+
+      while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        $wc = new Criteria();
+        $wc->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, $res["co_detalle_compras"]);
+
+        $updc = new Criteria();
+        $updc->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, NULL);
+        BasePeer::doUpdate($wc, $updc, $con);  
+
+      }
 
       $wherec = new Criteria();
       $wherec->add(Tb053DetalleComprasPeer::CO_COMPRAS, $tb052_compras->getCoCompras());
@@ -591,7 +613,11 @@ class ContratoActions extends sfActions
           $tb053_detalle_compras->setCoUnidadProducto($productoForm["co_unidad_producto"]);
           $tb053_detalle_compras->setInCalcularIva(true);
           $tb053_detalle_compras->setInExento($productoForm["in_exento"]);
+          $tb053_detalle_compras->setCoIvaProducto($productoForm["co_iva_producto"]);
+          $tb053_detalle_compras->setMoIvaProducto($productoForm["mo_iva_producto"]);
           $tb053_detalle_compras->save($con);
+
+          $co_enlace = $tb053_detalle_compras->getCoDetalleCompras();
 
           if (!empty($productoForm["co_detalle_cotizacion"])) {
 
@@ -602,41 +628,55 @@ class ContratoActions extends sfActions
             $updc->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $tb053_detalle_compras->getCoDetalleCompras());
             BasePeer::doUpdate($wherec, $updc, $con);
           }
-        }
-      }
 
+        
 
+          /**********************IVA*******************************/
 
+          $c = new Criteria();
+          $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336);
+          $c->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION_ENLACE, $productoForm["co_detalle_cotizacion"]);
+          $stmt = Tb207DetalleCotizacionPeer::doSelectStmt($c);
+          $campoIva = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      $monto_iva = $this->getIVA($tb052_comprasForm["monto_iva"], $tb008_proveedorForm["co_proveedor"]);
+          $monto_iva = $this->getIVA($campoIva["monto"], $tb008_proveedorForm["co_proveedor"]);
 
-      $wherec = new Criteria();
-      $wherec->add(Tb053DetalleComprasPeer::CO_COMPRAS, $tb052_compras->getCoCompras());
-      $wherec->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336);
-      BasePeer::doDelete($wherec, $con);
+          if ($monto_iva > 0) {
+            $tb053_detalle_compras = new Tb053DetalleCompras();
+            $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
+            $tb053_detalle_compras->setCoProducto(19336); //IMPUESTO AL VALOR AGREGADO (IVA)
+            $tb053_detalle_compras->setNuCantidad(1);
+            $tb053_detalle_compras->setCoPresupuesto($this->getCoPresupuestoIVA($co_solicitud_cotizacion));
+            $tb053_detalle_compras->setPrecioUnitario(round($monto_iva, 2));
+            $tb053_detalle_compras->setMonto(round($monto_iva, 2));
+            $tb053_detalle_compras->setDetalle('IMPUESTO AL VALOR AGREGADO (IVA)');
+            $tb053_detalle_compras->setCoPartida($campoIva["co_presupuesto"]);
+            $tb053_detalle_compras->setCoUnidadProducto(638);
+            $tb053_detalle_compras->setCoDetalleCompraEnlace($co_enlace);
+            $tb053_detalle_compras->save($con);
 
-      if ($monto_iva > 0) {
-        $tb053_detalle_compras = new Tb053DetalleCompras();
-        $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
+            
 
-        $tb053_detalle_compras->setCoProducto(19336); //IMPUESTO AL VALOR AGREGADO (IVA)
-        $tb053_detalle_compras->setNuCantidad(1);
-        $tb053_detalle_compras->setCoPresupuesto($this->getCoPresupuestoIVA($co_solicitud_cotizacion));
-        $tb053_detalle_compras->setPrecioUnitario($productoForm["precio_unitario"]);
-        $tb053_detalle_compras->setMonto(round($monto_iva, 2));
-        $tb053_detalle_compras->setDetalle('IMPUESTO AL VALOR AGREGADO (IVA)');
-        $tb053_detalle_compras->setCoPartida($tb052_comprasForm["co_partida_iva"]);
-        $tb053_detalle_compras->setCoUnidadProducto(638);
-        $tb053_detalle_compras->save($con);
+            if (!empty($tb052_comprasForm["tx_serial_cotizacion"])) {
 
-        if (!empty($tb052_comprasForm["tx_serial_cotizacion"])) {
+              $wherec = new Criteria();
+              $wherec->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_PRESU_BASE, $this->getCoDetalleCotizacionIva($tb052_comprasForm["tx_serial_cotizacion"]));
 
-          $wherec = new Criteria();
-          $wherec->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_PRESU_BASE, $this->getCoDetalleCotizacionIva($tb052_comprasForm["tx_serial_cotizacion"]));
+              $updc = new Criteria();
+              $updc->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $tb053_detalle_compras->getCoDetalleCompras());
+              BasePeer::doUpdate($wherec, $updc, $con);
+            }
+          }
+          /********************************************************/
 
-          $updc = new Criteria();
-          $updc->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $tb053_detalle_compras->getCoDetalleCompras());
-          BasePeer::doUpdate($wherec, $updc, $con);
+          /**********************Actualiza la Cotizacion Disponible********************/
+          
+            $cotizacion = Tb207DetalleCotizacionPeer::retrieveByPK($productoForm["co_detalle_cotizacion"]);
+            $cotizacion->setCoDetalleCompra($co_enlace);
+            $cotizacion->save($con);
+
+          /************************************************************************** */
+
         }
       }
 
@@ -655,16 +695,14 @@ class ContratoActions extends sfActions
       $tb056_contrato_compras->setCoRamo($tb052_comprasForm["co_ramo"]);
       $tb056_contrato_compras->setMonto($tb052_comprasForm["monto"]);
 
-      list($dia, $mes, $anio) = explode("/", $tb052_comprasForm["fecha_entrega"]);
+    /*  list($dia, $mes, $anio) = explode("/", $tb052_comprasForm["fecha_entrega"]);
       $fecha = $anio . "-" . $mes . "-" . $dia;
 
-      $tb056_contrato_compras->setFechaEntrega($fecha);
+      $tb056_contrato_compras->setFechaEntrega($fecha);*/
       $tb056_contrato_compras->setTiempoGarantia($tb052_comprasForm["tiempo_garantia"]);
       $tb056_contrato_compras->setCoTpContrato($tb052_comprasForm["co_tp_contrato"]);
       $tb056_contrato_compras->setCoFuenteFinanciamiento($tb052_comprasForm["co_fuente_financiamiento"]);
       $tb056_contrato_compras->save($con);
-
-
 
       $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb052_comprasForm["co_solicitud"]));
       $ruta->setCoUsuario($this->getUser()->getAttribute('codigo'));

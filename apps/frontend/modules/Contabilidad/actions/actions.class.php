@@ -140,7 +140,8 @@ class ContabilidadActions extends sfActions
   {
    
         $this->data = json_encode(array(
-             "co_solicitud"     => $this->getRequestParameter("co_solicitud")
+             "co_solicitud"     => $this->getRequestParameter("co_solicitud"),
+             "iva"     => $this->getRequestParameter("iva")
         ));
 
   }
@@ -930,8 +931,8 @@ class ContabilidadActions extends sfActions
   
   public function executeStorelistaProducto(sfWebRequest $request)
   {
-      $co_solicitud = $this->getRequestParameter("co_solicitud");
-       
+        $co_solicitud = $this->getRequestParameter("co_solicitud");
+        $iva = $this->getRequestParameter("iva");
                            
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -947,6 +948,7 @@ class ContabilidadActions extends sfActions
         $c->addJoin(Tb048ProductoPeer::CO_PRODUCTO, Tb053DetalleComprasPeer::CO_PRODUCTO);
         $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
         $c->add(Tb052ComprasPeer::CO_SOLICITUD,$co_solicitud);
+        $c->add(Tb053DetalleComprasPeer::CO_IVA_PRODUCTO,$iva);
         $c->add(Tb053DetalleComprasPeer::IN_CALCULAR_IVA,true);
                
         $cantidadTotal = Tb053DetalleComprasPeer::doCount($c);

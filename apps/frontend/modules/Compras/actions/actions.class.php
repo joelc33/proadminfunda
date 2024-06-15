@@ -1989,6 +1989,9 @@ class ComprasActions extends sfActions
             $c->addSelectColumn(Tb207DetalleCotizacionPeer::DETALLE);
             $c->addSelectColumn(Tb207DetalleCotizacionPeer::MONTO);
             $c->addSelectColumn(Tb207DetalleCotizacionPeer::IN_EXENTO);
+            $c->addSelectColumn(Tb207DetalleCotizacionPeer::CO_IVA_PRODUCTO);
+            $c->addSelectColumn(Tb207DetalleCotizacionPeer::MO_IVA_PRODUCTO);
+            
             $c->addJoin(Tb207DetalleCotizacionPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO);
             $c->add(Tb207DetalleCotizacionPeer::CO_COTIZACION, $co_cotizacion);
             $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336,  Criteria::NOT_EQUAL); //Excluye el IVA
@@ -2013,7 +2016,11 @@ class ComprasActions extends sfActions
             $c->addSelectColumn(Tb053DetalleComprasPeer::DETALLE);
             $c->addSelectColumn(Tb053DetalleComprasPeer::MONTO);
             $c->addSelectColumn(Tb053DetalleComprasPeer::IN_EXENTO);
+            $c->addSelectColumn(Tb053DetalleComprasPeer::CO_IVA_PRODUCTO);
+            $c->addSelectColumn(Tb053DetalleComprasPeer::MO_IVA_PRODUCTO);
+            $c->addSelectColumn(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION);
             $c->addJoin(Tb053DetalleComprasPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO);
+            $c->addJoin(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS, Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA,Criteria::LEFT_JOIN);
             $c->add(Tb053DetalleComprasPeer::CO_COMPRAS, $co_compras);
             $c->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336,  Criteria::NOT_EQUAL); //Excluye el IVA
 
@@ -2032,6 +2039,9 @@ class ComprasActions extends sfActions
             if (isset($reg['co_detalle_cotizacion'])) {
                 $reg['co_detalle_compras'] = '';
             }
+
+            $reg["monto_total"] = $reg["monto"]+$reg["mo_iva_producto"];
+            $reg["nu_iva_producto"] = $reg["co_iva_producto"];
 
             $registros[] = $reg;
         }

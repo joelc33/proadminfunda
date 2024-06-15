@@ -936,7 +936,8 @@ class SolicitudActions extends sfActions
                 "tx_razon_social"   => $tx_razon_social,
                 "fe_creacion"       => $dia . '-' . $mes . '-' . $anio,
                 "in_reporte"        => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
-                "cant_revision"     => $cantidad
+                "cant_revision"     => $cantidad,
+                "id_ruta"           => $res["co_ruta"]
             );
         }
 

@@ -158,7 +158,7 @@
                                 method: 'POST',
                                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/guardarestado',
                                 params: {
-                                    co_ruta: pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('in_reporte'),
+                                    co_ruta: pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('id_ruta'),
                                     co_estatus: 2
                                 },
                                 success: function(result, request) {
@@ -255,9 +255,9 @@
                 columns: [
                     new Ext.grid.RowNumberer(),
                     {
-                        header: 'in_reporte',
+                        header: 'id_ruta',
                         hidden:true,
-                        dataIndex: 'in_reporte'
+                        dataIndex: 'id_ruta'
                     },
                     {
                         header: 'N° Proceso',
@@ -440,6 +440,9 @@
                     },
                     {
                         name: 'in_reporte'
+                    },
+                    {
+                        name: 'id_ruta'
                     }
                 ]
             });

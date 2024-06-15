@@ -10,7 +10,7 @@
             this.storeCO_IVA_FACTURA = this.getStoreCO_IVA_FACTURA();
             this.storeCO_ENTE = this.getStoreCO_ENTE();
             this.storeCO_TIPO_COTIZACION        = this.getStoreCO_TIPO_COTIZACION();
-            this.storeCO_TPCONTRATO = this.getStoreCO_TPCONTRATO();
+            this.storeCO_TPCONTRATO             = this.getStoreCO_TPCONTRATO();
 
             this.co_solicitud = new Ext.form.Hidden({
                 name: 'tb206_cotizacion[co_solicitud]',

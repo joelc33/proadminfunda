@@ -778,8 +778,8 @@
             this.fieldCompra = new Ext.form.FieldSet({
                 //title: 'Datos de los Materiales',
                 items: [
-                    this.fecha_compra,
-                    this.co_iva_factura,
+                //    this.fecha_compra,
+                //    this.co_iva_factura,
                     this.co_ente,
                     this.gridPanel
 
