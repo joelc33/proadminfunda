@@ -394,18 +394,61 @@
                 style: 'background:#c9c9c9;',
             });
 
+
+
             this.buscar = new Ext.Button({
                 text: 'Buscar',
                 iconCls: 'icon-buscar',
                 handler: function() {
-                    this.msg = Ext.get('formularioAgregar');
-                    this.msg.load({
-                        url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Cotizacion/buscarPresupuestoBase',
-                        scripts: true,
-                        text: "Cargando.."
-                    });
+                    if (ComprasEditar.main.co_tipo_proceso.getValue() == null) {
+                        Ext.MessageBox.show({
+                            title: 'Mensaje',
+                            msg: 'Debe Seleccionar el Tipo de Proceso',
+                            closable: false,
+                            icon: Ext.MessageBox.INFO,
+                            resizable: false,
+                            animEl: document.body,
+                            buttons: Ext.MessageBox.OK
+                        });
+
+                    } else {
+                        this.msg = Ext.get('formularioAgregar');
+                        this.msg.load({
+                            url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Cotizacion/buscarPresupuestoBase',
+                            params:{
+                                co_tipo_solicitud: ComprasEditar.main.co_tipo_proceso.getValue(),
+                                co_tipo_tramite: 64
+                            },
+                            scripts: true,
+                            text: "Cargando.."
+                        });
+                    }
                 }
             });
+
+            this.co_tipo_proceso = new Ext.form.ComboBox({
+                fieldLabel: 'Tipo Proceso',
+                store: this.storeCO_TIPO_PROCESO,
+                typeAhead: true,
+                valueField: 'co_tipo_solicitud',
+                displayField: 'tx_tipo_solicitud',
+                hiddenName: 'tb052_compras[co_tipo_solicitud]',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                selectOnFocus: true,
+                mode: 'local',
+                width: 300,
+                allowBlank: false
+            });
+            this.storeCO_TIPO_PROCESO.load();
+
+            paqueteComunJS.funcion.seleccionarComboByCo({
+                objCMB: this.co_tipo_proceso,
+                value: this.OBJ.co_tipo_solicitud,
+                objStore: this.storeCO_TIPO_PROCESO
+            });
+
 
             this.compositefieldPresupuestoBase = new Ext.form.CompositeField({
                 fieldLabel: 'Codigo',
@@ -420,8 +463,8 @@
             this.fieldPresupuesto = new Ext.form.FieldSet({
                 title: 'Presupuesto Base',
                 items: [
+                    this.co_tipo_proceso,
                     this.compositefieldPresupuestoBase,
-                    this.tx_observacion
                 ]
             });
 
@@ -565,13 +608,13 @@
 
 
 
-            this.gridPanel = new Ext.grid.GridPanel({
+            this.gridPanel = new Ext.grid.EditorGridPanel({
                 title: 'Lista de Materiales',
                 iconCls: 'icon-libro',
                 store: this.store_lista,
                 loadMask: true,
-                height: 300,
-                width: 950,
+                //height: 300,
+                width: 1250,
                 autoScroll: true,
                 tbar: [this.agregar, '-', this.botonEliminar],
                 columns: [
@@ -584,11 +627,25 @@
                         dataIndex: 'co_detalle_compras'
                     },
                     {
+                        header: 'co_detalle_cotizacion',
+                        hidden: true,
+                        width: 10,
+                        menuDisabled: true,
+                        dataIndex: 'co_detalle_cotizacion'
+                    },
+                    {
                         header: 'co_detalle_requisicion',
                         hidden: true,
                         width: 10,
                         menuDisabled: true,
                         dataIndex: 'co_detalle_requisicion'
+                    },
+                    {
+                        header: 'co_presupuesto',
+                        hidden: true,
+                        width: 10,
+                        menuDisabled: true,
+                        dataIndex: 'co_presupuesto'
                     },
                     {
                         header: 'co_producto',
@@ -636,6 +693,27 @@
                         menuDisabled: true,
                         dataIndex: 'monto',
                         renderer: renderMonto
+                    },
+                    {
+                        header: 'IVA',
+                        width: 60,
+                        menuDisabled: true,
+                        dataIndex: 'nu_iva_producto',
+                        renderer: renderMonto
+                    },
+                    {
+                        header: 'Monto IVA',
+                        width: 100,
+                        menuDisabled: true,
+                        dataIndex: 'mo_iva_producto',
+                        renderer: renderMonto
+                    },
+                    {
+                        header: 'Monto Total',
+                        width: 100,
+                        menuDisabled: true,
+                        dataIndex: 'monto_total',
+                        renderer: renderMonto
                     }
                 ],
                 stripeRows: true,
@@ -644,6 +722,8 @@
                 listeners: {
                     cellclick: function(Grid, rowIndex, columnIndex, e) {
                         ComprasEditar.main.botonEliminar.enable();
+                        ComprasEditar.main.rowIndex = rowIndex;
+
                     }
                 }
             });
@@ -892,7 +972,13 @@
                         name: 'co_detalle_requisicion'
                     },
                     {
+                        name: 'co_detalle_cotizacion'
+                    },
+                    {
                         name: 'co_producto'
+                    },
+                    {
+                        name: 'co_presupuesto'
                     },
                     {
                         name: 'cod_producto'
@@ -917,6 +1003,18 @@
                     },
                     {
                         name: 'in_exento'
+                    },
+                    {
+                        name: 'co_iva_producto'
+                    },
+                    {
+                        name: 'nu_iva_producto'
+                    },
+                    {
+                        name: 'mo_iva_producto'
+                    },
+                    {
+                        name: 'monto_total'
                     }
                 ]
             });
@@ -956,7 +1054,7 @@
             this.tcancelar = 0;
             this.totaliva = 0;
             this.iva = 0;
-            this.iva = ComprasEditar.main.co_iva_factura.getValue();
+            
 
 
             this.monto = paqueteComunJS.funcion.getSumaColumnaGrid({
@@ -964,28 +1062,19 @@
                 campo: 'monto'
             });
 
-
-            var monto_exento = 0;
-            ComprasEditar.main.store_lista.each(function(store) {
-                if (store.data.in_exento == true) {
-                    monto_exento += store.data.monto
-                }
+            this.monto_iva = paqueteComunJS.funcion.getSumaColumnaGrid({
+                store: ComprasEditar.main.store_lista,
+                campo: 'mo_iva_producto'
             });
 
+            this.monto_total = paqueteComunJS.funcion.getSumaColumnaGrid({
+                store: ComprasEditar.main.store_lista,
+                campo: 'monto_total'
+            });
 
-            this.cancelar = parseFloat(this.monto);
-            if (this.monto > 0) {
-                this.totaliva = (parseFloat(this.monto - monto_exento) * parseFloat(this.iva)) / 100;
-            }
-
-            this.tcancelar = parseFloat(this.cancelar) + parseFloat(this.totaliva);
-            this.tcancelar = this.tcancelar.toFixed(2);
-            ComprasEditar.main.monto_compra.setValue(this.cancelar);
-            ComprasEditar.main.monto_iva.setValue(parseFloat(this.totaliva));
-            ComprasEditar.main.monto_total.setValue(parseFloat(this.tcancelar));
-            ComprasEditar.main.displayfieldmonto_compra.setValue("<span style='font-size:12px;'><b>Sub Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_compra.getValue()) + "</b></span>");
-            ComprasEditar.main.displayfieldmonto_iva.setValue("<span style='font-size:12px;'><b>Iva: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_iva.getValue()) + "</b></span>");
-            ComprasEditar.main.displayfieldmonto_total.setValue("<span style='font-size:18px;'><b>Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ComprasEditar.main.monto_total.getValue()) + "</b></span>");
+            ComprasEditar.main.displayfieldmonto_compra.setValue("<span style='font-size:12px;'><b>Sub Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto) + "</b></span>");
+            ComprasEditar.main.displayfieldmonto_iva.setValue("<span style='font-size:12px;'><b>Iva: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto_iva) + "</b></span>");
+            ComprasEditar.main.displayfieldmonto_total.setValue("<span style='font-size:12px;'><b>Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto_total) + "</b></span>");
 
 
         },
