@@ -382,7 +382,7 @@
                     listaProducto.main.store_lista.load();
                     proyecto.main.getTotal();
 
-                    proyecto.main.getVerificarIVA();
+                   // proyecto.main.getVerificarIVA();
 
                     Ext.utiles.msg('Mensaje', "El producto se agrego exitosamente");
 

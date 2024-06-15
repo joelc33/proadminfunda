@@ -36,7 +36,7 @@
                     type: 'string'
                 },
                 {
-                    name: 'nu_cantidad',
+                    name: 'nu_cantidad', 
                     type: 'number'
                 },
                 {

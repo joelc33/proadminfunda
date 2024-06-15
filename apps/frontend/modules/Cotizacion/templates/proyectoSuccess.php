@@ -1,6 +1,6 @@
 <script type="text/javascript">
     Ext.ns("proyecto");
-    proyecto.main = {
+    proyecto.main = { 
         init: function() {
 
             this.OBJ = paqueteComunJS.funcion.doJSON({
@@ -97,6 +97,16 @@
                 {
                     name: 'in_exento',
                     type: 'string'
+                }
+                ,
+                {
+                    name: 'mo_iva_producto',
+                    type: 'number'
+                }
+                ,
+                {
+                   name: 'monto_total',
+                    type: 'number'
                 }
             ]);
 
@@ -554,22 +564,7 @@
                 store: proyecto.main.store_lista,
                 campo: 'monto_total'
             });
-
-
-          /*  var monto_exento = 0;
-            proyecto.main.store_lista.each(function(store) {
-                if (store.data.in_exento == true) {
-                    monto_exento += store.data.monto
-                }
-            });
-
-
-            this.cancelar = parseFloat(this.monto);
-            if (this.monto > 0) {
-                this.totaliva = (parseFloat(this.monto - monto_exento) * parseFloat(this.iva)) / 100;
-            }*/
-
-            
+           
             proyecto.main.displayfieldmonto_compra.setValue("<span style='font-size:12px;'><b>Sub Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto) + "</b></span>");
             proyecto.main.displayfieldmonto_iva.setValue("<span style='font-size:12px;'><b>Iva: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto_iva) + "</b></span>");
             proyecto.main.displayfieldmonto_total.setValue("<span style='font-size:12px;'><b>Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto_total) + "</b></span>");
@@ -684,7 +679,7 @@
         },
         getVerificarIVA: function() {
 
-            var cant = paqueteComunJS.funcion.getSumaColumnaGrid({
+          /*  var cant = paqueteComunJS.funcion.getSumaColumnaGrid({
                 store: proyecto.main.store_lista,
                 campo: 'monto'
             });
@@ -696,7 +691,7 @@
             } else {
                 Ext.get('co_iva_factura').setStyle('background-color', '#FFFFFF');
                 proyecto.main.co_iva_factura.setReadOnly(false);
-            }
+            }*/
         }
     };
     Ext.onReady(proyecto.main.init, proyecto.main);
