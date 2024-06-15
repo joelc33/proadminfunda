@@ -161,7 +161,7 @@ class ViaticoActions extends sfActions
                     "codigo"              => $this->getUser()->getAttribute('codigo')
                 );
 
-                $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm);
+                $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm,$con);
 
                 if ($resp["success"] == true) {
                     $tb108_viaticoForm["co_solicitud"] = $resp["co_solicitud"];
@@ -207,10 +207,6 @@ class ViaticoActions extends sfActions
             } else {
                 $tb108_viatico->setInEmpleado(false);
             }
-
-
-
-
 
             $tb108_viatico->setCoOrigen($tb108_viaticoForm["co_origen"]);
             $tb108_viatico->setCoDestino($tb108_viaticoForm["co_destino"]);

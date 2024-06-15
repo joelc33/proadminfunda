@@ -53,10 +53,10 @@ class Tb026SolicitudPeer extends BaseTb026SolicitudPeer
         return $campos["co_proceso"];
     }  
 
-    static public function setSolicitud($tb026_solicitudForm)
+    static public function setSolicitud($tb026_solicitudForm,$con)
     {
 
-        $con = Propel::getConnection();
+     //   $con = Propel::getConnection();
         $conf_ruta = self::getVerificaRuta($tb026_solicitudForm["co_tipo_solicitud"]);
 
         if ($conf_ruta == '') {
@@ -69,7 +69,7 @@ class Tb026SolicitudPeer extends BaseTb026SolicitudPeer
 
         try {
 
-            $con->beginTransaction();
+         //   $con->beginTransaction();
 
             $tb026_solicitud = new Tb026Solicitud();
          
@@ -105,7 +105,7 @@ class Tb026SolicitudPeer extends BaseTb026SolicitudPeer
                 "co_solicitud" => $cod_solicitud
             );
 
-            $con->commit();
+           // $con->commit();
         } catch (PropelException $e) {
             $con->rollback();
             $data = array(

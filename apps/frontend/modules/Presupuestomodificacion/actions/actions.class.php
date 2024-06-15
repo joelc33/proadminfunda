@@ -912,7 +912,7 @@ class PresupuestomodificacionActions extends sfActions
             "codigo"              => $this->getUser()->getAttribute('codigo')
           );
 
-          $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm);
+          $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm,$con);
 
           //var_dump($resp); exit();
 

@@ -347,11 +347,11 @@
                             columnWidth: .3,
                             items: [this.fecha_fin]
                         },
-                        {
+                        /*{
                             labelWidth: 100,
                             columnWidth: .3,
                             items: [this.fecha_entrega]
-                        }
+                        }*/
                     ]
                 }]
             });
@@ -365,7 +365,7 @@
                 width: 200
             });
 
-            this.monto_contrato = new Ext.form.NumberField({
+            this.monto_contrato = new Ext.form.Hidden({
                 fieldLabel: 'Monto Presupuesto',
                 name: 'tb052_compras[monto]',
                 value: this.OBJ.monto,
@@ -375,7 +375,7 @@
                 width: 200
             });
 
-            this.Panelforma = new Ext.Panel({
+            /*this.Panelforma = new Ext.Panel({
                 items: [{
                     layout: 'column',
                     defaults: {
@@ -393,7 +393,7 @@
                         }
                     ]
                 }]
-            });
+            });*/
 
             this.tiempo_garantia = new Ext.form.TextField({
                 fieldLabel: 'Garantia',
@@ -522,12 +522,13 @@
                 items: [
                     this.tx_concepto,
                     //this.tx_observacion,
-                    this.co_tp_contrato,
+                 //   this.co_tp_contrato,
                     this.nu_orden_compra,
                     this.PanelFecha,
                     this.in_responsabilidad_social,
-                    this.Panelforma,
-                    this.Paneltiempo,
+                    this.monto_contrato,
+               //     this.Panelforma,
+               //     this.Paneltiempo,
                     this.tx_observacion,
                 ]
             });

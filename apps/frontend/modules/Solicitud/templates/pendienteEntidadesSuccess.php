@@ -144,11 +144,39 @@
             //objeto store
             this.store_lista = this.getLista();
 
+           
+
             this.estado = new Ext.Button({
-                text: 'Cambiar Estatus',
-                iconCls: 'icon-cambio',
-                handler: this.onEstatus
+                text: 'Procesar',
+                iconCls: 'icon-fin',
+                handler: function() {
+
+                    Ext.MessageBox.confirm('Confirmación', '¿Esta seguro de aprobar el proceso?', function(boton) {
+                        if (boton == "yes") {
+
+                            Ext.Ajax.request({
+                                method: 'POST',
+                                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/guardarestado',
+                                params: {
+                                    co_ruta: pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('in_reporte'),
+                                    co_estatus: 2
+                                },
+                                success: function(result, request) {
+                                    obj = Ext.util.JSON.decode(result.responseText);
+                                    if (obj.success == true) {
+                                        pendienteEntidadesLista.main.store_lista.load();
+                                        Ext.Msg.alert("Notificación", obj.msg);
+                                    } else {
+                                        Ext.Msg.alert("Notificación", obj.msg);
+                                    }                                    
+                                }
+                            });
+                        }
+                    });
+                }
             });
+
+
 
             this.revision = new Ext.Button({
                 text: 'Enviar a Revisión',
@@ -227,6 +255,11 @@
                 columns: [
                     new Ext.grid.RowNumberer(),
                     {
+                        header: 'in_reporte',
+                        hidden:true,
+                        dataIndex: 'in_reporte'
+                    },
+                    {
                         header: 'N° Proceso',
                         width: 100,
                         menuDisabled: true,
@@ -260,7 +293,7 @@
                     },
                     {
                         header: 'Unidad',
-                        width: 150,
+                        width: 200,
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'tx_proceso',

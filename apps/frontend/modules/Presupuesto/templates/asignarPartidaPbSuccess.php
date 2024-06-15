@@ -143,7 +143,7 @@ this.agregar_partida.disable();
 this.quitar_partida.disable();
 
 this.gridPanel = new Ext.grid.GridPanel({
-        title:'Detalle de la Compra',
+        title:'Detalle de las Partidas',
         iconCls: 'icon-libro',
         store: this.store_lista,
         loadMask:true,
@@ -318,7 +318,7 @@ this.formPanel_ = new Ext.form.FormPanel({
     items:[         this.co_cotizacion,
                     this.co_solicitud,
                     this.fieldDatos,
-                    this.fieldDatosContrato,
+                   // this.fieldDatosContrato,
                   //  this.fieldDatosEnte,
                     this.gridPanel
             ]

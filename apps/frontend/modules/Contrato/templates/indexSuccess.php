@@ -15,7 +15,7 @@
             this.co_proceso;
 
             this.co_solicitud = new Ext.form.TextField({
-                fieldLabel: 'N° Proceso',
+                fieldLabel: 'N° Procesos',
                 name: 'co_solicitud',
                 maskRe: /[0-9]/,
                 value: '',

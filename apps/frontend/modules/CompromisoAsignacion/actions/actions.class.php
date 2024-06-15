@@ -222,6 +222,7 @@ class CompromisoAsignacionActions extends sfActions
         $tb146_compromiso_asignacionForm = $this->getRequestParameter('tb146_compromiso_asignacion');
         $json_asignacion  = $this->getRequestParameter("json_asignacion");
         $con = Propel::getConnection();
+        $con->beginTransaction();
         if ($codigo != '' || $codigo != null) {
             $tb146_compromiso_asignacion = Tb146CompromisoAsignacionPeer::retrieveByPk($codigo);
             $tb052_compras         = Tb052ComprasPeer::retrieveByPk($tb146_compromiso_asignacionForm["co_compras"]);
@@ -238,7 +239,7 @@ class CompromisoAsignacionActions extends sfActions
                 "codigo"              => $this->getUser()->getAttribute('codigo')
             );
 
-            $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm);
+            $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm,$con);
 
             if ($resp["success"] == true) {
                 $tb146_compromiso_asignacionForm["co_solicitud"]      = $resp["co_solicitud"];
@@ -270,8 +271,7 @@ class CompromisoAsignacionActions extends sfActions
             //$tb146_compromiso_asignacion->setNuCancelacion($serial);
         }
         try {
-            $con->beginTransaction();
-
+           
             $Tb026Solicitud = Tb026SolicitudPeer::retrieveByPK($tb146_compromiso_asignacionForm["co_solicitud"]);
             $Tb026Solicitud->setCoTipoSolicitud($tb146_compromiso_asignacionForm["co_tipo_solicitud"]);
             $Tb026Solicitud->setCoProveedor($tb146_compromiso_asignacionForm["co_proveedor"])->save($con);

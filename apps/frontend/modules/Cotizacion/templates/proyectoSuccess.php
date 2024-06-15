@@ -198,7 +198,7 @@
                 ]
             });
 
-            this.co_iva_factura = new Ext.form.ComboBox({
+         /*   this.co_iva_factura = new Ext.form.ComboBox({
                 fieldLabel: 'IVA',
                 store: this.storeCO_IVA_FACTURA,
                 typeAhead: true,
@@ -219,7 +219,7 @@
                 objCMB: this.co_iva_factura,
                 value: this.OBJ.co_iva_factura,
                 objStore: this.storeCO_IVA_FACTURA
-            });
+            });*/
 
            
 
@@ -228,10 +228,10 @@
                 iconCls: 'icon-nuevo',
                 handler: function() {
 
-                    if (proyecto.main.co_iva_factura.getValue() == '') {
+                  /*  if (proyecto.main.co_iva_factura.getValue() == '') {
                         Ext.Msg.alert("Notificación", "Para agregar un producto, debe seleccionar el IVA ");
                         return;
-                    }
+                    }*/
 
                     this.msg = Ext.get('formularioAgregar');
                     this.msg.load({
@@ -263,7 +263,7 @@
                 store: this.store_lista,
                 loadMask: true,
                 height: 300,
-                width: 935,
+                width: 1150,
                 autoScroll: true,
                 tbar: [this.agregar],
                 columns: [
@@ -290,6 +290,13 @@
                         dataIndex: 'co_producto'
                     },
                     {
+                        header: 'co_iva_producto',
+                        hidden: true,
+                        width: 10,
+                        menuDisabled: true,
+                        dataIndex: 'co_iva_producto'
+                    },
+                    {
                         header: 'Codigo',
                         width: 80,
                         menuDisabled: true,
@@ -297,14 +304,14 @@
                     },
                     {
                         header: 'Descripción',
-                        width: 350,
+                        width: 300,
                         menuDisabled: true,
                         dataIndex: 'tx_producto',
                         renderer: textoLargo
                     },
                     {
                         header: 'Especificaciones',
-                        width: 180,
+                        width: 200,
                         menuDisabled: true,
                         dataIndex: 'detalle',
                         renderer: textoLargo
@@ -327,6 +334,27 @@
                         width: 100,
                         menuDisabled: true,
                         dataIndex: 'monto',
+                        renderer: renderMonto
+                    },
+                    {
+                        header: 'IVA',
+                        width: 60,
+                        menuDisabled: true,
+                        dataIndex: 'nu_iva_producto',
+                        renderer: renderMonto
+                    },
+                    {
+                        header: 'Monto IVA',
+                        width: 100,
+                        menuDisabled: true,
+                        dataIndex: 'mo_iva_producto',
+                        renderer: renderMonto
+                    },
+                    {
+                        header: 'Monto Total',
+                        width: 100,
+                        menuDisabled: true,
+                        dataIndex: 'monto_total',
                         renderer: renderMonto
                     }
                 ],
@@ -380,7 +408,7 @@
                     this.monto_compra,
                     this.monto_iva,
                     this.monto_total,
-                    this.co_iva_factura,
+                   // this.co_iva_factura,
                     this.co_ente,
                     this.gridPanel
                 ]
@@ -389,7 +417,7 @@
 
             this.formPanel_ = new Ext.form.FormPanel({
                 //  frame:true,
-                width: 1000,
+                width: 1200,
                 autoHeight: true,
                 autoScroll: true,
                 bodyStyle: 'padding:10px;',
@@ -473,7 +501,7 @@
                 title: 'Proyecto',
                 modal: true,
                 constrain: true,
-                width: 1010,
+                width: 1210,
                 //  frame:true,
                 closabled: true,
                 autoHeight: true,
@@ -509,7 +537,7 @@
             this.tcancelar = 0;
             this.totaliva = 0;
             this.iva = 0;
-            this.iva = proyecto.main.co_iva_factura.getValue();
+            
 
 
             this.monto = paqueteComunJS.funcion.getSumaColumnaGrid({
@@ -517,8 +545,18 @@
                 campo: 'monto'
             });
 
+            this.monto_iva = paqueteComunJS.funcion.getSumaColumnaGrid({
+                store: proyecto.main.store_lista,
+                campo: 'mo_iva_producto'
+            });
 
-            var monto_exento = 0;
+            this.monto_total = paqueteComunJS.funcion.getSumaColumnaGrid({
+                store: proyecto.main.store_lista,
+                campo: 'monto_total'
+            });
+
+
+          /*  var monto_exento = 0;
             proyecto.main.store_lista.each(function(store) {
                 if (store.data.in_exento == true) {
                     monto_exento += store.data.monto
@@ -529,16 +567,12 @@
             this.cancelar = parseFloat(this.monto);
             if (this.monto > 0) {
                 this.totaliva = (parseFloat(this.monto - monto_exento) * parseFloat(this.iva)) / 100;
-            }
+            }*/
 
-            this.tcancelar = parseFloat(this.cancelar) + parseFloat(this.totaliva);
-            this.tcancelar = this.tcancelar.toFixed(2);
-            proyecto.main.monto_compra.setValue(this.cancelar);
-            proyecto.main.monto_iva.setValue(parseFloat(this.totaliva));
-            proyecto.main.monto_total.setValue(parseFloat(this.tcancelar));
-            proyecto.main.displayfieldmonto_compra.setValue("<span style='font-size:12px;'><b>Sub Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(proyecto.main.monto_compra.getValue()) + "</b></span>");
-            proyecto.main.displayfieldmonto_iva.setValue("<span style='font-size:12px;'><b>Iva: </b>" + paqueteComunJS.funcion.getNumeroFormateado(proyecto.main.monto_iva.getValue()) + "</b></span>");
-            proyecto.main.displayfieldmonto_total.setValue("<span style='font-size:18px;'><b>Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(proyecto.main.monto_total.getValue()) + "</b></span>");
+            
+            proyecto.main.displayfieldmonto_compra.setValue("<span style='font-size:12px;'><b>Sub Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto) + "</b></span>");
+            proyecto.main.displayfieldmonto_iva.setValue("<span style='font-size:12px;'><b>Iva: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto_iva) + "</b></span>");
+            proyecto.main.displayfieldmonto_total.setValue("<span style='font-size:12px;'><b>Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto_total) + "</b></span>");
 
 
         },
@@ -579,6 +613,18 @@
                     },
                     {
                         name: 'in_exento'
+                    },
+                    {
+                        name: 'co_iva_producto'
+                    },
+                    {
+                        name: 'nu_iva_producto'
+                    },
+                    {
+                        name: 'mo_iva_producto'
+                    },
+                    {
+                        name: 'monto_total'
                     }
                 ]
             });

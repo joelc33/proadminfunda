@@ -210,6 +210,8 @@ class RequisicionActions extends sfActions
         $tb039_requisicionesForm = $this->getRequestParameter('tb039_requisiciones');
 
         $con = Propel::getConnection();
+        $con->beginTransaction();
+        
         if ($codigo != '' || $codigo != null) {
             $tb039_requisiciones = Tb039RequisicionesPeer::retrieveByPk($codigo);
         } else {
@@ -222,7 +224,7 @@ class RequisicionActions extends sfActions
                 "codigo"              =>  $this->getUser()->getAttribute('codigo')
             );
 
-            $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm);
+            $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm,$con);
 
             if ($resp["success"] == true) {
                 $tb039_requisicionesForm["co_solicitud"]        = $resp["co_solicitud"];
@@ -257,7 +259,7 @@ class RequisicionActions extends sfActions
             }
         }
         try {
-            $con->beginTransaction();
+          
 
             $tb039_requisiciones->setTxConcepto($tb039_requisicionesForm["tx_concepto"]);
             $tb039_requisiciones->setTxObservacion($tb039_requisicionesForm["tx_observacion"]);

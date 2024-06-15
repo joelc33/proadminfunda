@@ -43,6 +43,7 @@ class ContratoActions extends sfActions
   public function executeEditar(sfWebRequest $request)
   {
     //$this->forward('Compras', 'lista');
+
     $codigo =  $this->getRequestParameter("co_solicitud");
     $con = Propel::getConnection();
     $c = new Criteria();
@@ -455,6 +456,7 @@ class ContratoActions extends sfActions
     $correlativo = $total + 1;
 
     $con = Propel::getConnection();
+    $con->beginTransaction();
     if ($codigo != '' || $codigo != null) {
       $tb052_compras = Tb052ComprasPeer::retrieveByPk($codigo);
     } else {
@@ -468,7 +470,7 @@ class ContratoActions extends sfActions
         "codigo"              =>  $this->getUser()->getAttribute('codigo')
       );
 
-      $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm);
+      $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm,$con);
 
      //var_dump($resp); exit();
 
@@ -487,14 +489,7 @@ class ContratoActions extends sfActions
       $tb052_compras->setNumeroCompra($serial);
     }
     try {
-      $con->beginTransaction();
-
-      /*CAMPOS*/
-
-      /*Campo tipo BIGINT */
-
-
-
+     
       if (!empty($co_solicitud_cotizacion)) {
         $tb052_comprasForm["co_requisicion"] = $this->getDatosRequisicion($co_solicitud_cotizacion);
       }

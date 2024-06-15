@@ -518,8 +518,7 @@ class SolicitudActions extends sfActions
 
             if ($estatus == $in_carga_datos) {
 
-                $Tb030Ruta->setObservacion($tx_observacion)
-                    ->setCoEstatusRuta($co_estatus)
+                $Tb030Ruta->setCoEstatusRuta($co_estatus)
                     ->setCoUsuarioActualizo($co_usuario)
                     ->save($con);
 

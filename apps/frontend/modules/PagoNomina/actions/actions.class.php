@@ -327,6 +327,8 @@ class PagoNominaActions extends sfActions
         $tb132_pago_nomina_masivoForm = $this->getRequestParameter('tb132_pago_nomina_masivo');
         
         $con = Propel::getConnection();
+        $con->beginTransaction();
+        
         if ($codigo != '' || $codigo != null) {
             $tb122_pago_nomina = Tb122PagoNominaPeer::retrieveByPk($codigo);
         } else {
@@ -342,7 +344,7 @@ class PagoNominaActions extends sfActions
                 "codigo"              => $this->getUser()->getAttribute('codigo')
             );
 
-            $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm);
+            $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm,$con);
 
             if($resp["success"]==true){
                 $tb132_pago_nomina_masivoForm["co_solicitud"] = $resp["co_solicitud"];
@@ -351,8 +353,7 @@ class PagoNominaActions extends sfActions
         }
         
 
-        try {
-            $con->beginTransaction();
+        try {           
 
             $tb122_pago_nomina->setTxConcepto($tb132_pago_nomina_masivoForm["tx_concepto"]);
 
