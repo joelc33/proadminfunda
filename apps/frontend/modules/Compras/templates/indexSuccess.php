@@ -66,6 +66,11 @@
                 {
                     name: 'in_exento',
                     type: 'string'
+                },
+                {
+                    header: 'in_modificado',
+                    hidden: true,
+                    dataIndex: 'in_modificado'
                 }
             ]);
 
@@ -452,7 +457,7 @@
                 width: 300,
                 allowBlank: false
             });
-            this.storeCO_TIPO_PROCESO.load();         
+            this.storeCO_TIPO_PROCESO.load();
 
             paqueteComunJS.funcion.seleccionarComboByCo({
                 objCMB: this.co_tipo_proceso,
@@ -480,7 +485,7 @@
                         this.msg = Ext.get('formularioAgregar');
                         this.msg.load({
                             url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Cotizacion/buscarPresupuestoBase',
-                            params:{
+                            params: {
                                 co_tipo_solicitud: ComprasEditar.main.co_tipo_proceso.getValue(),
                                 co_tipo_tramite: 1
                             },
@@ -517,7 +522,7 @@
                     this.tx_concepto,
                     this.nu_orden_compra,
                     this.PanelFecha,
-                    this.in_responsabilidad_social,                   
+                    this.in_responsabilidad_social,
                     this.tx_observacion,
                 ]
             });
@@ -584,7 +589,6 @@
                 value: this.OBJ.co_ente,
                 objStore: this.storeCO_ENTE
             });
-
 
 
             this.displayfieldmonto_compra = new Ext.form.DisplayField({
@@ -701,7 +705,7 @@
                     },
                     {
                         header: 'Descripción',
-                        width: 380,
+                        width: 250,
                         menuDisabled: true,
                         dataIndex: 'tx_producto',
                         renderer: textoLargo
@@ -714,17 +718,82 @@
                         renderer: textoLargo
                     },
                     {
-                        header: 'Cantidad',
+                        header: 'Cant.',
                         width: 60,
                         menuDisabled: true,
-                        dataIndex: 'nu_cantidad'
+                        dataIndex: 'nu_cantidad',
+                        editor: new Ext.form.NumberField({
+                            allowBlank: false,
+                            autoCreate: {
+                                tag: "input",
+                                type: "text",
+                                autocomplete: "off",
+                                maxlength: 400
+                            },
+                            listeners: {
+                                change: function(cmb, record, index) {
+                                    var monto = this.getValue() * ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.precio_unitario;
+
+                                    var cantidad = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_cantidad;
+
+                                    if (parseInt(this.getValue()) > parseInt(cantidad)) {
+                                        Ext.Msg.alert("Alerta", "La cantidad ingresada es mayor a la cantidad requerida");
+                                        return false;
+                                    }
+
+                                    var nu_iva_producto = parseFloat(ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_iva_producto);
+                                    var mo_iva = monto * (nu_iva_producto / 100);
+                                    ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.monto = monto;
+                                    ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.mo_iva_producto = mo_iva;
+                                    ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.monto_total = monto + mo_iva;
+                                    ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.in_modificado = true;
+
+                                    ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.monto = monto;
+
+                                    ComprasEditar.main.getTotal();
+                                    //  ComprasEditar.main.getVerificarIVA();
+                                }
+                            }
+                        })
                     },
                     {
                         header: 'Precio Unitario',
                         width: 100,
                         menuDisabled: true,
                         dataIndex: 'precio_unitario',
-                        renderer: renderMonto
+                        renderer: renderMonto,
+                        editor: new Ext.form.NumberField({
+                            allowBlank: false,
+                            autoCreate: {
+                                tag: "input",
+                                type: "text",
+                                autocomplete: "off",
+                                maxlength: 400
+                            },
+                            listeners: {
+                                change: function(cmb, record, index) {
+
+                                    var precio_unitario = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.precio_unitario;
+
+                                    if (parseInt(this.getValue()) > parseInt(precio_unitario)) {
+                                        Ext.Msg.alert("Alerta", "El precio unitario ingresado es mayor al precio el presupuesto base");
+                                        return false;
+                                    }
+
+                                    var monto = this.getValue() * ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_cantidad;
+                                    var nu_iva_producto = parseFloat(ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_iva_producto);
+                                    var mo_iva = monto * (nu_iva_producto / 100);
+                                    ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.monto = monto;
+                                    ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.mo_iva_producto = mo_iva;
+                                    ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.monto_total = monto + mo_iva;
+                                    ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.in_modificado = true;
+
+                                    ComprasEditar.main.getTotal();
+                                    // ComprasEditar.main.getVerificarIVA();
+
+                                }
+                            }
+                        })
                     },
                     {
                         header: 'Monto',
@@ -753,7 +822,12 @@
                         menuDisabled: true,
                         dataIndex: 'monto_total',
                         renderer: renderMonto
-                    }                    
+                    },
+                    {
+                        header: 'in_modificado',
+                        hidden: true,
+                        dataIndex: 'in_modificado'
+                    }
                 ],
                 stripeRows: true,
                 autoScroll: true,
@@ -773,7 +847,9 @@
                 this.store_lista.load({
                     callback: function() {
                         ComprasEditar.main.getTotal();
-                        ComprasEditar.main.getVerificarIVA();
+                        if (ComprasEditar.main.store_lista.getCount() > 0) {
+                            ComprasEditar.main.buscar.disable();
+                        }
                     }
                 });
 
@@ -783,7 +859,7 @@
                 //title: 'Datos de los Materiales',
                 items: [
                     this.fecha_compra,
-                //    this.co_iva_factura,
+                    //    this.co_iva_factura,
                     this.co_ente,
                     this.gridPanel
 
@@ -1051,41 +1127,48 @@
                     },
                     {
                         name: 'monto_total'
+                    },
+                    {
+                        name: 'in_modificado'
                     }
                 ]
             });
             return this.store;
         },
         eliminar: function() {
-            var s = ComprasEditar.main.gridPanel.getSelectionModel().selection;
+            Ext.MessageBox.confirm('Confirmación', '¿Esta seguro que desea eliminar el material?', function(boton) {
+                if (boton == "yes") {
 
-            var co_detalle_compras = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.co_detalle_compras;
+                    var s = ComprasEditar.main.gridPanel.getSelectionModel().selection;
 
-            ComprasEditar.main.gridPanel.getStore().removeAt(ComprasEditar.main.rowIndex);
+                    var co_detalle_compras = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.co_detalle_compras;
 
-            if (co_detalle_compras != '') {
+                    ComprasEditar.main.gridPanel.getStore().removeAt(ComprasEditar.main.rowIndex);
 
-                Ext.Ajax.request({
-                    method: 'POST',
-                    url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/eliminarMaterial',
-                    params: {
-                        co_detalle_compras: co_detalle_compras
-                    },
-                    success: function(result, request) {
-                        //ComprasEditar.main.store_lista.load();
+                    if (co_detalle_compras != '') {
+
+                        Ext.Ajax.request({
+                            method: 'POST',
+                            url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/eliminarMaterial',
+                            params: {
+                                co_detalle_compras: co_detalle_compras
+                            },
+                            success: function(result, request) {
+                                //ComprasEditar.main.store_lista.load();
+                            }
+                        });
+
                     }
-                });
 
-            }
+                    for(var i = 0, r; r = s[i]; i++){                        
+                        ComprasEditar.main.store_lista.remove(r);
+                    }
 
-            /*for(var i = 0, r; r = s[i]; i++){
-                
-                ComprasEditar.main.store_lista.remove(r);
-            }*/
+                    ComprasEditar.main.botonEliminar.disable();
+                    ComprasEditar.main.getTotal();
+                }
+            });
 
-            ComprasEditar.main.botonEliminar.disable();
-            ComprasEditar.main.getTotal();
-            ComprasEditar.main.getVerificarIVA();
         },
         getTotal: function() {
 
@@ -1094,7 +1177,7 @@
             this.tcancelar = 0;
             this.totaliva = 0;
             this.iva = 0;
-            
+
 
 
             this.monto = paqueteComunJS.funcion.getSumaColumnaGrid({
@@ -1113,20 +1196,20 @@
             });
 
 
-          /*  var monto_exento = 0;
-            ComprasEditar.main.store_lista.each(function(store) {
-                if (store.data.in_exento == true) {
-                    monto_exento += store.data.monto
-                }
-            });
+            /*  var monto_exento = 0;
+              ComprasEditar.main.store_lista.each(function(store) {
+                  if (store.data.in_exento == true) {
+                      monto_exento += store.data.monto
+                  }
+              });
 
 
-            this.cancelar = parseFloat(this.monto);
-            if (this.monto > 0) {
-                this.totaliva = (parseFloat(this.monto - monto_exento) * parseFloat(this.iva)) / 100;
-            }*/
+              this.cancelar = parseFloat(this.monto);
+              if (this.monto > 0) {
+                  this.totaliva = (parseFloat(this.monto - monto_exento) * parseFloat(this.iva)) / 100;
+              }*/
 
-            
+
             ComprasEditar.main.displayfieldmonto_compra.setValue("<span style='font-size:12px;'><b>Sub Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto) + "</b></span>");
             ComprasEditar.main.displayfieldmonto_iva.setValue("<span style='font-size:12px;'><b>Iva: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto_iva) + "</b></span>");
             ComprasEditar.main.displayfieldmonto_total.setValue("<span style='font-size:12px;'><b>Total Compra: </b>" + paqueteComunJS.funcion.getNumeroFormateado(this.monto_total) + "</b></span>");

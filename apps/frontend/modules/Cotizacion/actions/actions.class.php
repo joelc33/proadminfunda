@@ -536,6 +536,9 @@ class CotizacionActions extends sfActions
     $c->addJoin(Tb039RequisicionesPeer::CO_REQUISICION, Tb206CotizacionPeer::CO_REQUISICION);
     $c->addJoin(Tb039RequisicionesPeer::CO_ENTE, Tb047EntePeer::CO_ENTE);
     $c->addJoin(Tb206CotizacionPeer::CO_TIPO_COTIZACION, Tb208TipoCotizacionPeer::CO_TIPO_COTIZACION);
+    $c->addJoin(Tb206CotizacionPeer::CO_SOLICITUD, Tb026SolicitudPeer::CO_SOLICITUD);
+    $c->add(Tb026SolicitudPeer::CO_ESTATUS,3);
+    $c->add(Tb206CotizacionPeer::IN_ACTIVO,true);
     $c->add(Tb208TipoCotizacionPeer::CO_TIPO_SOLICITUD, $this->getRequestParameter("co_tipo_solicitud"));
 
     if ($this->getRequestParameter("co_tipo_tramite") == 64) //contrato

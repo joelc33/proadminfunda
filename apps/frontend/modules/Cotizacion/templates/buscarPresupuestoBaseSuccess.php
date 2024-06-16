@@ -143,7 +143,7 @@
                     ComprasEditar.main.store_lista.load({
                         callback: function() {
                             ComprasEditar.main.getTotal();
-                            ComprasEditar.main.getVerificarIVA();
+                            //ComprasEditar.main.getVerificarIVA();
                         }
                     });
 
