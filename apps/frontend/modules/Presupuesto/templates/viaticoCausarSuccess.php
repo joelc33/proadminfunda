@@ -185,13 +185,14 @@
                         ContabilidadEditar.main.co_presupuesto_movimiento = ContabilidadEditar.main.store_lista.getAt(rowIndex).get('co_presupuesto_movimiento');
                         ContabilidadEditar.main.tx_producto = ContabilidadEditar.main.store_lista.getAt(rowIndex).get('tx_producto');
 
-                        if (ContabilidadEditar.main.co_tipo_movimiento == 1 || ContabilidadEditar.main.co_tipo_movimiento == 6) {
-                            ContabilidadEditar.main.causar.enable();
-                            ContabilidadEditar.main.descausar.disable();
-                        } else {
-                            ContabilidadEditar.main.descausar.enable();
-                            ContabilidadEditar.main.causar.disable();
-                        }
+                        ContabilidadEditar.main.causar.enable();
+                        /* if (ContabilidadEditar.main.co_tipo_movimiento == 1 || ContabilidadEditar.main.co_tipo_movimiento == 6) {
+                             ContabilidadEditar.main.causar.enable();
+                             ContabilidadEditar.main.descausar.disable();
+                         } else {
+                             ContabilidadEditar.main.descausar.enable();
+                             ContabilidadEditar.main.causar.disable();
+                         }*/
                     }
                 }
             });
@@ -299,12 +300,11 @@
                         ContabilidadEditar.main.store_lista.load();
                         Ext.Msg.alert("Notificación", obj.msg);
 
-                        solicitudLista.main.store_lista.baseParams.paginar = 'si';
-                        solicitudLista.main.store_lista.baseParams.in_ventanilla = 'true';
-                        solicitudLista.main.store_lista.load();
-                        solicitudLista.main.store_lista.on('load', function() {
-                            solicitudLista.main.estado.disable();
-                            solicitudLista.main.anular.disable();
+                        pendienteEntidadesLista.main.store_lista.baseParams.paginar = 'si';
+                        pendienteEntidadesLista.main.store_lista.load();
+                        pendienteEntidadesLista.main.store_lista.on('load', function() {
+                            pendienteEntidadesLista.main.estado.disable();
+                            pendienteEntidadesLista.main.revision.disable();
                         });
 
                         ContabilidadEditar.main.winformPanel_.close();
@@ -313,6 +313,8 @@
                     } else {
                         Ext.Msg.alert("Notificación", obj.msg);
                     }
+                    ContabilidadEditar.main.winformPanel_.close();
+
                     ContabilidadEditar.main.mascara.hide();
                 }
             });

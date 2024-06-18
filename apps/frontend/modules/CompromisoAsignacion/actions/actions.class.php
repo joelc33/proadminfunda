@@ -241,6 +241,8 @@ class CompromisoAsignacionActions extends sfActions
 
             $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm,$con);
 
+           
+
             if ($resp["success"] == true) {
                 $tb146_compromiso_asignacionForm["co_solicitud"]      = $resp["co_solicitud"];
             } else {
@@ -269,6 +271,7 @@ class CompromisoAsignacionActions extends sfActions
             }
 
             //$tb146_compromiso_asignacion->setNuCancelacion($serial);
+           
         }
         try {
            
@@ -296,6 +299,8 @@ class CompromisoAsignacionActions extends sfActions
                 $tb052_compras->setFechaCompra(date("Y-m-d"));
             }
 
+           
+
 
             $tb052_compras->setTxObservacion($tb146_compromiso_asignacionForm["tx_descripcion"]);
             $tb052_compras->setCoSolicitud($tb146_compromiso_asignacionForm["co_solicitud"]);
@@ -315,7 +320,7 @@ class CompromisoAsignacionActions extends sfActions
 
             foreach ($listaAsignacion  as $asignacionForm) {
 
-                if ($asignacionForm["co_detalle_compras"] == '') {
+                if (empty($asignacionForm["co_detalle_compras"])) {
 
                     $tb053_detalle_compras = new Tb053DetalleCompras();
                     $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
@@ -329,16 +334,11 @@ class CompromisoAsignacionActions extends sfActions
                     $tb053_detalle_compras->setCoAccionEspecifica($asignacionForm["co_accion"]);
                     $tb053_detalle_compras->save($con);
 
-
-                    $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
-                    $tb087_presupuesto_movimiento->setCoPartida($asignacionForm["co_partida"])
-                        ->setCoTipoMovimiento(1)
-                        ->setNuMonto($asignacionForm["monto"])
-                        ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
-                        ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                        ->setCoDetalleCompra($tb053_detalle_compras->getCoDetalleCompras())
-                        ->setInActivo(true)
-                        ->save($con);
+                   
+                    Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $tb053_detalle_compras->getCoPresupuesto(), 1, $tb053_detalle_compras->getMonto(), '', $tb053_detalle_compras->getCoDetalleCompras());
+                   
+                    Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $tb053_detalle_compras->getCoPresupuesto(), 2, $tb053_detalle_compras->getMonto(), '', $tb053_detalle_compras->getCoDetalleCompras());
+                    
                 }
             }
 
@@ -651,25 +651,13 @@ class CompromisoAsignacionActions extends sfActions
             $con->beginTransaction();
             /*CAMPOS*/
             $Tb053DetalleCompra = Tb053DetalleComprasPeer::retrieveByPk($codigo);
+            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $Tb053DetalleCompra->getCoPresupuesto(), 4, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
+            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $Tb053DetalleCompra->getCoPresupuesto(), 13, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
+
             $co_compras = $Tb053DetalleCompra->getCoCompras();
             $montod = $Tb053DetalleCompra->getMonto();
             $co_partida = $Tb053DetalleCompra->getCoPresupuesto();
             $Tb053DetalleCompra->delete($con);
-
-
-           
-            $montod = $montod * (-1);
-
-            $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
-            $tb087_presupuesto_movimiento->setCoPartida($co_partida)
-                ->setCoTipoMovimiento(4)
-                ->setNuMonto($montod)
-                //->setNuAnio(date('Y'))
-                ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
-                ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                ->setCoDetalleCompra($codigo)
-                ->setInActivo(true)
-                ->save($con);
 
 
             $c = new Criteria();

@@ -1087,16 +1087,10 @@ class ComprasActions extends sfActions
 
                 if (empty($tb053_detalle_compras->getCoPresupuesto())) {
 
-                    $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
-                    $tb087_presupuesto_movimiento->setCoPartida($asignacionForm["co_partida"])
-                        ->setCoTipoMovimiento(1)
-                        ->setNuMonto($asignacionForm["monto"])
-                        ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
-                        ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                        ->setCoDetalleCompra($tb053_detalle_compras->getCoDetalleCompras())
-                        ->setInActivo(true)
-                        ->save($con);
+                 
+                    Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_partida"], 1, $asignacionForm["monto"], '', $tb053_detalle_compras->getCoDetalleCompras());
 
+                    Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_partida"], 2, $asignacionForm["monto"], '', $tb053_detalle_compras->getCoDetalleCompras());
 
 
 

@@ -21,7 +21,7 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
     static public function movimientoPartida($con,$co_ejercicio,$co_usuario, $co_presupuesto, $co_tipo_movimiento, $monto, $co_detalle_cotizacion, $co_detalle_compras)
     {
 
-        if($co_tipo_movimiento == 4)
+        if($co_tipo_movimiento == 4 || $co_tipo_movimiento == 13)
         {
             $monto = $monto*(-1);
         }

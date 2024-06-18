@@ -338,12 +338,17 @@ class ViaticoActions extends sfActions
             $montod = $Tb053DetalleCompra->getMonto();
             $co_partida = $Tb053DetalleCompra->getCoPresupuesto();
 
+
+            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $Tb053DetalleCompra->getCoPresupuesto(), 4, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
+            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $Tb053DetalleCompra->getCoPresupuesto(), 13, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
+
+
             $Tb053DetalleCompra->setCoPresupuesto(null);
             $Tb053DetalleCompra->save($con);
 
 
 
-            $montod = $montod * (-1);
+          /*  $montod = $montod * (-1);
 
             $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
             $tb087_presupuesto_movimiento->setCoPartida($co_partida)
@@ -355,6 +360,7 @@ class ViaticoActions extends sfActions
                 ->setCoDetalleCompra($codigo)
                 ->setInActivo(true)
                 ->save($con);
+            */
 
 
             $c = new Criteria();
