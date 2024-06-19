@@ -957,7 +957,7 @@ class CuentaBancariaActions extends sfActions
                                 //modelo fk tb010_banco.CO_BANCO
     public function executeStorefkcobanco(sfWebRequest $request){
         $c = new Criteria();
-        $c->add(Tb010BancoPeer::IN_ENTE,true);
+       // $c->add(Tb010BancoPeer::IN_ENTE,true);
         $c->addAscendingOrderByColumn(Tb010BancoPeer::CO_BANCO);
         $stmt = Tb010BancoPeer::doSelectStmt($c);
         $registros = array();
