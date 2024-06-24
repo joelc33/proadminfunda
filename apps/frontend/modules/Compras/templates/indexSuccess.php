@@ -487,7 +487,7 @@
                             url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Cotizacion/buscarPresupuestoBase',
                             params: {
                                 co_tipo_solicitud: ComprasEditar.main.co_tipo_proceso.getValue(),
-                                co_tipo_tramite: 1
+                                co_tipo_tramite: ComprasEditar.main.co_tipo_proceso.getValue()
                             },
                             scripts: true,
                             text: "Cargando.."

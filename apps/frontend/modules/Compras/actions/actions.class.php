@@ -1214,7 +1214,7 @@ class ComprasActions extends sfActions
             $tb052_compras = new Tb052Compras();
 
             $tb026_solicitudForm = array(
-                "co_tipo_solicitud"   => 1,
+                "co_tipo_solicitud"   => $tb052_comprasForm["co_tipo_solicitud"],
                 "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
                 "fe_solicitud"        => date("d/m/Y"),
                 "observacion"         => $tb052_comprasForm["tx_observacion"],
