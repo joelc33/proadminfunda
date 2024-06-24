@@ -668,8 +668,9 @@ class IngresoFinancieroActions extends sfActions
     //modelo fk tb010_banco.CO_BANCO
     public function executeStorefkidtb010banco(sfWebRequest $request)
     {
-        $c = new Criteria();
-        $c->add(Tb010BancoPeer::IN_ENTE,true);
+        $c = new Criteria(); 
+        $c->setDistinct();
+        $c->addJoin(Tb010BancoPeer::CO_BANCO,Tb011CuentaBancariaPeer::CO_BANCO);
         $stmt = Tb010BancoPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
