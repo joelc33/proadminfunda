@@ -1244,7 +1244,7 @@ class ComprasActions extends sfActions
             if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
                 $serial = date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
             } else {
-                $serial =  date("Ym") . '-' . Tb137ControlSerialPeer::getSerial(11, $con, $this->getUser()->getAttribute('ejercicio'));
+                $serial =  date("Ym") . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
             }
 
             $tb052_compras->setNumeroCompra($serial);
