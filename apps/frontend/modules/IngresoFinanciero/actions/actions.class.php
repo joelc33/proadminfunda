@@ -669,6 +669,7 @@ class IngresoFinancieroActions extends sfActions
     public function executeStorefkidtb010banco(sfWebRequest $request)
     {
         $c = new Criteria();
+        $c->add(Tb010BancoPeer::IN_ENTE,true);
         $stmt = Tb010BancoPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
