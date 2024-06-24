@@ -385,7 +385,7 @@
 				title: 'Formulario: Transcripcion de Movimientos',
 				modal: true,
 				constrain: true,
-				width: 714,
+				width: 714, 
 				frame: true,
 				closabled: true,
 				autoHeight: true,

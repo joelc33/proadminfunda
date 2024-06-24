@@ -77,7 +77,7 @@
             this.estado = new Ext.Button({
                 text: 'Enviar Tramite',
                 iconCls: 'icon-volver',
-                handler: function() {
+                handler: function() { 
 
                     /* */
                     Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar este tramite?', function(boton) {

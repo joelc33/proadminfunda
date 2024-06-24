@@ -184,7 +184,7 @@ getLista: function(){
     {name: 'mo_transaccion'},
     {name: 'fe_transaccion'},
     {name: 'mo_saldo_nuevo'},
-    {name: 'de_observacion'},
+    {name: 'de_observacion'}, 
     {name: 'id_tb010_banco'},
     {name: 'id_tb154_tipo_cuenta_movimiento'},
     {name: 'id_tb153_tipo_documento_cuenta'},

@@ -37,7 +37,7 @@ class IngresoFinancieroActions extends sfActions
     }
 
     public function executeEditar(sfWebRequest $request)
-    {
+    { 
         $codigo = $this->getRequestParameter("co_solicitud");
         if ($codigo != '' || $codigo != null) {
             $c = new Criteria();
