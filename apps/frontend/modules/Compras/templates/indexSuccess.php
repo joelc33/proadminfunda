@@ -520,7 +520,7 @@
                 title: 'Datos de la Orden de Compra',
                 items: [
                     this.tx_concepto,
-                    this.nu_orden_compra,
+                   // this.nu_orden_compra,
                     this.PanelFecha,
                     this.in_responsabilidad_social,
                     this.tx_observacion,

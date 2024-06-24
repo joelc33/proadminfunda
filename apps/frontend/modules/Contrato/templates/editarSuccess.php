@@ -525,7 +525,7 @@
                     this.tx_concepto,
                     //this.tx_observacion,
                     //   this.co_tp_contrato,
-                    this.nu_orden_compra,
+                   // this.nu_orden_compra,
                     this.PanelFecha,
                     this.in_responsabilidad_social,
                     this.monto_contrato,
