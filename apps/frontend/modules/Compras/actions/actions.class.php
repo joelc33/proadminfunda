@@ -1946,10 +1946,7 @@ class ComprasActions extends sfActions
             $listaProducto  = json_decode($json_producto, true);
             $array_producto = array();
             $i = 0;
-            foreach ($listaProducto  as $productoForm) {
-                $array_producto[$i] = $productoForm["co_detalle_requisicion"];
-                $i++;
-            }
+            
 
             $c = new Criteria();
             $c->clearSelectColumns();
@@ -1964,7 +1961,7 @@ class ComprasActions extends sfActions
             $c->addSelectColumn(Tb057UnidadProductoPeer::TX_UNIDAD_PRODUCTO);
             $c->addJoin(Tb051DetalleRequisionProductoPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO);
             $c->addJoin(Tb051DetalleRequisionProductoPeer::CO_UNIDAD_PRODUCTO, Tb057UnidadProductoPeer::CO_UNIDAD_PRODUCTO);
-            $c->add(Tb051DetalleRequisionProductoPeer::CO_DETALLE_REQUISICION, $array_producto,  Criteria::NOT_IN);
+           // $c->add(Tb051DetalleRequisionProductoPeer::CO_DETALLE_REQUISICION, $array_producto,  Criteria::NOT_IN);
             $c->add(Tb048ProductoPeer::IN_VER, true);
             $c->add(Tb051DetalleRequisionProductoPeer::CO_REQUISICION, $co_requisicion);
 
@@ -1979,9 +1976,19 @@ class ComprasActions extends sfActions
             $registros = array();
             while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-                $reg["tx_producto"] = $reg["tx_producto"];
+               // $reg["tx_producto"] = $reg["tx_producto"];
 
-                $registros[] = $reg;
+                $cant = $reg["nu_cantidad"];                
+                foreach ($listaProducto  as $productoForm) {
+                    if($reg["co_detalle_requisicion"] == $productoForm["co_detalle_requisicion"]){
+                        $cant-= $productoForm["nu_cantidad"];
+                    }
+                }
+
+                if($cant>0){
+                    $reg["nu_cantidad"] = $cant;
+                    $registros[] = $reg;
+                }
             }
 
             $this->data = json_encode(array(
