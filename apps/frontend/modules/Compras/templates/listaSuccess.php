@@ -27,7 +27,7 @@
              * <Form Principal que carga el Filtro>
              */
             this.formFiltroPrincipal = new Ext.form.FormPanel({
-                title: 'Buscar Ordenes de Compras',
+                title: 'Buscar Ordenes de Compras / Servicios',
                 iconCls: 'icon-solpendiente',
                 collapsible: true,
                 titleCollapse: true,
@@ -99,7 +99,7 @@
             });
 
             this.nueva_solicitud = new Ext.Button({
-                text: 'Nueva Compra',
+                text: 'Nuevo',
                 iconCls: 'icon-nuevo',
                 handler: function() {
                     //                                contribuyenteLista.main.mascara.show();
@@ -113,7 +113,7 @@
             });
 
             this.anular = new Ext.Button({
-                text: 'Anular Compra',
+                text: 'Anular',
                 iconCls: 'icon-anteriores',
                 handler: function() {
 
@@ -184,7 +184,7 @@
             }
 
             this.gridPanel_ = new Ext.grid.GridPanel({
-                title: 'Lista de Ordenes de Compras',
+                title: 'Lista de Ordenes de Compras / Servicios',
                 iconCls: 'icon-libro',
                 store: this.store_lista,
                 loadMask: true,
@@ -222,6 +222,12 @@
                         width: 300,
                         menuDisabled: true,
                         dataIndex: 'tx_razon_social'
+                    },
+                    {
+                        header: 'Tipo de Proceso',
+                        width: 150,
+                        menuDisabled: true,
+                        dataIndex: 'tx_tipo_solicitud'
                     },
                     {
                         header: 'Concepto',

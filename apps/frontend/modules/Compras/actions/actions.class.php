@@ -166,7 +166,7 @@ class ComprasActions extends sfActions
                 "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
                 "fe_registro"        => "",
                 "co_documento"       => $campos_proveedor["co_documento"],
-                "nu_compra"          => $nu_compra,
+                "nu_compra"          => 'Por Asignar',
                 "co_usuario"         => "",
                 "co_proyecto"        => "",
                 "co_accion"          => "",
@@ -1681,6 +1681,7 @@ class ComprasActions extends sfActions
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
         $c->addSelectColumn(Tb030RutaPeer::TX_RUTA_REPORTE);
+        
 
         // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR,   Criteria::LEFT_JOIN);
