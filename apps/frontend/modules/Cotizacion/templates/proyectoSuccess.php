@@ -110,11 +110,8 @@
                 }
             ]);
 
-            this.tx_serial_cotizacion = new Ext.form.TextField({
-                fieldLabel: 'Código',
+            this.tx_serial_cotizacion = new Ext.form.Hidden({               
                 name: 'tb206_cotizacion[tx_serial_cotizacion]',
-                allowBlank: false,
-                width: 120,
                 value: this.OBJ.tx_serial_cotizacion
             });
 

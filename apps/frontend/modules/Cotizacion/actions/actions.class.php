@@ -42,6 +42,8 @@ class CotizacionActions extends sfActions
     $requisicion = $this->getRequisicion($this->getRequestParameter("co_solicitud"));
     $this->co_requisicion = $requisicion["co_requisicion"];
 
+  
+
     if (!empty($campos["co_cotizacion"])) {
 
       $this->data = json_encode(array(
@@ -60,6 +62,8 @@ class CotizacionActions extends sfActions
         "co_tipo_cotizacion"   => $campos["co_tipo_cotizacion"],
         "co_iva_factura"       => round($campos["nu_iva"], 0),
       ));
+
+      
     } else {
 
       $c = new Criteria();
@@ -79,7 +83,7 @@ class CotizacionActions extends sfActions
         "co_ente"              => "",
         "co_iva_factura"       => "",
         "numero_cotizacion"    => "",
-        "tx_observacion"       => "",
+        "tx_observacion"       => $campos["tx_concepto"],
         "tx_serial_cotizacion" => ""
       ));
     }
@@ -114,7 +118,7 @@ class CotizacionActions extends sfActions
         "tx_observacion"     => "",
       ));
     }
-  }
+  } 
 
   public function executeStorelistamateriales(sfWebRequest $request)
   {
@@ -204,7 +208,7 @@ class CotizacionActions extends sfActions
       $tb206_cotizacion->setMontoIva($tb206_cotizacionForm["monto_iva"]);
       $tb206_cotizacion->setMontoSubTotal($tb206_cotizacionForm["monto_compra"]);
       $tb206_cotizacion->setMontoTotal($tb206_cotizacionForm["monto_total"]);
-      $tb206_cotizacion->setTxSerialCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
+      $tb206_cotizacion->setTxSerialCotizacion($serial);
       $tb206_cotizacion->setCoTipoCotizacion($tb206_cotizacionForm["co_tipo_cotizacion"]);
       $tb206_cotizacion->setCoModalidad($tb206_cotizacionForm["co_tipo_modalidad"]);
       $tb206_cotizacion->setInActivo(true);
