@@ -187,7 +187,7 @@ class CotizacionActions extends sfActions
       $tb206_cotizacion    = Tb206CotizacionPeer::retrieveByPk($codigo);
     } else {
       $tb206_cotizacion = new Tb206Cotizacion();
-      $serial = 'PB-' . date("Ym") . '-' . Tb137ControlSerialPeer::getSerial(3, $con, $this->getUser()->getAttribute('ejercicio'));
+      $serial = 'PB-' . date("Ym") . '-' . Tb137ControlSerialPeer::getSerial(13, $con, $this->getUser()->getAttribute('ejercicio'));
     }
     $tb206_cotizacion->setNumeroCotizacion($serial);
 
@@ -209,6 +209,7 @@ class CotizacionActions extends sfActions
       $tb206_cotizacion->setMontoSubTotal($tb206_cotizacionForm["monto_compra"]);
       $tb206_cotizacion->setMontoTotal($tb206_cotizacionForm["monto_total"]);
       $tb206_cotizacion->setTxSerialCotizacion($serial);
+      $tb206_cotizacion->setNumeroCotizacion($serial);
       $tb206_cotizacion->setCoTipoCotizacion($tb206_cotizacionForm["co_tipo_cotizacion"]);
       $tb206_cotizacion->setCoModalidad($tb206_cotizacionForm["co_tipo_modalidad"]);
       $tb206_cotizacion->setInActivo(true);
