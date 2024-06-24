@@ -58,6 +58,7 @@ this.tx_tipo  = new Ext.form.ComboBox({
     fieldLabel:'Tipo',
     hiddenName:'tb024_cuenta_contable[tx_tipo]',
     width:150,
+    allowBlank:false,
     value: this.OBJ.tx_tipo,
     store: new Ext.data.ArrayStore({
         id: 0,
@@ -134,11 +135,11 @@ this.formPanel_ = new Ext.form.FormPanel({
     autoScroll:true,
    // bodyStyle:'padding:10px;',
     items:[         this.co_cuenta_contable,
-                    this.tx_prefijo,
+//                    this.tx_prefijo,
                     this.tx_codigo_cuenta,
                     this.tx_descripcion,
-                    this.nu_cuenta_contable,
-                    this.nivel,
+//                    this.nu_cuenta_contable,
+//                    this.nivel,
                     this.tx_tipo
             ]
 });

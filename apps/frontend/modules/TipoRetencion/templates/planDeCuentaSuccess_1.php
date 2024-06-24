@@ -5,7 +5,7 @@ init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'<?php echo $data ?>'});
 this.store_lista = this.getLista();
-this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
+
 //Agregar un registro
 this.nuevo = new Ext.Button({
     text:'Crear Cuenta',
@@ -50,7 +50,7 @@ this.secundaria = new Ext.Button({
     handler:function(){
         this.msg = Ext.get('formulario');
         this.msg.load({
-         url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/CuentaContable/verCuenta',
+         url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/TipoRetencion/verCuentaAgregar',
          scripts: true,
          text: "Cargando..",
          params:{
@@ -63,26 +63,6 @@ this.secundaria = new Ext.Button({
     }
 });
 
-//filtro
-this.filtro = new Ext.Button({
-    text:'Filtro',
-    iconCls: 'icon-buscar',
-    handler:function(){
-        this.msg = Ext.get('filtroCuentaContable');
-        CuentaContable.main.mascara.show();
-        CuentaContable.main.filtro.setDisabled(true);
-        this.msg.load({
-             url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CuentaContable/filtro',
-             scripts: true
-        });
-    }
-});
-
-this.excel = new Ext.Button({
-    text:'Exportar a Excel',
-    iconCls:'icon-libro',
-    handler: this.onExportar
-});
 
 //Grid principal
 this.gridPanel_ = new Ext.grid.GridPanel({
@@ -93,12 +73,13 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 //    frame:true,
     height:420,
     tbar:[
-        this.nuevo,'-',this.editar,'-',this.filtro,'-',this.excel
+        //this.nuevo,'-',this.editar,'-',
+        this.secundaria
     ],
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'co_cuenta_contable',hidden:true, menuDisabled:true,dataIndex: 'co_cuenta_contable'},
-    {header: 'Cuenta', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_cuenta'},
+    {header: 'Cuenta', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_cuenta'},
     {header: 'Denominación', width:700,  menuDisabled:true, sortable: true,  dataIndex: 'tx_descripcion'},
     {header: 'Nivel', width:60,  menuDisabled:true, sortable: true,  dataIndex: 'nu_nivel'},
     {header: 'Tipo', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo'},
@@ -108,21 +89,11 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     stateful: true,
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
         
-//        var co_tipo = PlandecuentaLista.main.gridPanel_.getSelectionModel().getSelected().get('co_tipo');
-//        
-//        if(co_tipo == 4){
-//             PlandecuentaLista.main.secundaria.disable();
-//        }else{
-//             PlandecuentaLista.main.secundaria.enable();
-//        }
-//            
-//        PlandecuentaLista.main.editar.enable();       
-//        PlandecuentaLista.main.eliminar.enable();
     },
     celldblclick:function(Grid, rowIndex, columnIndex,e ){
         this.msg = Ext.get('formulario');
         this.msg.load({
-         url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/CuentaContable/verCuentaAgregar',
+         url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/TipoRetencion/verCuentaAgregar',
          scripts: true,
          text: "Cargando..",
          params:{
@@ -153,8 +124,33 @@ this.salir = new Ext.Button({
     }
 });
 
-this.gridPanel_.render("contenedor");
+this.formPanel_ = new Ext.form.FormPanel({
+    frame:true,
+    width:1100,
+    autoHeight:true,  
+    autoScroll:true,
+    bodyStyle:'padding:10px;',
+    items:[this.gridPanel_]
+});
 
+this.winformPanel_ = new Ext.Window({
+    title:'Asignación de Cuenta Bancaria',
+    modal:true,
+    constrain:true,
+    width:1100,
+    frame:true,
+    closabled:true,
+    autoHeight:true,
+    items:[
+        this.formPanel_
+    ],
+    buttons:[
+        this.salir
+    ],
+    buttonAlign:'center'
+});
+this.winformPanel_.show();
+TipoRetencionLista.main.mascara.hide();
 },
 getLista: function(){
     this.store = new Ext.data.JsonStore({
@@ -171,15 +167,9 @@ getLista: function(){
     });
     return this.store;
 }
-,onExportar : function() {
-
-    
-   window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/plan_cuenta_XLS.php');
-}
 };
 Ext.onReady(CuentaContable.main.init, CuentaContable.main);
 </script>
 <div id="formularioPlandecuenta"></div>
 <div id="contenedor"></div>
 <div id="formulario"></div>
-<div id="filtroCuentaContable"></div>

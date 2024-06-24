@@ -275,28 +275,14 @@ class CuentaContableActions extends sfActions
       
      $con = Propel::getConnection();
      if($codigo!=''||$codigo!=null){
-         $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPk($codigo);
-     }else{
-         $tb024_cuenta_contable = new Tb024CuentaContable();
-         
-         $tx_cuenta = $tb024_cuenta_contableForm["tx_prefijo"].$tb024_cuenta_contableForm["tx_codigo_cuenta"];
     
-         $tb024_cuenta_contable->setTxCuenta($tx_cuenta)
-                              ->setTxCodigoCuenta($tb024_cuenta_contableForm["tx_codigo_cuenta"])
-                              ->setNuNivel($tb024_cuenta_contableForm["nu_nivel"])
-                              ->save($con);
-     }
-     try
+      try
       { 
         $con->beginTransaction();
-       //  $tx_cuenta = str_replace(".","",$nu_cuenta_contable);
-
-        $tb024_cuenta_contable->setTxTipo($tb024_cuenta_contableForm["tx_tipo"])
-                              ->setTxDescripcion(strtoupper($tb024_cuenta_contableForm["tx_descripcion"]))
-                              ->save($con);
-                                
-      
-        $tb024_cuenta_contable->save($con);
+         $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPk($codigo);
+         $tb024_cuenta_contable->setTxTipo($tb024_cuenta_contableForm["tx_tipo"]);
+         $tb024_cuenta_contable->setTxDescripcion(strtoupper($tb024_cuenta_contableForm["tx_descripcion"]));
+         $tb024_cuenta_contable->save($con);
         
         $this->data = json_encode(array(
                     "success" => true,
@@ -310,7 +296,115 @@ class CuentaContableActions extends sfActions
             "success" => false,
             "msg" =>  $e->getMessage()
         ));
-      }
+      }        
+         
+         
+     }else{
+         $tb024_cuenta_contable = new Tb024CuentaContable();
+     try
+      { 
+        $con->beginTransaction();
+        
+        $cant = strlen(trim($tb024_cuenta_contableForm["tx_codigo_cuenta"]));
+        
+        $c = new Criteria();
+        $c->add(Tb024CuentaContablePeer::TX_CODIGO_CUENTA,$tb024_cuenta_contableForm["tx_codigo_cuenta"]);
+        $stmt = Tb024CuentaContablePeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($campos["co_cuenta_contable"]!=''||$campos["co_cuenta_contable"]!=null){
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'El Numero de la cuenta contable ya existe'
+                ));
+                echo $this->data;
+                return sfView::NONE;              
+        }
+        
+        if($cant==1){
+            $nu_nivel = 1;
+
+        }else{
+            if($cant==3){
+             $nu_nivel = 2;  
+             $tx_nivel_anterior = substr($tb024_cuenta_contableForm["tx_codigo_cuenta"],0,1);
+
+            }else{
+            if($cant==5){
+             $nu_nivel = 3; 
+             $tx_nivel_anterior = substr($tb024_cuenta_contableForm["tx_codigo_cuenta"],0,3);
+            }else{
+            if($cant==7){
+             $nu_nivel = 4;
+             $tx_nivel_anterior = substr($tb024_cuenta_contableForm["tx_codigo_cuenta"],0,5);
+            }else{
+            if($cant==9){
+             $nu_nivel = 5;   
+             $tx_nivel_anterior = substr($tb024_cuenta_contableForm["tx_codigo_cuenta"],0,7);
+            }else{ 
+            if($cant==14){
+             $nu_nivel = 6;   
+             $tx_nivel_anterior = substr($tb024_cuenta_contableForm["tx_codigo_cuenta"],0,9);
+            }else{
+            if($cant==16){
+             $nu_nivel = 7;   
+             $tx_nivel_anterior = substr($tb024_cuenta_contableForm["tx_codigo_cuenta"],0,14);
+            }else{
+            if($cant==18){
+             $nu_nivel = 8;  
+             $tx_nivel_anterior = substr($tb024_cuenta_contableForm["tx_codigo_cuenta"],0,16);
+            }else{
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'El Numero de la cuenta contable es invalida'
+                ));
+                echo $this->data;
+                return sfView::NONE;    
+            }                
+            }               
+            }                
+            }               
+            }                
+            }                
+            }           
+        }
+        
+        $c1 = new Criteria();
+        $c1->add(Tb024CuentaContablePeer::TX_CODIGO_CUENTA,$tx_nivel_anterior);
+        $stmt1 = Tb024CuentaContablePeer::doSelectStmt($c1);
+        $campos1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+        if($campos1["co_cuenta_contable"]==''||$campos1["co_cuenta_contable"]==null){
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'EL nivel anterior no existe, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;              
+        }     
+        $tb024_cuenta_contable->setTxCodigoCuenta($tb024_cuenta_contableForm["tx_codigo_cuenta"])
+                              ->setNuCuentaContable($tb024_cuenta_contableForm["tx_codigo_cuenta"])
+                              ->setTxTipo($tb024_cuenta_contableForm["tx_tipo"])
+                              ->setTxDescripcion(strtoupper($tb024_cuenta_contableForm["tx_descripcion"]))
+                              ->setMoDisponible(0)
+                              ->setNuNivel($nu_nivel)
+                              ->save($con);
+                              
+        
+        $this->data = json_encode(array(
+                    "success" => true,
+                    "msg" => 'Modificación realizada exitosamente'
+                ));
+        $con->commit();
+      }catch (PropelException $e)
+      {
+        $con->rollback();
+        $this->data = json_encode(array(
+            "success" => false,
+            "msg" =>  $e->getMessage()
+        ));
+      }    
+
+     }
+
   }
   
   public function executeEditar(sfWebRequest $request)
@@ -332,7 +426,7 @@ class CuentaContableActions extends sfActions
           
         $this->data = json_encode(array(
                 "co_cuenta_contable"         => $co_cuenta_contable,
-                "tx_codigo_cuenta"           => $campos["tx_cuenta"],
+                "tx_codigo_cuenta"           => $campos["tx_codigo_cuenta"],
                 "nu_cuenta_contable"         => $campos["nu_cuenta_contable"],
                 "tx_descripcion"             => $campos["tx_descripcion"],
                 "tx_tipo"                    => $campos["tx_tipo"],
@@ -356,13 +450,13 @@ class CuentaContableActions extends sfActions
         }
         
         $this->data = json_encode(array(
-                            "co_partida_presupuestaria"  => "",
-                            "tx_codigo_cuenta"           => $cantidad,
+                            "co_cuenta_contable"         => "",
+                            "tx_codigo_cuenta"           => "",
                             "nu_cuenta_contable"         => "",
                             "tx_descripcion"             => "",
                             "tx_tipo"                    => "",
-                            "nivel"                      => $nivel+1,
-                            "tx_prefijo"                 => $tx_cuenta
+                            "nivel"                      => "",
+                            "tx_prefijo"                 => ""
                     ));
     }
 
@@ -452,7 +546,7 @@ class CuentaContableActions extends sfActions
         $c = new Criteria();
 
     if($this->getRequestParameter("BuscarBy")=="true"){
-        if($nu_cuenta_contable!=""){$c->add(Tb024CuentaContablePeer::NU_CUENTA_CONTABLE,'%'.$nu_cuenta_contable.'%',Criteria::ILIKE);}
+        if($nu_cuenta_contable!=""){$c->add(Tb024CuentaContablePeer::NU_CUENTA_CONTABLE,$nu_cuenta_contable.'%',Criteria::ILIKE);}
         if($tx_descripcion!=""){$c->add(Tb024CuentaContablePeer::TX_DESCRIPCION,'%'.$tx_descripcion.'%',Criteria::ILIKE);}
         if($nu_nivel!=""){$c->add(Tb024CuentaContablePeer::NU_NIVEL,$nu_nivel);}
     }        
@@ -462,8 +556,8 @@ class CuentaContableActions extends sfActions
 
         $c->setLimit($limit)->setOffset($start);
         //$c->add(Tb024CuentaContablePeer::NU_NIVEL, 1);
-        $c->addAscendingOrderByColumn(Tb024CuentaContablePeer::NU_NIVEL);
-        $c->addAscendingOrderByColumn(Tb024CuentaContablePeer::CO_CUENTA_CONTABLE);
+        $c->addAscendingOrderByColumn(Tb024CuentaContablePeer::NU_CUENTA_CONTABLE);
+//        $c->addAscendingOrderByColumn(Tb024CuentaContablePeer::CO_CUENTA_CONTABLE);
 
         $stmt = Tb024CuentaContablePeer::doSelectStmt($c);
         $registros = "";

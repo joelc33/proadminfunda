@@ -46,19 +46,103 @@ class TipoRetencionActions extends sfActions
   {
          $this->data = json_encode(array(
                 "ejercicio"        => $this->getUser()->getAttribute('ejercicio'),
-                "co_tipo_retencion" => $this->getRequestParameter("co_tipo_retencion")
+                "co_tipo_retencion" => $this->getRequestParameter("co_tipo_retencion"),
+                "co_clase_retencion" => $this->getRequestParameter("co_clase_retencion")
          ));
   }
   
   public function executeAsignarCuenta(sfWebRequest $request)
   {
         $co_tipo_retencion   = $this->getRequestParameter("co_tipo_retencion");
-        $co_cuenta_contable = $this->getRequestParameter("co_cuenta_contable");
+        $co_clase_retencion = $this->getRequestParameter("co_clase_retencion");
+        $tx_codigo_cuenta = $this->getRequestParameter("tx_codigo_cuenta");
+        
         $con = Propel::getConnection();
+        
+        $tx_nivel_anterior = substr($tx_codigo_cuenta,0,7);
+        
+        $cant = strlen(trim($tx_codigo_cuenta));
+        
+        $c1 = new Criteria();
+        $c1->add(Tb072ClaseRetencionPeer::CO_CLASE_RETENCION,$co_clase_retencion);
+        $stmt1 = Tb072ClaseRetencionPeer::doSelectStmt($c1);
+        $campos1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+        if($campos1["raiz_contable"]==''||$campos1["raiz_contable"]==null){
+            $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'Debe ir al modulo clase de retencion y asignar la raiz contable'
+                ));
+                echo $this->data;
+                return sfView::NONE;   
+        }else{
+            
+            if($tx_nivel_anterior!=$campos1["raiz_contable"]){
+            $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'La raiz contable no corresponde para esa retencion'
+                ));
+                echo $this->data;
+                return sfView::NONE;                 
+            }
+            
+        }        
+        
+        if($cant==14){
+            
+        $c = new Criteria();
+        $c->add(Tb024CuentaContablePeer::TX_CODIGO_CUENTA,$tx_codigo_cuenta);
+        $stmt = Tb024CuentaContablePeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($campos["co_cuenta_contable"]!=''||$campos["co_cuenta_contable"]!=null){
+            
+        if($campos["tx_tipo"]=='N'){
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'la cuenta contable no acepta movimiento, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;              
+        }else{
+            $co_cuenta_contable = $campos["co_cuenta_contable"];
+        }                       
+        }else{
+
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'la cuenta contable no existe, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;               
+        
+        }           
+            
+        }else{
+             $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'La cuenta contable es invalida'
+                ));
+                echo $this->data;
+                return sfView::NONE;             
+        }
+        
+
+        
+        $c2 = new Criteria();
+        $c2->add(Tb041TipoRetencionPeer::CO_CUENTA_CONTABLE,$co_cuenta_contable);
+        $stmt2 = Tb041TipoRetencionPeer::doSelectStmt($c2);
+        $campos2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+        if($campos2["co_tipo_retencion"]!=''||$campos2["co_tipo_retencion"]!=null){
+            $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'La cuenta contable ya fue asignada a otra retencion, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;                 
+        }        
         
         $tb041_tipo_retencion = Tb041TipoRetencionPeer::retrieveByPK($co_tipo_retencion);
         $tb041_tipo_retencion->setCoCuentaContable($co_cuenta_contable)
-                             ->save();
+                             ->save($con);
         
                
         $this->data = json_encode(array(
@@ -110,10 +194,95 @@ class TipoRetencionActions extends sfActions
         $con->beginTransaction();
        
         $tb041_tipo_retencionForm = $this->getRequestParameter('tb041_tipo_retencion');
+        $co_clase_retencion = $tb041_tipo_retencionForm["co_clase_retencion"];
+        $tx_codigo_cuenta = $this->getRequestParameter("tx_codigo_cuenta");
 /*CAMPOS*/
-                                        
+        
+        $tx_nivel_anterior = substr($tx_codigo_cuenta,0,7);
+        
+        $cant = strlen(trim($tx_codigo_cuenta));
+        
+        $c1 = new Criteria();
+        $c1->add(Tb072ClaseRetencionPeer::CO_CLASE_RETENCION,$co_clase_retencion);
+        $stmt1 = Tb072ClaseRetencionPeer::doSelectStmt($c1);
+        $campos1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+        if($campos1["raiz_contable"]==''||$campos1["raiz_contable"]==null){
+            $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'Debe ir al modulo clase de retencion y asignar la raiz contable'
+                ));
+                echo $this->data;
+                return sfView::NONE;   
+        }else{
+            
+            if($tx_nivel_anterior!=$campos1["raiz_contable"]){
+            $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'La raiz contable no corresponde para esa retencion'
+                ));
+                echo $this->data;
+                return sfView::NONE;                 
+            }
+            
+        }        
+        
+        if($cant==14){
+            
+        $c = new Criteria();
+        $c->add(Tb024CuentaContablePeer::TX_CODIGO_CUENTA,$tx_codigo_cuenta);
+        $stmt = Tb024CuentaContablePeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($campos["co_cuenta_contable"]!=''||$campos["co_cuenta_contable"]!=null){
+            
+        if($campos["tx_tipo"]=='N'){
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'la cuenta contable no acepta movimiento, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;              
+        }else{
+            $co_cuenta_contable = $campos["co_cuenta_contable"];
+        }                       
+        }else{
+
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'la cuenta contable no existe, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;               
+        
+        }           
+            
+        }else{
+             $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'La cuenta contable es invalida'
+                ));
+                echo $this->data;
+                return sfView::NONE;             
+        }
+        
+
+        
+        $c2 = new Criteria();
+        $c2->add(Tb041TipoRetencionPeer::CO_CUENTA_CONTABLE,$co_cuenta_contable);
+        $stmt2 = Tb041TipoRetencionPeer::doSelectStmt($c2);
+        $campos2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+        if($campos2["co_tipo_retencion"]!=''||$campos2["co_tipo_retencion"]!=null){
+            $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'La cuenta contable ya fue asignada a otra retencion, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;                 
+        }        
+        
         /*Campo tipo VARCHAR */
         $tb041_tipo_retencion->setTxTipoRetencion($tb041_tipo_retencionForm["tx_tipo_retencion"]);
+        
+        $tb041_tipo_retencion->setCoCuentaContable($co_cuenta_contable);
         
         $tb041_tipo_retencion->setCoClaseRetencion($tb041_tipo_retencionForm["co_clase_retencion"]);
                                 
@@ -133,6 +302,7 @@ class TipoRetencionActions extends sfActions
         ));
       }
     }
+    
   
      public function executeCambiarEstado(sfWebRequest $request)
     {
@@ -215,6 +385,7 @@ class TipoRetencionActions extends sfActions
     $c->addSelectColumn(Tb041TipoRetencionPeer::CO_TIPO_RETENCION);
     $c->addSelectColumn(Tb041TipoRetencionPeer::TX_TIPO_RETENCION);
     $c->addSelectColumn(Tb041TipoRetencionPeer::IN_ACTIVO);
+    $c->addSelectColumn(Tb072ClaseRetencionPeer::CO_CLASE_RETENCION);
     $c->addSelectColumn(Tb072ClaseRetencionPeer::TX_CLASE_RETENCION);
     $c->addSelectColumn(Tb024CuentaContablePeer::TX_CUENTA);
     $c->addAscendingOrderByColumn(Tb041TipoRetencionPeer::CO_TIPO_RETENCION);
@@ -229,6 +400,7 @@ class TipoRetencionActions extends sfActions
         $registros[] = array(
             "co_tipo_retencion"     => trim($res["co_tipo_retencion"]),
             "tx_tipo_retencion"     => trim($res["tx_tipo_retencion"]),
+            "co_clase_retencion"    => trim($res["co_clase_retencion"]),
             "tx_clase_retencion"    => trim($res["tx_clase_retencion"]),
             "tx_cuenta"             => trim($res["tx_cuenta"]),
             "estado"                => $activo,

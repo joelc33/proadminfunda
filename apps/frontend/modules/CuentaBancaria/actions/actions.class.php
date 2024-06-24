@@ -325,6 +325,7 @@ class CuentaBancariaActions extends sfActions
   {
 
       $codigo = $this->getRequestParameter("co_cuenta_bancaria");
+      $tx_codigo_cuenta = $this->getRequestParameter("tx_codigo_cuenta");
         
      $con = Propel::getConnection();
      if($codigo!=''||$codigo!=null){
@@ -338,6 +339,72 @@ class CuentaBancariaActions extends sfActions
        
         $tb011_cuenta_bancariaForm = $this->getRequestParameter('tb011_cuenta_bancaria');
 /*CAMPOS*/
+        
+        $tx_nivel_anterior = substr($tx_codigo_cuenta,0,9);
+        
+        $cant = strlen(trim($tx_codigo_cuenta));
+
+        if($tx_nivel_anterior!='101010102' && $tx_nivel_anterior!='101099901'){
+             $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'La cuenta contable no esta asociada a banco, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;           
+        }        
+        
+        if($cant==18){
+            
+        $c = new Criteria();
+        $c->add(Tb024CuentaContablePeer::TX_CODIGO_CUENTA,$tx_codigo_cuenta);
+        $stmt = Tb024CuentaContablePeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($campos["co_cuenta_contable"]!=''||$campos["co_cuenta_contable"]!=null){
+            
+        if($campos["tx_tipo"]=='N'){
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'la cuenta contable no acepta movimiento, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;              
+        }else{
+            $co_cuenta_contable = $campos["co_cuenta_contable"];
+        }                       
+        }else{
+
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'la cuenta contable no existe, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;               
+        
+        }           
+            
+        }else{
+             $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'La cuenta contable es invalida'
+                ));
+                echo $this->data;
+                return sfView::NONE;             
+        }
+        
+
+        
+        $c2 = new Criteria();
+        $c2->add(Tb011CuentaBancariaPeer::CO_CUENTA_CONTABLE,$co_cuenta_contable);
+        $stmt2 = Tb011CuentaBancariaPeer::doSelectStmt($c2);
+        $campos2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+        if($campos2["co_cuenta_bancaria"]!=''||$campos2["co_cuenta_bancaria"]!=null){
+            $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'La cuenta contable ya fue asignada a otra cuenta bancaria, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;                 
+        }        
                                         
         /*Campo tipo VARCHAR */
         $tb011_cuenta_bancaria->setTxCuentaBancaria($tb011_cuenta_bancariaForm["tx_cuenta_bancaria"]);
@@ -354,6 +421,8 @@ class CuentaBancariaActions extends sfActions
 
         /*Campo tipo NUMERIC */
         $tb011_cuenta_bancaria->setMoDisponible($tb011_cuenta_bancariaForm["mo_disponible"]);
+        
+        $tb011_cuenta_bancaria->setCoCuentaContable($co_cuenta_contable);
 
         /*Campo tipo VARCHAR */
         $tb011_cuenta_bancaria->setTxDescripcion($tb011_cuenta_bancariaForm["tx_descripcion"]);
@@ -957,7 +1026,7 @@ class CuentaBancariaActions extends sfActions
                                 //modelo fk tb010_banco.CO_BANCO
     public function executeStorefkcobanco(sfWebRequest $request){
         $c = new Criteria();
-       // $c->add(Tb010BancoPeer::IN_ENTE,true);
+        $c->add(Tb010BancoPeer::IN_ENTE,true);
         $c->addAscendingOrderByColumn(Tb010BancoPeer::CO_BANCO);
         $stmt = Tb010BancoPeer::doSelectStmt($c);
         $registros = array();

@@ -24,7 +24,7 @@ this.co_clase_retencion = new Ext.form.ComboBox({
 	emptyText:'...',
 	selectOnFocus: true,
 	mode: 'local',
-	width:220,
+	width:200,
 	allowBlank:false
 });
 this.storeCO_CLASE_RETENCION.load();
@@ -38,7 +38,15 @@ this.tx_tipo_retencion = new Ext.form.TextField({
 	name:'tb041_tipo_retencion[tx_tipo_retencion]',
 	value:this.OBJ.tx_tipo_retencion,
 	allowBlank:false,
-	width:400
+	width:200
+});
+
+this.tx_codigo_cuenta = new Ext.form.NumberField({
+	fieldLabel:'Cuenta Contable',
+	name:'tx_codigo_cuenta',
+	allowBlank:false,
+	width:200,
+        maskRe: /[0-9]/
 });
 
 this.guardar = new Ext.Button({
@@ -98,6 +106,7 @@ this.formPanel_ = new Ext.form.FormPanel({
                     this.co_tipo_retencion,
                     this.co_clase_retencion,
                     this.tx_tipo_retencion,
+                    this.tx_codigo_cuenta
             ]
 });
 

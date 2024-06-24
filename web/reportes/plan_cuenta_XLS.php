@@ -38,7 +38,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
     $conex = new ConexionComun();
 
            
-        $sql = "SELECT * FROM public.tb024_cuenta_contable tb085 order by co_cuenta_contable;";
+        $sql = "SELECT * FROM public.tb024_cuenta_contable tb085 order by nu_cuenta_contable asc;";
      //echo $sql; exit();
     $retencion = $conex->ObtenerFilasBySqlSelect($sql);
 
@@ -50,6 +50,8 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
         //where n is the Excel row number (ie cell A1 in the first row)
         $objPHPExcel->getActiveSheet()->setCellValueExplicit('A'.$rowCount, $value['tx_cuenta'], PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value['tx_descripcion'], PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->setCellValueExplicit('C'.$rowCount, $value['nu_nivel'], PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->setCellValueExplicit('D'.$rowCount, $value['tx_tipo'], PHPExcel_Cell_DataType::TYPE_STRING);
         // Increment the Excel row counter
         $rowCount++;
     }
