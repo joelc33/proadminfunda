@@ -1236,15 +1236,17 @@ class ComprasActions extends sfActions
 
             if($tb052_comprasForm["co_tipo_solicitud"]==1){
                 $co_serial = 2;
+                $prefix = 'OC';
             }else{
                 $co_serial = 3;
+                $prefix = 'OS';
             }
 
 
             if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
-                $serial = date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
+                $serial = $prefix.'-'.date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
             } else {
-                $serial =  date("Ym") . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
+                $serial =  $prefix.'-'.date("Ym") . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
             }
 
             $tb052_compras->setNumeroCompra($serial);
