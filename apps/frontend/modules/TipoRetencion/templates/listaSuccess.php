@@ -124,7 +124,8 @@ this.add_cuenta = new Ext.Button({
          scripts: true,
          text: "Cargando..",
          params:{
-             co_tipo_retencion:TipoRetencionLista.main.gridPanel_.getSelectionModel().getSelected().get('co_tipo_retencion')
+             co_tipo_retencion:TipoRetencionLista.main.gridPanel_.getSelectionModel().getSelected().get('co_tipo_retencion'),
+             co_clase_retencion:TipoRetencionLista.main.gridPanel_.getSelectionModel().getSelected().get('co_clase_retencion')    
          }
         });
     }
@@ -145,11 +146,12 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 //    frame:true,
     height:550,
     tbar:[
-        this.nuevo,'-',this.editar,'-',this.add_cuenta,'-',this.cambiar_estado
+        this.nuevo,'-',this.editar,'-',this.cambiar_estado
     ],
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'co_tipo_retencion',hidden:true, menuDisabled:true,dataIndex: 'co_tipo_retencion'},
+    {header: 'co_clase_retencion',hidden:true, menuDisabled:true,dataIndex: 'co_clase_retencion'},
     {header: 'in_activo',hidden:true, menuDisabled:true,dataIndex: 'in_activo'},
     {header: 'Tipo de Retencion', width:500,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_retencion'},
     {header: 'Clase de Retencion', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_clase_retencion'},
@@ -209,6 +211,7 @@ getLista: function(){
     root:'data',
     fields:[
             {name: 'co_tipo_retencion'},
+            {name: 'co_clase_retencion'},
             {name: 'tx_tipo_retencion'},
             {name: 'tx_clase_retencion'},
             {name: 'tx_cuenta'},

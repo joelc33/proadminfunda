@@ -130,6 +130,14 @@ this.tx_descripcion = new Ext.form.TextField({
 	width:300
 });
 
+this.tx_codigo_cuenta = new Ext.form.TextField({
+	fieldLabel:'Cuenta Contable',
+	name:'tx_codigo_cuenta',
+	allowBlank:false,
+	width:200,
+        maskRe: /[0-9]/
+});
+
 this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
@@ -190,8 +198,8 @@ this.formPanel_ = new Ext.form.FormPanel({
                     this.co_tipo_cuenta,
                     this.co_descripcion_cuenta,
                     this.nu_contrato,
-//                    this.mo_disponible,
-                    this.tx_descripcion
+                    this.tx_descripcion,
+                    this.tx_codigo_cuenta
             ]
 });
 
