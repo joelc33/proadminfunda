@@ -729,6 +729,8 @@ class PartidapresupuestoActions extends sfActions
         $c->addGroupByColumn(Tb139AplicacionPeer::NU_ANIO_FISCAL);
         $c->addGroupByColumn(Tb139AplicacionPeer::TX_APLICACION);
         $c->addAscendingOrderByColumn(Tb139AplicacionPeer::TX_TIP_APLICACION);
+
+        echo $c->toString(); exit();
         $stmt = Tb139AplicacionPeer::doSelectStmt($c);
         $registros = array();
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
