@@ -90,6 +90,12 @@
                                 co_ejecutor: this.getValue()
                             }
                         });
+
+                        PartidapresupuestoListaDesagregada.main.storeCO_PROYECTO.load({
+                            params: {
+                                co_ejecutor: this.getValue()
+                            }
+                        });
                     }
                 }
             });
