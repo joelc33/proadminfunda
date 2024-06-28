@@ -730,7 +730,7 @@ class PartidapresupuestoActions extends sfActions
         $c->addGroupByColumn(Tb139AplicacionPeer::TX_APLICACION);
         $c->addAscendingOrderByColumn(Tb139AplicacionPeer::TX_TIP_APLICACION);
 
-        echo $c->toString(); exit();
+        //echo $c->toString(); exit();
         $stmt = Tb139AplicacionPeer::doSelectStmt($c);
         $registros = array();
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
