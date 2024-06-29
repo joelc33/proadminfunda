@@ -652,6 +652,7 @@ class IngresoFinancieroActions extends sfActions
 
         $c = new Criteria();
         $c->add(Tb011CuentaBancariaPeer::CO_BANCO, $banco);
+        $c->addJoin(Tb024CuentaContablePeer::CO_CUENTA_CONTABLE,Tb011CuentaBancariaPeer::CO_CUENTA_CONTABLE);
         $stmt = Tb011CuentaBancariaPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -671,6 +672,7 @@ class IngresoFinancieroActions extends sfActions
         $c = new Criteria(); 
         $c->setDistinct();
         $c->addJoin(Tb010BancoPeer::CO_BANCO,Tb011CuentaBancariaPeer::CO_BANCO);
+        $c->addJoin(Tb024CuentaContablePeer::CO_CUENTA_CONTABLE,Tb011CuentaBancariaPeer::CO_CUENTA_CONTABLE);
         $stmt = Tb010BancoPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
