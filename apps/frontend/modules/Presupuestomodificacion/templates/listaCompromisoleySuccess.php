@@ -27,7 +27,7 @@
              * <Form Principal que carga el Filtro>
              */
             this.formFiltroPrincipal = new Ext.form.FormPanel({
-                title: 'Buscar Credito Adicional',
+                title: 'Buscar Compromiso de Ingreso de Ley',
                 iconCls: 'icon-solpendiente',
                 collapsible: true,
                 titleCollapse: true,
@@ -99,13 +99,13 @@
             });
 
             this.nueva_solicitud = new Ext.Button({
-                text: 'Nuevo Credito Adicional',
+                text: 'Nuevo Compromiso',
                 iconCls: 'icon-nuevo',
                 handler: function() {
                     //                                contribuyenteLista.main.mascara.show();
                     this.msg = Ext.get('formulariocontribuyente');
                     this.msg.load({
-                        url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuestomodificacion/creditoadicional",
+                        url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuestomodificacion/compromisoley",
                         params:{
                             co_tipo_solicitud : 6
                         },
@@ -116,7 +116,7 @@
             });
 
             this.anular = new Ext.Button({
-                text: 'Anular Credito Adicional',
+                text: 'Anular Compromiso',
                 iconCls: 'icon-anteriores',
                 handler: function() {
 
@@ -187,7 +187,7 @@
             }
 
             this.gridPanel_ = new Ext.grid.GridPanel({
-                title: 'Lista de Credito Adicional',
+                title: 'Lista de Compromiso de Ingreso de Ley',
                 iconCls: 'icon-libro',
                 store: this.store_lista,
                 loadMask: true,
@@ -216,7 +216,7 @@
                     },     
                                   
                     {
-                        header: 'Nro Credito',
+                        header: 'Nro Compromiso',
                         width: 100,
                         menuDisabled: true,
                         sortable: true,
@@ -324,7 +324,7 @@
         },
         getLista: function() {
             this.store = new Ext.data.JsonStore({
-                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuestomodificacion/storelistaCreditoAdicional',
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuestomodificacion/storelistaCompromisoLey',
                 root: 'data',
                 fields: [{
                         name: 'tx_login'
