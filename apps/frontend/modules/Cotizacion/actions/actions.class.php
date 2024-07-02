@@ -168,6 +168,42 @@ class CotizacionActions extends sfActions
   }
 
 
+  public function executeEliminarMaterial(sfWebRequest $request)
+  {
+
+      $codigo = $this->getRequestParameter("co_detalle_cotizacion");
+
+      $con = Propel::getConnection();
+      try {
+          $con->beginTransaction();
+          /*CAMPOS*/
+          $Tb207DetalleCotizacion = Tb207DetalleCotizacionPeer::retrieveByPk($codigo);
+          $Tb207DetalleCotizacion->delete($con);
+
+          $wherec = new Criteria();
+          $wherec->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION_ENLACE, $codigo, Criteria::EQUAL);
+          BasePeer::doDelete($wherec, $con);
+
+          $this->data = json_encode(array(
+              "success" => true,
+              "msg" => 'Registro Borrado con exito!'
+          ));
+
+
+          $con->commit();
+      } catch (PropelException $e) {
+          $con->rollback();
+          $this->data = json_encode(array(
+              "success" => false,
+              //		    "msg" =>  $e->getMessage()
+              "msg" => 'Este registro no se puede borrar'
+          ));
+      }
+
+      $this->setTemplate('eliminar');
+  }
+
+
 
   public function executeGuardar(sfWebRequest $request)
   {

@@ -264,6 +264,18 @@
                 return paqueteComunJS.funcion.getNumeroFormateado(val);
             }
 
+            this.botonEliminar = new Ext.Button({
+                text: 'Eliminar',
+                iconCls: 'icon-eliminar',
+                id: 'eliminar',
+                handler: function(boton) {
+                    proyecto.main.eliminar();
+                }
+            });
+
+            this.botonEliminar.disable();
+
+
             this.gridPanel = new Ext.grid.GridPanel({
                 title: 'Lista de Materiales',
                 iconCls: 'icon-libro',
@@ -272,7 +284,7 @@
                 height: 300,
                 width: 1150,
                 autoScroll: true,
-                tbar: [this.agregar],
+                tbar: [this.agregar,'-',this.botonEliminar],
                 columns: [
                     new Ext.grid.RowNumberer(),
                     {
@@ -536,6 +548,31 @@
             });
             this.winformPanel_.show();
 
+        },
+        eliminar: function() {
+            var s = proyecto.main.gridPanel.getSelectionModel().getSelections();
+
+            var co_detalle_cotizacion = proyecto.main.gridPanel.getSelectionModel().getSelected().get('co_detalle_cotizacion');
+
+            if (co_detalle_cotizacion != '') {
+
+                Ext.Ajax.request({
+                    method: 'POST',
+                    url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Cotizacion/eliminarMaterial',
+                    params: {
+                        co_detalle_cotizacion: co_detalle_cotizacion
+                    },
+                    success: function(result, request) {
+                        //proyecto.main.store_lista.load();
+                        Ext.utiles.msg('Mensaje', "El producto se eliminó exitosamente");
+                    }
+                });
+
+            }
+
+            for (var i = 0, r; r = s[i]; i++) {
+                proyecto.main.store_lista.remove(r);
+            }
         },
         getTotal: function() {
 
