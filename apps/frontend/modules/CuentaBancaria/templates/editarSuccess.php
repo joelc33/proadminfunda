@@ -26,7 +26,8 @@ this.tx_cuenta_bancaria = new Ext.form.TextField({
 	allowBlank:false,
         maxLength:20,
         minLength:20,
-	width:300
+	width:300,
+        maskRe: /[0-9]/        
 });
 
 this.co_banco = new Ext.form.ComboBox({
