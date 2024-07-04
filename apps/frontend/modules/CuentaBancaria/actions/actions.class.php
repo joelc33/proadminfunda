@@ -362,7 +362,7 @@ class CuentaBancariaActions extends sfActions
                 return sfView::NONE;           
         }        
         
-        if($cant==18){
+        if($cant==18 || $cant==14){
             
         $c = new Criteria();
         $c->add(Tb024CuentaContablePeer::TX_CODIGO_CUENTA,$tx_codigo_cuenta);
