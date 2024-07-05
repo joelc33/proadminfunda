@@ -307,6 +307,7 @@ class PresupuestomodificacionActions extends sfActions
           "id_tb068_numero_fuente_financiamiento"     => $campos["id_tb068_numero_fuente_financiamiento"],
           "id_tb152_tipo_credito"     => $campos["id_tb152_tipo_credito"],
           "id_tb073_fuente_financiamiento"     => $campos["id_tb073_fuente_financiamiento"],
+            "in_procesado"     => $campos["in_procesado"],
         ));
       } else {
         $this->data = json_encode(array(
@@ -331,6 +332,7 @@ class PresupuestomodificacionActions extends sfActions
           "id_tb068_numero_fuente_financiamiento"     => "",
           "id_tb152_tipo_credito"     => "",
           "id_tb073_fuente_financiamiento"     => "",
+           "in_procesado"     => false,
         ));
       }
     } else {
@@ -355,6 +357,7 @@ class PresupuestomodificacionActions extends sfActions
         "id_tb068_numero_fuente_financiamiento"     => "",
         "id_tb152_tipo_credito"     => "",
         "id_tb073_fuente_financiamiento"     => "",
+          "in_procesado"     => false,
       ));
     }
   }
@@ -1320,7 +1323,7 @@ class PresupuestomodificacionActions extends sfActions
 
         $tb096_presupuesto_modificacion->setDeModificacion($tb096_presupuesto_modificacionForm["de_modificacion"]);
         $tb096_presupuesto_modificacion->setDeJustificacion($tb096_presupuesto_modificacionForm["de_justificacion"]);
-        $tb096_presupuesto_modificacion->setNuOficio($tb096_presupuesto_modificacionForm["nu_oficio"]);
+        $tb096_presupuesto_modificacion->setNuOficio($tb096_presupuesto_modificacionForm["numero_decreto"]);
 
 
         if ($tb096_presupuesto_modificacionForm["fe_oficio"] != '') {
@@ -1379,6 +1382,40 @@ class PresupuestomodificacionActions extends sfActions
 
         $tb096_presupuesto_modificacionForm = $this->getRequestParameter('tb096_presupuesto_modificacion');
 
+            $c = new Criteria();
+            $c->add(Tb096PresupuestoModificacionPeer::NU_OFICIO,$tb096_presupuesto_modificacionForm["numero_decreto"]);
+            $c->add(Tb096PresupuestoModificacionPeer::CO_TIPO_SOLICITUD, 7);
+            $cantidad = Tb096PresupuestoModificacionPeer::doCount($c);
+            
+            
+                 $cant=0;
+                 
+                $tx_fuente = substr($tb096_presupuesto_modificacionForm["numero_decreto"],0,1);
+                $ci = new Criteria();     
+                $ci->add(Tb073FuenteFinanciamientoPeer::TX_SIGLAS,$tx_fuente);
+                $ci->add(Tb073FuenteFinanciamientoPeer::IN_ACTIVO,true);
+                $cant = Tb073FuenteFinanciamientoPeer::doCount($ci);                 
+                
+                 if($cant==0){
+                    
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" =>  "La inicial de la fuente no es valida o no esta activa, verifique!"
+                 ));
+                 echo $this->data;
+                return sfView::NONE;                   
+                }             
+
+            if ($cantidad >0) {
+                $this->data = json_encode(array(
+                  'success' => false,
+                  'msg' => '<span style="color:red;font-size:13px,"><b>El numero de fuente ya se encuentra registrado, verifiqe!</b></span>'
+                ));
+   
+                 echo $this->data;
+                return sfView::NONE;  
+            }       
+        
        //echo "entro"; exit();
 
         $tb026_solicitudForm = array(
@@ -1422,7 +1459,7 @@ class PresupuestomodificacionActions extends sfActions
         $tb096_presupuesto_modificacion->setDeJustificacion($tb096_presupuesto_modificacionForm["de_justificacion"]);
 
         /*Campo tipo DATE */
-        $tb096_presupuesto_modificacion->setNuOficio($tb096_presupuesto_modificacionForm["nu_oficio"]);
+        $tb096_presupuesto_modificacion->setNuOficio($tb096_presupuesto_modificacionForm["numero_decreto"]);
 
         /*Campo tipo DATE */
         /*Campo tipo DATE */
@@ -2039,6 +2076,21 @@ class PresupuestomodificacionActions extends sfActions
         $con->beginTransaction();
 
         $tb096_presupuesto_modificacion = Tb096PresupuestoModificacionPeer::retrieveByPk($codigo);
+        
+        list($dia, $mes, $anio) = explode("/", $tb096_presupuesto_modificacionForm["fe_modificacion"]);
+        $fecha = $anio . "-" . $mes . "-" . $dia;
+        $tb096_presupuesto_modificacion->setFeModificacion($fecha);
+
+        $tb096_presupuesto_modificacion->setDeModificacion($tb096_presupuesto_modificacionForm["de_modificacion"]);
+
+        $tb096_presupuesto_modificacion->setNuOficio($tb096_presupuesto_modificacionForm["numero_decreto"]);
+
+        $tb096_presupuesto_modificacion->setUpdatedAt(date('Y-m-d'));
+
+        $tb096_presupuesto_modificacion->setCoUsuario($this->getUser()->getAttribute('codigo'));
+
+        $tb096_presupuesto_modificacion->setIdTb152TipoCredito($tb096_presupuesto_modificacionForm["id_tb152_tipo_credito"]);     
+        
         $tb096_presupuesto_modificacion->setInProcesado(true);
         $tb096_presupuesto_modificacion->save($con);
 
@@ -2068,78 +2120,13 @@ class PresupuestomodificacionActions extends sfActions
           if ($campos_destino["in_traspaso"] != true) {
             if ($campos_destino["id_tb098_tipo_distribucion"] == 2) {
 
-              $c10 = new Criteria();
-              $c10->add(Tb085PresupuestoPeer::ID, $campos_destino["id_tb085_presupuesto"]);
-              $stmt10 = Tb085PresupuestoPeer::doSelectStmt($c10);
-              $campos10 = $stmt10->fetch(PDO::FETCH_ASSOC);
 
-              $c11 = new Criteria();
-              $c11->add(Tb082EjecutorPeer::ID, $campos_destino["id_tb082_ejecutor_destino"]);
-              $stmt11 = Tb082EjecutorPeer::doSelectStmt($c11);
-              $campos11 = $stmt11->fetch(PDO::FETCH_ASSOC);
-
-              $c12 = new Criteria();
-              $c12->clearSelectColumns();
-              $c12->add(Tb096PresupuestoModificacionPeer::ID, $codigo);
-              $c12->addSelectColumn(Tb068NumeroFuenteFinanciamientoPeer::TX_NUMERO_FUENTE);
-              $c12->addSelectColumn(Tb073FuenteFinanciamientoPeer::TX_SIGLAS);
-              $c12->addJoin(Tb096PresupuestoModificacionPeer::ID_TB068_NUMERO_FUENTE_FINANCIAMIENTO, Tb068NumeroFuenteFinanciamientoPeer::CO_NUMERO_FUENTE);
-              $c12->addJoin(Tb068NumeroFuenteFinanciamientoPeer::CO_FUENTE_FINANCIAMIENTO, Tb073FuenteFinanciamientoPeer::CO_FUENTE_FINANCIAMIENTO);
-              $stmt12 = Tb096PresupuestoModificacionPeer::doSelectStmt($c12);
-              $campos12 = $stmt12->fetch(PDO::FETCH_ASSOC);
-
-              /*CAMPOS*/
-              $tb085_presupuesto = new Tb085Presupuesto();
-              $tb085_presupuesto->setIdTb084AccionEspecifica($campos_destino["id_tb084_accion_especifica"]);
-              $tb085_presupuesto->setNuPartida($campos_destino["nu_partida"]);
-              $tb085_presupuesto->setDePartida($campos10["de_partida"]);
-              $tb085_presupuesto->setMoInicial(0);
-              //$tb085_presupuesto->setMoActualizado($campos_destino["mo_distribucion"]);
-              $tb085_presupuesto->setMoActualizado(0);
-              $tb085_presupuesto->setMoPrecomprometido(0);
-              $tb085_presupuesto->setMoComprometido(0);
-              $tb085_presupuesto->setMoCausado(0);
-              $tb085_presupuesto->setMoPagado(0);
-              //$tb085_presupuesto->setMoDisponible($campos_destino["mo_distribucion"]);
-              $tb085_presupuesto->setMoDisponible(0);
-              $tb085_presupuesto->setInActivo(true);
-              $tb085_presupuesto->setInMovimiento(true);
-              /*$tb085_presupuesto->setNuPa(substr(trim($campos_destino["nu_partida"]), 0, 3));
-                        $tb085_presupuesto->setNuGe(substr(substr(trim($campos_destino["nu_partida"]), 0, 5), 3));
-                        $tb085_presupuesto->setNuEs(substr(substr(trim($campos_destino["nu_partida"]), 0, 7), 5));
-                        $tb085_presupuesto->setNuSe(substr(substr(trim($campos_destino["nu_partida"]), 0, 9), 7));
-                        $tb085_presupuesto->setNuSse(substr(substr(trim($campos_destino["nu_partida"]), 0, 12), 9));
-                        $tb085_presupuesto->setCoPartida(substr(trim($campos_destino["nu_partida"]), 0, 12));*/
-              $tb085_presupuesto->setNuPa($campos10["nu_pa"]);
-              $tb085_presupuesto->setNuGe($campos10["nu_ge"]);
-              $tb085_presupuesto->setNuEs($campos10["nu_es"]);
-              $tb085_presupuesto->setNuSe($campos10["nu_se"]);
-              $tb085_presupuesto->setNuSse($campos10["nu_sse"]);
-              $tb085_presupuesto->setCoPartida($campos10["nu_partida"]);
-              $tb085_presupuesto->setNuNivel(11);
-              //$tb085_presupuesto->setNuFi(substr(substr(trim($campos_destino["nu_partida"]), 0, 17), 12));
-              $tb085_presupuesto->setNuFi($campos12["tx_siglas"] . $campos12["tx_numero_fuente"]);
-              $tb085_presupuesto->setCoCategoria($campos11["nu_ejecutor"] . '.' . $campos_destino["nu_partida"]);
-              $tb085_presupuesto->setNuAplicacion($campos_destino["nu_aplicacion"]);
-              //$tb085_presupuesto->setTpIngreso($campos_destino["tp_ingreso"]);
-              //$tb085_presupuesto->setCoCuentaContable($campos_destino["co_cuenta_contable"]);
-              $tb085_presupuesto->setTipApl($campos_destino["nu_aplicacion"]);
-              $tb085_presupuesto->setInGenCheque(true);
-              $tb085_presupuesto->setTipGasto($campos_destino["tip_gasto"]);
-              //$tb085_presupuesto->setTipIng($campos_destino["tip_ing"]);
-              //$tb085_presupuesto->setCodAmb($campos_destino["cod_amb"]);
-              $tb085_presupuesto->setCoEnte($campos_destino["id_tb082_ejecutor_destino"]);
-              $tb085_presupuesto->setNuAnio($campos_destino["id_tb013_anio_fiscal"]);
-              //$tb085_presupuesto->setMoDisponibleAct($campos_destino["mo_disponible_act"]);
-              $tb085_presupuesto->setIdTb139Aplicacion($campos_destino['id_tb139_aplicacion']);
-              $tb085_presupuesto->setCodEnte($campos11["nu_ejecutor"]);
-              $tb085_presupuesto->save($con);
 
               $saldo_anterior = 0;
               $saldo_nuevo = $campos_destino["mo_distribucion"];
 
               $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
-              $tb087_presupuesto_movimiento->setCoPartida($tb085_presupuesto->getId())
+              $tb087_presupuesto_movimiento->setCoPartida($campos_destino["id_tb085_presupuesto"])
                 ->setCoTipoMovimiento(7)
                 ->setNuMonto($campos_destino["mo_distribucion"])
                 ->setNuAnio($campos_destino["id_tb013_anio_fiscal"])
@@ -2151,7 +2138,7 @@ class PresupuestomodificacionActions extends sfActions
                 ->save($con);
 
               $tb097_movimiento = Tb097ModificacionDetallePeer::retrieveByPK($campos_destino["id"]);
-              $tb097_movimiento->setIdTb085Presupuesto($tb085_presupuesto->getId());
+              $tb097_movimiento->setIdTb085Presupuesto($campos_destino["id_tb085_presupuesto"]);
               $tb097_movimiento->setInTraspaso(true);
               $tb097_movimiento->save($con);
             } else {
@@ -2219,7 +2206,7 @@ class PresupuestomodificacionActions extends sfActions
 
         $this->data = json_encode(array(
           'success' => true,
-          'msg' => 'Partidas Creadas con exito!.'
+          'msg' => 'Credito aprobado con exito!.'
         ));
       } catch (PropelException $e) {
         $con->rollback();
@@ -3054,6 +3041,7 @@ class PresupuestomodificacionActions extends sfActions
   public function executeStorefkcofuentefinanciamiento(sfWebRequest $request)
   {
     $c = new Criteria();
+    $c->add(Tb073FuenteFinanciamientoPeer::IN_ACTIVO, true);
     $stmt = Tb073FuenteFinanciamientoPeer::doSelectStmt($c);
     $registros = array();
     while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {

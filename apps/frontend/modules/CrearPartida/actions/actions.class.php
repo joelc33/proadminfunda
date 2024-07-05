@@ -28,33 +28,28 @@ class CrearPartidaActions extends sfActions
     $co_solicitud =  $this->getRequestParameter("co_solicitud");  
     if($codigo!=''||$codigo!=null){
         $c = new Criteria();
-                $c->add(Tb067CreacionPartidaPeer::CO_CREACION_PARTIDA,$codigo);
+                $c->add(Tb085PresupuestoPeer::ID,$codigo);
         
-        $stmt = Tb067CreacionPartidaPeer::doSelectStmt($c);
+        $stmt = Tb085PresupuestoPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->data = json_encode(array(
-                            "co_creacion_partida"       => $campos["co_creacion_partida"],
-                            "co_fuente_financiamiento"  => $campos["co_fuente_financiamiento"],
-                            "co_numero_fuente"          => $campos["co_numero_fuente"],
-                            "co_ente_ejecutor"          => $campos["co_ente_ejecutor"],
-                            "co_proyecto"               => $campos["co_proyecto"],
-                            "co_accion_especifica"      => $campos["co_accion_especifica"],
-                            "co_partida"                => $campos["co_partida"],
+                            "id"                        => $campos["id"],
+                            "co_ente_ejecutor"          => $campos["co_ente"],
+                            "co_proyecto"               => $campos["id_tb083_proyecto_ac"],
+                            "co_accion_especifica"      => $campos["id_tb084_accion_especifica"],
+                            "co_partida"                => $campos["id_tb091_partida"],
                             "nu_anio"                   => $campos["nu_anio"],
-                            "tx_descripcion"            => $campos["tx_descripcion"],
-                            "tx_partida"                => $campos["tx_partida"],
-                            "nu_monto"                  => $campos["nu_monto"],
+                            "tx_descripcion"            => $campos["de_partida"],
+                            "tx_partida"                => $campos["nu_sse"],
+                            "nu_monto"                  => $campos["mo_inicial"],
                             "co_solicitud"              => $campos["co_solicitud"],
-                            "co_usuario"                => $campos["co_usuario"],
-                            "co_estatus"                => $campos["co_estatus"],
-                            "co_usuario_cambio"         => $campos["co_usuario_cambio"],
-                            "fe_cambio"                 => $campos["fe_cambio"],
-                            "co_aplicacion"             => $campos["co_aplicacion"],
-                            "co_ambito"                 => $campos["co_ambito"],
+                            "tx_fuente"                => $campos["nu_fi"],
+                            "co_aplicacion"             => $campos["id_tb139_aplicacion"],
+                            "co_ambito"                 => $campos["cod_amb"],
                             "co_area_estrategica"       => $campos["co_area_estrategica"],
                             "co_clasificacion_economica" => $campos["co_clasificacion_economica"],
-                            "co_tipo_gasto"             => $campos["co_tipo_gasto"],
-                            "co_tipo_ingreso"           => $campos["co_tipo_ingreso"]
+                            "tipo_gasto"             => $campos["tip_gasto"],
+                            "co_tipo_ingreso"           => $campos["tip_ing"]
                     ));
     }else{
         $this->data = json_encode(array(
@@ -87,21 +82,33 @@ class CrearPartidaActions extends sfActions
   
   public function executeEliminar(sfWebRequest $request)
   {
-	$codigo = $this->getRequestParameter("co_creacion_partida");
+	$codigo = $this->getRequestParameter("id");
 	$con = Propel::getConnection();
 	try
 	{ 
 	$con->beginTransaction();
 	
-	$tb067_creacion_partida = Tb067CreacionPartidaPeer::retrieveByPk($codigo);			
-	$tb067_creacion_partida->delete($con);
+	$tb085_presupuesto = Tb085PresupuestoPeer::retrieveByPk($codigo);
+        
+        if($tb085_presupuesto->getMoAumento()>0){
+		$this->data = json_encode(array(
+		    "success" => false,
+		    "msg" => 'No es posible eliminar el registro ya que le fue asociado a otro proceso'
+		));  
+                       echo $this->data;
+                return sfView::NONE;            
+                
+        }
+        
+	$tb085_presupuesto->delete($con);
+        
         
         $c = new Criteria();
-        $c->add(Tb067CreacionPartidaPeer::CO_SOLICITUD,$tb067_creacion_partida->getCoSolicitud());
-        $cant = Tb067CreacionPartidaPeer::doCount($c);
+        $c->add(Tb085PresupuestoPeer::CO_SOLICITUD,$tb085_presupuesto->getCoSolicitud());
+        $cant = Tb085PresupuestoPeer::doCount($c);
         
         if($cant==0){
-            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb067_creacion_partida->getCoSolicitud()));
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb085_presupuesto->getCoSolicitud()));
             $ruta->setInCargarDato(false)->save($con);
         }
         
@@ -124,67 +131,118 @@ class CrearPartidaActions extends sfActions
   public function executeGuardar(sfWebRequest $request)
   {
 
-     $codigo = $this->getRequestParameter("co_creacion_partida");
+     $codigo = $this->getRequestParameter("id");
      $tb067_creacion_partidaForm = $this->getRequestParameter('tb067_creacion_partida');
-        
+     
+                $cp = new Criteria();
+                $cp->add(Tb091PartidaPeer::ID,$tb067_creacion_partidaForm["co_partida"]);
+                $stmtp = Tb091PartidaPeer::doSelectStmt($cp);
+                $presupuesto = $stmtp->fetch(PDO::FETCH_ASSOC);
+                
+
+                $aplicacion   = $this->getAplicacion($tb067_creacion_partidaForm["co_aplicacion"]);
+                $tipo_ingreso = $this->getTipoIngreso($tb067_creacion_partidaForm["co_tipo_ingreso"]);
+                
+                $nu_partida = $presupuesto["nu_pa"].$presupuesto["nu_ge"].$presupuesto["nu_es"].$presupuesto["nu_se"].$tb067_creacion_partidaForm["tx_partida"].$tb067_creacion_partidaForm["tx_fuente"];
+                $co_partida = $presupuesto["nu_pa"].$presupuesto["nu_ge"].$presupuesto["nu_es"].$presupuesto["nu_se"];
+                
+                $nu_sector   = $this->getSector($tb067_creacion_partidaForm["co_proyecto"]);
+                $nu_proyecto = $this->getProyecto($tb067_creacion_partidaForm["co_proyecto"]);
+                $nu_ejecutor   = $this->getEjecutor($tb067_creacion_partidaForm["co_ente_ejecutor"]);
+                $nu_accion_especifica   = $this->getAccionEspecifica($tb067_creacion_partidaForm["co_accion_especifica"]);
+                              
+                $co_categoria = $nu_ejecutor.'.'.$nu_sector.'.'.$nu_proyecto.'.00.'.$nu_accion_especifica.'.'.$presupuesto["nu_pa"].'.'.$presupuesto["nu_ge"].'.'.$presupuesto["nu_es"].'.'.$presupuesto["nu_se"].'.'.$tb067_creacion_partidaForm["tx_partida"].'.'.$tb067_creacion_partidaForm["tx_fuente"];     
+                 $cantidad=0;
+                 $cant=0;
+                 
+                $tx_fuente = substr($tb067_creacion_partidaForm["tx_fuente"],0,1);
+                $ci = new Criteria();     
+                $ci->add(Tb073FuenteFinanciamientoPeer::TX_SIGLAS,$tx_fuente);
+                $ci->add(Tb073FuenteFinanciamientoPeer::IN_ACTIVO,true);
+                $cant = Tb073FuenteFinanciamientoPeer::doCount($ci);                 
+                
+                 if($cant==0){
+                    
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" =>  "La inicial de la fuente no es valida o no esta activa, verifique!"
+                 ));
+                 echo $this->data;
+                return sfView::NONE;                   
+                }               
+                
      $con = Propel::getConnection();
      if($codigo!=''||$codigo!=null){
-         $tb067_creacion_partida = Tb067CreacionPartidaPeer::retrieveByPk($codigo);
-         $cantidad=0;
-     }else{
-        $tb067_creacion_partida = new Tb067CreacionPartida();
-        //$tb067_creacion_partida->setNuAnio(date('Y'));
-        $tb067_creacion_partida->setNuAnio( $this->getUser()->getAttribute('ejercicio'));
+         $tb085_presupuesto = Tb085PresupuestoPeer::retrieveByPk($codigo);
          
-        $c = new Criteria();     
-        $c->add(Tb067CreacionPartidaPeer::CO_FUENTE_FINANCIAMIENTO,$tb067_creacion_partidaForm["co_fuente_financiamiento"]);
-        $c->add(Tb067CreacionPartidaPeer::CO_NUMERO_FUENTE,$tb067_creacion_partidaForm["co_numero_fuente"]);
-        $c->add(Tb067CreacionPartidaPeer::CO_PARTIDA,$tb067_creacion_partidaForm["co_partida"]);
-        $c->add(Tb067CreacionPartidaPeer::CO_ACCION_ESPECIFICA,$tb067_creacion_partidaForm["co_accion_especifica"]);
-        $c->add(Tb067CreacionPartidaPeer::TX_PARTIDA,$tb067_creacion_partidaForm["tx_partida"]);
-        //$c->add(Tb067CreacionPartidaPeer::NU_ANIO,date('Y'));
-        $c->add(Tb067CreacionPartidaPeer::IN_ANULAR, FALSE);
-        $c->add(Tb067CreacionPartidaPeer::NU_ANIO, $this->getUser()->getAttribute('ejercicio'));
-        
-        $cantidad = Tb067CreacionPartidaPeer::doCount($c);  
+         
+     }else{
+         $tb085_presupuesto = new Tb085Presupuesto();
+         
+                $c = new Criteria();     
+                $c->add(Tb085PresupuestoPeer::NU_PARTIDA,$nu_partida);
+                $c->add(Tb085PresupuestoPeer::ID_TB084_ACCION_ESPECIFICA,$tb067_creacion_partidaForm["co_accion_especifica"]);
+                $c->add(Tb085PresupuestoPeer::NU_ANIO, $this->getUser()->getAttribute('ejercicio'));
+                $cantidad = Tb085PresupuestoPeer::doCount($c);  
          
      }
      try
       { 
-        $con->beginTransaction();        
+        $con->beginTransaction();      
         
-        if($cantidad > 0){
-            $this->data = json_encode(array(
-                "success" => false,
-                "msg" =>  "La partida ya se encuentra registrada"
-             ));
-        }else{
-            
-            if(date("Y")>$this->getUser()->getAttribute('ejercicio')){
-                $fecha = $this->getUser()->getAttribute('fe_cierre'); 
-            }else{
-                $fecha = date("Y-m-d H:i:s");
-            }  
         
-            $tb067_creacion_partida->setCreatedAt($fecha);
-            $tb067_creacion_partida->setCoFuenteFinanciamiento($tb067_creacion_partidaForm["co_fuente_financiamiento"]);
-            $tb067_creacion_partida->setCoNumeroFuente($tb067_creacion_partidaForm["co_numero_fuente"]);
-            $tb067_creacion_partida->setCoEnteEjecutor($tb067_creacion_partidaForm["co_ente_ejecutor"]);
-            $tb067_creacion_partida->setCoProyecto($tb067_creacion_partidaForm["co_proyecto"]);
-            $tb067_creacion_partida->setCoAccionEspecifica($tb067_creacion_partidaForm["co_accion_especifica"]);
-            $tb067_creacion_partida->setCoPartida($tb067_creacion_partidaForm["co_partida"]);        
-            $tb067_creacion_partida->setTxDescripcion($tb067_creacion_partidaForm["tx_descripcion"]);
-            $tb067_creacion_partida->setTxPartida($tb067_creacion_partidaForm["tx_partida"]);
-            $tb067_creacion_partida->setNuMonto(0);
-            $tb067_creacion_partida->setCoSolicitud($tb067_creacion_partidaForm["co_solicitud"]);
-            $tb067_creacion_partida->setCoUsuario($this->getUser()->getAttribute('codigo'));
-            $tb067_creacion_partida->setCoAmbito($tb067_creacion_partidaForm["co_ambito"]);
-            $tb067_creacion_partida->setCoTipoIngreso($tb067_creacion_partidaForm["co_tipo_ingreso"]);
-            $tb067_creacion_partida->setCoAplicacion($tb067_creacion_partidaForm["co_aplicacion"]);
-            $tb067_creacion_partida->setCoTipoGasto($tb067_creacion_partidaForm["co_tipo_gasto"]);
-            $tb067_creacion_partida->setCoClasificacionEconomica($tb067_creacion_partidaForm["co_clasificacion_economica"]);
-            $tb067_creacion_partida->setCoAreaEstrategica($tb067_creacion_partidaForm["co_area_estrategica"]);
-            $tb067_creacion_partida->setCoEstatus(1);
+
+                if($cantidad>0){
+                    
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" =>  "La partida ya se encuentra registrada"
+                 ));
+                    
+                }else{
+                
+
+                    $tb085_presupuesto->setIdTb084AccionEspecifica($tb067_creacion_partidaForm["co_accion_especifica"])
+                                      ->setNuPartida($nu_partida)
+                                      ->setDePartida($tb067_creacion_partidaForm["tx_descripcion"])
+                                      ->setMoInicial(0)
+                                      ->setMoActualizado(0)
+                                      ->setMoPrecomprometido(0)
+                                      ->setMoComprometido(0)
+                                      ->setMoCausado(0)
+                                      ->setMoPagado(0)
+                                      ->setMoDisponible(0)
+                                      ->setInActivo(true)
+                                      ->setInMovimiento($presupuesto["in_movimiento"])
+                                      ->setNuPa($presupuesto["nu_pa"])
+                                      ->setNuGe($presupuesto["nu_ge"])
+                                      ->setNuEs($presupuesto["nu_es"])
+                                      ->setNuSe($presupuesto["nu_se"])
+                                      ->setNuSse($tb067_creacion_partidaForm["tx_partida"])
+                                      ->setCoPartida($co_partida)
+                                      ->setNuNivel(11)
+                                      ->setNuFi($tb067_creacion_partidaForm["tx_fuente"])
+                                      ->setCoCategoria($co_categoria)
+                                      ->setNuAplicacion($aplicacion["tx_tip_aplicacion"])
+                                      ->setTpIngreso($presupuesto["tp_ingreso"])
+                                      ->setNuSector($nu_sector)
+                                      ->setCodEnte($nu_ejecutor)
+                                      ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
+                                      ->setCoEnte($tb067_creacion_partidaForm["co_ente_ejecutor"])
+                                      ->setTpIngreso($tipo_ingreso["tx_tip_ingreso"])
+                                      ->setTipIng($tb067_creacion_partidaForm["co_tipo_ingreso"])
+                                      ->setTipApl($aplicacion["tx_tip_aplicacion"])
+                                      ->setTipGasto($tb067_creacion_partidaForm["co_tipo_gasto"])
+                                      ->setCodAmb($tb067_creacion_partidaForm["co_ambito"])
+                                      ->setInGenCheque(($aplicacion["tx_genera_cheque"]=='S')?TRUE:FALSE)
+                                      ->setIdTb139Aplicacion($tb067_creacion_partidaForm["co_aplicacion"])
+                                      ->setCoClasificacionEconomica($tb067_creacion_partidaForm["co_clasificacion_economica"])
+                                      ->setCoAreaEstrategica($tb067_creacion_partidaForm["co_area_estrategica"])
+                                      ->setCoSolicitud($tb067_creacion_partidaForm["co_solicitud"])
+                                      ->setIdTb083ProyectoAc($tb067_creacion_partidaForm["co_proyecto"])
+                                      ->setIdTb091Partida($tb067_creacion_partidaForm["co_partida"])
+                                      ->save($con); 
+              
 
             $con->commit();
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb067_creacion_partidaForm["co_solicitud"]));
@@ -193,15 +251,14 @@ class CrearPartidaActions extends sfActions
             Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());                 
 
             $con->commit();
-       
-            $tb067_creacion_partida->save($con);
+
             $this->data = json_encode(array(
                         "success" => true,
-                        "msg" => 'Modificación realizada exitosamente'
+                        "msg" => 'Proceso realizado exitosamente'
                     ));
             $con->commit();
+          }
         
-        }
       }catch (PropelException $e)
       {
         $con->rollback();
@@ -401,7 +458,7 @@ class CrearPartidaActions extends sfActions
                 $tipo_ingreso = $this->getTipoIngreso($campos["co_tipo_ingreso"]);
                 
                 $nu_partida = $presupuesto["nu_pa"].$presupuesto["nu_ge"].$presupuesto["nu_es"].$presupuesto["nu_se"].$campos["tx_partida"].$nu_fi;
-                $co_partida = $presupuesto["nu_pa"].$presupuesto["nu_ge"].$presupuesto["nu_es"].$presupuesto["nu_se"].$campos["tx_partida"];
+                $co_partida = $presupuesto["nu_pa"].$presupuesto["nu_ge"].$presupuesto["nu_es"].$presupuesto["nu_se"];
                 
                 $nu_sector   = $this->getSector($campos["co_proyecto"]);
                 $nu_proyecto = $this->getProyecto($campos["co_proyecto"]);
@@ -508,38 +565,24 @@ class CrearPartidaActions extends sfActions
     
     $c = new Criteria();  
     $c->clearSelectColumns();
-    $c->addSelectColumn(Tb067CreacionPartidaPeer::CO_CREACION_PARTIDA);
-//    $c->addSelectColumn(Tb091PartidaPeer::CO_PARTIDA);
-//    $c->addSelectColumn(Tb091PartidaPeer::DE_PARTIDA);
-//    $c->addSelectColumn(Tb091PartidaPeer::NU_PA);
-//    $c->addSelectColumn(Tb091PartidaPeer::NU_GE);
-//    $c->addSelectColumn(Tb091PartidaPeer::NU_ES);
-//    $c->addSelectColumn(Tb091PartidaPeer::NU_SE);
-    $c->addSelectColumn(Tb067CreacionPartidaPeer::TX_PARTIDA);
-    $c->addSelectColumn(Tb067CreacionPartidaPeer::NU_PARTIDA_DESAGREGADA);
-    $c->addSelectColumn(Tb067CreacionPartidaPeer::TX_DESCRIPCION);
-    $c->addSelectColumn(Tb067CreacionPartidaPeer::NU_MONTO);
-    $c->addAsColumn('tx_estatus', Tb031EstatusRutaPeer::TX_DESCRIPCION);
-    $c->addSelectColumn(Tb031EstatusRutaPeer::CO_ESTATUS_RUTA);
+    $c->addSelectColumn(Tb085PresupuestoPeer::ID);
+    $c->addSelectColumn(Tb085PresupuestoPeer::NU_PARTIDA);
+    $c->addSelectColumn(Tb085PresupuestoPeer::NU_SSE);
+    $c->addSelectColumn(Tb085PresupuestoPeer::DE_PARTIDA);
+    $c->addSelectColumn(Tb085PresupuestoPeer::MO_INICIAL);
     
-    
-//    $c->addJoin(Tb091PartidaPeer::ID, Tb067CreacionPartidaPeer::CO_PARTIDA);
-    $c->addJoin(Tb031EstatusRutaPeer::CO_ESTATUS_RUTA, Tb067CreacionPartidaPeer::CO_ESTATUS);
-    
-    $c->add(Tb067CreacionPartidaPeer::CO_SOLICITUD,$co_solicitud);
+    $c->add(Tb085PresupuestoPeer::CO_SOLICITUD,$co_solicitud);
     
     $c->setIgnoreCase(true);
-    $cantidadTotal = Tb067CreacionPartidaPeer::doCount($c);
+    $cantidadTotal = Tb085PresupuestoPeer::doCount($c);
     
     $c->setLimit($limit)->setOffset($start);
-    $c->addAscendingOrderByColumn(Tb067CreacionPartidaPeer::CO_CREACION_PARTIDA);
+    $c->addAscendingOrderByColumn(Tb085PresupuestoPeer::ID);
         
-    $stmt = Tb067CreacionPartidaPeer::doSelectStmt($c);
+    $stmt = Tb085PresupuestoPeer::doSelectStmt($c);
     $registros = "";
     while($res = $stmt->fetch(PDO::FETCH_ASSOC)){ 
-        
-        //$res["tx_partida"] = Tb085PresupuestoPeer::mascaraNomina($res["nu_partida_desagregada"]); //$res["nu_pa"].'.'.$res["nu_ge"].'.'.$res["nu_es"].'.'.$res["nu_se"].'.'.$res["tx_partida"];
-        
+
         $registros[] = $res;
     }
 

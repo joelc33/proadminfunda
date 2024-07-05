@@ -160,6 +160,8 @@ this.id_tb084_accion_especifica = new Ext.form.ComboBox({
           ModificaciondetalleEditar.main.storeID_PRESUPUESTO.load({
               params: {
                 ae:this.getValue(),
+                tipo_fuente:ModificaciondetalleEditar.main.OBJ.tipo_fuente,
+                numero_fuente:ModificaciondetalleEditar.main.OBJ.numero_fuente,
                 id_tb096_presupuesto_modificacion:ModificaciondetalleEditar.main.OBJ.id_tb096_presupuesto_modificacion
               }
           })

@@ -35,7 +35,7 @@ this.editar= new Ext.Button({
     text:'Editar',
     iconCls: 'icon-editar',
     handler:function(){
-	this.codigo  = CrearPartidaLista.main.gridPanel_.getSelectionModel().getSelected().get('co_creacion_partida');
+	this.codigo  = CrearPartidaLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 	CrearPartidaLista.main.mascara.show();
         this.msg = Ext.get('formularioCrearPartida');
         this.msg.load({
@@ -51,14 +51,14 @@ this.eliminar= new Ext.Button({
     text:'Eliminar',
     iconCls: 'icon-eliminar',
     handler:function(){
-	this.codigo  = CrearPartidaLista.main.gridPanel_.getSelectionModel().getSelected().get('co_creacion_partida');
+	this.codigo  = CrearPartidaLista.main.gridPanel_.getSelectionModel().getSelected().get('id');
 	Ext.MessageBox.confirm('Confirmación', '¿Realmente desea eliminar este registro?', function(boton){
 	if(boton=="yes"){
         Ext.Ajax.request({
             method:'POST',
             url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/CrearPartida/eliminar',
             params:{
-                co_creacion_partida:CrearPartidaLista.main.gridPanel_.getSelectionModel().getSelected().get('co_creacion_partida')
+                id:CrearPartidaLista.main.gridPanel_.getSelectionModel().getSelected().get('id')
             },
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
@@ -109,12 +109,10 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     ],
     columns: [
     new Ext.grid.RowNumberer(),
-        {header: 'co_creacion_partida',hidden:true, menuDisabled:true,dataIndex: 'co_creacion_partida'},
-        //{header: 'Partida Afectada', width:350,  menuDisabled:true, sortable: true,  dataIndex: 'de_partida',renderer:textoLargo},
-//        {header: 'Monto Disponible', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'mo_disponible',renderer:renderMonto},
-        {header: 'Nro. Partida', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_partida'},
-        {header: 'Descripción', width:550,  menuDisabled:true, sortable: true,  dataIndex: 'tx_descripcion',renderer:textoLargo},
-        {header: 'Monto', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'nu_monto',renderer:renderMonto},
+        {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
+        {header: 'Nro. Partida', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'nu_partida'},
+        {header: 'Descripción', width:550,  menuDisabled:true, sortable: true,  dataIndex: 'de_partida',renderer:textoLargo},
+        {header: 'Monto', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'mo_inicial',renderer:renderMonto},
     ],
     stripeRows: true,
     autoScroll:true,
@@ -174,17 +172,10 @@ getLista: function(){
     url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/CrearPartida/storelista',
     root:'data',
     fields:[
-            {name: 'co_creacion_partida'},
-            {name: 'co_partida'},
-            {name: 'de_partida',
-                convert:function(v,r){
-                    return r.co_partida+' - '+r.de_partida;
-                }
-            },
-            {name: 'tx_descripcion'},
-            {name: 'tx_partida'},
-            {name: 'nu_monto'},
-            {name: 'mo_disponible'}
+            {name: 'id'},
+            {name: 'nu_partida'},
+            {name: 'de_partida'},
+            {name: 'mo_inicial'}
            ]
     });
     return this.store;
