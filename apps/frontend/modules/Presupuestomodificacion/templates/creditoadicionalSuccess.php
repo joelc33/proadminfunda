@@ -673,8 +673,14 @@
         stateful: true,
         listeners: {
           cellclick: function(Grid, rowIndex, columnIndex, e) {
+            if(PresupuestomodificacionEditar.main.OBJ.in_procesado==true){
+            PresupuestomodificacionEditar.main.nuevo.disable();
+            PresupuestomodificacionEditar.main.editar.disable();
+            PresupuestomodificacionEditar.main.eliminar.disable();
+            }else{
             PresupuestomodificacionEditar.main.editar.enable();
             PresupuestomodificacionEditar.main.eliminar.enable();
+        }
           }
         },
         bbar: new Ext.PagingToolbar({
@@ -863,8 +869,13 @@
         stateful: true,
         listeners: {
           cellclick: function(Grid, rowIndex, columnIndex, e) {
+           if(PresupuestomodificacionEditar.main.OBJ.in_procesado==true){
+            PresupuestomodificacionEditar.main.editar_destino.disable();
+            PresupuestomodificacionEditar.main.eliminar_destino.disable();
+            }else{
             PresupuestomodificacionEditar.main.editar_destino.enable();
-            PresupuestomodificacionEditar.main.eliminar_destino.enable();
+            PresupuestomodificacionEditar.main.eliminar_destino.enable();    
+            }
           }
         },
         bbar: new Ext.PagingToolbar({
@@ -939,8 +950,13 @@
       if (this.OBJ.id) {
           
         if(this.OBJ.in_procesado==true){
-        PresupuestomodificacionEditar.main.gridPanel_origen.disable();
-        PresupuestomodificacionEditar.main.gridPanel_destino.disable();
+            
+            PresupuestomodificacionEditar.main.nuevo_destino.disable();
+            PresupuestomodificacionEditar.main.nuevo.disable();
+        PresupuestomodificacionEditar.main.gridPanel_origen.enable();
+        PresupuestomodificacionEditar.main.gridPanel_destino.enable();
+        PresupuestomodificacionEditar.main.nuevo.disable();
+        
         }else{         
         PresupuestomodificacionEditar.main.gridPanel_origen.enable();
         PresupuestomodificacionEditar.main.gridPanel_destino.enable();
