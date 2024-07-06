@@ -135,6 +135,35 @@ class CrearPartidaActions extends sfActions
      $codigo = $this->getRequestParameter("id");
      $tb067_creacion_partidaForm = $this->getRequestParameter('tb067_creacion_partida');
      
+     $tx_fuente = substr($tb067_creacion_partidaForm["tx_fuente"],0,1);
+                      $cantidad=0;
+                 $cant=0;
+                     $ci = new Criteria();     
+                $ci->add(Tb073FuenteFinanciamientoPeer::TX_SIGLAS,$tx_fuente);
+                $ci->add(Tb073FuenteFinanciamientoPeer::IN_ACTIVO,true);
+                $cant = Tb073FuenteFinanciamientoPeer::doCount($ci);                 
+                
+                 if($cant==0){
+                    
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" =>  "La inicial de la fuente no es valida o no esta activa, verifique!"
+                 ));
+                 echo $this->data;
+                return sfView::NONE;                   
+                }  
+
+                if($tx_fuente=='L'){
+                    if(substr($tb067_creacion_partidaForm["tx_fuente"],1,4)!='0000'){
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" =>  "La inicial de la fuente al ser ley el correlativo debe ser 0000, verifique!"
+                 ));
+                 echo $this->data;
+                return sfView::NONE;                        
+                    }
+                }
+     
                 $cp = new Criteria();
                 $cp->add(Tb091PartidaPeer::ID,$tb067_creacion_partidaForm["co_partida"]);
                 $stmtp = Tb091PartidaPeer::doSelectStmt($cp);
@@ -153,24 +182,7 @@ class CrearPartidaActions extends sfActions
                 $nu_accion_especifica   = $this->getAccionEspecifica($tb067_creacion_partidaForm["co_accion_especifica"]);
                               
                 $co_categoria = $nu_ejecutor.'.'.$nu_sector.'.'.$nu_proyecto.'.00.'.$nu_accion_especifica.'.'.$presupuesto["nu_pa"].'.'.$presupuesto["nu_ge"].'.'.$presupuesto["nu_es"].'.'.$presupuesto["nu_se"].'.'.$tb067_creacion_partidaForm["tx_partida"].'.'.$tb067_creacion_partidaForm["tx_fuente"];     
-                 $cantidad=0;
-                 $cant=0;
-                 
-                $tx_fuente = substr($tb067_creacion_partidaForm["tx_fuente"],0,1);
-                $ci = new Criteria();     
-                $ci->add(Tb073FuenteFinanciamientoPeer::TX_SIGLAS,$tx_fuente);
-                $ci->add(Tb073FuenteFinanciamientoPeer::IN_ACTIVO,true);
-                $cant = Tb073FuenteFinanciamientoPeer::doCount($ci);                 
-                
-                 if($cant==0){
-                    
-                $this->data = json_encode(array(
-                    "success" => false,
-                    "msg" =>  "La inicial de la fuente no es valida o no esta activa, verifique!"
-                 ));
-                 echo $this->data;
-                return sfView::NONE;                   
-                }               
+
                 
      $con = Propel::getConnection();
      if($codigo!=''||$codigo!=null){
