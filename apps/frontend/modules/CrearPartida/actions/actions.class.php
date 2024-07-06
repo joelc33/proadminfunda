@@ -74,7 +74,8 @@ class CrearPartidaActions extends sfActions
                             "co_area_estrategica"          => "",
                             "co_clasificacion_economica"   => "",
                             "co_tipo_gasto"                => "",            
-                            "co_tipo_ingreso"              => ""
+                            "co_tipo_ingreso"              => "",
+                            "tx_fuente"                    => "",
                     ));
     }
 
