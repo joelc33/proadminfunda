@@ -338,6 +338,7 @@
               }
 
               PresupuestomodificacionEditar.main.id.setValue(action.result.codigo);
+              PresupuestomodificacionEditar.main.co_solicitud.setValue(action.result.co_solicitud);
               PresupuestomodificacionEditar.main.nu_modificacion.setValue("<span style='color:black;font-size:15px;'><b>N° Crédito: </b> " + action.result.numero + "</span>");
 
               PresupuestomodificacionEditar.main.gridPanel_origen.enable();

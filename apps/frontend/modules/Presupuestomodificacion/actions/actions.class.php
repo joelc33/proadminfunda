@@ -1357,6 +1357,7 @@ class PresupuestomodificacionActions extends sfActions
           'success' => true,
           'numero' => $campos["nu_modificacion"],
           'codigo' => $tb096_presupuesto_modificacion->getId(),
+          'co_solicitud' => $tb096_presupuesto_modificacion->getCoSolicitud(),
           'msg' => '<span style="color:green;font-size:13px,">Datos Editado con exito!.<br>
                     Numero de Movimiento <br><textarea readonly>' . $campos["nu_modificacion"] . '</textarea></span>'
         ));
@@ -1530,6 +1531,7 @@ class PresupuestomodificacionActions extends sfActions
           'success' => true,
           'numero' => $campos["nu_modificacion"],
           'codigo' => $tb096_presupuesto_modificacion->getId(),
+          'co_solicitud' => $tb096_presupuesto_modificacion->getCoSolicitud(),
           'msg' => '<span style="color:green;font-size:13px,">Datos Guardados con exito!.<br>
                     Numero de Movimiento <br><textarea readonly>' . $campos["nu_modificacion"] . '</textarea></span>'
         ));
