@@ -51,6 +51,7 @@
         fieldLabel: 'Fecha Crédito',
         name: 'tb096_presupuesto_modificacion[fe_modificacion]',
         value: this.OBJ.fe_modificacion,
+        maxValue:this.OBJ.fe_fin,
         allowBlank:false,
         width: 100
       });
@@ -134,7 +135,7 @@
       });
       
       this.numero_decreto = new Ext.form.TextField({
-        fieldLabel: 'N° de Fuente',
+        fieldLabel: 'N° de Credito',
         name: 'tb096_presupuesto_modificacion[numero_decreto]',
         value: this.OBJ.nu_oficio,
         maxLength:5,
