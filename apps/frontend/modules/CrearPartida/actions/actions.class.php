@@ -569,6 +569,7 @@ class CrearPartidaActions extends sfActions
     $c->addSelectColumn(Tb085PresupuestoPeer::NU_PARTIDA);
     $c->addSelectColumn(Tb085PresupuestoPeer::NU_SSE);
     $c->addSelectColumn(Tb085PresupuestoPeer::DE_PARTIDA);
+    $c->addSelectColumn(Tb085PresupuestoPeer::CO_CATEGORIA);
     $c->addSelectColumn(Tb085PresupuestoPeer::MO_INICIAL);
     
     $c->add(Tb085PresupuestoPeer::CO_SOLICITUD,$co_solicitud);

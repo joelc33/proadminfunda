@@ -110,7 +110,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
         {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
-        {header: 'Nro. Partida', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'nu_partida'},
+        {header: 'Nro. Partida', width:250,  menuDisabled:true, sortable: true,  dataIndex: 'co_categoria'},
         {header: 'Descripción', width:550,  menuDisabled:true, sortable: true,  dataIndex: 'de_partida',renderer:textoLargo},
         {header: 'Monto', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'mo_inicial',renderer:renderMonto},
     ],
@@ -175,6 +175,7 @@ getLista: function(){
             {name: 'id'},
             {name: 'nu_partida'},
             {name: 'de_partida'},
+            {name: 'co_categoria'},
             {name: 'mo_inicial'}
            ]
     });
