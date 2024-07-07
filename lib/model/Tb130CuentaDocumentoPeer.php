@@ -82,8 +82,10 @@ class Tb130CuentaDocumentoPeer extends BaseTb130CuentaDocumentoPeer
             
             $Tb024CuentaContable = new Tb024CuentaContable();
             $Tb024CuentaContable->setNuCuentaContable($tx_cuenta)
+                                ->setTxCodigoCuenta($tx_cuenta)
                                 ->setTxDescripcion($tx_descripcion)
                                 ->setTxTipo('S')
+                                ->setTxCuenta('S')
                                 ->setNuNivel(6)
                                 ->save();
                       
