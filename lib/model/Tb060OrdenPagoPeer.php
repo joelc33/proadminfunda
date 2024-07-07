@@ -1284,21 +1284,21 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                     if($co_tipo_solicitud == 23){
                         //LIQUIDACION DE NOMINA
-                        $c = new Criteria();
-                        $c->clearSelectColumns();
-                        $c->addSelectColumn('SUM(' .Tb123ArchivoPagoPeer::NU_MONTO. ') as total');
-                        $c->addSelectColumn(Tb010BancoPeer::NU_CODIGO);
-                        $c->addSelectColumn(Tb010BancoPeer::CO_BANCO);
-                        $c->addJoin(Tb123ArchivoPagoPeer::CO_PAGO_NOMINA, Tb122PagoNominaPeer::CO_PAGO_NOMINA);
-                        $c->addJoin(Tb123ArchivoPagoPeer::COD_BANCO, Tb010BancoPeer::NU_CODIGO);
-                        $c->add(Tb122PagoNominaPeer::CO_SOLICITUD,$co_solicitud);
-                        $c->addGroupByColumn(Tb010BancoPeer::NU_CODIGO);
-                        $c->addGroupByColumn(Tb010BancoPeer::CO_BANCO);
-
-                        
-                        $stmt = Tb123ArchivoPagoPeer::doSelectStmt($c);
-                        $registros = "";
-                        while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
+//                        $c = new Criteria();
+//                        $c->clearSelectColumns();
+//                        $c->addSelectColumn('SUM(' .Tb123ArchivoPagoPeer::NU_MONTO. ') as total');
+//                        $c->addSelectColumn(Tb010BancoPeer::NU_CODIGO);
+//                        $c->addSelectColumn(Tb010BancoPeer::CO_BANCO);
+//                        $c->addJoin(Tb123ArchivoPagoPeer::CO_PAGO_NOMINA, Tb122PagoNominaPeer::CO_PAGO_NOMINA);
+//                        $c->addJoin(Tb123ArchivoPagoPeer::COD_BANCO, Tb010BancoPeer::NU_CODIGO);
+//                        $c->add(Tb122PagoNominaPeer::CO_SOLICITUD,$co_solicitud);
+//                        $c->addGroupByColumn(Tb010BancoPeer::NU_CODIGO);
+//                        $c->addGroupByColumn(Tb010BancoPeer::CO_BANCO);
+//
+//                        echo $co_tipo_solicitud; exit();
+//                        $stmt = Tb123ArchivoPagoPeer::doSelectStmt($c);
+//                        $registros = "";
+//                        while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
 
                             if(date("Y")>$ejercicio){
                                 $FeEmision = $ejercicio.'-12-31'; 
@@ -1312,14 +1312,14 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                                 ->setFeEmision( $FeEmision)
                                 //->setNuAnio(date('Y'))
                                 ->setNuAnio( $ejercicio)
-                                ->setMoPagar($res["total"])
-                                ->setMoPendiente($res["total"])
+                                ->setMoPagar($nu_monto_total)
+                                ->setMoPendiente($nu_monto_total)
                                 ->setMoPagado(0)
                                 ->setCoOdp($Tb060OrdenPago->getCoOrdenPago())
                                 ->setCoTipoSolicitud($co_tipo_solicitud)                               
                                 ->save($con);
 
-                        }
+//                        }
                 
                 
                     }else{            
