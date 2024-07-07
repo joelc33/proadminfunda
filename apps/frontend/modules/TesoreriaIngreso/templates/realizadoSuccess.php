@@ -29,6 +29,13 @@ init:function(){
 //Mascara general del modulo
 this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 
+function formatoNro(val){
+    
+        if(val==null){
+            val = 0;
+        }
+	return '<p align="right">'+paqueteComunJS.funcion.getNumeroFormateado(val)+'</p>';
+}
 //objeto store
 this.store_lista = this.getLista();
 
@@ -120,7 +127,7 @@ this.formFiltroPrincipal = new Ext.form.FormPanel({
         this.compositefieldCIRIF,
         this.tx_razon_social,        
 	this.co_solicitud,
-        this.co_proceso
+//        this.co_proceso
     ],
     keys: [{
 		key:[Ext.EventObject.ENTER],
@@ -147,6 +154,30 @@ this.formFiltroPrincipal = new Ext.form.FormPanel({
     ]
 });
 
+this.botonPagar = new Ext.Button({
+    text:'Ingresar',
+    iconCls:'icon-pagos',
+    handler:function(){
+        this.co_liquidacion_pago = TesoreriaIngresoLista.main.gridPanel_.getSelectionModel().getSelected().get('co_cuenta_detalle');
+        this.co_solicitud = TesoreriaIngresoLista.main.gridPanel_.getSelectionModel().getSelected().get('co_solicitud');
+        this.co_tipo_solicitud = TesoreriaIngresoLista.main.gridPanel_.getSelectionModel().getSelected().get('co_tipo_solicitud');
+                var msg = Ext.get('muestra_contrib');
+                    msg.load({
+                    url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/TesoreriaIngreso/ingresar',
+                    scripts: true,
+                    params:{
+                        co_liquidacion_pago: this.co_liquidacion_pago,
+                        co_solicitud: this.co_solicitud,
+                        co_tipo_solicitud: this.co_tipo_solicitud
+                    },
+                    text: 'Cargando...'
+                    });
+                    msg.show();
+        
+    }
+});
+
+this.botonPagar.setDisabled(true);
 //Grid principal
 this.gridPanel_ = new Ext.grid.GridPanel({
     //title:'Lista de TesoreriaIngreso',
@@ -156,16 +187,17 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 //    frame:true,
     height:396,
     tbar:[
-        //this.nuevo
+//        this.botonPagar
     ],
     columns: [
     new Ext.grid.RowNumberer(),
-    {header: 'id',hidden:true, menuDisabled:true,dataIndex: 'id'},
+    {header: 'co_cuenta_detalle',hidden:true, menuDisabled:true,dataIndex: 'co_cuenta_detalle'},
     {header: 'N° Solicitud', width:100,menuDisabled:true,dataIndex: 'co_solicitud',renderer: renderRectificacion}, 
     {header: 'RIF', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_rif'},
     {header: 'Razon Social', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social'},
     {header: 'Tipo de solicitud', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud',renderer: renderRectificacion},
-    {header: 'Proceso', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_proceso',renderer: renderRectificacion},
+    {header: 'fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'fe_pago',renderer: renderRectificacion},
+    {header: 'Monto', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'mo_pago',renderer: formatoNro},
     ],
     stripeRows: true,
     autoScroll:true,
@@ -173,31 +205,33 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     listeners:{
         cellclick:function(Grid, rowIndex, columnIndex,e ){
         
+        TesoreriaIngresoLista.main.botonPagar.enable();
+        
         var cant_revision =  TesoreriaIngresoLista.main.store_lista.getAt(rowIndex).get('cant_revision');
                 
         if(cant_revision>0){
             TesoreriaIngresoLista.main.estado.disable();  
         }        
     
-        var msg = Ext.get('detalle');
-        msg.load({
-            url: '<?php echo $_SERVER['SCRIPT_NAME']?>/TesoreriaIngreso/detalle',
-            scripts: true,
-            params:
-            {
-                codigo: TesoreriaIngresoLista.main.store_lista.getAt(rowIndex).get('co_solicitud'),
-                co_tipo_solicitud: TesoreriaIngresoLista.main.store_lista.getAt(rowIndex).get('co_tipo_solicitud'),
-                co_proceso: TesoreriaIngresoLista.main.store_lista.getAt(rowIndex).get('co_proceso')
-
-            },
-            text: 'Cargando...'
-        });
-    
-
-        if(panel_detalle.collapsed == true)
-        {
-        panel_detalle.toggleCollapse();
-        } 
+//        var msg = Ext.get('detalle');
+//        msg.load({
+//            url: '<?php echo $_SERVER['SCRIPT_NAME']?>/TesoreriaIngreso/detalle',
+//            scripts: true,
+//            params:
+//            {
+//                codigo: TesoreriaIngresoLista.main.store_lista.getAt(rowIndex).get('co_solicitud'),
+//                co_tipo_solicitud: TesoreriaIngresoLista.main.store_lista.getAt(rowIndex).get('co_tipo_solicitud'),
+//                co_proceso: TesoreriaIngresoLista.main.store_lista.getAt(rowIndex).get('co_proceso')
+//
+//            },
+//            text: 'Cargando...'
+//        });
+//    
+//
+//        if(panel_detalle.collapsed == true)
+//        {
+//        panel_detalle.toggleCollapse();
+//        } 
 
     }},
     bbar: new Ext.PagingToolbar({
@@ -221,20 +255,23 @@ this.panel = new Ext.Panel({
 this.panel.render("contenedorTesoreriaIngresoLista");
 
 this.store_lista.load();
+this.store_lista.on('load',function(){
+TesoreriaIngresoLista.main.botonPagar.disable();
+});
 },
 getLista: function(){
     this.store = new Ext.data.JsonStore({
     url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/TesoreriaIngreso/storelistaIngresado',
     root:'data',
     fields:[
-            {name: 'tx_login'},
+            {name: 'mo_cuota'},
+            {name: 'mo_pago'},
+            {name: 'co_cuenta_detalle'},
             {name: 'tx_tipo_solicitud'},
             {name: 'co_solicitud'},
-            {name: 'fe_creacion'},
+            {name: 'fe_pago'},
             {name: 'cant_revision'},
-            {name: 'tx_proceso'},
             {name: 'co_tipo_solicitud'},
-            {name: 'co_proceso'},
             {name: 'tx_rif'},
             {name: 'tx_razon_social'}
     ]
@@ -262,6 +299,45 @@ getStoreCO_DOCUMENTO:function(){
             ]
     });
     return this.store;
+},
+aplicarFiltroByFormulario: function(){
+	//Capturamos los campos con su value para posteriormente verificar cual
+	//esta lleno y trabajar en base a ese.
+	var campo = TesoreriaIngresoLista.main.formFiltroPrincipal.getForm().getValues();
+
+         if(panel_detalle.collapsed == false)
+         {
+             panel_detalle.toggleCollapse();
+         } 
+
+
+	TesoreriaIngresoLista.main.store_lista.baseParams={}
+
+	var swfiltrar = false;
+	for(campName in campo){
+	    if(campo[campName]!=''){
+		swfiltrar = true;
+		eval(" TesoreriaIngresoLista.main.store_lista.baseParams."+campName+" = '"+campo[campName]+"';");
+	    }
+	}
+	if(swfiltrar==true){
+	    TesoreriaIngresoLista.main.store_lista.baseParams.BuscarBy = true;
+           // pendientePagosLista.main.store_lista.baseParams.in_ventanilla = 'true';
+	    TesoreriaIngresoLista.main.store_lista.load();
+	}else{
+	    Ext.MessageBox.show({
+		       title: 'Notificación',
+		       msg: 'Debe ingresar un parametro de busqueda',
+		       buttons: Ext.MessageBox.OK,
+		       icon: Ext.MessageBox.WARNING
+	    });
+	}
+
+	},
+limpiarCamposByFormFiltro: function(){
+TesoreriaIngresoLista.main.formFiltroPrincipal.getForm().reset();
+TesoreriaIngresoLista.main.store_lista.baseParams={};
+TesoreriaIngresoLista.main.store_lista.load();
 }
 };
 Ext.onReady(TesoreriaIngresoLista.main.init, TesoreriaIngresoLista.main);

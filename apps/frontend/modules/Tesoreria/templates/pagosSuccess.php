@@ -12,6 +12,14 @@ this.storeCO_PROCESO = this.getStoreCO_PROCESO();
 
 this.storeCO_DOCUMENTO = this.getStoreCO_DOCUMENTO();
 
+function formatoNro(val){
+    
+        if(val==null){
+            val = 0;
+        }
+	return '<p align="right">'+paqueteComunJS.funcion.getNumeroFormateado(val)+'</p>';
+}
+
 this.co_solicitud = new Ext.form.TextField({
 	fieldLabel:'N° Solicitud',
 	name:'co_solicitud',
@@ -95,7 +103,7 @@ this.formFiltroPrincipal = new Ext.form.FormPanel({
         this.compositefieldCIRIF,
         this.tx_razon_social,        
 	this.co_solicitud,
-        this.co_proceso
+//        this.co_proceso
     ],
     keys: [{
 		key:[Ext.EventObject.ENTER],
@@ -162,6 +170,33 @@ function renderRectificacion(val, attr, record) {
     }
 }
 
+this.botonPagar = new Ext.Button({
+    text:'Pagar',
+    iconCls:'icon-pagos',
+    handler:function(){
+        this.co_liquidacion_pago = pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_liquidacion_pago');
+        this.co_solicitud = pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_solicitud');
+        this.co_tipo_solicitud = pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_tipo_solicitud');
+        this.co_tipo_odp = pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_tipo_odp');
+                var msg = Ext.get('muestra_contrib');
+                    msg.load({
+                    url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Tesoreria/index',
+                    scripts: true,
+                    params:{
+                        co_liquidacion_pago: this.co_liquidacion_pago,
+                        co_solicitud: this.co_solicitud,
+                        co_tipo_odp: this.co_tipo_odp,
+                        co_tipo_solicitud: this.co_tipo_solicitud
+                    },
+                    text: 'Cargando...'
+                    });
+                    msg.show();
+        
+    }
+});
+
+this.botonPagar.setDisabled(true);
+
 this.gridPanel_ = new Ext.grid.GridPanel({
 //    title:'Lista de solicitud',
     iconCls: 'icon-libro',
@@ -169,18 +204,19 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     loadMask:true,
     height:396,
     tbar:[
-        this.revision
+        this.botonPagar,'-',this.revision
     ],
     columns: [
     new Ext.grid.RowNumberer(),
+    {header: 'co_liquidacion_pago',hidden:true, menuDisabled:true,dataIndex: 'co_liquidacion_pago'},
     {header: 'N° Solicitud', width:100,menuDisabled:true,dataIndex: 'co_solicitud',renderer: renderRectificacion}, 
     {header: 'RIF', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_rif'},
     {header: 'Razon Social', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social',renderer: textoLargo},
-
     {header: 'Tipo de solicitud', width:250,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud',renderer: renderRectificacion},
-    {header: 'Proceso', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_proceso',renderer: renderRectificacion},
     {header: 'Orden de Pago', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial',renderer: renderRectificacion},
-  //  {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'fe_creacion',renderer: renderRectificacion}
+    {header: 'Monto Pendiente', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'mo_pendiente',renderer: formatoNro},
+    {header: 'Fecha ODP', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'fe_emision',renderer: renderRectificacion},
+    {header: 'Descripción', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_concepto',renderer: textoLargo}
     ],
     stripeRows: true,
     autoScroll:true,
@@ -188,6 +224,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){
 	
          pendientePagosLista.main.estado.enable();
+         pendientePagosLista.main.botonPagar.enable();
          pendientePagosLista.main.revision.enable();
          
          var cant_revision =  pendientePagosLista.main.store_lista.getAt(rowIndex).get('cant_revision');
@@ -196,25 +233,25 @@ this.gridPanel_ = new Ext.grid.GridPanel({
             pendientePagosLista.main.estado.disable();  
          }        
         
-         var msg = Ext.get('detalle');
-         msg.load({
-                url: '<?php echo $_SERVER['SCRIPT_NAME']?>/Tesoreria/detalle',
-                scripts: true,
-                params:
-                {
-                    codigo: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_solicitud'),
-                    co_tipo_solicitud: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_tipo_solicitud'),
-                    co_proceso: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_proceso')
-
-                },
-                text: 'Cargando...'
-         });
+//         var msg = Ext.get('detalle');
+//         msg.load({
+//                url: '<?php echo $_SERVER['SCRIPT_NAME']?>/Tesoreria/detalle',
+//                scripts: true,
+//                params:
+//                {
+//                    codigo: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_solicitud'),
+//                    co_tipo_solicitud: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_tipo_solicitud'),
+//                    co_proceso: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_proceso')
+//
+//                },
+//                text: 'Cargando...'
+//         });
         
     
-         if(panel_detalle.collapsed == true)
-         {
-            panel_detalle.toggleCollapse();
-         } 
+//         if(panel_detalle.collapsed == true)
+//         {
+//            panel_detalle.toggleCollapse();
+//         } 
     
     }},
     bbar: new Ext.PagingToolbar({
@@ -239,6 +276,7 @@ this.store_lista.baseParams.paginar = 'si';
 this.store_lista.load();
 this.store_lista.on('load',function(){
 pendientePagosLista.main.estado.disable();
+pendientePagosLista.main.botonPagar.disable();
 pendientePagosLista.main.revision.disable();
 });
 },
@@ -278,16 +316,19 @@ getLista: function(){
     url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Tesoreria/storelistapagos',
     root:'data',
     fields:[ 
-            {name: 'tx_login'},
+            {name: 'co_liquidacion_pago'},
             {name: 'tx_tipo_solicitud'},
             {name: 'co_solicitud'},
-            {name: 'fe_creacion'},
+            {name: 'fe_emision'},
             {name: 'cant_revision'},
             {name: 'tx_proceso'},
             {name: 'co_tipo_solicitud'},
             {name: 'co_proceso'},
             {name: 'tx_rif'},
             {name: 'tx_razon_social'},
+            {name: 'mo_pendiente'},
+            {name: 'co_tipo_odp'},
+            {name: 'tx_concepto'},
             {name: 'tx_serial'}
            ]
     });
