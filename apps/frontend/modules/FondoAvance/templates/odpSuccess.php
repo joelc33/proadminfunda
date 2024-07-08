@@ -167,7 +167,7 @@ this.fieldAsignacion= new Ext.form.FieldSet({
         items:[
             this.co_compras,
             this.tx_descripcion,
-            this.nu_cancelacion,
+//            this.nu_cancelacion,
             this.fe_compromiso,
             this.nu_monto
        ]
