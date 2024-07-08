@@ -278,6 +278,7 @@ this.monto = new Ext.form.NumberField({
     value: '',
     blankText: 'Debe introducir el monto a pagar',
     msgTarget: 'under',
+    value:this.OBJ.mo_pendiente,
     validator: function(){
         return this.validFlag;
     },
