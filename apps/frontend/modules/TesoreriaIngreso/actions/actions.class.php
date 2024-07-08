@@ -402,7 +402,7 @@ class TesoreriaIngresoActions extends sfActions
     $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);  
     $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::MO_CUOTA);
     $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::FE_PAGO);
-    $c->addSelectColumn(Tb142CuentaCobrarPeer::DE_DESCRIPCION);
+    $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::DE_CUOTA);
     
     $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
     $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
@@ -465,7 +465,7 @@ class TesoreriaIngresoActions extends sfActions
                 "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
                 "co_solicitud"      => trim($res["co_solicitud"]),
                 "mo_cuota"          => trim($res["mo_cuota"]),
-                "descripcion"          => trim($res["de_descripcion"]),
+                "descripcion"          => trim($res["de_cuota"]),
                 "tx_rif"            => $tx_rif,
                 "tx_razon_social"   => $tx_razon_social,
                 "fe_pago"       => $dia.'-'.$mes.'-'.$anio,
@@ -537,7 +537,7 @@ class TesoreriaIngresoActions extends sfActions
     $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::MO_CUOTA);
     $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::FE_PAGO);
     $c->addSelectColumn(Tb148CuentaCobrarPagoPeer::MO_PAGO);
-    $c->addSelectColumn(Tb142CuentaCobrarPeer::DE_DESCRIPCION);
+    $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::DE_CUOTA);
     
     $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
     $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
@@ -602,7 +602,7 @@ class TesoreriaIngresoActions extends sfActions
                 "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
                 "co_solicitud"      => trim($res["co_solicitud"]),
                 "mo_cuota"          => trim($res["mo_cuota"]),
-                "descripcion"          => trim($res["de_descripcion"]),
+                "descripcion"          => trim($res["de_cuota"]),
                 "mo_pago"          => trim($res["mo_pago"]),
                 "tx_rif"            => $tx_rif,
                 "tx_razon_social"   => $tx_razon_social,

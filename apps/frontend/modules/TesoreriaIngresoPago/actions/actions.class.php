@@ -176,7 +176,7 @@ class TesoreriaIngresoPagoActions extends sfActions
         $tb155_cuenta_bancaria_historico->setIdTb153TipoDocumentoCuenta($tb148_cuenta_cobrar_pagoForm["id_tb153_tipo_documento_cuenta"]);
         $tb155_cuenta_bancaria_historico->setIdTb154TipoCuentaMovimiento($campos11["id_tipo_cuenta_movimiento"]);
         $tb155_cuenta_bancaria_historico->setIdTb156SubtipoDocumento(1);
-        $tb155_cuenta_bancaria_historico->setDeObservacion('INGRESO FINANCIERO');
+        $tb155_cuenta_bancaria_historico->setDeObservacion($campos2["de_cuota"]);
         $tb155_cuenta_bancaria_historico->setIdTb148CuentaCobrarPago($tb148_cuenta_cobrar_pago->getId());
         $tb155_cuenta_bancaria_historico->setInConciliado(true);
         $tb155_cuenta_bancaria_historico->save($con);
@@ -262,7 +262,7 @@ class TesoreriaIngresoPagoActions extends sfActions
         $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos6["mo_pagado"]);
         $tb150_presupuesto_ingreso_movimiento->setMoSaldoNuevo($mo_recaudado);
         $tb150_presupuesto_ingreso_movimiento->setCoSolicitud($campos3["co_solicitud"]);
-        $tb150_presupuesto_ingreso_movimiento->setTxObservacion('INGRESO RECAUDACION');
+        $tb150_presupuesto_ingreso_movimiento->setTxObservacion($campos2["de_cuota"]);
         $tb150_presupuesto_ingreso_movimiento->save($con);        
         
         $co_tipo_solicitud = $this->getRequestParameter("co_tipo_solicitud");
