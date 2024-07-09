@@ -195,7 +195,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'N° Solicitud', width:100,menuDisabled:true,dataIndex: 'co_solicitud',renderer: renderRectificacion}, 
     {header: 'RIF', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_rif'},
     {header: 'Razon Social', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social'},
-    {header: 'Tipo de solicitud', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud',renderer: renderRectificacion},
+//    {header: 'Tipo de solicitud', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud',renderer: renderRectificacion},
     {header: 'Descripción', width:500,  menuDisabled:true, sortable: true,  dataIndex: 'descripcion',renderer: textoLargo},
     {header: 'fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'fe_pago',renderer: renderRectificacion},
     {header: 'Monto', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'mo_pago',renderer: formatoNro},
