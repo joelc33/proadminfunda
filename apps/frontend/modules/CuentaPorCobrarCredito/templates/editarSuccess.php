@@ -110,7 +110,12 @@ this.de_descripcion = new Ext.form.TextArea({
 	name:'tb142_cuenta_cobrar[de_descripcion]',
 	value:this.OBJ.de_descripcion,
 	allowBlank:false,
-	width:500
+	width:500,
+        listeners: {
+        change: function(field, newValue, oldValue) {
+        field.setValue(newValue.toUpperCase());
+    }
+}         
 });
 
 this.mo_cuenta = new Ext.form.NumberField({
@@ -352,8 +357,10 @@ this.gridPanel = new Ext.grid.GridPanel({
         stateful: true,
         listeners:{
             cellclick:function(Grid, rowIndex, columnIndex,e ){
-                CuentaPorCobrarCreditoEditar.main.editar.enable();
-                CuentaPorCobrarCreditoEditar.main.eliminar.enable();
+            if(CuentaPorCobrarCreditoEditar.main.gridPanel.getSelectionModel().getSelected().get('in_pago')==false){
+            CuentaPorCobrarCreditoEditar.main.editar.enable();
+            CuentaPorCobrarCreditoEditar.main.eliminar.enable();
+            }
             }
         },
         bbar: new Ext.PagingToolbar({
@@ -562,6 +569,7 @@ this.winformPanel_.show();
 			{name: 'mo_cuota'},
 			{name: 'fe_pago'},
 			{name: 'in_activo'},
+                        {name: 'in_pago'},
 			{name: 'created_at'},
 			{name: 'updated_at'},
         ]

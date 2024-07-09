@@ -71,7 +71,7 @@ class CuentaPorCobrarCreditoDetalleActions extends sfActions
         $this->data = json_encode(array(
                             "id"     => "",
                             "id_tb142_cuenta_cobrar"     => $this->getRequestParameter("id_tb142_cuenta_cobrar"),
-                            "de_cuota"     => "",
+                            "de_cuota"     => $campos2["de_descripcion"],
                             "mo_cuota"     => "",
                             "fe_pago"     => "",
                             "in_activo"     => "",
@@ -278,6 +278,7 @@ class CuentaPorCobrarCreditoDetalleActions extends sfActions
             "mo_cuota"     => trim($res["mo_cuota"]),
             "fe_pago"     => trim(date("d-m-Y", strtotime($res["fe_pago"]))),
             "in_activo"     => trim($res["in_activo"]),
+            "in_pago"     => trim($res["in_pago"]),
             "created_at"     => trim($res["created_at"]),
             "updated_at"     => trim($res["updated_at"]),
         );
