@@ -72,7 +72,8 @@ this.fe_emision = new Ext.form.DateField({
     fieldLabel: 'Fecha',
     allowBlank:false,
     width:100,
-    value:new Date()
+    value:new Date(),
+    maxValue:new Date()    
 });
 
 this.forma_pago = new Ext.form.ComboBox({

@@ -132,6 +132,7 @@ this.fe_documento = new Ext.form.DateField({
 	fieldLabel:'Fecha Doc.',
 	name:'tb142_cuenta_cobrar[fe_documento]',
 	value:this.OBJ.fe_documento,
+        maxValue:this.OBJ.fe_documento?this.OBJ.fe_documento:new Date(),
 	allowBlank:false,
 	width:100
 });
@@ -317,7 +318,7 @@ this.mo_pago = new Ext.form.DisplayField({
 });
 
 this.mo_diferencia = new Ext.form.DisplayField({
- value:"<span style='color:yellow;font-size:18px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(0)+"</b></span>"
+ value:"<span style='font-size:18px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(0)+"</b></span>"
 });
 
 this.bbar_monto = new Ext.ux.StatusBar({
@@ -588,7 +589,7 @@ this.winformPanel_.show();
     this.mo_diponiblie = this.monto_total - this.monto_cuotas;
 
     CuentaPorCobrarCreditoEditar.main.mo_pago.setValue("<span style='font-size:18px;'><b>Total Cuotas: </b>"+paqueteComunJS.funcion.getNumeroFormateado(this.monto_cuotas)+"</b></span>");
-    CuentaPorCobrarCreditoEditar.main.mo_diferencia.setValue("<span style='color:yellow;font-size:18px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(this.mo_diponiblie)+"</b></span>");
+    CuentaPorCobrarCreditoEditar.main.mo_diferencia.setValue("<span style='font-size:18px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(this.mo_diponiblie)+"</b></span>");
 
 }
 };

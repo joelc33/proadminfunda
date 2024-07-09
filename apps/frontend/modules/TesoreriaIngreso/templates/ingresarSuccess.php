@@ -85,7 +85,8 @@ this.fe_ingreso = new Ext.form.DateField({
     fieldLabel: 'Fecha Ingreso',
     allowBlank:false,
     width:100,
-    value:new Date()
+    value:new Date(),
+    maxValue:new Date()
 });
 
 this.fe_registro = new Ext.form.DateField({
