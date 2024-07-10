@@ -6,6 +6,7 @@ class Tb042RetencionPeer extends BaseTb042RetencionPeer
         static public function getTipoRetencion ($co_documento,$co_proveedor){
             
             $c = new Criteria();
+            $c->setDistinct();
             $c->addSelectColumn(Tb042RetencionPeer::CO_TIPO_RETENCION);
             $c->addSelectColumn(Tb042RetencionPeer::NU_VALOR);
             $c->addSelectColumn(Tb042RetencionPeer::NU_SUSTRAENDO);
@@ -19,7 +20,7 @@ class Tb042RetencionPeer extends BaseTb042RetencionPeer
             $c->add(Tb071RetencionProveedorPeer::CO_PROVEEDOR,$co_proveedor);
             $c->add(Tb041TipoRetencionPeer::IN_ACTIVO,TRUE);
             
-            echo $c->toString(); exit();
+         //   echo $c->toString(); exit();
 
             return  Tb042RetencionPeer::doSelectStmt($c);
             
