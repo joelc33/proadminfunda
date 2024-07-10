@@ -19,7 +19,7 @@ class Tb042RetencionPeer extends BaseTb042RetencionPeer
             $c->add(Tb071RetencionProveedorPeer::CO_PROVEEDOR,$co_proveedor);
             $c->add(Tb041TipoRetencionPeer::IN_ACTIVO,TRUE);
             
-            //echo $c->toString(); exit();
+            echo $c->toString(); exit();
 
             return  Tb042RetencionPeer::doSelectStmt($c);
             
