@@ -2099,6 +2099,7 @@ class ComprasActions extends sfActions
 
             $c->addJoin(Tb207DetalleCotizacionPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO);
             $c->add(Tb207DetalleCotizacionPeer::CO_COTIZACION, $co_cotizacion);
+            $c->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, null,Criteria::ISNULL);
             $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336,  Criteria::NOT_EQUAL); //Excluye el IVA
 
             $cantidadTotal = Tb207DetalleCotizacionPeer::doCount($c);
