@@ -155,53 +155,53 @@ this.botonTxtPago = new Ext.Button({
 
 if(PagosPanel.main.OBJ.co_tipo_solicitud == 23){
 
-    scrollMenu.add({
-        text: 'Banco BOD - Todos',
-        icon: '../images/bod.png',
-        handler: function(){
-          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoBod/i/"+PagosPanel.main.OBJ.co_ruta);
-        }
-    });
-
-    scrollMenu.add({
-        text: 'Banco BOD - CTA',
-        icon: '../images/bod.png',
-        handler: function(){
-          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoBodCta/i/"+PagosPanel.main.OBJ.co_ruta);
-        }
-    });
-
-    scrollMenu.add({
-        text: 'Banco BOD - BAN',
-        icon: '../images/bod.png',
-        handler: function(){
-          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoBodBan/i/"+PagosPanel.main.OBJ.co_ruta);
-        }
-    });
-    
-    scrollMenu.add({
-        text: 'Banco de Venezuela',
-        icon: '../images/venezuela.jpeg',
-        handler: function(){
-          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoBancodeVenezuela/i/"+PagosPanel.main.OBJ.co_ruta);
-        }
-    });
-
-    scrollMenu.add({
-        text: 'Banco Provincial',
-        icon: '../images/provincial.png',
-        handler: function(){
-          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoProvincial/i/"+PagosPanel.main.OBJ.co_ruta);
-        }
-    });
-    
-    scrollMenu.add({
-        text: 'Otros Bancos',
-        icon: '../images/16x16/entidad.png',
-        handler: function(){
-          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoOtrosBancos/i/"+PagosPanel.main.OBJ.co_ruta);
-        }
-    });
+//    scrollMenu.add({
+//        text: 'Banco BOD - Todos',
+//        icon: '../images/bod.png',
+//        handler: function(){
+//          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoBod/i/"+PagosPanel.main.OBJ.co_ruta);
+//        }
+//    });
+//
+//    scrollMenu.add({
+//        text: 'Banco BOD - CTA',
+//        icon: '../images/bod.png',
+//        handler: function(){
+//          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoBodCta/i/"+PagosPanel.main.OBJ.co_ruta);
+//        }
+//    });
+//
+//    scrollMenu.add({
+//        text: 'Banco BOD - BAN',
+//        icon: '../images/bod.png',
+//        handler: function(){
+//          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoBodBan/i/"+PagosPanel.main.OBJ.co_ruta);
+//        }
+//    });
+//    
+//    scrollMenu.add({
+//        text: 'Banco de Venezuela',
+//        icon: '../images/venezuela.jpeg',
+//        handler: function(){
+//          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoBancodeVenezuela/i/"+PagosPanel.main.OBJ.co_ruta);
+//        }
+//    });
+//
+//    scrollMenu.add({
+//        text: 'Banco Provincial',
+//        icon: '../images/provincial.png',
+//        handler: function(){
+//          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoProvincial/i/"+PagosPanel.main.OBJ.co_ruta);
+//        }
+//    });
+//    
+//    scrollMenu.add({
+//        text: 'Otros Bancos',
+//        icon: '../images/16x16/entidad.png',
+//        handler: function(){
+//          window.open("http://<?php echo $_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']; ?>/reporte/pagoOtrosBancos/i/"+PagosPanel.main.OBJ.co_ruta);
+//        }
+//    });
 
 
 }
@@ -317,11 +317,11 @@ this.gridPagosR = new  Ext.grid.GridPanel({
 this.tabpanel = new Ext.TabPanel({
     activeTab:0,
     items:[
-        {
-            title:'Datos',
-            items:[this.gridPagosP],
-            autoHeight:true
-        },
+//        {
+//            title:'Datos',
+//            items:[this.gridPagosP],
+//            autoHeight:true
+//        },
         {
             title:'Datos del Pago',
             items:[this.gridPagosR],

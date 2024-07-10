@@ -48,10 +48,11 @@
       });
 
       this.fe_modificacion = new Ext.form.DateField({
-        fieldLabel: 'Fecha Traslado',
+        fieldLabel: 'Fecha Crédito',
         name: 'tb096_presupuesto_modificacion[fe_modificacion]',
         value: this.OBJ.fe_modificacion,
-        //	allowBlank:false,
+        maxValue:this.OBJ.fe_fin,
+        allowBlank:false,
         width: 100
       });
 
@@ -59,7 +60,7 @@
         fieldLabel: 'Descripcion',
         name: 'tb096_presupuesto_modificacion[de_modificacion]',
         value: this.OBJ.de_modificacion,
-        //	allowBlank:false,
+        allowBlank:false,
         width: 500
       });
 
@@ -86,8 +87,7 @@
         valueField: 'co_fuente_financiamiento',
         displayField: 'tx_fuente_financiamiento',
         hiddenName: 'tb096_presupuesto_modificacion[id_tb073_fuente_financiamiento]',
-        //readOnly:(this.OBJ.id_tb073_fuente_financiamiento!='')?true:false,
-        //style:(this.main.OBJ.id_tb073_fuente_financiamiento!='')?'background:#c9c9c9;':'',
+        readOnly:(this.OBJ.id_tb073_fuente_financiamiento!='')?true:false,
         forceSelection: true,
         resizable: true,
         triggerAction: 'all',
@@ -95,18 +95,17 @@
         selectOnFocus: true,
         mode: 'local',
         width: 500,
-        resizable: true,
         allowBlank: false,
-        listeners: {
-          select: function() {
-            PresupuestomodificacionEditar.main.id_tb068_numero_fuente_financiamiento.clearValue();
-            PresupuestomodificacionEditar.main.storeCO_NUMERO_FUENTE.load({
-              params: {
-                tipo: this.getValue()
-              }
-            })
-          }
-        }
+//        listeners: {
+//          select: function() {
+//            PresupuestomodificacionEditar.main.id_tb068_numero_fuente_financiamiento.clearValue();
+//            PresupuestomodificacionEditar.main.storeCO_NUMERO_FUENTE.load({
+//              params: {
+//                tipo: this.getValue()
+//              }
+//            })
+//          }
+//        }
       });
       this.storeCO_FUENTE_FINANCIAMIENTO.load();
       paqueteComunJS.funcion.seleccionarComboByCo({
@@ -134,6 +133,24 @@
         resizable: true,
         allowBlank: false
       });
+      
+      this.numero_decreto = new Ext.form.TextField({
+        fieldLabel: 'N° de Credito',
+        name: 'tb096_presupuesto_modificacion[numero_decreto]',
+        value: this.OBJ.nu_oficio,
+        maxLength:5,
+        minLength:5,
+        readOnly:(this.OBJ.nu_oficio!='')?true:false,
+        allowBlank: false,
+	width:500,
+        listeners: {
+        change: function(field, newValue, oldValue) {
+        field.setValue(newValue.toUpperCase());
+    }
+        },
+//        maskRe: /[0-9]/ 
+      });      
+      
       /*
       this.storeCO_NUMERO_FUENTE.load();
       	paqueteComunJS.funcion.seleccionarComboByCo({
@@ -142,18 +159,18 @@
       	objStore: this.storeCO_NUMERO_FUENTE
       });*/
 
-      if (this.OBJ.id_tb073_fuente_financiamiento) {
-        this.storeCO_NUMERO_FUENTE.load({
-          params: {
-            tipo: this.OBJ.id_tb073_fuente_financiamiento,
-            numero: this.OBJ.id_tb068_numero_fuente_financiamiento
-          },
-          callback: function() {
-            PresupuestomodificacionEditar.main.id_tb068_numero_fuente_financiamiento.setValue(PresupuestomodificacionEditar.main.OBJ.id_tb068_numero_fuente_financiamiento);
-          }
-        });
-
-      }
+//      if (this.OBJ.id_tb073_fuente_financiamiento) {
+//        this.storeCO_NUMERO_FUENTE.load({
+//          params: {
+//            tipo: this.OBJ.id_tb073_fuente_financiamiento,
+//            numero: this.OBJ.id_tb068_numero_fuente_financiamiento
+//          },
+//          callback: function() {
+//            PresupuestomodificacionEditar.main.id_tb068_numero_fuente_financiamiento.setValue(PresupuestomodificacionEditar.main.OBJ.id_tb068_numero_fuente_financiamiento);
+//          }
+//        });
+//
+//      }
 
       this.fe_oficio = new Ext.form.DateField({
         fieldLabel: 'Fecha de Oficio',
@@ -322,7 +339,8 @@
               }
 
               PresupuestomodificacionEditar.main.id.setValue(action.result.codigo);
-              PresupuestomodificacionEditar.main.nu_modificacion.setValue("<span style='color:black;font-size:15px;'><b>N° Traslado: </b> " + action.result.numero + "</span>");
+              PresupuestomodificacionEditar.main.co_solicitud.setValue(action.result.co_solicitud);
+              PresupuestomodificacionEditar.main.nu_modificacion.setValue("<span style='color:black;font-size:15px;'><b>N° Crédito: </b> " + action.result.numero + "</span>");
 
               PresupuestomodificacionEditar.main.gridPanel_origen.enable();
               PresupuestomodificacionEditar.main.gridPanel_destino.enable();
@@ -346,6 +364,8 @@
               PresupuestomodificacionEditar.main.guardar.show();
               PresupuestomodificacionEditar.main.generar.show();
               PresupuestomodificacionEditar.main.crear.hide();
+              PresupuestomodificacionEditar.main.numero_decreto.setReadOnly(true);
+              PresupuestomodificacionEditar.main.id_tb073_fuente_financiamiento.setReadOnly(true);
             }
           });
 
@@ -416,7 +436,7 @@
       });
 
       this.generar = new Ext.Button({
-        text: 'Generar Partidas (1)',
+        text: 'Aprobar Credito adicional (2)',
         iconCls: 'icon-aprobar',
         handler: function() {
 
@@ -432,7 +452,7 @@
             return false;
           }
 
-          Ext.MessageBox.confirm('Confirmación', '¿Realmente desea generar las nuevas partidas?<br><b>Nota:</b> No se podran modificar los datos.', function(boton) {
+          Ext.MessageBox.confirm('Confirmación', '¿Realmente desea aprobar el credito?<br><b>Nota:</b> No se podran modificar los datos.', function(boton) {
             if (boton == "yes") {
 
               PresupuestomodificacionEditar.main.formPanel_.getForm().submit({
@@ -469,8 +489,8 @@
                     solicitudLista.main.estado.disable();
                     solicitudLista.main.anular.disable();
                   });
-                  PresupuestomodificacionEditar.main.guardar.show();
-                  PresupuestomodificacionEditar.main.generar.show();
+                  PresupuestomodificacionEditar.main.guardar.hide();
+                  PresupuestomodificacionEditar.main.generar.hide();
                   PresupuestomodificacionEditar.main.crear.hide();
                   PresupuestomodificacionEditar.main.winformPanel_.close();
                 }
@@ -497,14 +517,14 @@
           this.mo_modificacion,
           this.fe_modificacion,
           this.de_modificacion,
-          this.de_justificacion,
+//          this.de_justificacion,
           //          this.nu_oficio,
           this.id_tb073_fuente_financiamiento,
-          this.id_tb068_numero_fuente_financiamiento,
-          this.fe_oficio,
-          this.de_articulo_ley,
+          this.numero_decreto,
+//          this.fe_oficio,
+//          this.de_articulo_ley,
           this.id_tb152_tipo_credito,
-          this.id_tb082_ejecutor_origen
+//          this.id_tb082_ejecutor_origen
           //          this.id_tb083_proyecto_ac
         ]
       });
@@ -521,17 +541,16 @@
         iconCls: 'icon-nuevo',
         handler: function() {
 
-          if (PresupuestomodificacionEditar.main.id_tb082_ejecutor_origen.getValue() == '') {
-            Ext.Msg.alert("Alerta", "Debe Seleccionar Ejecutor antes de agregar las partidas de origen.");
-            return false;
-          }
+//          if (PresupuestomodificacionEditar.main.id_tb082_ejecutor_origen.getValue() == '') {
+//            Ext.Msg.alert("Alerta", "Debe Seleccionar Ejecutor antes de agregar las partidas de origen.");
+//            return false;
+//          }
 
           PresupuestomodificacionEditar.main.mascara.show();
           this.msg = Ext.get('formularioModificaciondetalle');
           this.msg.load({
             url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Modificaciondetalle/editarCreditoadicional',
             params: {
-              ejecutor: PresupuestomodificacionEditar.main.id_tb082_ejecutor_origen.getValue(),
               movimiento: PresupuestomodificacionEditar.main.id.getValue()
             },
             scripts: true,
@@ -654,8 +673,14 @@
         stateful: true,
         listeners: {
           cellclick: function(Grid, rowIndex, columnIndex, e) {
+            if(PresupuestomodificacionEditar.main.OBJ.in_procesado==true){
+            PresupuestomodificacionEditar.main.nuevo.disable();
+            PresupuestomodificacionEditar.main.editar.disable();
+            PresupuestomodificacionEditar.main.eliminar.disable();
+            }else{
             PresupuestomodificacionEditar.main.editar.enable();
             PresupuestomodificacionEditar.main.eliminar.enable();
+        }
           }
         },
         bbar: new Ext.PagingToolbar({
@@ -669,6 +694,10 @@
 
       if (this.OBJ.id) {
         this.crear.hide();
+        
+        if(this.OBJ.in_procesado==true){
+        this.generar.hide(); 
+        }
         this.store_lista.baseParams.id_tb096_presupuesto_modificacion = this.OBJ.id;
         this.store_lista.load({
           callback: function() {
@@ -722,7 +751,8 @@
           this.msg.load({
             url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Modificaciondetalle/destino',
             params: {
-              ejecutor: PresupuestomodificacionEditar.main.id_tb082_ejecutor_destino.getValue(),
+              numero_fuente: PresupuestomodificacionEditar.main.numero_decreto.getValue(),
+              tipo_fuente: PresupuestomodificacionEditar.main.id_tb073_fuente_financiamiento.getValue(),
               movimiento: PresupuestomodificacionEditar.main.id.getValue()
             },
             scripts: true,
@@ -839,8 +869,13 @@
         stateful: true,
         listeners: {
           cellclick: function(Grid, rowIndex, columnIndex, e) {
+           if(PresupuestomodificacionEditar.main.OBJ.in_procesado==true){
+            PresupuestomodificacionEditar.main.editar_destino.disable();
+            PresupuestomodificacionEditar.main.eliminar_destino.disable();
+            }else{
             PresupuestomodificacionEditar.main.editar_destino.enable();
-            PresupuestomodificacionEditar.main.eliminar_destino.enable();
+            PresupuestomodificacionEditar.main.eliminar_destino.enable();    
+            }
           }
         },
         bbar: new Ext.PagingToolbar({
@@ -913,8 +948,19 @@
         ]
       });
       if (this.OBJ.id) {
+          
+        if(this.OBJ.in_procesado==true){
+            
+            PresupuestomodificacionEditar.main.nuevo_destino.disable();
+            PresupuestomodificacionEditar.main.nuevo.disable();
         PresupuestomodificacionEditar.main.gridPanel_origen.enable();
-        PresupuestomodificacionEditar.main.gridPanel_destino.enable()
+        PresupuestomodificacionEditar.main.gridPanel_destino.enable();
+        PresupuestomodificacionEditar.main.nuevo.disable();
+        
+        }else{         
+        PresupuestomodificacionEditar.main.gridPanel_origen.enable();
+        PresupuestomodificacionEditar.main.gridPanel_destino.enable();
+        }
         this.nu_modificacion = new Ext.form.DisplayField({
           value: "<span style='color:black;font-size:15px;'><b>N° Credito: </b> " + this.OBJ.nu_modificacion + "</span>"
         });
@@ -975,7 +1021,6 @@
         buttons: [
           this.crear,
           this.generar,
-          this.guardar,
           this.salir
         ],
         buttonAlign: 'center'
@@ -1111,15 +1156,15 @@
       });
 
       if (this.monto_debito > 0) {
-        Ext.get('id_tb082_ejecutor_origen').setStyle('background-color', '#c9c9c9');
-        PresupuestomodificacionEditar.main.id_tb082_ejecutor_origen.setReadOnly(true);
+//        Ext.get('id_tb082_ejecutor_origen').setStyle('background-color', '#c9c9c9');
+//        PresupuestomodificacionEditar.main.id_tb082_ejecutor_origen.setReadOnly(true);
         //PresupuestomodificacionEditar.main.nuevo.disable();
         PresupuestomodificacionEditar.main.editar.disable();
         PresupuestomodificacionEditar.main.eliminar.disable();
 
       } else {
-        Ext.get('id_tb082_ejecutor_origen').setStyle('background-color', '#FFFFFF');
-        PresupuestomodificacionEditar.main.id_tb082_ejecutor_origen.setReadOnly(false);
+//        Ext.get('id_tb082_ejecutor_origen').setStyle('background-color', '#FFFFFF');
+//        PresupuestomodificacionEditar.main.id_tb082_ejecutor_origen.setReadOnly(false);
         PresupuestomodificacionEditar.main.nuevo.enable();
         PresupuestomodificacionEditar.main.editar.disable();
         PresupuestomodificacionEditar.main.eliminar.disable();

@@ -110,7 +110,12 @@ this.de_descripcion = new Ext.form.TextArea({
 	name:'tb142_cuenta_cobrar[de_descripcion]',
 	value:this.OBJ.de_descripcion,
 	allowBlank:false,
-	width:500
+	width:500,
+        listeners: {
+        change: function(field, newValue, oldValue) {
+        field.setValue(newValue.toUpperCase());
+    }
+}         
 });
 
 this.mo_cuenta = new Ext.form.NumberField({
@@ -127,6 +132,7 @@ this.fe_documento = new Ext.form.DateField({
 	fieldLabel:'Fecha Doc.',
 	name:'tb142_cuenta_cobrar[fe_documento]',
 	value:this.OBJ.fe_documento,
+        maxValue:this.OBJ.fe_documento?this.OBJ.fe_documento:new Date(),
 	allowBlank:false,
 	width:100
 });
@@ -312,7 +318,7 @@ this.mo_pago = new Ext.form.DisplayField({
 });
 
 this.mo_diferencia = new Ext.form.DisplayField({
- value:"<span style='color:yellow;font-size:18px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(0)+"</b></span>"
+ value:"<span style='font-size:18px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(0)+"</b></span>"
 });
 
 this.bbar_monto = new Ext.ux.StatusBar({
@@ -352,8 +358,10 @@ this.gridPanel = new Ext.grid.GridPanel({
         stateful: true,
         listeners:{
             cellclick:function(Grid, rowIndex, columnIndex,e ){
-                CuentaPorCobrarCreditoEditar.main.editar.enable();
-                CuentaPorCobrarCreditoEditar.main.eliminar.enable();
+            if(CuentaPorCobrarCreditoEditar.main.gridPanel.getSelectionModel().getSelected().get('in_pago')==false){
+            CuentaPorCobrarCreditoEditar.main.editar.enable();
+            CuentaPorCobrarCreditoEditar.main.eliminar.enable();
+            }
             }
         },
         bbar: new Ext.PagingToolbar({
@@ -562,6 +570,7 @@ this.winformPanel_.show();
 			{name: 'mo_cuota'},
 			{name: 'fe_pago'},
 			{name: 'in_activo'},
+                        {name: 'in_pago'},
 			{name: 'created_at'},
 			{name: 'updated_at'},
         ]
@@ -580,7 +589,7 @@ this.winformPanel_.show();
     this.mo_diponiblie = this.monto_total - this.monto_cuotas;
 
     CuentaPorCobrarCreditoEditar.main.mo_pago.setValue("<span style='font-size:18px;'><b>Total Cuotas: </b>"+paqueteComunJS.funcion.getNumeroFormateado(this.monto_cuotas)+"</b></span>");
-    CuentaPorCobrarCreditoEditar.main.mo_diferencia.setValue("<span style='color:yellow;font-size:18px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(this.mo_diponiblie)+"</b></span>");
+    CuentaPorCobrarCreditoEditar.main.mo_diferencia.setValue("<span style='font-size:18px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(this.mo_diponiblie)+"</b></span>");
 
 }
 };

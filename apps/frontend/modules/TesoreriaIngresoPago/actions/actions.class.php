@@ -95,7 +95,7 @@ class TesoreriaIngresoPagoActions extends sfActions
         $tb148_cuenta_cobrar_pago->setMoPago($tb148_cuenta_cobrar_pagoForm["mo_pago"]);
                                                         
         /*Campo tipo BIGINT */
-        $tb148_cuenta_cobrar_pago->setIdTb074FormaPago($tb148_cuenta_cobrar_pagoForm["id_tb074_forma_pago"]);
+//        $tb148_cuenta_cobrar_pago->setIdTb074FormaPago($tb148_cuenta_cobrar_pagoForm["id_tb074_forma_pago"]);
                                                         
         /*Campo tipo BIGINT */
         $tb148_cuenta_cobrar_pago->setIdTb010Banco($tb148_cuenta_cobrar_pagoForm["id_tb010_banco"]);
@@ -110,20 +110,21 @@ class TesoreriaIngresoPagoActions extends sfActions
                                                                 
         /*Campo tipo DATE */
         list($dia, $mes, $anio) = explode("-",$tb148_cuenta_cobrar_pagoForm["fe_registro"]);
-        $fe_registro = $anio."-".$mes."-".$dia;
-        $tb148_cuenta_cobrar_pago->setFeRegistro($fe_registro);
+        $fe_registro = date('Y-m-d');
+        $tb148_cuenta_cobrar_pago->setFeRegistro(date('Y-m-d'));
                                                         
         /*Campo tipo BIGINT */
-        $tb148_cuenta_cobrar_pago->setIdTb147TipoDocumento($tb148_cuenta_cobrar_pagoForm["id_tb147_tipo_documento"]);
+        $tb148_cuenta_cobrar_pago->setIdTb147TipoDocumento($tb148_cuenta_cobrar_pagoForm["id_tb153_tipo_documento_cuenta"]);
                                                         
         /*Campo tipo VARCHAR */
         $tb148_cuenta_cobrar_pago->setDeOrdenIngreso($tb148_cuenta_cobrar_pagoForm["de_orden_ingreso"]);
 
         /*Campo tipo BIGINT */
-        $tb148_cuenta_cobrar_pago->setIdTb155CuentaBancariaHistorico($tb148_cuenta_cobrar_pagoForm["id_tb155_cuenta_bancaria_historico"]);
+        $tb148_cuenta_cobrar_pago->setIdTb155CuentaBancariaHistorico($tb148_cuenta_cobrar_pagoForm["id_tb155_cuenta_bancaria_historico"]?$tb148_cuenta_cobrar_pagoForm["id_tb155_cuenta_bancaria_historico"]:null);
                                 
         /*CAMPOS*/
         $tb148_cuenta_cobrar_pago->save($con);
+
 
         $c1 = new Criteria();
         $c1->clearSelectColumns();
@@ -146,22 +147,48 @@ class TesoreriaIngresoPagoActions extends sfActions
         $c10->add(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA, $tb148_cuenta_cobrar_pagoForm["id_tb011_cuenta_bancaria"]);
         $stmt10 = Tb011CuentaBancariaPeer::doSelectStmt($c10);
         $campos10 = $stmt10->fetch(PDO::FETCH_ASSOC);
+        
+        $c11 = new Criteria();
+        $c11->add(Tb153TipoDocumentoCuentaPeer::ID, $tb148_cuenta_cobrar_pagoForm["id_tb153_tipo_documento_cuenta"]);
+        $stmt11 = Tb153TipoDocumentoCuentaPeer::doSelectStmt($c11);
+        $campos11 = $stmt11->fetch(PDO::FETCH_ASSOC);        
 
         $mo_disponible = $campos10["mo_disponible"] + $tb148_cuenta_cobrar_pagoForm["mo_pago"];
         $mo_ingreso = $campos10["mo_ingreso"] + $tb148_cuenta_cobrar_pagoForm["mo_pago"];
+        
+        if($this->getRequestParameter('in_posteo')==0){
+            
 
-        /*$tb011_cuenta_bancaria = Tb011CuentaBancariaPeer::retrieveByPk($tb148_cuenta_cobrar_pagoForm["id_tb011_cuenta_bancaria"]);
+        $tb011_cuenta_bancaria = Tb011CuentaBancariaPeer::retrieveByPk($tb148_cuenta_cobrar_pagoForm["id_tb011_cuenta_bancaria"]);
         $tb011_cuenta_bancaria->setMoDisponible($mo_disponible);
         $tb011_cuenta_bancaria->setMoIngreso($mo_ingreso);
-        $tb011_cuenta_bancaria->save($con);*/
+        $tb011_cuenta_bancaria->save($con);
 
-        /*$tb155_cuenta_bancaria_historico = new Tb155CuentaBancariaHistorico();
+        $tb155_cuenta_bancaria_historico = new Tb155CuentaBancariaHistorico();
         $tb155_cuenta_bancaria_historico->setIdTb011CuentaBancaria($tb148_cuenta_cobrar_pagoForm["id_tb011_cuenta_bancaria"]);
         $tb155_cuenta_bancaria_historico->setMoTransaccion($tb148_cuenta_cobrar_pagoForm["mo_pago"]);
-        $tb155_cuenta_bancaria_historico->setMoSaldo($mo_disponible);
+        $tb155_cuenta_bancaria_historico->setNuTransaccion($tb148_cuenta_cobrar_pagoForm["nu_referencia"]);
+        $tb155_cuenta_bancaria_historico->setMoSaldoAnterior($campos10["mo_disponible"]);
+        $tb155_cuenta_bancaria_historico->setMoSaldoNuevo($mo_disponible);
         $tb155_cuenta_bancaria_historico->setFeTransaccion($fe_ingreso);
-        $tb155_cuenta_bancaria_historico->setDeObservacion('CREDITO ADICIONAL');
-        $tb155_cuenta_bancaria_historico->save($con);*/
+        $tb155_cuenta_bancaria_historico->setCoSolicitud($this->getRequestParameter("co_solicitud"));
+        $tb155_cuenta_bancaria_historico->setIdTb010Banco($campos10["co_banco"]);
+        $tb155_cuenta_bancaria_historico->setIdTb153TipoDocumentoCuenta($tb148_cuenta_cobrar_pagoForm["id_tb153_tipo_documento_cuenta"]);
+        $tb155_cuenta_bancaria_historico->setIdTb154TipoCuentaMovimiento($campos11["id_tipo_cuenta_movimiento"]);
+        $tb155_cuenta_bancaria_historico->setIdTb156SubtipoDocumento(1);
+        $tb155_cuenta_bancaria_historico->setDeObservacion($campos2["de_cuota"]);
+        $tb155_cuenta_bancaria_historico->setIdTb148CuentaCobrarPago($tb148_cuenta_cobrar_pago->getId());
+        $tb155_cuenta_bancaria_historico->setInConciliado(true);
+        $tb155_cuenta_bancaria_historico->save($con);
+
+        }else{
+         
+        $tb155_cuenta_bancaria_historico = Tb155CuentaBancariaHistoricoPeer::retrieveByPk( $tb148_cuenta_cobrar_pagoForm["id_tb155_cuenta_bancaria_historico"]);
+        $tb155_cuenta_bancaria_historico->setInConciliado(true);
+        $tb155_cuenta_bancaria_historico->setIdTb148CuentaCobrarPago($tb148_cuenta_cobrar_pago->getId());
+        $tb155_cuenta_bancaria_historico->save($con);            
+            
+        }
 
         $tb145_cuenta_cobrar_detalle = Tb145CuentaCobrarDetallePeer::retrieveByPk( $tb148_cuenta_cobrar_pagoForm["id_tb145_cuenta_cobrar_detalle"]);
         $tb145_cuenta_cobrar_detalle->setMoPagado($campos1["total_pago"]);
@@ -171,10 +198,7 @@ class TesoreriaIngresoPagoActions extends sfActions
         }
         $tb145_cuenta_cobrar_detalle->save($con);
 
-        $tb155_cuenta_bancaria_historico = Tb155CuentaBancariaHistoricoPeer::retrieveByPk( $tb148_cuenta_cobrar_pagoForm["id_tb155_cuenta_bancaria_historico"]);
-        $tb155_cuenta_bancaria_historico->setInConciliado(true);
-        $tb155_cuenta_bancaria_historico->setIdTb148CuentaCobrarPago($tb148_cuenta_cobrar_pago->getId());
-        $tb155_cuenta_bancaria_historico->save($con);
+
         
         $c3 = new Criteria();
         $c3->clearSelectColumns();
@@ -197,31 +221,48 @@ class TesoreriaIngresoPagoActions extends sfActions
         $campos5 = $stmt5->fetch(PDO::FETCH_ASSOC);
         
         $c6 = new Criteria();
-        $c6->add(Tb064PresupuestoIngresoPeer::CO_PRESUPUESTO_INGRESO, $tb148_cuenta_cobrar_pagoForm["id_tb064_presupuesto_ingreso"]);
+        $c6->clearSelectColumns();
+        $c6->addSelectColumn(Tb064PresupuestoIngresoPeer::CO_PRESUPUESTO_INGRESO);
+        $c6->addSelectColumn(Tb064PresupuestoIngresoPeer::MO_PAGADO);
+        $c6->addSelectColumn(Tb097ModificacionDetallePeer::MO_DISTRIBUCION);
+        $c6->addSelectColumn(Tb064PresupuestoIngresoPeer::CO_CUENTA_CONTABLE);
+        $c6->addJoin(Tb097ModificacionDetallePeer::ID_TB064_PRESUPUESTO_INGRESO, Tb064PresupuestoIngresoPeer::CO_PRESUPUESTO_INGRESO);
+        $c6->addJoin(Tb096PresupuestoModificacionPeer::ID, Tb097ModificacionDetallePeer::ID_TB096_PRESUPUESTO_MODIFICACION);
+        $c6->add(Tb096PresupuestoModificacionPeer::CO_SOLICITUD, $campos3["co_solicitud"]);
         $stmt6 = Tb064PresupuestoIngresoPeer::doSelectStmt($c6);
-        $campos6 = $stmt6->fetch(PDO::FETCH_ASSOC);                          
+        $cantidad6 = Tb064PresupuestoIngresoPeer::doCount($c6);
+        
+        while($campos6 = $stmt6->fetch(PDO::FETCH_ASSOC)){
+            
+        if($cantidad6>1){    
 
-        $mo_recaudado = $campos6["mo_pagado"] + $tb148_cuenta_cobrar_pagoForm["mo_pago"];
+        $mo_recaudado = $campos6["mo_pagado"] + $campos6["mo_distribucion"];
+        $mo_movimiento = $campos6["mo_distribucion"];
+        }else{
+        
+        $mo_recaudado = $campos6["mo_pagado"] + $tb148_cuenta_cobrar_pagoForm["mo_pago"];    
+        $mo_movimiento = $tb148_cuenta_cobrar_pagoForm["mo_pago"];    
+        }
 
-        $tb064_presupuesto_ingreso = Tb064PresupuestoIngresoPeer::retrieveByPk($tb148_cuenta_cobrar_pagoForm["id_tb064_presupuesto_ingreso"]);
+        $tb064_presupuesto_ingreso = Tb064PresupuestoIngresoPeer::retrieveByPk($campos6["co_presupuesto_ingreso"]);
         $tb064_presupuesto_ingreso->setMoPagado($mo_recaudado);
         $tb064_presupuesto_ingreso->save($con);                         
 
         $tb150_presupuesto_ingreso_movimiento = new Tb150PresupuestoIngresoMovimiento();
-        $tb150_presupuesto_ingreso_movimiento->setIdTb064PresupuestoIngreso($tb148_cuenta_cobrar_pagoForm["id_tb064_presupuesto_ingreso"]);
-        $tb150_presupuesto_ingreso_movimiento->setMoMovimiento($tb148_cuenta_cobrar_pagoForm["mo_pago"]);
+        $tb150_presupuesto_ingreso_movimiento->setIdTb064PresupuestoIngreso($campos6["co_presupuesto_ingreso"]);
+        $tb150_presupuesto_ingreso_movimiento->setMoMovimiento($mo_movimiento);
         $tb150_presupuesto_ingreso_movimiento->setNuAnio( $this->getUser()->getAttribute('ejercicio'));
         if(date("Y")>$this->getUser()->getAttribute('ejercicio')){
-        $tb150_presupuesto_ingreso_movimiento->setCreatedAt($tb148_cuenta_cobrar_pagoForm["fe_registro"]); 
+        $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fe_registro); 
         }else{
-        $tb150_presupuesto_ingreso_movimiento->setCreatedAt($tb148_cuenta_cobrar_pagoForm["fe_registro"]); 
+        $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fe_registro); 
         }        
         $tb150_presupuesto_ingreso_movimiento->setCoUsuario($this->getUser()->getAttribute('codigo'));
         $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(11);
         $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos6["mo_pagado"]);
         $tb150_presupuesto_ingreso_movimiento->setMoSaldoNuevo($mo_recaudado);
         $tb150_presupuesto_ingreso_movimiento->setCoSolicitud($campos3["co_solicitud"]);
-        $tb150_presupuesto_ingreso_movimiento->setTxObservacion('INGRESO RECAUDACION');
+        $tb150_presupuesto_ingreso_movimiento->setTxObservacion($campos2["de_cuota"]);
         $tb150_presupuesto_ingreso_movimiento->save($con);        
         
         $co_tipo_solicitud = $this->getRequestParameter("co_tipo_solicitud");
@@ -230,28 +271,33 @@ class TesoreriaIngresoPagoActions extends sfActions
         }else{
         $fecha_asiento =    $fe_registro;    
         }
-//                    $tb061_asiento_contable = new Tb061AsientoContable();
-//                    $tb061_asiento_contable->setMoDebe($tb148_cuenta_cobrar_pagoForm["mo_pago"])
-//                                  ->setCoCuentaContable($campos10["co_cuenta_contable"])
-//                                  ->setCoSolicitud($campos3["co_solicitud"])
-//                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-//                                  ->setCreatedAt($fecha_asiento)
-//                                  ->setCoTipoAsiento(12)
-//                                  ->setInActivo(true)
-//                                  ->save($con);        
-//                    
-//                    $tb061_asiento_contable = new Tb061AsientoContable();
-//                    $tb061_asiento_contable->setMoHaber($tb148_cuenta_cobrar_pagoForm["mo_pago"])
-//                                  ->setCoCuentaContable($campos6["co_cuenta_contable"])
-//                                  ->setCoSolicitud($campos3["co_solicitud"])
-//                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-//                                  ->setCreatedAt($fecha_asiento)
-//                                  ->setCoTipoAsiento(12)
-//                                  ->setInActivo(true)
-//                                  ->save($con);    
-                    
-               
         
+        
+                    $tb061_asiento_contable = new Tb061AsientoContable();
+                    $tb061_asiento_contable->setMoDebe($mo_movimiento)
+                                  ->setCoCuentaContable($campos10["co_cuenta_contable"])
+                                  ->setCoSolicitud($campos3["co_solicitud"])
+                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                  ->setCreatedAt($fecha_asiento)
+                                  ->setCoTipoAsiento(12)
+                                  ->setInActivo(true)
+                                  ->save($con);   
+                    
+
+                    
+                    $tb061_asiento_contable = new Tb061AsientoContable();
+                    $tb061_asiento_contable->setMoHaber($mo_movimiento)
+                                  ->setCoCuentaContable($campos6["co_cuenta_contable"])
+                                  ->setCoSolicitud($campos3["co_solicitud"])
+                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                  ->setCreatedAt($fecha_asiento)
+                                  ->setCoTipoAsiento(12)
+                                  ->setInActivo(true)
+                                  ->save($con);    
+                    
+        }
+        
+         if($this->getRequestParameter('in_posteo')==1){
                $c = new Criteria();
                $c->add(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA,$tb155_cuenta_bancaria_historico->getIdTb011CuentaBancaria());
                $stmt = Tb011CuentaBancariaPeer::doSelectStmt($c);
@@ -265,7 +311,7 @@ class TesoreriaIngresoPagoActions extends sfActions
                     
                     $tb061_asiento_contable = new Tb061AsientoContable();
                     $tb061_asiento_contable->setMoHaber($tb148_cuenta_cobrar_pagoForm["mo_pago"])
-                                  ->setCoCuentaContable(60652)
+                                  ->setCoCuentaContable($reg["co_cuenta_contable"])
                                   ->setCoSolicitud($campos3["co_solicitud"])
                                   ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                   ->setCreatedAt($fecha_asiento)
@@ -282,7 +328,9 @@ class TesoreriaIngresoPagoActions extends sfActions
                                   ->setCreatedAt($fecha_asiento)
                                   ->setCoTipoAsiento(9)
                                   ->setInActivo(true)
-                                  ->save($con);                    
+                                  ->save($con);   
+                    
+         }
         
        $c = new Criteria();
        $c->add(Tb008ProveedorPeer::CO_PROVEEDOR,$campos3["co_proveedor"]);

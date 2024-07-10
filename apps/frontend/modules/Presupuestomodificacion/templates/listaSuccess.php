@@ -107,7 +107,7 @@
                     this.msg.load({
                         url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuestomodificacion/creditoadicional",
                         params:{
-                            co_tipo_solicitud : 6
+                            co_tipo_solicitud : 7
                         },
                         scripts: true,
                         text: "Cargando.."

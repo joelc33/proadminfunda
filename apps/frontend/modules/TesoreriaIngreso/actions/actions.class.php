@@ -383,11 +383,11 @@ class TesoreriaIngresoActions extends sfActions
         $c->add(Tb026SolicitudPeer::CO_SOLICITUD,$co_solicitud);
     }
     
-    if($in_ventanilla=='true'){
-        $c->add(Tb030RutaPeer::NU_ORDEN,1);
-    }else{
-        $c->add(Tb030RutaPeer::NU_ORDEN,1,  Criteria::GREATER_THAN);
-    }
+//    if($in_ventanilla=='true'){
+//        $c->add(Tb030RutaPeer::NU_ORDEN,1);
+//    }else{
+//        $c->add(Tb030RutaPeer::NU_ORDEN,1,  Criteria::GREATER_THAN);
+//    }
     
    
     $registro_proceso = Tb028ProcesoPeer::getListaProcesoAsignado($this->getUser()->getAttribute('codigo'));
@@ -395,52 +395,49 @@ class TesoreriaIngresoActions extends sfActions
       
                               
     $c->setIgnoreCase(true);
-    $c->addSelectColumn(Tb030RutaPeer::CO_SOLICITUD);
-    $c->addSelectColumn(Tb030RutaPeer::CO_PROCESO);
-    $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
-    $c->addSelectColumn(Tb028ProcesoPeer::TX_PROCESO);
     $c->addSelectColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
     $c->addSelectColumn(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
     $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD); 
-    $c->addSelectColumn(Tb001UsuarioPeer::TX_LOGIN);   
-    $c->addSelectColumn(Tb026SolicitudPeer::CREATED_AT); 
+    $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::ID);   
     $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);  
-    
+    $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::MO_CUOTA);
+    $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::FE_PAGO);
+    $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::DE_CUOTA);
     
     $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
     $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
     $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+    $c->addJoin(Tb142CuentaCobrarPeer::ID, Tb145CuentaCobrarDetallePeer::ID_TB142_CUENTA_COBRAR);
+    $c->addJoin(Tb142CuentaCobrarPeer::CO_PROVEEDOR,Tb008ProveedorPeer::CO_PROVEEDOR);
+    $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO,  Tb007DocumentoPeer::CO_DOCUMENTO);
 
-    $c->addJoin(Tb142CuentaCobrarPeer::CO_PROVEEDOR,Tb008ProveedorPeer::CO_PROVEEDOR,   Criteria::LEFT_JOIN);
-    $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO,  Tb007DocumentoPeer::CO_DOCUMENTO,   Criteria::LEFT_JOIN);
-
-    $c->addJoin(Tb142CuentaCobrarPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD,Tb142CuentaCobrarPeer::CO_SOLICITUD);
         
     $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
-    $c->addJoin(Tb028ProcesoPeer::CO_PROCESO, Tb030RutaPeer::CO_PROCESO);
-    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
+//    $c->addJoin(Tb028ProcesoPeer::CO_PROCESO, Tb030RutaPeer::CO_PROCESO);
+//    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
     $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO);
 
-    $c->addJoin(Tb142CuentaCobrarPeer::ID, Tb145CuentaCobrarDetallePeer::ID_TB142_CUENTA_COBRAR);
+
     $c->addAnd(Tb145CuentaCobrarDetallePeer::IN_PAGO, false);
     
   //  $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD,$registro_tramite,Criteria::IN);
-    $c->addAnd(Tb030RutaPeer::CO_PROCESO,42,Criteria::IN);
-    
-    $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA,1);
-    $c->addAnd(Tb030RutaPeer::IN_ACTUAL,true);
-    $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
+//    $c->addAnd(Tb030RutaPeer::CO_PROCESO,42,Criteria::IN);
+//    
+//    $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA,1);
+//    $c->addAnd(Tb030RutaPeer::IN_ACTUAL,true);
+    $c->add(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
     
     //echo $c->toString(); exit();
     
     //$c->addAnd(Tb026SolicitudPeer::CO_USUARIO,$this->getUser()->getAttribute('codigo'));
-    $cantidadTotal = Tb026SolicitudPeer::doCount($c);
+    $cantidadTotal = Tb145CuentaCobrarDetallePeer::doCount($c);
     
     $c->setLimit($limit)->setOffset($start);
-    $c->addAscendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
+    $c->addAscendingOrderByColumn(Tb145CuentaCobrarDetallePeer::FE_PAGO);
         
     
-    $stmt = Tb026SolicitudPeer::doSelectStmt($c);
+    $stmt = Tb145CuentaCobrarDetallePeer::doSelectStmt($c);
     $registros = "";
     while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
         
@@ -460,19 +457,18 @@ class TesoreriaIngresoActions extends sfActions
         
         
 
-        list($anio,$mes,$dia) = explode('-',$res["created_at"]);
+        list($anio,$mes,$dia) = explode('-',$res["fe_pago"]);
         $registros[] = array(
-                "tx_proceso"        => trim($res["tx_proceso"]),
-                "co_ruta"           => trim($res["co_ruta"]),
+                "co_cuenta_detalle" => trim($res["id"]),
                 "co_solicitud"      => trim($res["co_solicitud"]),
-                "co_proceso"        => trim($res["co_proceso"]),
                 "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
                 "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
                 "co_solicitud"      => trim($res["co_solicitud"]),
-                "tx_login"          => trim($res["tx_login"]),
+                "mo_cuota"          => trim($res["mo_cuota"]),
+                "descripcion"          => trim($res["de_cuota"]),
                 "tx_rif"            => $tx_rif,
                 "tx_razon_social"   => $tx_razon_social,
-                "fe_creacion"       => $dia.'-'.$mes.'-'.$anio,
+                "fe_pago"       => $dia.'-'.$mes.'-'.$anio,
                 "cant_revision"     => $cantidad
             );
     }
@@ -488,138 +484,138 @@ class TesoreriaIngresoActions extends sfActions
     {
      
       $limit         =   $this->getRequestParameter("limit",20);
-      $start         =   $this->getRequestParameter("start",0);
-      $in_ventanilla = $this->getRequestParameter("in_ventanilla");
-      $co_proceso    =   $this->getRequestParameter("co_proceso");
-      $co_solicitud  =   $this->getRequestParameter("co_solicitud");
-      
-      $co_documento     =   $this->getRequestParameter("co_documento");
-      $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
-      $tx_razon_social  =   $this->getRequestParameter("tx_razon_social");    
-      
-      $c = new Criteria();  
-      $c->clearSelectColumns();
-      
-      if($co_proceso!=''){
-          $c->add(Tb028ProcesoPeer::CO_PROCESO,$co_proceso);
-      }
-      
-      if($co_documento!=''){
-          $c->add(Tb007DocumentoPeer::CO_DOCUMENTO,$co_documento);
-      }
-      
-      if($nu_cedula_rif!=''){
-          $c->add(Tb008ProveedorPeer::TX_RIF,$nu_cedula_rif);
-      }
-      
-      if($tx_razon_social!=''){
-          $c->add(Tb008ProveedorPeer::TX_RAZON_SOCIAL,'%'.$tx_razon_social.'%',Criteria::LIKE);
-      }
-          
-      
-      if($co_solicitud!=''){
-          $c->add(Tb026SolicitudPeer::CO_SOLICITUD,$co_solicitud);
-      }
-      
-      if($in_ventanilla=='true'){
-          $c->add(Tb030RutaPeer::NU_ORDEN,1);
-      }else{
-          $c->add(Tb030RutaPeer::NU_ORDEN,1,  Criteria::GREATER_THAN);
-      }
-      
-     
-      $registro_proceso = Tb028ProcesoPeer::getListaProcesoAsignado($this->getUser()->getAttribute('codigo'));
-      $registro_tramite = Tb006TipoSolicitudUsuarioPeer::getListaTramiteAsignado($this->getUser()->getAttribute('codigo'));
+    $start         =   $this->getRequestParameter("start",0);
+    $in_ventanilla = $this->getRequestParameter("in_ventanilla");
+    $co_proceso    =   $this->getRequestParameter("co_proceso");
+    $co_solicitud  =   $this->getRequestParameter("co_solicitud");
+    
+    $co_documento     =   $this->getRequestParameter("co_documento");
+    $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
+    $tx_razon_social  =   $this->getRequestParameter("tx_razon_social");    
+    
+    $c = new Criteria();  
+    $c->clearSelectColumns();
+    
+    if($co_proceso!=''){
+        $c->add(Tb028ProcesoPeer::CO_PROCESO,$co_proceso);
+    }
+    
+    if($co_documento!=''){
+        $c->add(Tb007DocumentoPeer::CO_DOCUMENTO,$co_documento);
+    }
+    
+    if($nu_cedula_rif!=''){
+        $c->add(Tb008ProveedorPeer::TX_RIF,$nu_cedula_rif);
+    }
+    
+    if($tx_razon_social!=''){
+        $c->add(Tb008ProveedorPeer::TX_RAZON_SOCIAL,'%'.$tx_razon_social.'%',Criteria::LIKE);
+    }
         
-                                
-      $c->setIgnoreCase(true);
-      $c->addSelectColumn(Tb030RutaPeer::CO_SOLICITUD);
-      $c->addSelectColumn(Tb030RutaPeer::CO_PROCESO);
-      $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
-      $c->addSelectColumn(Tb028ProcesoPeer::TX_PROCESO);
-      $c->addSelectColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
-      $c->addSelectColumn(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
-      $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD); 
-      $c->addSelectColumn(Tb001UsuarioPeer::TX_LOGIN);   
-      $c->addSelectColumn(Tb026SolicitudPeer::CREATED_AT); 
-      $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);  
+    
+    if($co_solicitud!=''){
+        $c->add(Tb026SolicitudPeer::CO_SOLICITUD,$co_solicitud);
+    }
+    
+//    if($in_ventanilla=='true'){
+//        $c->add(Tb030RutaPeer::NU_ORDEN,1);
+//    }else{
+//        $c->add(Tb030RutaPeer::NU_ORDEN,1,  Criteria::GREATER_THAN);
+//    }
+    
+   
+    $registro_proceso = Tb028ProcesoPeer::getListaProcesoAsignado($this->getUser()->getAttribute('codigo'));
+    $registro_tramite = Tb006TipoSolicitudUsuarioPeer::getListaTramiteAsignado($this->getUser()->getAttribute('codigo'));
       
-      
-      $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
-      $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
-      $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
-  
-      $c->addJoin(Tb142CuentaCobrarPeer::CO_PROVEEDOR,Tb008ProveedorPeer::CO_PROVEEDOR,   Criteria::LEFT_JOIN);
-      $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO,  Tb007DocumentoPeer::CO_DOCUMENTO,   Criteria::LEFT_JOIN);
-  
-      $c->addJoin(Tb142CuentaCobrarPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
-          
-      $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
-      $c->addJoin(Tb028ProcesoPeer::CO_PROCESO, Tb030RutaPeer::CO_PROCESO);
-      $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
-      $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO);
+                              
+    $c->setIgnoreCase(true);
+    $c->addSelectColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
+    $c->addSelectColumn(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+    $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD); 
+    $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::ID);   
+    $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);  
+    $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::MO_CUOTA);
+    $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::FE_PAGO);
+    $c->addSelectColumn(Tb148CuentaCobrarPagoPeer::MO_PAGO);
+    $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::DE_CUOTA);
+    
+    $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
+    $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
+    $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+    
+    $c->addJoin(Tb145CuentaCobrarDetallePeer::ID, Tb148CuentaCobrarPagoPeer::ID_TB145_CUENTA_COBRAR_DETALLE);
+    $c->addJoin(Tb142CuentaCobrarPeer::ID, Tb145CuentaCobrarDetallePeer::ID_TB142_CUENTA_COBRAR);
+    $c->addJoin(Tb142CuentaCobrarPeer::CO_PROVEEDOR,Tb008ProveedorPeer::CO_PROVEEDOR);
+    $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO,  Tb007DocumentoPeer::CO_DOCUMENTO);
 
-      $c->addJoin(Tb142CuentaCobrarPeer::ID, Tb145CuentaCobrarDetallePeer::ID_TB142_CUENTA_COBRAR);
-      $c->addAnd(Tb145CuentaCobrarDetallePeer::IN_PAGO, true);
-      
-    //  $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD,$registro_tramite,Criteria::IN);
-      $c->addAnd(Tb030RutaPeer::CO_PROCESO,42,Criteria::IN);
-      
-      $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA,1);
-      $c->addAnd(Tb030RutaPeer::IN_ACTUAL,true);
-      $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
-      
-      //echo $c->toString(); exit();
-      
-      //$c->addAnd(Tb026SolicitudPeer::CO_USUARIO,$this->getUser()->getAttribute('codigo'));
-      $cantidadTotal = Tb026SolicitudPeer::doCount($c);
-      
-      $c->setLimit($limit)->setOffset($start);
-      $c->addAscendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
-          
-      
-      $stmt = Tb026SolicitudPeer::doSelectStmt($c);
-      $registros = "";
-      while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
-          
-          
-          $cantidad = Tb026SolicitudPeer::getCantRevision($res["co_solicitud"]);
-  
-          $tx_rif = $res["inicial"]."-".$res["tx_rif"];
-          $tx_razon_social = strtoupper($res["tx_razon_social"]);
-          
-           if($res["tx_rif"]==''){
-              if($res["co_persona"]!=''){
-                  $datos_persona = $this->getDatosPersona($res["co_persona"]);
-                  $tx_rif = $datos_persona["inicial"]."-".$datos_persona["nu_cedula"];
-                  $tx_razon_social = strtoupper($datos_persona["nb_persona"].' '.$datos_persona["ap_persona"]);
-              }            
-          }
-          
-          
-  
-          list($anio,$mes,$dia) = explode('-',$res["created_at"]);
-          $registros[] = array(
-                  "tx_proceso"        => trim($res["tx_proceso"]),
-                  "co_ruta"           => trim($res["co_ruta"]),
-                  "co_solicitud"      => trim($res["co_solicitud"]),
-                  "co_proceso"        => trim($res["co_proceso"]),
-                  "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
-                  "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
-                  "co_solicitud"      => trim($res["co_solicitud"]),
-                  "tx_login"          => trim($res["tx_login"]),
-                  "tx_rif"            => $tx_rif,
-                  "tx_razon_social"   => $tx_razon_social,
-                  "fe_creacion"       => $dia.'-'.$mes.'-'.$anio,
-                  "cant_revision"     => $cantidad
-              );
-      }
-  
-      $this->data = json_encode(array(
-          "success"   =>  true,
-          "total"     =>  $cantidadTotal,
-          "data"      =>  $registros
-          ));
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD,Tb142CuentaCobrarPeer::CO_SOLICITUD);
+        
+    $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+//    $c->addJoin(Tb028ProcesoPeer::CO_PROCESO, Tb030RutaPeer::CO_PROCESO);
+//    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
+    $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO);
+
+
+//    $c->addAnd(Tb145CuentaCobrarDetallePeer::IN_PAGO, true);
+    
+  //  $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD,$registro_tramite,Criteria::IN);
+//    $c->addAnd(Tb030RutaPeer::CO_PROCESO,42,Criteria::IN);
+//    
+//    $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA,1);
+//    $c->addAnd(Tb030RutaPeer::IN_ACTUAL,true);
+    $c->add(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
+    
+    //echo $c->toString(); exit();
+    
+    //$c->addAnd(Tb026SolicitudPeer::CO_USUARIO,$this->getUser()->getAttribute('codigo'));
+    $cantidadTotal = Tb148CuentaCobrarPagoPeer::doCount($c);
+    
+    $c->setLimit($limit)->setOffset($start);
+    $c->addAscendingOrderByColumn(Tb145CuentaCobrarDetallePeer::FE_PAGO);
+        
+    
+    $stmt = Tb148CuentaCobrarPagoPeer::doSelectStmt($c);
+    $registros = "";
+    while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
+        
+        
+        $cantidad = Tb026SolicitudPeer::getCantRevision($res["co_solicitud"]);
+
+        $tx_rif = $res["inicial"]."-".$res["tx_rif"];
+        $tx_razon_social = strtoupper($res["tx_razon_social"]);
+        
+         if($res["tx_rif"]==''){
+            if($res["co_persona"]!=''){
+                $datos_persona = $this->getDatosPersona($res["co_persona"]);
+                $tx_rif = $datos_persona["inicial"]."-".$datos_persona["nu_cedula"];
+                $tx_razon_social = strtoupper($datos_persona["nb_persona"].' '.$datos_persona["ap_persona"]);
+            }            
+        }
+        
+        
+
+        list($anio,$mes,$dia) = explode('-',$res["fe_pago"]);
+        $registros[] = array(
+                "co_cuenta_detalle" => trim($res["id"]),
+                "co_solicitud"      => trim($res["co_solicitud"]),
+                "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
+                "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
+                "co_solicitud"      => trim($res["co_solicitud"]),
+                "mo_cuota"          => trim($res["mo_cuota"]),
+                "descripcion"          => trim($res["de_cuota"]),
+                "mo_pago"          => trim($res["mo_pago"]),
+                "tx_rif"            => $tx_rif,
+                "tx_razon_social"   => $tx_razon_social,
+                "fe_pago"       => $dia.'-'.$mes.'-'.$anio,
+                "cant_revision"     => $cantidad
+            );
+    }
+
+    $this->data = json_encode(array(
+        "success"   =>  true,
+        "total"     =>  $cantidadTotal,
+        "data"      =>  $registros
+        ));
       }
 
     public function executeListaPendiente()
@@ -762,7 +758,8 @@ class TesoreriaIngresoActions extends sfActions
 
     public function executeStorefktipodocumento(sfWebRequest $request){
         $c = new Criteria();
-        $stmt = Tb147TipoDocumentoPeer::doSelectStmt($c);
+        $c->add(Tb153TipoDocumentoCuentaPeer::ID_TIPO_CUENTA_MOVIMIENTO, 4);
+        $stmt = Tb153TipoDocumentoCuentaPeer::doSelectStmt($c);
         $registros = array();
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
             $registros[] = $reg;
@@ -833,6 +830,32 @@ class TesoreriaIngresoActions extends sfActions
 
         
     }
+    
+  public function executeBuscarReferencia(sfWebRequest $request)
+  {
+  
+    $cuenta  = $this->getRequestParameter('cuenta');
+    $referencia  = $this->getRequestParameter('referencia');
+    $tipo_documento  = $this->getRequestParameter('tipo_documento');
+
+        $c = new Criteria();
+        $c->add(Tb155CuentaBancariaHistoricoPeer::ID_TB011_CUENTA_BANCARIA, $cuenta);
+        $c->add(Tb155CuentaBancariaHistoricoPeer::NU_TRANSACCION, $referencia);
+        $c->add(Tb155CuentaBancariaHistoricoPeer::ID_TB153_TIPO_DOCUMENTO_CUENTA, $tipo_documento);
+        $c->add(Tb155CuentaBancariaHistoricoPeer::IN_CONCILIADO, FALSE);
+        $c->add(Tb155CuentaBancariaHistoricoPeer::FE_TRANSACCION, "date_part('year', tb155_cuenta_bancaria_historico.fe_transaccion) = ".$this->getUser()->getAttribute('ejercicio'), Criteria::CUSTOM);
+//        $c->add(Tb155CuentaBancariaHistoricoPeer::ID_TB154_TIPO_CUENTA_MOVIMIENTO, 4);
+        $stmt = Tb155CuentaBancariaHistoricoPeer::doSelectStmt($c);
+
+    $registros = $stmt->fetch(PDO::FETCH_ASSOC);
+    $this->data = json_encode(array(
+        "success"   => true,
+        "data"      => $registros
+    ));
+    
+    $this->setTemplate('store');
+    
+  }    
 
 
 }

@@ -340,6 +340,15 @@ class CuentaBancariaActions extends sfActions
         $tb011_cuenta_bancariaForm = $this->getRequestParameter('tb011_cuenta_bancaria');
 /*CAMPOS*/
         
+//        if(!is_numeric(trim($tb011_cuenta_bancariaForm["tx_cuenta_bancaria"]))){
+//            $this->data = json_encode(array(
+//                "success" => false,
+//                "msg" => 'El Campo Cuenta Bancaria deben ser solo numeros, verifique!'
+//            ));
+//            echo $this->data;
+//            return sfView::NONE;
+//        }        
+        
         $tx_nivel_anterior = substr($tx_codigo_cuenta,0,9);
         
         $cant = strlen(trim($tx_codigo_cuenta));
@@ -353,7 +362,7 @@ class CuentaBancariaActions extends sfActions
                 return sfView::NONE;           
         }        
         
-        if($cant==18){
+        if($cant==18 || $cant==14){
             
         $c = new Criteria();
         $c->add(Tb024CuentaContablePeer::TX_CODIGO_CUENTA,$tx_codigo_cuenta);

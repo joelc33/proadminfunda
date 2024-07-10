@@ -39,11 +39,13 @@ class BancoActions extends sfActions
         $this->data = json_encode(array(
                             "co_banco"     => $campos["co_banco"],
                             "tx_banco"     => $campos["tx_banco"],
+                            "in_banco_empresa"     => $campos["in_ente"],
                     ));
     }else{
         $this->data = json_encode(array(
                             "co_banco"     => "",
                             "tx_banco"     => "",
+                            "in_banco_empresa"     => "",
                     ));
     }
 

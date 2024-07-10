@@ -50,6 +50,18 @@ this.hiddenJsonPago = new Ext.form.Hidden({
             name : 'co_liquidacion_pago'
 
    }); 
+   
+this.in_posteo = new Ext.form.Hidden({
+            name : 'in_posteo',
+            value: 0
+
+   });    
+   
+this.id_tb155_cuenta_bancaria_historico = new Ext.form.Hidden({
+            name : 'tb148_cuenta_cobrar_pago[id_tb155_cuenta_bancaria_historico]',
+            value: ''
+
+   });   
 
    //<ClavePrimaria>
 this.id_tb145_cuenta_cobrar_detalle = new Ext.form.Hidden({
@@ -73,7 +85,8 @@ this.fe_ingreso = new Ext.form.DateField({
     fieldLabel: 'Fecha Ingreso',
     allowBlank:false,
     width:100,
-    //value:new Date()
+    value:new Date(),
+    maxValue:new Date()
 });
 
 this.fe_registro = new Ext.form.DateField({
@@ -102,12 +115,12 @@ this.forma_pago = new Ext.form.ComboBox({
 
 this.tipo_documento = new Ext.form.ComboBox({
     fieldLabel : 'Tipo Doc.',
-    displayField:'de_tipo_documento',
+    displayField:'de_tipo_documento_cuenta',
     store: this.store_tipo_documento,
     typeAhead: true,
     valueField: 'id',
-    hiddenName:'tb148_cuenta_cobrar_pago[id_tb147_tipo_documento]',
-    name: 'id_tb147_tipo_documento',
+    hiddenName:'tb148_cuenta_cobrar_pago[id_tb153_tipo_documento_cuenta]',
+    name: 'id_tb153_tipo_documento_cuenta',
     triggerAction: 'all',
     emptyText:'Seleccione Tipo de Documento',
     selectOnFocus:true,
@@ -147,16 +160,16 @@ this.cuenta = new Ext.form.ComboBox({
     mode:'local',
     width:350,
     resizable:true,
-	listeners:{
-		select: function(){
-			recaudacion.formulario.id_tb155_cuenta_bancaria_historico.clearValue();
-			recaudacion.formulario.storeID_INGRESO.load({
-				params: {
-					cuenta:this.getValue()
-				}
-			})
-		}
-  	}
+//	listeners:{
+//		select: function(){
+//			recaudacion.formulario.id_tb155_cuenta_bancaria_historico.clearValue();
+//			recaudacion.formulario.storeID_INGRESO.load({
+//				params: {
+//					cuenta:this.getValue()
+//				}
+//			})
+//		}
+//  	}
 });
 
 function renderMonto(val, attr, record) {
@@ -167,30 +180,30 @@ this.displayfieldmonto = new Ext.form.DisplayField({
  value:"<span style='font-size:12px;'><b>Total Ingresos: </b></span>"
 });
 
-this.id_tb155_cuenta_bancaria_historico = new Ext.form.ComboBox({
-	fieldLabel:'Ingreso',
-	store: this.storeID_INGRESO,
-	typeAhead: true,
-	valueField: 'id',
-	displayField:'descripcion',
-	hiddenName:'tb148_cuenta_cobrar_pago[id_tb155_cuenta_bancaria_historico]',
-	//readOnly:(this.OBJ.id_tb011_cuenta_bancaria!='')?true:false,
-	//style:(this.main.OBJ.id_tb011_cuenta_bancaria!='')?'background:#c9c9c9;':'',
-	forceSelection:true,
-	resizable:true,
-	triggerAction: 'all',
-	emptyText:'Seleccione Ingreso...',
-	selectOnFocus: true,
-	mode: 'local',
-	width:350,
-	resizable:true,
-	allowBlank:false,
-    onSelect: function(record){
-		recaudacion.formulario.id_tb155_cuenta_bancaria_historico.setValue(record.data.id);
-		recaudacion.formulario.monto.setValue(record.data.mo_transaccion);
-		this.collapse();
-    },
-});
+//this.id_tb155_cuenta_bancaria_historico = new Ext.form.ComboBox({
+//	fieldLabel:'Ingreso',
+//	store: this.storeID_INGRESO,
+//	typeAhead: true,
+//	valueField: 'id',
+//	displayField:'descripcion',
+//	hiddenName:'tb148_cuenta_cobrar_pago[id_tb155_cuenta_bancaria_historico]',
+//	//readOnly:(this.OBJ.id_tb011_cuenta_bancaria!='')?true:false,
+//	//style:(this.main.OBJ.id_tb011_cuenta_bancaria!='')?'background:#c9c9c9;':'',
+//	forceSelection:true,
+//	resizable:true,
+//	triggerAction: 'all',
+//	emptyText:'Seleccione Ingreso...',
+//	selectOnFocus: true,
+//	mode: 'local',
+//	width:350,
+//	resizable:true,
+//	allowBlank:false,
+//    onSelect: function(record){
+//		recaudacion.formulario.id_tb155_cuenta_bancaria_historico.setValue(record.data.id);
+//		recaudacion.formulario.monto.setValue(record.data.mo_transaccion);
+//		this.collapse();
+//    },
+//});
 
 this.id_tb064_presupuesto_ingreso = new Ext.form.ComboBox({
 	fieldLabel:'Partida Ingreso',
@@ -266,6 +279,7 @@ this.monto = new Ext.form.NumberField({
     value: '',
     blankText: 'Debe introducir el monto a pagar',
     msgTarget: 'under',
+    value:this.OBJ.mo_pendiente,
     validator: function(){
         return this.validFlag;
     },
@@ -312,6 +326,30 @@ this.monto_pagado = new Ext.form.NumberField({
         value:this.OBJ.mo_pagado
 });
 
+this.referencia = new Ext.form.TextField({
+        fieldLabel : 'Doc/Ref',
+        id : 'referencia',
+        name : 'tb148_cuenta_cobrar_pago[nu_referencia]',
+        width: '150px',
+        allowNegative : false,
+        allowBlank:false,
+        maskRe: /[0-9]/,
+        blankText: 'Debe introducir el numero de Documento o referencia'
+});
+
+//    this.referencia.on('blur',function(){
+//            if(recaudacion.formulario.cuenta.getValue()==""){
+//                    Ext.Msg.alert("Alerta","Disculpe debe seleccionar la cuenta bancaria");
+//                    return false;
+//            }
+//            if(recaudacion.formulario.tipo_documento.getValue()==""){
+//                    Ext.Msg.alert("Alerta","Disculpe debe seleccionar la fe_ingreso");
+//                    return false;
+//            }            
+//            
+//            recaudacion.formulario.buscarReferencia();
+//                    });
+
 this.formpanel = new Ext.FormPanel({
     width: 500,
     padding:'15px',
@@ -323,18 +361,18 @@ this.formpanel = new Ext.FormPanel({
         recaudacion.formulario.co_cheque,
         recaudacion.formulario.hiddenJsonPago,
         recaudacion.formulario.nu_orden,          
-        recaudacion.formulario.forma_pago,
+        recaudacion.formulario.in_posteo,
         recaudacion.formulario.banco,
         recaudacion.formulario.cuenta,
         recaudacion.formulario.id_tb155_cuenta_bancaria_historico,
-        recaudacion.formulario.id_tb064_presupuesto_ingreso,
+//        recaudacion.formulario.id_tb064_presupuesto_ingreso,
         recaudacion.formulario.fe_ingreso,  
-        recaudacion.formulario.fe_registro,
         recaudacion.formulario.tipo_documento, 
+        recaudacion.formulario.referencia,
         recaudacion.formulario.monto,             
         recaudacion.formulario.mo_pendiente,
         recaudacion.formulario.monto_pagado,
-        recaudacion.formulario.gridPanel
+//        recaudacion.formulario.gridPanel
     ]
 });
 
@@ -361,11 +399,6 @@ this.addEvents();
 
 onRecaudar : function(btn, ev) {
 
-    if(recaudacion.formulario.monto.getValue()==0){
-            Ext.Msg.alert("Alerta","Disculpe el monto a pagar no puede ser cero");
-            return false;
-    }else{
-        if(recaudacion.formulario.forma_pago.getValue()==1){
             if(recaudacion.formulario.banco.getValue()==""){
                     Ext.Msg.alert("Alerta","Disculpe debe seleccionar el banco");
                     return false;
@@ -378,8 +411,8 @@ onRecaudar : function(btn, ev) {
                     Ext.Msg.alert("Alerta","Disculpe debe seleccionar la fe_ingreso");
                     return false;
             }
-        }
-    }
+        
+    
 
     if(recaudacion.formulario.mo_disponible.getValue() <= 0 ){
         Ext.Msg.alert("Alerta","Disculpe el monto a pagar no puede ser menor al disponible");
@@ -395,7 +428,50 @@ onRecaudar : function(btn, ev) {
             store:recaudacion.formulario.gridPanel.getStore()
         });
         recaudacion.formulario.hiddenJsonPago.setValue(list);
+        
+         Ext.Ajax.request({
+                method:'GET',
+                url:'<?php echo $_SERVER["SCRIPT_NAME"]?>/TesoreriaIngreso/buscarReferencia',
+                params:{
+                    cuenta: recaudacion.formulario.cuenta.getValue(),
+                    referencia: recaudacion.formulario.referencia.getValue(),
+                    tipo_documento: recaudacion.formulario.tipo_documento.getValue()
+                },
+                success:function(result, request ) {
+                    obj = Ext.util.JSON.decode(result.responseText);
+                    if(obj.data){
+                    Ext.MessageBox.confirm('Confirmación', 'El numero de documento ya se encuentra registrado por un monto de '+obj.data.mo_transaccion+' ¿desea postear?.', function(boton) {
+                    if (boton == "yes") {
+                        recaudacion.formulario.monto.setValue(obj.data.mo_transaccion);
+                        recaudacion.formulario.id_tb155_cuenta_bancaria_historico.setValue(obj.data.id);
+                        recaudacion.formulario.in_posteo.setValue(1);
+                        recaudacion.formulario.onProcesar();                  
+                
+                        }else{
+                            
+                            
+                        recaudacion.formulario.monto.setValue(recaudacion.formulario.mo_pendiente.getValue());
+                        recaudacion.formulario.onProcesar();                            
+                            
+                            
+                        }
+                    });
+                    }else{
+                        recaudacion.formulario.monto.setValue(recaudacion.formulario.mo_pendiente.getValue());
+                        recaudacion.formulario.onProcesar(); 
+                    }
+                }
+         });        
+
+},
+onProcesar : function(btn, ev) {
+
        
+    if(recaudacion.formulario.monto.getValue()==0){
+    Ext.Msg.alert("Alerta","Disculpe el monto a ingresar no puede ser cero");
+    return false;
+    }
+        
         
   recaudacion.formulario.formpanel.form.submit({
      success: function(form, action){
@@ -409,31 +485,10 @@ onRecaudar : function(btn, ev) {
              });
 
             // window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/ventanilla/web/reportes/reporte_propaganda.php?codigo='+recaudacion.formulario.OBJ.co_ingvar_declaracion);
-         
-            PagosPanel.main.storeP.load();
-            PagosPanel.main.storeR.load();
-            recaudacion.formulario.mo_pendiente.setValue(action.result.mo_pendiente);
-            recaudacion.formulario.mo_disponible.setValue(action.result.mo_pendiente);
-            recaudacion.formulario.monto_pagado.setValue(action.result.mo_pagado);
-            recaudacion.formulario.store_lista_pagos.load({       
-                callback: function(){
-                    recaudacion.formulario.getTotal();
-                }}
-            );
-
-            recaudacion.formulario.id_tb155_cuenta_bancaria_historico.clearValue();
-			recaudacion.formulario.storeID_INGRESO.load({
-				params: {
-					cuenta: recaudacion.formulario.cuenta.getValue()
-				}
-			});
-
-            /*if(panel_detalle.collapsed == false){
-                panel_detalle.toggleCollapse();
-            } 
-            recaudacion.formulario.win.close();*/
 
 
+            TesoreriaIngresoLista.main.store_lista.load();
+            recaudacion.formulario.win.close();
          }
      },
      failure: function(form, action) {
@@ -442,8 +497,33 @@ onRecaudar : function(btn, ev) {
 
      }
  });
-},
 
+},
+buscarReferencia: function(){
+         Ext.Ajax.request({
+                method:'GET',
+                url:'<?php echo $_SERVER["SCRIPT_NAME"]?>/TesoreriaIngreso/buscarReferencia',
+                params:{
+                    cuenta: recaudacion.formulario.cuenta.getValue(),
+                    referencia: recaudacion.formulario.referencia.getValue(),
+                    tipo_documento: recaudacion.formulario.tipo_documento.getValue()
+                },
+                success:function(result, request ) {
+                    obj = Ext.util.JSON.decode(result.responseText);
+                    if(obj.data){
+                    Ext.MessageBox.confirm('Confirmación', '¿desea postear?.', function(boton) {
+                    if (boton == "yes") {
+                
+                
+                        }else{
+                        }
+                    });
+                    }else{
+                        recaudacion.formulario.monto.setValue(recaudacion.formulario.mo_pendiente.getValue());
+                    }
+                }
+         });
+    },
 /*
 *  STORE QUE CARGA LOS COMBOS DE BANCO - CUENTA
 */
@@ -476,7 +556,7 @@ getDataTipoDocumento: function(){
 var store =  new Ext.data.JsonStore({
         url:'<?php echo $_SERVER["SCRIPT_NAME"]?>/TesoreriaIngreso/storefktipodocumento',
                 root:'data',
-                fields: ['id','de_tipo_documento']
+                fields: ['id','de_tipo_documento_cuenta']
  });
 return store;
 },
@@ -561,6 +641,7 @@ recaudacion.formulario.banco.on('beforeselect',function(cmb,record,index){
     }
         });
 },this);
+
 
 },
 

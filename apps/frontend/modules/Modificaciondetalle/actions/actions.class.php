@@ -244,6 +244,8 @@ class ModificaciondetalleActions extends sfActions
                             "id_tb082_ejecutor"     => $this->getRequestParameter("ejecutor")!=""?$this->getRequestParameter("ejecutor"):"",
                             "id_tb139_aplicacion"     => "",
                             "nu_aplicacion"     => "",
+                            "numero_fuente"     => $this->getRequestParameter("numero_fuente"),
+                            "tipo_fuente"     => $this->getRequestParameter("tipo_fuente"),
                     ));
     }
 
@@ -620,7 +622,7 @@ class ModificaciondetalleActions extends sfActions
             /*Campo tipo TIMESTAMP */
             $tb097_modificacion_detalle->setUpdatedAt($fecha);
 
-            $tb097_modificacion_detalle->setIdTb082EjecutorOrigen($tb097_modificacion_detalleForm["id_tb082_ejecutor_origen"]);
+//            $tb097_modificacion_detalle->setIdTb082EjecutorOrigen($tb097_modificacion_detalleForm["id_tb082_ejecutor_origen"]);
 
             /*CAMPOS*/
             $tb097_modificacion_detalle->save($con);
@@ -1074,6 +1076,7 @@ class ModificaciondetalleActions extends sfActions
           
         public function executeStorefkidtb085presupuestoCreditoAdicional(sfWebRequest $request){
             $codigo      =   $this->getRequestParameter("ae");
+            $numero_fuente      =   $this->getRequestParameter("numero_fuente");
 
             $subSelect = "tb085_presupuesto.nu_fi IN (SELECT nu_fi
             FROM tb097_modificacion_detalle as tb097
@@ -1087,6 +1090,7 @@ class ModificaciondetalleActions extends sfActions
             //$c->addJoin(Tb085PresupuestoPeer::NU_ANIO, Tb013AnioFiscalPeer::CO_ANIO_FISCAL);
             //$c->add(Tb013AnioFiscalPeer::IN_ACTIVO,TRUE);
             //$c->add(Tb085PresupuestoPeer::NU_FI, $subSelect, Criteria::CUSTOM);
+            $c->add(Tb085PresupuestoPeer::NU_FI, $numero_fuente);
             $c->add(Tb085PresupuestoPeer::NU_ANIO, $this->getUser()->getAttribute('ejercicio'));
             //$c->add(Tb013AnioFiscalPeer::CO_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
             $stmt = Tb085PresupuestoPeer::doSelectStmt($c);

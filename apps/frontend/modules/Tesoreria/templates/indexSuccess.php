@@ -26,6 +26,15 @@ init: function(){
             value: '<?php echo $co_solicitud; ?>'
 
    });
+   
+  this.co_tipo_odp = new Ext.form.Hidden({
+            name : 'co_tipo_odp',
+            width: '150px',
+            readOnly:true,
+            value: '<?php echo $co_tipo_odp; ?>'
+
+   });   
+   
 this.co_cheque = new Ext.form.Hidden({
         name : 'Pagos[co_cheque]',
         width: '150px',
@@ -63,7 +72,8 @@ this.fe_emision = new Ext.form.DateField({
     fieldLabel: 'Fecha',
     allowBlank:false,
     width:100,
-    value:new Date()
+    value:new Date(),
+    maxValue:new Date()    
 });
 
 this.forma_pago = new Ext.form.ComboBox({
@@ -255,15 +265,16 @@ this.formpanel = new Ext.FormPanel({
              recaudacion.formulario.hiddenJsonPago,
              recaudacion.formulario.nu_orden,
              recaudacion.formulario.fe_emision,             
-             recaudacion.formulario.forma_pago,
+//             recaudacion.formulario.forma_pago,
              recaudacion.formulario.banco,
              recaudacion.formulario.cuenta,
-             recaudacion.formulario.chequera,
+//             recaudacion.formulario.chequera,
              recaudacion.formulario.monto,             
-             recaudacion.formulario.referencia,
+//             recaudacion.formulario.referencia,
              recaudacion.formulario.mo_pendiente,
              recaudacion.formulario.mo_pagado,
-             recaudacion.formulario.gridPanel]
+//             recaudacion.formulario.gridPanel
+         ]
 
 });
 
@@ -295,7 +306,7 @@ onRecaudar : function(btn, ev) {
                 Ext.Msg.alert("Alerta","Disculpe el monto a pagar no puede ser cero");
                 return false;
   }else{
-      if(recaudacion.formulario.forma_pago.getValue()==1){
+
         if(recaudacion.formulario.banco.getValue()==""){
                 Ext.Msg.alert("Alerta","Disculpe debe seleccionar el banco");
                 return false;
@@ -304,11 +315,11 @@ onRecaudar : function(btn, ev) {
                 Ext.Msg.alert("Alerta","Disculpe debe seleccionar la cuenta bancaria");
                 return false;
         }
-        if(recaudacion.formulario.chequera.getValue()==""){
-                Ext.Msg.alert("Alerta","Disculpe debe seleccionar la chequera");
-                return false;
-        }
-        }
+//        if(recaudacion.formulario.chequera.getValue()==""){
+//                Ext.Msg.alert("Alerta","Disculpe debe seleccionar la chequera");
+//                return false;
+//        }
+
         }
 
         if(!recaudacion.formulario.formpanel.getForm().isValid()){
@@ -339,14 +350,14 @@ onRecaudar : function(btn, ev) {
 
             // window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/ventanilla/web/reportes/reporte_propaganda.php?codigo='+recaudacion.formulario.OBJ.co_ingvar_declaracion);
          
-            PagosPanel.main.storeP.load(); 
-            PagosPanel.main.storeP.load(); 
+//            PagosPanel.main.storeP.load(); 
+//            PagosPanel.main.storeP.load(); 
            pendientePagosLista.main.store_lista.load();//bandeja
-           if(panel_detalle.collapsed == false)
-            {
-            panel_detalle.toggleCollapse();
-
-            } 
+//           if(panel_detalle.collapsed == false)
+//            {
+//            panel_detalle.toggleCollapse();
+//
+//            } 
              recaudacion.formulario.win.close()
 
 
@@ -436,13 +447,19 @@ this.total_pagado = paqueteComunJS.funcion.getSumaColumnaGrid({
             campo:'mo_pagado'
             });            
 
-if(cant>1){
-    Ext.get('referencia').setStyle('background-color','#c9c9c9');
-    recaudacion.formulario.referencia.setReadOnly(true);
+if(recaudacion.formulario.co_tipo_odp.getValue()==1){
     Ext.get('monto').setStyle('background-color','#c9c9c9');
     recaudacion.formulario.monto.setReadOnly(true);    
 
 }
+
+//if(cant>1){
+//    Ext.get('referencia').setStyle('background-color','#c9c9c9');
+//    recaudacion.formulario.referencia.setReadOnly(true);
+//    Ext.get('monto').setStyle('background-color','#c9c9c9');
+//    recaudacion.formulario.monto.setReadOnly(true);    
+//
+//}
 this.tcancelar = parseFloat(this.total_pendiente);
 this.tcancelar = this.tcancelar.toFixed(2);
 recaudacion.formulario.monto.setValue(this.tcancelar);

@@ -172,7 +172,7 @@ labelWidth: 150,
                     this.nu_partida,
                     this.id_tb064_presupuesto_ingreso,
                     this.mo_disponible,
-                    this.monto,
+//                    this.monto,
                     this.mo_distribucion,
             ]
 });

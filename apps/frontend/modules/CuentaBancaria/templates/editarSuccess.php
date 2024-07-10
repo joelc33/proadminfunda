@@ -19,14 +19,15 @@ this.co_cuenta_bancaria = new Ext.form.Hidden({
 //</ClavePrimaria>
 
 
-this.tx_cuenta_bancaria = new Ext.form.NumberField({
+this.tx_cuenta_bancaria = new Ext.form.TextField({
 	fieldLabel:'N° de Cuenta',
 	name:'tb011_cuenta_bancaria[tx_cuenta_bancaria]',
 	value:this.OBJ.tx_cuenta_bancaria,
 	allowBlank:false,
         maxLength:20,
         minLength:20,
-	width:300
+	width:300,
+        maskRe: /[0-9]/        
 });
 
 this.co_banco = new Ext.form.ComboBox({

@@ -21,12 +21,17 @@ this.mo_disponible = new Ext.form.Hidden({
     value:this.OBJ.mo_disponible
 });
 
-this.de_cuota = new Ext.form.TextField({
+this.de_cuota = new Ext.form.TextArea({
 	fieldLabel:'Descripcion',
 	name:'tb145_cuenta_cobrar_detalle[de_cuota]',
 	value:this.OBJ.de_cuota,
 	allowBlank:false,
-	width:400
+	width:400,
+        listeners: {
+        change: function(field, newValue, oldValue) {
+        field.setValue(newValue.toUpperCase());
+    }
+}         
 });
 
 this.disponibilidad = new Ext.form.NumberField({
@@ -67,6 +72,7 @@ this.fe_pago = new Ext.form.DateField({
 	fieldLabel:'Fecha de Pago',
 	name:'tb145_cuenta_cobrar_detalle[fe_pago]',
 	value:this.OBJ.fe_pago,
+        maxValue:this.OBJ.fe_pago?this.OBJ.fe_pago:new Date(),
 	allowBlank:false,
 	width:100
 });

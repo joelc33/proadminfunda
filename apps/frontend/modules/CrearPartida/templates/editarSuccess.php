@@ -23,8 +23,8 @@ this.storeAREA_ESTRATEGICA          = this.getStoreAREA_ESTRATEGICA();
 
 //<ClavePrimaria>
 this.co_creacion_partida = new Ext.form.Hidden({
-    name:'co_creacion_partida',
-    value:this.OBJ.co_creacion_partida});
+    name:'id',
+    value:this.OBJ.id});
 
 this.co_solicitud = new Ext.form.Hidden({
     name:'tb067_creacion_partida[co_solicitud]',
@@ -88,14 +88,14 @@ this.co_numero_fuente = new Ext.form.ComboBox({
 	allowBlank:false
 });
 
-if(this.OBJ.co_fuente_financiamiento!=''){
-        CrearPartidaEditar.main.storeCO_NUMERO_FUENTE.load({
-            params:{co_fuente_financiamiento:CrearPartidaEditar.main.OBJ.co_fuente_financiamiento},
-            callback: function(){
-                CrearPartidaEditar.main.co_numero_fuente.setValue(CrearPartidaEditar.main.OBJ.co_numero_fuente);
-            }
-        });
-}
+//if(this.OBJ.co_fuente_financiamiento!=''){
+//        CrearPartidaEditar.main.storeCO_NUMERO_FUENTE.load({
+//            params:{co_fuente_financiamiento:CrearPartidaEditar.main.OBJ.co_fuente_financiamiento},
+//            callback: function(){
+//                CrearPartidaEditar.main.co_numero_fuente.setValue(CrearPartidaEditar.main.OBJ.co_numero_fuente);
+//            }
+//        });
+//}
 
 
 this.co_ente_ejecutor = new Ext.form.ComboBox({
@@ -105,8 +105,8 @@ this.co_ente_ejecutor = new Ext.form.ComboBox({
 	valueField: 'id',
 	displayField:'ejecutor',
 	hiddenName:'tb067_creacion_partida[co_ente_ejecutor]',
-	//readOnly:(this.OBJ.co_ente_ejecutor!='')?true:false,
-	//style:(this.main.OBJ.co_ente_ejecutor!='')?'background:#c9c9c9;':'',
+	readOnly:(this.OBJ.co_ente_ejecutor!='')?true:false,
+	style:(this.OBJ.co_ente_ejecutor!='')?'background:#c9c9c9;':'',
 	forceSelection:true,
 	resizable:true,
 	triggerAction: 'all',
@@ -154,8 +154,8 @@ this.co_proyecto = new Ext.form.ComboBox({
 	valueField: 'id',
 	displayField:'de_proyecto_ac',
 	hiddenName:'tb067_creacion_partida[co_proyecto]',
-	//readOnly:(this.OBJ.co_proyecto!='')?true:false,
-	//style:(this.main.OBJ.co_proyecto!='')?'background:#c9c9c9;':'',
+	readOnly:(this.OBJ.co_proyecto!='')?true:false,
+	style:(this.OBJ.co_proyecto!='')?'background:#c9c9c9;':'',
 	forceSelection:true,
 	resizable:true,
 	triggerAction: 'all',
@@ -193,7 +193,9 @@ this.co_accion_especifica = new Ext.form.ComboBox({
 	typeAhead: true,
 	valueField: 'id',
 	displayField:'accion_especifica',
-	hiddenName:'tb067_creacion_partida[co_accion_especifica]',	
+	hiddenName:'tb067_creacion_partida[co_accion_especifica]',
+	readOnly:(this.OBJ.co_accion_especifica!='')?true:false,
+	style:(this.OBJ.co_accion_especifica!='')?'background:#c9c9c9;':'',        
 	forceSelection:true,
 	resizable:true,
 	triggerAction: 'all',
@@ -219,7 +221,7 @@ if(this.OBJ.co_accion_especifica!=''){
             params:{co_accion:CrearPartidaEditar.main.OBJ.co_accion_especifica},
             callback: function(){
                 CrearPartidaEditar.main.co_partida.setValue(CrearPartidaEditar.main.OBJ.co_partida);
-                CrearPartidaEditar.main.cargarDisponible();
+//                CrearPartidaEditar.main.cargarDisponible();
             }
         });
 }
@@ -231,6 +233,8 @@ this.co_partida = new Ext.form.ComboBox({
 	valueField: 'id',
 	displayField:'de_partida',
 	hiddenName:'tb067_creacion_partida[co_partida]',
+	readOnly:(this.OBJ.co_partida!='')?true:false,
+	style:(this.OBJ.co_partida!='')?'background:#c9c9c9;':'',         
 	forceSelection:true,
 	resizable:true,
         forceAll:true,
@@ -242,7 +246,11 @@ this.co_partida = new Ext.form.ComboBox({
 	allowBlank:false,
         listeners:{
             select: function(){
-                CrearPartidaEditar.main.cargarDisponible();
+//                CrearPartidaEditar.main.cargarDisponible();
+
+      var str = CrearPartidaEditar.main.co_partida.lastSelectionText;
+      var res = str.split("-");
+      CrearPartidaEditar.main.tx_descripcion.setValue(res[1].trim());
             }
         }
     
@@ -411,20 +419,42 @@ this.nu_monto_disponible = new Ext.form.TextField({
 this.tx_descripcion = new Ext.form.TextField({
 	fieldLabel:'Descripcion',
 	name:'tb067_creacion_partida[tx_descripcion]',
+	readOnly:(this.OBJ.tx_descripcion!='')?true:false,
+	style:(this.OBJ.tx_descripcion!='')?'background:#c9c9c9;':'',     
 	value:this.OBJ.tx_descripcion,
 	allowBlank:false,
 	width:700
 });
 
 this.tx_partida = new Ext.form.TextField({
-	fieldLabel:'Partida',
+	fieldLabel:'Desag. Partida',
 	name:'tb067_creacion_partida[tx_partida]',
+	readOnly:(this.OBJ.tx_partida!='')?true:false,
+	style:(this.OBJ.tx_partida!='')?'background:#c9c9c9;':'',             
 	value:this.OBJ.tx_partida,
 	allowBlank:false,
 	width:200,
-	readOnly:(this.OBJ.tx_partida!='')?true:false,
-	style:(this.OBJ.tx_partida!='')?'background:#c9c9c9;':'',
-        //maskRe: /[0-9]/, 
+        maxLength:3,
+        minLength:3,  
+        maskRe: /[0-9]/, 
+});
+
+
+this.tx_fuente = new Ext.form.TextField({
+	fieldLabel:'N° de Fuente',
+	name:'tb067_creacion_partida[tx_fuente]',
+	readOnly:(this.OBJ.tx_fuente!='')?true:false,
+	style:(this.OBJ.tx_fuente!='')?'background:#c9c9c9;':'',          
+	value:this.OBJ.tx_fuente,
+	allowBlank:false,
+	width:200,
+        maxLength:5,
+        minLength:5,        
+        listeners: {
+        change: function(field, newValue, oldValue) {
+        field.setValue(newValue.toUpperCase());
+    }
+} 
 });
 
 this.nu_monto = new Ext.form.NumberField({
@@ -497,8 +527,8 @@ this.formPanel_ = new Ext.form.FormPanel({
 
                     this.co_creacion_partida,
                     this.co_solicitud,
-                    this.co_fuente_financiamiento,
-                    this.co_numero_fuente,
+//                    this.co_fuente_financiamiento,
+//                    this.co_numero_fuente,
                     this.co_ente_ejecutor,
                     this.co_proyecto,
                     this.co_accion_especifica,
@@ -510,7 +540,8 @@ this.formPanel_ = new Ext.form.FormPanel({
                     this.co_clasificacion_economica,
                     this.co_area_estrategica,
                     this.tx_descripcion,
-                    this.tx_partida
+                    this.tx_partida,
+                    this.tx_fuente
             ]
 });
 

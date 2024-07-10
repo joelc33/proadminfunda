@@ -17,6 +17,7 @@ class TesoreriaActions extends sfActions
        $this->co_liquidacion_pago = $this->getRequestParameter('co_liquidacion_pago');
        $this->co_solicitud = $this->getRequestParameter('co_solicitud');
        $this->co_tipo_solicitud = $this->getRequestParameter('co_tipo_solicitud');
+       $this->co_tipo_odp = $this->getRequestParameter('co_tipo_odp');
   
   }
   
@@ -1596,8 +1597,12 @@ class TesoreriaActions extends sfActions
     $c->addSelectColumn(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
     $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD); 
     $c->addSelectColumn(Tb001UsuarioPeer::TX_LOGIN);   
-    $c->addSelectColumn(Tb026SolicitudPeer::CREATED_AT); 
+    $c->addSelectColumn(Tb060OrdenPagoPeer::FE_EMISION); 
     $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);  
+    $c->addSelectColumn(Tb060OrdenPagoPeer::TX_CONCEPTO); 
+    $c->addSelectColumn(Tb062LiquidacionPagoPeer::CO_LIQUIDACION_PAGO);
+    $c->addSelectColumn(Tb062LiquidacionPagoPeer::MO_PENDIENTE);
+    $c->addSelectColumn(Tb060OrdenPagoPeer::CO_TIPO_ODP);
     
     
     $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
@@ -1607,12 +1612,13 @@ class TesoreriaActions extends sfActions
 
     $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR,Tb008ProveedorPeer::CO_PROVEEDOR,   Criteria::LEFT_JOIN);
     $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO,  Tb007DocumentoPeer::CO_DOCUMENTO,   Criteria::LEFT_JOIN);
-  //  $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb060OrdenPagoPeer::CO_SOLICITUD,   Criteria::LEFT_JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb062LiquidacionPagoPeer::CO_SOLICITUD);
         
     $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
     $c->addJoin(Tb028ProcesoPeer::CO_PROCESO, Tb030RutaPeer::CO_PROCESO);
     $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
     $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO);
+    $c->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb062LiquidacionPagoPeer::CO_SOLICITUD);
     
   //  $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD,$registro_tramite,Criteria::IN);
     $c->addAnd(Tb030RutaPeer::CO_PROCESO,4,Criteria::IN);
@@ -1625,13 +1631,31 @@ class TesoreriaActions extends sfActions
     //echo $c->toString(); exit();
     
     //$c->addAnd(Tb026SolicitudPeer::CO_USUARIO,$this->getUser()->getAttribute('codigo'));
-    $cantidadTotal = Tb026SolicitudPeer::doCount($c);
+    $cantidadTotal = Tb062LiquidacionPagoPeer::doCount($c);
     
     $c->setLimit($limit)->setOffset($start);
-    $c->addAscendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
-        
+    $c->addAscendingOrderByColumn(Tb060OrdenPagoPeer::CO_ORDEN_PAGO);
+ 
     
-    $stmt = Tb026SolicitudPeer::doSelectStmt($c);
+//         $registros = '';
+//         $sql = "select tb062.co_liquidacion_pago, tb062.tx_serial, tb062.co_solicitud,                    
+//                        to_char(fe_emision,'dd/mm/yyyy') as fe_emision,
+//                        tb062.mo_pagar,
+//                        tb062.mo_pagado,
+//                        tb062.mo_pendiente,
+//                        tb062.nu_anio,
+//                        tb027.tx_tipo_solicitud,
+//			tb027.co_tipo_solicitud
+//                from tb062_liquidacion_pago as tb062,
+//                     tb026_solicitud as tb026,
+//                     tb027_tipo_solicitud as tb027
+//                where
+//                     tb062.co_solicitud = tb026.co_solicitud and
+//                     tb026.co_tipo_solicitud = tb027.co_tipo_solicitud and
+//                     tb062.in_anular is null and
+//                     tb062.co_solicitud = ".$co_solicitud." and tb062.mo_pendiente > 0  order by co_liquidacion_pago";    
+    
+    $stmt = Tb062LiquidacionPagoPeer::doSelectStmt($c);
     $registros = "";
     while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
         
@@ -1651,10 +1675,11 @@ class TesoreriaActions extends sfActions
         
         
 
-        list($anio,$mes,$dia) = explode('-',$res["created_at"]);
+        list($anio,$mes,$dia) = explode('-',$res["fe_emision"]);
         $registros[] = array(
                 "tx_proceso"        => trim($res["tx_proceso"]),
                 "co_ruta"           => trim($res["co_ruta"]),
+                "co_liquidacion_pago" => trim($res["co_liquidacion_pago"]),
                 "co_solicitud"      => trim($res["co_solicitud"]),
                 "co_proceso"        => trim($res["co_proceso"]),
                 "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
@@ -1663,7 +1688,10 @@ class TesoreriaActions extends sfActions
                 "tx_login"          => trim($res["tx_login"]),
                 "tx_rif"            => $tx_rif,
                 "tx_razon_social"   => $tx_razon_social,
-                "fe_creacion"       => $dia.'-'.$mes.'-'.$anio,
+                "tx_concepto"       => trim($res["tx_concepto"]),
+                "co_tipo_odp"       => trim($res["co_tipo_odp"]),
+                "mo_pendiente"       => trim($res["mo_pendiente"]),
+                "fe_emision"       => $dia.'-'.$mes.'-'.$anio,
                 "cant_revision"     => $cantidad,
                 "tx_serial"         => Tb060OrdenPagoPeer::getODP($res["co_solicitud"])
             );

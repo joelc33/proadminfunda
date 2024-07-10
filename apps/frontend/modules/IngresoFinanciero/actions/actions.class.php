@@ -711,7 +711,9 @@ class IngresoFinancieroActions extends sfActions
     public function executeStorefkidtb153tipodocumentocuenta(sfWebRequest $request)
     {
         $c = new Criteria();
+        if($this->getRequestParameter("id")!=5){
         $c->add(Tb153TipoDocumentoCuentaPeer::ID_TIPO_CUENTA_MOVIMIENTO, $this->getRequestParameter("id"));
+        }
         $stmt = Tb153TipoDocumentoCuentaPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {

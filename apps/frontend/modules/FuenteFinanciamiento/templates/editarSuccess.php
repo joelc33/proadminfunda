@@ -25,7 +25,12 @@ this.tx_siglas = new Ext.form.TextField({
 	name:'tb073_fuente_financiamiento[tx_siglas]',
 	value:this.OBJ.tx_siglas,
 	allowBlank:false,
-	width:200
+	width:200,
+        listeners: {
+        change: function(field, newValue, oldValue) {
+        field.setValue(newValue.toUpperCase());
+    }
+} 
 });
 
 this.in_activo = new Ext.form.Checkbox({
