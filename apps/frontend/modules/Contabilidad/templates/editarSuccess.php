@@ -168,7 +168,7 @@
             });
 
             function renderMonto(val, attr, record) {
-                return paqueteComunJS.funcion.getNumeroFormateado(val);
+               // return paqueteComunJS.funcion.getNumeroFormateado(val);
             }
 
             this.nu_orden_pago = new Ext.form.TextField({
@@ -333,7 +333,7 @@
             this.datosContrato = '<p class="registro_detalle"><b>Fecha de Inicio: </b>' + this.OBJ.fe_inicio + '</p>';
             this.datosContrato += '<p class="registro_detalle"><b>Fecha Fin: </b>' + this.OBJ.fe_fin + '</p>';
             this.datosContrato += '<p class="registro_detalle"><b>Tipo de Contrato: </b>' + this.OBJ.tx_ramo + '</p>';
-            this.datosContrato += '<p class="registro_detalle"><b>Monto previsto: </b>' + paqueteComunJS.funcion.getNumeroFormateado(this.OBJ.monto) + '</p>';
+     //       this.datosContrato += '<p class="registro_detalle"><b>Monto previsto: </b>' + paqueteComunJS.funcion.getNumeroFormateado(this.OBJ.monto) + '</p>';
 
             this.fieldDatosContrato = new Ext.form.FieldSet({
                 title: 'Datos del Contrato',
@@ -492,8 +492,8 @@
                 campo: 'nu_total'
             });
 
-            ContabilidadEditar.main.monto_total_compra.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ContabilidadEditar.main.monto_total_factura) + "</b></span>");
-            ContabilidadEditar.main.monto_total.setValue("<span style='font-size:12px;'><b>|  Total a Pagar: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ContabilidadEditar.main.total_pagar) + "</b></span>");
+        //    ContabilidadEditar.main.monto_total_compra.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ContabilidadEditar.main.monto_total_factura) + "</b></span>");
+        //    ContabilidadEditar.main.monto_total.setValue("<span style='font-size:12px;'><b>|  Total a Pagar: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ContabilidadEditar.main.total_pagar) + "</b></span>");
 
         },
         eliminar: function() {
