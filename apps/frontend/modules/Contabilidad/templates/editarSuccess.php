@@ -332,7 +332,7 @@
 
             this.datosContrato = '<p class="registro_detalle"><b>Fecha de Inicio: </b>' + this.OBJ.fe_inicio + '</p>';
             this.datosContrato += '<p class="registro_detalle"><b>Fecha Fin: </b>' + this.OBJ.fe_fin + '</p>';
-            this.datosContrato += '<p class="registro_detalle"><b>Tipo de Contrato: </b>' + this.OBJ.tx_ramo + '</p>';
+      //      this.datosContrato += '<p class="registro_detalle"><b>Tipo de Contrato: </b>' + this.OBJ.tx_ramo + '</p>';
      //       this.datosContrato += '<p class="registro_detalle"><b>Monto previsto: </b>' + paqueteComunJS.funcion.getNumeroFormateado(this.OBJ.monto) + '</p>';
 
             this.fieldDatosContrato = new Ext.form.FieldSet({
