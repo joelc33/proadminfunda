@@ -1779,17 +1779,20 @@ class ComprasActions extends sfActions
 
 
             $Tb053DetalleComprasIva = Tb053DetalleComprasPeer::retrieveByPk($campos["co_detalle_compras"]);
-            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $Tb053DetalleComprasIva->getCoPresupuesto(), 4, $Tb053DetalleComprasIva->getMonto(), '', $Tb053DetalleComprasIva->getCoDetalleCompras());
-            $Tb053DetalleComprasIva->delete($con);
+            if($Tb053DetalleComprasIva != null){
+                
+                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $Tb053DetalleComprasIva->getCoPresupuesto(), 4, $Tb053DetalleComprasIva->getMonto(), '', $Tb053DetalleComprasIva->getCoDetalleCompras());
+                $Tb053DetalleComprasIva->delete($con);
 
 
-            $civa = new Criteria();
-            $civa->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION_ENLACE, $resp["co_detalle_cotizacion"]);
-            $stmtiva = Tb207DetalleCotizacionPeer::doSelectStmt($civa);
-            $respiva = $stmtiva->fetch(PDO::FETCH_ASSOC);
+                $civa = new Criteria();
+                $civa->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION_ENLACE, $resp["co_detalle_cotizacion"]);
+                $stmtiva = Tb207DetalleCotizacionPeer::doSelectStmt($civa);
+                $respiva = $stmtiva->fetch(PDO::FETCH_ASSOC);
 
-            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $respiva["co_presupuesto"], 1, $respiva["monto"], $respiva["co_detalle_cotizacion"], '');
+                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $respiva["co_presupuesto"], 1, $respiva["monto"], $respiva["co_detalle_cotizacion"], '');
 
+            }
 
 
             $wc = new Criteria();
@@ -1804,11 +1807,12 @@ class ComprasActions extends sfActions
             Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $productoForm["co_presupuesto"], 4, $tb053_detalle_compras->getMonto(), $productoForm["co_detalle_cotizacion"], $tb053_detalle_compras->getCoDetalleCompras());
 
 */
+
             $this->data = json_encode(array(
                 "success" => true,
                 "msg" => 'Registro Borrado con exito!'
             ));
-            $con->commit();
+           
         } catch (PropelException $e) {
             $con->rollback();
             $this->data = json_encode(array(
