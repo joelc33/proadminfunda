@@ -1808,6 +1808,7 @@ class ComprasActions extends sfActions
 
 */
 
+            $con->commit();
             $this->data = json_encode(array(
                 "success" => true,
                 "msg" => 'Registro Borrado con exito!'
