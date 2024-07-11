@@ -117,7 +117,7 @@ this.monto_total_compra = new Ext.form.DisplayField({
 });
 
 function renderMonto(val, attr, record) { 
-     return paqueteComunJS.funcion.getNumeroFormateado(val);     
+  //  return paqueteComunJS.funcion.getNumeroFormateado(val);     
 } 
 
 this.nu_orden_pago = new Ext.form.TextField({
@@ -197,7 +197,7 @@ this.fieldDatos= new Ext.form.FieldSet({
 this.datosContrato  = '<p class="registro_detalle"><b>Fecha de Inicio: </b>'+this.OBJ.fe_inicio+'</p>';
 this.datosContrato += '<p class="registro_detalle"><b>Fecha Fin: </b>'+this.OBJ.fe_fin+'</p>';
 this.datosContrato +='<p class="registro_detalle"><b>Tipo de Contrato: </b>'+this.OBJ.tx_ramo+'</p>';
-this.datosContrato +='<p class="registro_detalle"><b>Monto previsto: </b>'+paqueteComunJS.funcion.getNumeroFormateado(this.OBJ.monto)+'</p>';
+//this.datosContrato +='<p class="registro_detalle"><b>Monto previsto: </b>'+paqueteComunJS.funcion.getNumeroFormateado(this.OBJ.monto)+'</p>';
 
 this.fieldDatosContrato= new Ext.form.FieldSet({
         title: 'Datos del Contrato',
