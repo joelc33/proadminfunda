@@ -1226,13 +1226,15 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
         $co_orden_pago =  $campos["co_orden_pago"];
 
-        echo "sss".$co_orden_pago; exit();
+        
 
         $nu_monto_total = $nu_monto-$total_retencion;
         $nu_monto_no_retencion = $nu_monto;
         //$nu_monto_total = $nu_monto;
 
         //echo $total_retencion; exit();
+
+        echo $cant_orden_pago; exit();
 
         switch ($cant_orden_pago) {
             case 0:
