@@ -965,6 +965,8 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     $wherec = new Criteria();
                     $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
                     BasePeer::doDelete($wherec, $con);
+
+                    echo "ddddd"; exit();
             
                 break;
 
@@ -1225,7 +1227,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
         $co_orden_pago =  $campos["co_orden_pago"];
 
-        echo $co_orden_pago; exit();
+       // echo $co_orden_pago; exit();
 
         $nu_monto_total = $nu_monto-$total_retencion;
         $nu_monto_no_retencion = $nu_monto;
