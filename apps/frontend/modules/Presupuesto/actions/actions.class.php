@@ -253,6 +253,8 @@ class PresupuestoActions extends sfActions
 
             $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'));
 
+            echo "odp=".$co_odp; exit();
+
             $wherec = new Criteria();
             $wherec->add(Tb046FacturaRetencionPeer::CO_SOLICITUD, $co_solicitud);
 
