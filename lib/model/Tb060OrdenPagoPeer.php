@@ -1234,7 +1234,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         //echo $total_retencion; exit();
 
-        echo $cant_orden_pago; exit();
+    //    echo $cant_orden_pago; exit();
 
         switch ($cant_orden_pago) {
             case 0:
@@ -1286,6 +1286,8 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                             ->setCoRuta($co_ruta)
                             ->setInPagado(FALSE)
                             ->save($con);
+
+                        echo "llego ll"; exit();
 
                     if($co_tipo_solicitud == 23){
                         //LIQUIDACION DE NOMINA
