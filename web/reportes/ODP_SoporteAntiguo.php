@@ -271,13 +271,13 @@ class PDF_Flo extends PDF_FlowingBlock
                         $this->Row(array(utf8_decode('DOCUMENTOS Y RETENCIONES')),0,0);
                         $this->SetFillColor(255, 255, 255);
                         $this->SetAligns(array("C","C","C","R","R","R","R","R","R"));
-                        $this->SetWidths(array(20,15,22,20,30,20,30,30,28));                 
+                        $this->SetWidths(array(20,30,15,23,20,20,25,20,27));                 
                         $this->SetFont('Times','',8);  
                         $Y = $this->GetY();
                         $this->RoundedRect(10, 83, 200, 50, 1.5, '1111', '', $style);                         
                         $this->SetY($Y);
                         $this->SetX(10);
-                        $this->Row(array('DOCUM.','SOPORTE','FECHA','MONTO BASE','IVA '.$valor['co_iva_factura'].' %','TOTAL','RETENCIONES','MONTO','CANCELADO'),0,0);
+                        $this->Row(array('DOCUM.','SOPORTE','FECHA','MONTO BASE','IVA '.$valor['co_iva_factura'].' %','TOTAL','RETENCIONES','MONTO','CANCELADO'),1,1);
                         
 
                         $campo1='';
@@ -1031,10 +1031,10 @@ $pdf->SetMargins(0, 0);
 $pdf->Output($dir, 'F');
 
 
-//$pdf=new PDF_Flo('P','mm','letter');
-//$pdf->PrintChapter();
-//$pdf->SetMargins(0, 0);
-//$pdf->SetDisplayMode('default');
-//$pdf->Output();
+/*$pdf=new PDF_Flo('P','mm','letter');
+$pdf->PrintChapter();
+$pdf->SetMargins(0, 0);
+$pdf->SetDisplayMode('default');
+$pdf->Output();*/
 
 ?>
