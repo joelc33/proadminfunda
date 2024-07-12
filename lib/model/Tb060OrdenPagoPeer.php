@@ -1287,7 +1287,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                             ->setInPagado(FALSE)
                             ->save($con);
 
-                        echo "llego ll"; exit();
+                       // echo "llego ll"; exit();
 
                     if($co_tipo_solicitud == 23){
                         //LIQUIDACION DE NOMINA
