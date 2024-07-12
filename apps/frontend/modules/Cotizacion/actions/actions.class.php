@@ -595,7 +595,7 @@ class CotizacionActions extends sfActions
     $c->addDescendingOrderByColumn(Tb206CotizacionPeer::CO_SOLICITUD);
 
 
-    echo $c->toString(); exit();
+   // echo $c->toString(); exit();
 
     $stmt = Tb206CotizacionPeer::doSelectStmt($c);
     $registros = "";
