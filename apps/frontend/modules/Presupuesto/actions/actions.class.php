@@ -251,7 +251,7 @@ class PresupuestoActions extends sfActions
         try {
             $con->beginTransaction();
 
-            echo "llego"; exit();
+           
 
             $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'));
 
