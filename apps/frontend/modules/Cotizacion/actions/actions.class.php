@@ -594,6 +594,9 @@ class CotizacionActions extends sfActions
     $c->setLimit($limit)->setOffset($start);
     $c->addDescendingOrderByColumn(Tb206CotizacionPeer::CO_SOLICITUD);
 
+
+    echo $c->toString(); exit();
+
     $stmt = Tb206CotizacionPeer::doSelectStmt($c);
     $registros = "";
     while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
