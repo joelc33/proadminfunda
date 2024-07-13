@@ -392,7 +392,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->MultiCell(200, 50, '', 0, 0, 'L', 0);
                     $this->SetY($Y);
                     $this->SetX(10);
-                    $this->Row(array('', $this->datos[0]['tx_documento_odp'], date("d/m/Y", strtotime($this->datos[0]['fe_emision'])), number_format($valores['nu_monto'], 2, ',', '.'), '0.00', number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
+                    $this->Row(array('', $this->datos[0]['tx_documento_odp'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), number_format($valores['nu_monto'], 2, ',', '.'), '0.00', number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
                     $j++;
                 }
 
@@ -631,13 +631,13 @@ class PDF_Flo extends PDF_FlowingBlock
                             $this->SetAligns(array("C", "C", "L", "R", "L", "R", "R"));
                             $this->SetWidths(array(20, 25, 44, 25, 25, 30, 31));
                             $this->SetX(10);
-                            //  $this->Row(array('Fact-' . $valor['nu_factura'], date("d/m/Y", strtotime($valor['fecha_odp'])), $valor['tx_concepto'], number_format($valor['nu_total'], 2, ',', '.'), utf8_decode('RETENCIÓN I.V.A'), number_format($valor['nu_iva_retencion'], 2, ',', '.'), number_format($valor['total_pagar'], 2, ',', '.')), 0, 0);
+                            $this->Row(array('Fact-' . $valor['nu_factura'], date("d/m/Y", strtotime($valor['fecha_odp'])), $valor['tx_concepto'], number_format($valor['nu_total'], 2, ',', '.'), utf8_decode('RETENCIÓN I.V.A'), number_format($valor['nu_iva_retencion'], 2, ',', '.'), number_format($valor['total_pagar'], 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
                             $this->SetX(124);
                             $this->SetWidths(array(25, 30));
                             $this->SetAligns(array("L", "R"));
-                            //   $this->Row(array(utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.')), 0, 0);
+                            $this->Row(array(utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.')), 0, 0);
                         }
                         $monto = $monto + $campo1['mo_retencion'];
                     }
@@ -869,12 +869,11 @@ class PDF_Flo extends PDF_FlowingBlock
         $conex = new ConexionComun();
         $sql = "select distinct          tb008.tx_razon_social,
                          (tb007.inicial||'-'||tb008.tx_rif) as tx_rif,     
-                         case when tb045.fe_emision is null then tb026.fe_registro else tb045.fe_emision end as fe_pago,                    
+                         case when tb045.fe_emision is null then tb060.fe_emision else tb045.fe_emision end as fe_pago,                    
                          upper(substr(tb052.tx_observacion,1,250)) as tx_observacion,
                          tb001.nb_usuario,
                          tb052.anio,
-                         tb060.created_at as fecha_odp,
-                         tb060.fe_emision as fe_emision,                         
+                         tb060.created_at as fecha_odp,                      
                          tb052.co_solicitud,
                          tb060.tx_serial,
                          tb060.co_orden_pago as co_odp,
@@ -1091,6 +1090,7 @@ class PDF_Flo extends PDF_FlowingBlock
     }
 }
 
+/*
 $pdf=new PDF_Flo('P','mm','letter');
 $pdf->AliasNbPages();
 $pdf->PrintChapter();
@@ -1110,10 +1110,10 @@ $update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".
 $comm->Execute($update);    
 $pdf->SetMargins(0, 0);
 $pdf->Output($dir, 'F');
+*/
 
-
-/*$pdf = new PDF_Flo('P', 'mm', 'letter');
+$pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetMargins(0, 0);
 $pdf->SetDisplayMode('default');
-$pdf->Output();*/
+$pdf->Output();
