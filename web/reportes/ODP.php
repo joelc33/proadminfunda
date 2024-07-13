@@ -868,7 +868,8 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $conex = new ConexionComun();
         $sql = "select distinct          tb008.tx_razon_social,
-                         (tb007.inicial||'-'||tb008.tx_rif) as tx_rif,                        
+                         (tb007.inicial||'-'||tb008.tx_rif) as tx_rif,     
+                         case when tb045.fe_emision is null then tb026.fe_registro else tb045.fe_emision end as fe_pago,                    
                          upper(substr(tb052.tx_observacion,1,250)) as tx_observacion,
                          tb001.nb_usuario,
                          tb052.anio,
