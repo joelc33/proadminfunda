@@ -395,6 +395,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->SetY($Y);
                     $this->SetX(10);
                     $this->Row(array('', $this->datos[0]['tx_documento_odp'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), '',  number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
+
                     $j++;
                 }
 
@@ -896,7 +897,7 @@ class PDF_Flo extends PDF_FlowingBlock
                           tb045.co_compra as nu_compra, 
                           numero_compra,
                           nu_total_retencion, 
-                          total_pagar,
+                          case when total_pagar is null then tb052.monto_total else total_pagar end total_pagar,
                           nu_factura,
 						  case when tb027_tipo_solicitud.in_odp_avance = false then 'X' else '' end as permanente,
 						  case when tb027_tipo_solicitud.in_odp_avance = true then 'X' else '' end as avance
