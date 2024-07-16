@@ -1189,7 +1189,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             default:
                     //Otros
 
-                    echo "llego"; exit();
+                   
                     $wherec = new Criteria();
                     $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
                     BasePeer::doDelete($wherec, $con);
@@ -1204,7 +1204,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,2);
                     $c->add(Tb087PresupuestoMovimientoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
                     $c->add(Tb053DetalleComprasPeer::IN_PRESUPUESTO, TRUE);
-
+ 
                     $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
                     $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
