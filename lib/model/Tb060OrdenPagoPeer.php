@@ -1289,6 +1289,12 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                             ->setInPagado(FALSE)
                             ->save($con);
 
+
+                        $compra = Tb052ComprasPeer::retrieveByPK($co_solicitud);
+                        if($compra->getMontoTotal() == 0){
+                            $compra->setMontoTotal($nu_monto_total)->save($con);
+                        }
+
                        // echo "llego ll"; exit();
 
                     if($co_tipo_solicitud == 23){
