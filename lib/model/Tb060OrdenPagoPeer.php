@@ -1188,6 +1188,8 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
             default:
                     //Otros
+
+                    echo "llego"; exit();
                     $wherec = new Criteria();
                     $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
                     BasePeer::doDelete($wherec, $con);
