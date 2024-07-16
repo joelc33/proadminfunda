@@ -503,7 +503,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetFont('Times', 'B', 12);
                 $this->SetAligns(array("L", "R"));
                 $this->SetWidths(array(140, 60));
-                $this->Row(array('', number_format($valores['total_pagar'], 2, ',', '.')), 0, 0);
+                $this->Row(array('', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
                 $this->SetWidths(array(60, 80, 60));
                 $this->SetFont('Times', 'B', 8);
 
