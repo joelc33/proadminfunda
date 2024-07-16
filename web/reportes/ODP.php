@@ -267,7 +267,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetY($Y);
                 if ($this->datos[0]['co_tipo_odp'] == 1) $avance = 'X';
                 else $permanente = 'X';
-                $this->Row(array('AVANCE:           ' . $avance, 'PERMANENTE: ' . $permanente), 0, 0);
+                $this->Row(array('AVANCE:           ' . $this->datos[0]['avance'], 'PERMANENTE: ' . $this->datos[0]['permanente']), 0, 0);
 
                 $this->SetFont('Times', 'B', 8);
                 $Y = $this->GetY();
@@ -286,7 +286,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetAligns(array("L", "L"));
                 $this->SetFont('Times', '', 8);
                 $this->SetX(150);
-                $this->Row(array('SIST PATRIA: ', 'TRANSFERENCIA: '), 0, 0);
+                $this->Row(array('SIST PATRIA: ', 'TRANSFERENCIA: X'), 0, 0);
                 $this->SetAligns(array("L"));
                 $this->SetWidths(array(150));
                 $this->SetFont('Times', 'B', 10);
@@ -894,8 +894,11 @@ class PDF_Flo extends PDF_FlowingBlock
                           numero_compra,
                           nu_total_retencion, 
                           total_pagar,
-                          nu_factura
+                          nu_factura,
+						  case when tb027_tipo_solicitud.in_odp_avance = false then 'X' else '' end as permanente,
+						  case when tb027_tipo_solicitud.in_odp_avance = true then 'X' else '' end as avance
                   from   tb026_solicitud as tb026
+                  left join tb027_tipo_solicitud ON tb027_tipo_solicitud.co_tipo_solicitud = tb026.co_tipo_solicitud
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud                                                   
                   left join tb060_orden_pago as tb060 on tb060.co_solicitud = tb026.co_solicitud
                   left join tb008_proveedor as tb008 on tb008.co_proveedor=tb026.co_proveedor 
