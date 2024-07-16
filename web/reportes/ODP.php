@@ -302,7 +302,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetY($Y - 3);
                 $this->SetX(138);
 
-                echo $valores['nu_monto']; exit();
+                echo var_dump($valores['nu_monto']); exit();
                 $VALOR = '**********' . number_format($valores['nu_monto'], 2, ',', '.') . ' Bs. S';
                 $this->SetFont('Times', '', 9);
                 $this->Ln(3);
