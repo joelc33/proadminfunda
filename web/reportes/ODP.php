@@ -397,8 +397,8 @@ class PDF_Flo extends PDF_FlowingBlock
                 }
 
 
-               /* $y = $this->getY();
-                $this->line(76, $y + 1, 98, $y + 1);
+                $y = $this->getY();
+                /*$this->line(76, $y + 1, 98, $y + 1);
                 $this->SetX(75);
                 $this->SetAligns(array("R"));
                 $Y = $this->GetY();
