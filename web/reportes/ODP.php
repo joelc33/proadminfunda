@@ -345,13 +345,13 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->Row(array(utf8_decode('DOCUMENTOS Y RETENCIONES')), 0, 0);
                 $this->SetFillColor(255, 255, 255);
                 $this->SetAligns(array("C", "C", "C", "R", "R", "R", "R", "R", "R"));
-                $this->SetWidths(array(20, 30, 15, 23, 20, 20, 25, 20, 27));
+                $this->SetWidths(array(20, 30, 15, 50, 20, 25, 20, 27));
                 $this->SetFont('Times', '', 8);
                 $Y = $this->GetY();
                 $this->RoundedRect(10, 83, 200, 50, 1.5, '1111', '', $style);
                 $this->SetY($Y);
                 $this->SetX(10);
-                $this->Row(array('DOCUM.', 'SOPORTE', 'FECHA', 'MONTO BASE', 'IVA %', 'TOTAL', 'RETENCIONES', 'MONTO', 'CANCELADO'), 1, 1);
+                $this->Row(array('DOCUM.', 'SOPORTE', 'FECHA', 'DESCRIPCION', 'TOTAL', 'RETENCIONES', 'MONTO', 'CANCELADO'), 1, 1);
 
 
                 $campo1 = '';
@@ -376,7 +376,7 @@ class PDF_Flo extends PDF_FlowingBlock
                             if (!empty($this->datos[0]['nu_factura']))
                                 $factura = 'Fact-' . $this->datos[0]['nu_factura'];
 
-                            $this->Row(array($factura, $this->datos[0]['numero_compra'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), number_format($valor['nu_base_imponible'], 2, ',', '.'), number_format($valor['nu_iva_factura'], 2, ',', '.'), number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
+                            $this->Row(array($factura, $this->datos[0]['numero_compra'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), '', 2, ',', '.'), number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
                             //$this->SetX(142);
