@@ -205,7 +205,10 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->datos = $this->getFacturas();
 
-        $valores["nu_monto"] = $this->datos[0]['nu_total']; //$this->TotalMonto();
+        if($this->datos[0]['nu_total']==0) 
+            $valores["nu_monto"] = $this->datos[0]['nu_total']; //$this->TotalMonto();
+        else
+            $valores["nu_monto"] = $this->TotalMonto();
 
         $i = 1;
 
@@ -344,8 +347,8 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetFont('Times', 'B', 8);
                 $this->Row(array(utf8_decode('DOCUMENTOS Y RETENCIONES')), 0, 0);
                 $this->SetFillColor(255, 255, 255);
-                $this->SetAligns(array("C", "C", "C", "R", "R", "R", "R", "R", "R"));
-                $this->SetWidths(array(20, 30, 15, 50, 20, 25, 20, 27));
+                $this->SetAligns(array("C", "C", "R", "R", "R", "R", "R", "R"));
+                $this->SetWidths(array(20, 30, 15, 43, 20, 25, 20, 27));
                 $this->SetFont('Times', '', 8);
                 $Y = $this->GetY();
                 $this->RoundedRect(10, 83, 200, 50, 1.5, '1111', '', $style);
@@ -369,14 +372,14 @@ class PDF_Flo extends PDF_FlowingBlock
                             $Y = $this->GetY();
                             //$this->MultiCell(200,50,'',0,0,'L',0);
                             $this->SetY($Y);
-                            $this->SetAligns(array("C", "C", "C", "R", "R", "R", "R", "R", "R"));
+                            $this->SetAligns(array("C", "C", "C", "L", "R", "R", "R", "R"));
                             $this->SetX(10);
 
                             $factura = "";
                             if (!empty($this->datos[0]['nu_factura']))
                                 $factura = 'Fact-' . $this->datos[0]['nu_factura'];
 
-                            $this->Row(array($factura, $this->datos[0]['numero_compra'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), '', 2, ',', '.'), number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
+                            $this->Row(array($factura, $this->datos[0]['numero_compra'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])),'', number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format(22, 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
                             //$this->SetX(142);
@@ -392,7 +395,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->MultiCell(200, 50, '', 0, 0, 'L', 0);
                     $this->SetY($Y);
                     $this->SetX(10);
-                    $this->Row(array('', $this->datos[0]['tx_documento_odp'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), number_format($valores['nu_monto'], 2, ',', '.'), '0.00', number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
+                    $this->Row(array('', $this->datos[0]['tx_documento_odp'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), '',  number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
                     $j++;
                 }
 
@@ -1095,7 +1098,7 @@ class PDF_Flo extends PDF_FlowingBlock
 }
 
 
-$pdf=new PDF_Flo('P','mm','letter');
+/*$pdf=new PDF_Flo('P','mm','letter');
 $pdf->AliasNbPages();
 $pdf->PrintChapter();
 
@@ -1113,11 +1116,11 @@ $update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".
 ////echo $update; exit();
 $comm->Execute($update);    
 $pdf->SetMargins(0, 0);
-$pdf->Output($dir, 'F');
+$pdf->Output($dir, 'F');*/
 
 
-/*$pdf = new PDF_Flo('P', 'mm', 'letter');
+$pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetMargins(0, 0);
 $pdf->SetDisplayMode('default');
-$pdf->Output();*/
+$pdf->Output();
