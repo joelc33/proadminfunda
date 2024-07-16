@@ -205,10 +205,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->datos = $this->getFacturas();
 
-        if($this->datos[0]['nu_total']>0) 
-            $valores["nu_monto"] = $this->datos[0]['nu_total']; //$this->TotalMonto();
-        else
-            $valores["nu_monto"] = $this->TotalMonto();
+        $valores["nu_monto"] = $this->TotalMonto();
 
         $i = 1;
 
