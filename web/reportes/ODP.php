@@ -397,13 +397,13 @@ class PDF_Flo extends PDF_FlowingBlock
                 }
 
 
-                $y = $this->getY();
+               /* $y = $this->getY();
                 $this->line(76, $y + 1, 98, $y + 1);
                 $this->SetX(75);
                 $this->SetAligns(array("R"));
                 $Y = $this->GetY();
                 $this->SetWidths(array(23));
-                $this->Row(array(number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
+                $this->Row(array(number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);*/
 
                 $this->line(163, $y + 1, 183, $y + 1);
                 $this->SetAligns(array("R"));
@@ -418,7 +418,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetAligns(array("R"));
                 $this->SetX(183);
                 $this->SetWidths(array(27));
-                $this->Row(array(number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
+                $this->Row(array(number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
 
                 $this->SetX(35);
                 $this->SetWidths(array(120));
