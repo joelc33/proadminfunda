@@ -157,7 +157,7 @@ class ViaticoActions extends sfActions
                     "co_tipo_solicitud"   => 22,
                     "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
                     "fe_solicitud"        => date("d/m/Y"),
-                    "observacion"         => 'Solicitud de Viaticos',
+                    "observacion"         => $tb108_viaticoForm["tx_evento"],
                     "codigo"              => $this->getUser()->getAttribute('codigo')
                 );
 

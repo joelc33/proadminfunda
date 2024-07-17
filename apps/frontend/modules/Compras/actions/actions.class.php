@@ -1040,6 +1040,16 @@ class ComprasActions extends sfActions
         }
         try {
             $con->beginTransaction();
+
+            $cv = new Criteria();
+            $cv->add(Tb108ViaticoPeer::CO_SOLICITUD, $co_solicitud);
+            $stmt = Tb108ViaticoPeer::doSelectStmt($cv);
+            $datosv = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+
+
+
             $tb052_compras->setCoUsuario($this->getUser()->getAttribute('codigo'));
             //$tb052_compras->setFechaCompra(date("Y-m-d")); 
             if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
@@ -1049,7 +1059,7 @@ class ComprasActions extends sfActions
             }
             $tb052_compras->setCoSolicitud($co_solicitud);
             $tb052_compras->setCoTipoSolicitud(22);
-            //$tb052_compras->setAnio(date('Y'));                                                     
+            $tb052_compras->setTxObservacion($datosv["tx_evento"]);                                                  
             $tb052_compras->setAnio($this->getUser()->getAttribute('ejercicio'));
             $tb052_compras->setNuIva(0);
             $tb052_compras->setMontoIva(0);
