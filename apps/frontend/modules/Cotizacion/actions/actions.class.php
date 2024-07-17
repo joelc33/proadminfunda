@@ -230,7 +230,7 @@ class CotizacionActions extends sfActions
 
     try {
       $con->beginTransaction();
-
+ 
 
       /*Campo tipo BIGINT */
       $tb206_cotizacion->setCoRequisicion($tb206_cotizacionForm["co_requisicion"]);
@@ -584,9 +584,9 @@ class CotizacionActions extends sfActions
 
     if ($this->getRequestParameter("co_tipo_tramite") == 64) //contrato
     {
-      $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(2, 6), Criteria::IN);
+      $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(2, 5), Criteria::IN);
     } else {
-      $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(2, 6), Criteria::NOT_IN);
+      $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(2, 5), Criteria::NOT_IN);
     }
 
     $c->setIgnoreCase(true);
