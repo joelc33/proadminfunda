@@ -379,7 +379,7 @@ class PDF_Flo extends PDF_FlowingBlock
                             if (!empty($this->datos[0]['nu_factura']))
                                 $factura = 'Fact-' . $this->datos[0]['nu_factura'];
 
-                            $this->Row(array($factura, $this->datos[0]['numero_compra'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])),$this->datos[0]['tx_observacion'], number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format(22, 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
+                            $this->Row(array($factura, $this->datos[0]['numero_compra'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])),utf8_decode($this->datos[0]['tx_observacion']), number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format(22, 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
                             //$this->SetX(142);
@@ -395,7 +395,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->MultiCell(200, 50, '', 0, 0, 'L', 0);
                     $this->SetY($Y);
                     $this->SetX(10);
-                    $this->Row(array('', $this->datos[0]['tx_documento_odp'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), $this->datos[0]['tx_observacion'],  number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
+                    $this->Row(array('', $this->datos[0]['tx_documento_odp'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), utf8_decode($this->datos[0]['tx_observacion']),  number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
 
                     $j++;
                 }
@@ -875,7 +875,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $sql = "select distinct          tb008.tx_razon_social,
                          (tb007.inicial||'-'||tb008.tx_rif) as tx_rif,     
                          case when tb045.fe_emision is null then tb060.fe_emision else tb045.fe_emision end as fe_pago,                    
-                         SUBSTRING(upper(substr(tb052.tx_observacion,1,250)), 1, 65) as tx_observacion,
+                         SUBSTRING(upper(substr(tb052.tx_observacion,1,250)), 1, 47) as tx_observacion,
                          tb001.nb_usuario,
                          tb052.anio,
                          tb060.created_at as fecha_odp,                      
@@ -1119,8 +1119,8 @@ $comm->Execute($update);
 $pdf->SetMargins(0, 0);
 $pdf->Output($dir, 'F');
 
-/*
-$pdf = new PDF_Flo('P', 'mm', 'letter');
+
+/*$pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetMargins(0, 0);
 $pdf->SetDisplayMode('default');
