@@ -328,25 +328,26 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->Row(array('A FAVOR DE: ' . $this->datos[0]['tx_rif'] . ' - ' . utf8_decode($this->datos[0]['tx_razon_social']) . ' ' . utf8_decode($this->datos[0]['rep'])), 0, 0);
 
                 $Y = $this->GetY();
-                $this->RoundedRect(10, 78, 200, 15, 1.5, '1111', '', $style);
+             /*   $this->RoundedRect(10, 78, 200, 15, 1.5, '1111', '', $style);
                 $this->SetY(78);
                 $this->SetX(10);
                 $this->Row(array('POR CONCEPTO DE: ' . utf8_decode($this->datos[0]['tx_observacion'])), 0, 0);
+                */
 
-                $this->SetY($Y + 20);
+                $this->SetY($Y + 10);
                 $this->SetFillColor(255, 255, 255);
                 $this->SetWidths(array(200));
                 $this->SetAligns(array("C"));
                 $this->SetFillColor(201, 199, 199);
 
-                $Y = $this->GetY();
+               /* $Y = $this->GetY();
                 $this->RoundedRect(10, 93, 200, 5, 1.5, '1001', '', $style);
-                $this->SetY(93);
+                $this->SetY(93);*/
 
                 $this->SetFont('Times', 'B', 8);
                 $this->Row(array(utf8_decode('DOCUMENTOS Y RETENCIONES')), 0, 0);
                 $this->SetFillColor(255, 255, 255);
-                $this->SetAligns(array("C", "C", "R", "R", "R", "R", "R", "R"));
+                $this->SetAligns(array("C", "C", "C", "C", "C", "C", "C", "C"));
                 $this->SetWidths(array(20, 30, 15, 43, 20, 25, 20, 27));
                 $this->SetFont('Times', '', 8);
                 $Y = $this->GetY();
@@ -360,7 +361,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->lista_retenciones = $this->getRetenciones($this->datos[0]['co_factura']);
 
 
-                
+                $this->SetAligns(array("C", "C", "R", "J", "R", "R", "R", "R"));
                 $monto = 0;
                 $j = 1;
                 if ($this->lista_retenciones) {
@@ -378,7 +379,7 @@ class PDF_Flo extends PDF_FlowingBlock
                             if (!empty($this->datos[0]['nu_factura']))
                                 $factura = 'Fact-' . $this->datos[0]['nu_factura'];
 
-                            $this->Row(array($factura, $this->datos[0]['numero_compra'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])),'', number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format(22, 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
+                            $this->Row(array($factura, $this->datos[0]['numero_compra'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])),$this->datos[0]['tx_observacion'], number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format(22, 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
                             //$this->SetX(142);
@@ -394,7 +395,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->MultiCell(200, 50, '', 0, 0, 'L', 0);
                     $this->SetY($Y);
                     $this->SetX(10);
-                    $this->Row(array('', $this->datos[0]['tx_documento_odp'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), '',  number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
+                    $this->Row(array('', $this->datos[0]['tx_documento_odp'], date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), $this->datos[0]['tx_observacion'],  number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
 
                     $j++;
                 }
@@ -874,7 +875,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $sql = "select distinct          tb008.tx_razon_social,
                          (tb007.inicial||'-'||tb008.tx_rif) as tx_rif,     
                          case when tb045.fe_emision is null then tb060.fe_emision else tb045.fe_emision end as fe_pago,                    
-                         upper(substr(tb052.tx_observacion,1,250)) as tx_observacion,
+                         SUBSTRING(upper(substr(tb052.tx_observacion,1,250)), 1, 65) as tx_observacion,
                          tb001.nb_usuario,
                          tb052.anio,
                          tb060.created_at as fecha_odp,                      
@@ -1123,5 +1124,4 @@ $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetMargins(0, 0);
 $pdf->SetDisplayMode('default');
-$pdf->Output();
-*/
+$pdf->Output();*/
