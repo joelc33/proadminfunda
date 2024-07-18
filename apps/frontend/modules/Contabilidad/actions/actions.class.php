@@ -251,7 +251,7 @@ class ContabilidadActions extends sfActions
             
         }
     }
-    exit();
+   // exit();
     
     $this->data = json_encode(array(
         "success"   => true,
