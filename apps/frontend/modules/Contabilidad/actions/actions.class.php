@@ -220,7 +220,7 @@ class ContabilidadActions extends sfActions
                      $valor = $nu_base_imponible*($reg["nu_valor"]/100);
                }
              }else{
-                var_dump($reg.'-'.$monto_total); 
+              //  var_dump($reg.'-'.$monto_total); 
                $valor = $monto_total*($reg["nu_valor"]/100);  
              }
              
