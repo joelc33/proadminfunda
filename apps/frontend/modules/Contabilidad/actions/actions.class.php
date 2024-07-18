@@ -197,7 +197,7 @@ class ContabilidadActions extends sfActions
     $co_iva_retencion    = $this->getRequestParameter('co_iva_retencion');
     $co_proveedor        = $this->getRequestParameter('co_proveedor');
     
-    echo "entro"; exit();
+    
    
     $iva = $nu_base_imponible*($co_iva_factura/100);
     $monto_total = $nu_base_imponible+$iva;
@@ -225,7 +225,7 @@ class ContabilidadActions extends sfActions
            
              
         }else if($co_ramo == $reg["co_ramo"]){           
-             
+            echo "entros"; exit();
              if($reg["co_tipo_retencion"]!=95 || $reg["co_tipo_retencion"]!=100){
                if($co_documento==1 && $monto_total>$reg["mo_minimo"]){              
                     $valor = ($nu_base_imponible*($reg["nu_valor"]/100)) - $reg["nu_sustraendo"];    
