@@ -207,8 +207,10 @@ class ContabilidadActions extends sfActions
  
     while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
 
-        echo "ramo=".$reg["co_ramo"]; exit();
+        
         if($reg["co_ramo"]==''){
+
+            var_dump($reg); exit();
            
              if($reg["co_tipo_retencion"]!=95 || $reg["co_tipo_retencion"]!=100){                                  
                if($co_documento==1 && $monto_total>$reg["mo_minimo"]){
