@@ -213,7 +213,7 @@ class ContabilidadActions extends sfActions
            
            
              if($reg["co_tipo_retencion"]!=95 && $reg["co_tipo_retencion"]!=100){    
-                var_dump($reg);                              
+                                           
                if($co_documento==1 && $monto_total>$reg["mo_minimo"]){
                     $valor = ($nu_base_imponible*($reg["nu_valor"]/100)) - $reg["nu_sustraendo"];    
                }else{  
