@@ -216,11 +216,11 @@ class ContabilidadActions extends sfActions
                if($co_documento==1 && $monto_total>$reg["mo_minimo"]){
                     $valor = ($nu_base_imponible*($reg["nu_valor"]/100)) - $reg["nu_sustraendo"];    
                }else{  
-                     var_dump($reg); 
+                     
                      $valor = $nu_base_imponible*($reg["nu_valor"]/100);
                }
              }else{
-
+                var_dump($reg); 
                $valor = $monto_total*($reg["nu_valor"]/100);  
              }
              
