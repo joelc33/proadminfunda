@@ -154,8 +154,8 @@ class CajaActions extends autoCajaActions
         $c->addJoin(Tb063PagoPeer::CO_CONCEPTO_PAGO, Tb116ConceptoPagoPeer::CO_CONCEPTO_PAGO, Criteria::LEFT_JOIN);
         $c->add(Tb062LiquidacionPagoPeer::CO_SOLICITUD,$co_solicitud);
 
-        echo $c->toString();
-        exit();
+       // echo $c->toString();
+       // exit();
                
         $cantidadTotal = Tb063PagoPeer::doCount($c);
         //$c->setLimit($limit)->setOffset($start);
