@@ -233,7 +233,12 @@ class ContabilidadActions extends sfActions
                      $valor = $nu_base_imponible*($reg["nu_valor"]/100);
                }
              }else{
+
                      $valor = $monto_total*($reg["nu_valor"]/100);  
+                     if($reg["co_tipo_retencion"] == 100){
+                        echo $valor; exit();
+                     }
+                     
              }            
            
              $registros[] = array("nu_valor" => $valor,
