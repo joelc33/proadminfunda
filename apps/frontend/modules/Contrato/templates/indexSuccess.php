@@ -84,7 +84,7 @@
                         if (boton == "yes") {
                             this.msg = Ext.get('formulariosolicitud');
                             this.msg.load({
-                                url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/enviarEntidades",
+                                url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/enviarEntidadesCompra",
                                 params: {
                                     co_solicitud: solicitudLista.main.gridPanel_.getSelectionModel().getSelected().get('co_solicitud')
                                 },
