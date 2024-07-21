@@ -86,7 +86,7 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
 
 
                 $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
-                $tb087_presupuesto_movimiento->setCoPartida($cuenta_contable["co_presupuesto"])
+                $tb087_presupuesto_movimiento->setCoPartida($campos_iva["co_presupuesto"])
                     ->setCoTipoMovimiento(2)
                     ->setNuMonto($mo_iva)
                     ->setNuAnio($co_ejercicio)
