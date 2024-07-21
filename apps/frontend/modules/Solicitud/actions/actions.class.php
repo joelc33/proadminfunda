@@ -348,6 +348,95 @@ class SolicitudActions extends sfActions
         $tb026_solicitud->save();
     }
 
+    public function executeEnviarEntidadesCompra(sfWebRequest $request)
+    {
+
+        $co_solicitud = $this->getRequestParameter("co_solicitud");
+        $co_usuario = $this->getUser()->getAttribute('codigo');
+
+        $in_carga_datos = $this->getInCargarDatos($co_solicitud);
+        $estatus = Tb030RutaPeer::getValidarCargarDatos($co_solicitud);
+
+        if ($in_carga_datos != true) {
+            $estatus = $in_carga_datos;
+        }
+
+        if ($estatus == $in_carga_datos) {
+
+
+            $con = Propel::getConnection();
+
+
+            try {
+
+                $con->beginTransaction();
+
+
+                $c = new Criteria();
+                $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
+                $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
+
+                $c->addAscendingOrderByColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+
+                $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
+
+                while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    
+                    Tb087PresupuestoMovimientoPeer::movimientoPartida(
+                        $con,
+                        $this->getUser()->getAttribute('ejercicio'),
+                        $this->getUser()->getAttribute('codigo'),
+                        $reg["co_presupuesto"],
+                        1,
+                        $reg["monto"],
+                        '',
+                        $reg["co_detalle_compras"]
+                    );
+
+                    $cc = new Criteria();
+                    $cc->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
+                    $stmtc = Tb207DetalleCotizacionPeer::doSelectStmt($cc);
+                    $cotizacion= $stmtc->fetch(PDO::FETCH_ASSOC);            
+                   
+                    Tb087PresupuestoMovimientoPeer::movimientoPartida(
+                        $con,
+                        $this->getUser()->getAttribute('ejercicio'),
+                        $this->getUser()->getAttribute('codigo'),
+                        $cotizacion["co_presupuesto"],
+                        16,
+                        $cotizacion["monto"],
+                        $cotizacion["co_detalle_cotizacion"],
+                        ''
+                    );
+
+
+                }
+
+                $Tb030Ruta = Tb030RutaPeer::retrieveByPK($this->getCoRuta($co_solicitud));
+                $Tb030Ruta->setCoEstatusRuta(2);
+                $Tb030Ruta->setCoUsuarioActualizo($co_usuario);
+                $Tb030Ruta->save($con);
+
+                $con->commit();
+            } catch (PropelException $e) {
+                $con->rollback();
+                $data = json_encode(array(
+                    "success" => false,
+                    "msg" =>  $e->getMessage()
+                ));
+            }
+        }
+
+
+
+        $this->data = json_encode(array(
+            "in_estatus"     => $estatus,
+            "in_carga_datos" => $in_carga_datos
+        ));
+
+        $this->setTemplate('enviarEntidades');
+    }
+
     public function executeEnviarEntidades(sfWebRequest $request)
     {
 
@@ -517,6 +606,15 @@ class SolicitudActions extends sfActions
             }
 
             if ($estatus == $in_carga_datos) {
+
+
+
+                //Contabilidad Retenciones
+                if($Tb030Ruta->getCoProceso()==8){
+
+                    Tb045FacturaPeer::setRetenciones($con, $Tb030Ruta->getCoSolicitud(), $co_usuario, $co_ruta, $this->getUser()->getAttribute('ejercicio'));
+
+                }
 
                 $Tb030Ruta->setCoEstatusRuta($co_estatus)
                     ->setCoUsuarioActualizo($co_usuario)
