@@ -1354,11 +1354,11 @@ class ComprasActions extends sfActions
             }
     
     
-            if ($productoForm["in_modificado"]) {
+           /* if ($productoForm["in_modificado"]) {
               Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $productoForm["co_presupuesto"], 4, $tb053_detalle_compras->getMonto(), $productoForm["co_detalle_cotizacion"], $tb053_detalle_compras->getCoDetalleCompras());
     
               Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $productoForm["co_presupuesto"], 1, $productoForm["monto"], $productoForm["co_detalle_cotizacion"], $tb053_detalle_compras->getCoDetalleCompras());
-            }
+            }*/
     
             //  $tb053_detalle_compras = new Tb053DetalleCompras();
             $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
