@@ -148,7 +148,7 @@ class PresupuestoActions extends sfActions
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
         $c->addSelectColumn(Tb030RutaPeer::TX_RUTA_REPORTE);
-        
+
 
         // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR,   Criteria::LEFT_JOIN);
@@ -160,7 +160,7 @@ class PresupuestoActions extends sfActions
         $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD,  Criteria::LEFT_JOIN);
 
-       
+
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, 10);
 
         $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
@@ -170,7 +170,7 @@ class PresupuestoActions extends sfActions
         $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
 
 
-      //  echo $c->toString(); exit();
+        //  echo $c->toString(); exit();
 
         $cantidadTotal = Tb026SolicitudPeer::doCount($c);
 
@@ -251,11 +251,11 @@ class PresupuestoActions extends sfActions
         try {
             $con->beginTransaction();
 
-           
+
 
             $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'));
 
-  //          echo "odp=".$co_odp; exit();
+            //          echo "odp=".$co_odp; exit();
 
             $wherec = new Criteria();
             $wherec->add(Tb046FacturaRetencionPeer::CO_SOLICITUD, $co_solicitud);
@@ -473,20 +473,20 @@ class PresupuestoActions extends sfActions
         $c->addSelectColumn(Tb052ComprasPeer::TX_CONCEPTO);
         $c->addSelectColumn(Tb052ComprasPeer::TX_OBSERVACION);
         $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
-                
+
         $c->addSelectColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
 
-       // $c->addAsColumn('nu_iva_retencion', Tb044IvaRetencionPeer::NU_VALOR);
+        // $c->addAsColumn('nu_iva_retencion', Tb044IvaRetencionPeer::NU_VALOR);
         $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD, Tb026SolicitudPeer::CO_SOLICITUD);
         $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR);
         $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
-        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA, Criteria::LEFT_JOIN);        
+        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA, Criteria::LEFT_JOIN);
         $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO);
-        $c->addJoin(Tb030RutaPeer::CO_SOLICITUD,Tb026SolicitudPeer::CO_SOLICITUD);
-        $c->add(Tb030RutaPeer::CO_ESTATUS_RUTA,1);
+        $c->addJoin(Tb030RutaPeer::CO_SOLICITUD, Tb026SolicitudPeer::CO_SOLICITUD);
+        $c->add(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
         /******JOEL MODIFICACION VALUACION***/
 
-       // $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA,Criteria::LEFT_JOIN);
+        // $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA,Criteria::LEFT_JOIN);
         $c->add(Tb052ComprasPeer::CO_SOLICITUD, $codigo);
 
         /************************************/
@@ -505,7 +505,7 @@ class PresupuestoActions extends sfActions
         $stmt1 = Tb052ComprasPeer::doSelectStmt($c1);
         $campos1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 
-        list($anio,$mes,$dia) = explode("-",$campos["fecha_compra"]);
+        list($anio, $mes, $dia) = explode("-", $campos["fecha_compra"]);
 
         $encrip = new myConfig();
 
@@ -522,17 +522,17 @@ class PresupuestoActions extends sfActions
             "tipo"                  => $campos["inicial"],
             "tipo_solicitud"        => $campos["tx_tipo_solicitud"],
             "tx_direccion"          => $campos["tx_direccion"],
-            "fecha"                 => $dia.'/'.$mes.'/'.$anio,
+            "fecha"                 => $dia . '/' . $mes . '/' . $anio,
             "fe_fin"                => $campos["fecha_fin"],
             "tx_ramo"               => $campos["tx_ramo"],
-            "monto"                 => ($campos["nu_total"]==null)?$campos["monto_total"]:$campos["nu_total"],
+            "monto"                 => ($campos["nu_total"] == null) ? $campos["monto_total"] : $campos["nu_total"],
             "monto_retenciones"     => $campos["nu_total_retencion"],
-            "total_pagar"           => ($campos["total_pagar"]==null)?$campos["monto_total"]:$campos["total_pagar"],
+            "total_pagar"           => ($campos["total_pagar"] == null) ? $campos["monto_total"] : $campos["total_pagar"],
             "nu_iva"                => $campos["nu_iva"],
             "co_tipo_odp"           => $this->getCoTipoOdp($codigo),
             "tx_concepto"           => $campos1["tx_concepto"],
             "numero_compra"         => $campos["numero_compra"],
-            "tx_observacion"         => ($campos["tx_concepto"]==null)?($campos["tx_observacion"]!=null)?$campos["tx_observacion"]:'':$campos["tx_concepto"],
+            "tx_observacion"         => ($campos["tx_concepto"] == null) ? ($campos["tx_observacion"] != null) ? $campos["tx_observacion"] : '' : $campos["tx_concepto"],
         ));
     }
 
@@ -1685,18 +1685,16 @@ class PresupuestoActions extends sfActions
 
 
                     $montod = $Tb207DetalleCotizacion->getMonto();
-                    $montod = $montod * (-1);
-
-                    $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
-                    $tb087_presupuesto_movimiento->setCoPartida($Tb207DetalleCotizacion->getCoPresupuesto())
-                        ->setCoTipoMovimiento(4)
-                        ->setNuMonto($montod)
-                        //->setNuAnio(date('Y'))
-                        ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
-                        ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                        ->setCoDetallePresuBase($co_detalle_cotizacion)
-                        ->setInActivo(true)
-                        ->save($con);
+                    Tb087PresupuestoMovimientoPeer::movimientoPartida(
+                        $con,
+                        $this->getUser()->getAttribute('ejercicio'),
+                        $this->getUser()->getAttribute('codigo'),
+                        $Tb207DetalleCotizacion->getCoPresupuesto(),
+                        16,
+                        $Tb207DetalleCotizacion->getMonto(),
+                        $co_detalle_cotizacion,
+                        ''
+                    );
                 }
 
 
@@ -1704,9 +1702,19 @@ class PresupuestoActions extends sfActions
                     ->save($con);
 
 
-                $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
+                Tb087PresupuestoMovimientoPeer::movimientoPartida(
+                    $con,
+                    $this->getUser()->getAttribute('ejercicio'),
+                    $this->getUser()->getAttribute('codigo'),
+                    $co_presupuesto,
+                    15,
+                    $Tb207DetalleCotizacion->getMonto(),
+                    $co_detalle_cotizacion,
+                    ''
+                );
+                /* $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
                 $tb087_presupuesto_movimiento->setCoPartida($co_presupuesto)
-                    ->setCoTipoMovimiento(1)
+                    ->setCoTipoMovimiento(15)
                     ->setNuMonto($Tb207DetalleCotizacion->getMonto())
                     //->setNuAnio(date('Y'))
                     ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
@@ -1714,7 +1722,7 @@ class PresupuestoActions extends sfActions
                     ->setCoDetallePresuBase($co_detalle_cotizacion)
                     ->setInActivo(true)
                     ->save($con);
-
+                */
 
                 $c = new Criteria();
                 $c->clearSelectColumns();
@@ -2603,7 +2611,7 @@ class PresupuestoActions extends sfActions
 
             // $detalle_compra = $this->getDetalleCompra($co_detalle_compras);
 
-          /*  if ($co_tipo_movimiento == 1 || $co_tipo_movimiento == 6) {
+            /*  if ($co_tipo_movimiento == 1 || $co_tipo_movimiento == 6) {
                 $co_tipo_movimiento = 2;
                 $mensaje = 'La Orden de Pago se generó con exito!';
             } else if ($co_tipo_movimiento == 2) {

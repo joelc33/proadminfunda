@@ -594,9 +594,9 @@ class ContabilidadActions extends sfActions
                         $tb026_solicitud->setCoProveedor($co_proveedor)->save($con);                         
                     }
                     
-                    $tb045_factura->save($con);
+                    $tb045_factura->save($con); 
                                         
-                    $co_cuenta_por_pagar = Tb130CuentaDocumentoPeer::getCoCuentaContable($co_solicitud); //Factura
+                   /* $co_cuenta_por_pagar = Tb130CuentaDocumentoPeer::getCoCuentaContable($co_solicitud); //Factura
                                  
                     $tb061_asiento_contable = new Tb061AsientoContable();
                     $tb061_asiento_contable->setMoHaber($v["nu_total"])
@@ -606,7 +606,7 @@ class ContabilidadActions extends sfActions
                                   ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                   ->setCoRuta($ruta->getCoRuta())
                                   ->setCoTipoAsiento(1)
-                                  ->save($con);
+                                  ->save($con);*/
                                       
                     
                     $listaDetalleFactura  = json_decode($v["json_detalle_retencion"],true);
@@ -635,7 +635,7 @@ class ContabilidadActions extends sfActions
 
                             $monto = $lp["mo_total"]; //+$mo_retencion;
 
-                            $tb061_asiento_contable = new Tb061AsientoContable();
+                           /* $tb061_asiento_contable = new Tb061AsientoContable();
 
                             $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable($lp["co_producto"], $co_solicitud);
 
@@ -660,7 +660,7 @@ class ContabilidadActions extends sfActions
                                              ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                              ->setCoDetalleCompra($cuenta_contable["co_detalle_compras"])
                                              ->setInActivo(true)
-                                             ->save($con);
+                                             ->save($con);*/
 
 
                             $total_iva+=$mo_iva;
@@ -668,9 +668,9 @@ class ContabilidadActions extends sfActions
                                       
                     }
                     
-                    $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable(19336, $co_solicitud);
+                    /* $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable(19336, $co_solicitud);
 
-                    if($total_iva>0){
+                   if($total_iva>0){
                             $tb061_asiento_contable = new Tb061AsientoContable();
                             $tb061_asiento_contable->setMoDebe($total_iva)
                                           ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
@@ -715,7 +715,7 @@ class ContabilidadActions extends sfActions
                                       ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                       ->setCoTipoAsiento(2)
                                       ->setCoRuta($ruta->getCoRuta())
-                                      ->save($con);  
+                                      ->save($con);  */
                     
                     foreach($listaDetalleFactura  as $vp){
                             $tb046_factura_retencion = new Tb046FacturaRetencion();
