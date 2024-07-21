@@ -63,35 +63,44 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                 ->setInActivo(true)
                 ->save($con);
 
-            $total_iva += $mo_iva;
+            if ($mo_iva > 0) {
+                $ci = new Criteria();
+                $ci->add(Tb053DetalleComprasPeer::CO_DETALLE_COMPRA_ENLACE, $res["co_detalle_compra"]);
+                $stmti = Tb053DetalleComprasPeer::doSelectStmt($ci);
+                $campos_iva = $stmti->fetch(PDO::FETCH_ASSOC);
+
+
+                $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable($campos_iva["co_producto"], $co_solicitud);
+
+
+                $tb061_asiento_contable = new Tb061AsientoContable();
+                $tb061_asiento_contable->setMoDebe($mo_iva)
+                    ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
+                    ->setCoSolicitud($co_solicitud)
+                    ->setCoProducto($campos_iva["co_producto"])
+                    ->setCoFactura($campos["co_factura"])
+                    ->setCoUsuario($co_usuario)
+                    ->setCoTipoAsiento(1)
+                    ->setCoRuta($co_ruta)
+                    ->save($con);
+
+
+                $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
+                $tb087_presupuesto_movimiento->setCoPartida($cuenta_contable["co_presupuesto"])
+                    ->setCoTipoMovimiento(2)
+                    ->setNuMonto($mo_iva)
+                    ->setNuAnio($co_ejercicio)
+                    ->setCoUsuario($co_usuario)
+                    ->setCoDetalleCompra($cuenta_contable["co_detalle_compras"])
+                    ->setInActivo(true)
+                    ->setCoFactura($campos["co_factura"])
+                    ->save($con);
+            }
+
+            //$total_iva += $mo_iva;
         }
 
-        $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable(19336, $co_solicitud);
 
-        if ($total_iva > 0) {
-            $tb061_asiento_contable = new Tb061AsientoContable();
-            $tb061_asiento_contable->setMoDebe($total_iva)
-                ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
-                ->setCoSolicitud($co_solicitud)
-                ->setCoProducto(19336)
-                ->setCoFactura($campos["co_factura"])
-                ->setCoUsuario($co_usuario)
-                ->setCoTipoAsiento(1)
-                ->setCoRuta($co_ruta)
-                ->save($con);
-
-
-            $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
-            $tb087_presupuesto_movimiento->setCoPartida($cuenta_contable["co_presupuesto"])
-                ->setCoTipoMovimiento(2)
-                ->setNuMonto($total_iva)
-                ->setNuAnio($co_ejercicio)
-                ->setCoUsuario($co_usuario)
-                ->setCoDetalleCompra($cuenta_contable["co_detalle_compras"])
-                ->setInActivo(true)
-                ->setCoFactura($campos["co_factura"])
-                ->save($con);
-        }
 
 
         $tb061_asiento_contable = new Tb061AsientoContable();
