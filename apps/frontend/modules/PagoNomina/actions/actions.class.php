@@ -471,9 +471,9 @@ if($data->sheets[0]['cells'][$i][2]==''){
 
 
                 /*********************Joel Codigo de Aporte***********************/
-
+                if($data->sheets[0]['cells'][$i][1]=='A'){
                 $mo_total += trim($data->sheets[0]['cells'][$i][4]);
-
+                }
                 if ($co_ejecutor == '')
                     $co_ejecutor = Tb082EjecutorPeer::getCoEjecutor(trim($data->sheets[0]['cells'][$i][1]));
 
@@ -515,7 +515,7 @@ if($data->sheets[0]['cells'][$i][2]==''){
             $tb052_compras->setMontoTotal($mo_total);
             $tb052_compras->setCoTipoMovimiento(0);
             $tb052_compras->setCoEjecutor($co_ejecutor);
-            // $tb052_compras->setCoEjecutor($tb122_pago_nominaForm["co_ejecutor"]);
+            $tb052_compras->setTxObservacion($tb132_pago_nomina_masivoForm["tx_concepto"]);
             $tb052_compras->save($con);
 
             $c = new Criteria();
