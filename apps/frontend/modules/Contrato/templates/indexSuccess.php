@@ -142,6 +142,17 @@
                 handler: function() {
                     this.msg = Ext.get('formulariosolicitud');
                     this.msg.load({
+                        url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Contrato/editar",
+                        scripts: true,
+                        text: "Cargando..",
+                        params: {
+                            co_solicitud: solicitudLista.main.codigo,
+                            co_tipo_solicitud: 64,
+                            co_proceso: solicitudLista.main.co_proceso
+                        }
+                    });
+                    
+                   /* this.msg.load({
                         url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/cargarDatos",
                         scripts: true,
                         text: "Cargando..",
@@ -150,7 +161,7 @@
                             co_tipo_solicitud: solicitudLista.main.co_tipo_solicitud,
                             co_proceso: solicitudLista.main.co_proceso
                         }
-                    });
+                    });*/
                 }
             });
 

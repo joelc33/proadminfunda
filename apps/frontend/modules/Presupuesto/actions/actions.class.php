@@ -267,6 +267,7 @@ class PresupuestoActions extends sfActions
 
             $wherec = new Criteria();
             $wherec->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+            $wherec->add(Tb045FacturaPeer::CO_ODP, null,Criteria::ISNULL);
 
             $updc = new Criteria();
             $updc->add(Tb045FacturaPeer::CO_ODP, $co_odp);

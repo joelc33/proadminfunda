@@ -872,7 +872,7 @@ class PDF_Flo extends PDF_FlowingBlock
     {
 
         $conex = new ConexionComun();
-        $sql = "select distinct          tb008.tx_razon_social,
+        $sql = "select distinct * from (select distinct          tb008.tx_razon_social,
                          (tb007.inicial||'-'||tb008.tx_rif) as tx_rif,     
                          case when tb045.fe_emision is null then tb060.fe_emision else tb045.fe_emision end as fe_pago,                    
                          SUBSTRING(upper(substr(tb052.tx_observacion,1,250)), 1, 47) as tx_observacion,
@@ -899,19 +899,16 @@ class PDF_Flo extends PDF_FlowingBlock
                           numero_compra,
                           nu_total_retencion, 
                           case when total_pagar is null then tb052.monto_total else total_pagar end total_pagar,
-                          nu_factura,
-						  case when tb027_tipo_solicitud.in_odp_avance = false then 'X' else '' end as permanente,
-						  case when tb027_tipo_solicitud.in_odp_avance = true then 'X' else '' end as avance
+                          nu_factura
                   from   tb026_solicitud as tb026
-                  left join tb027_tipo_solicitud ON tb027_tipo_solicitud.co_tipo_solicitud = tb026.co_tipo_solicitud
-                  left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud                                                   
-                  left join tb060_orden_pago as tb060 on tb060.co_solicitud = tb026.co_solicitud
+                  left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud  
+                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud                                                  
+                  left join tb060_orden_pago as tb060 on tb060.co_ruta = tb030.co_ruta
                   left join tb008_proveedor as tb008 on tb008.co_proveedor=tb026.co_proveedor 
                   left join tb001_usuario as tb001 on tb001.co_usuario = tb026.co_usuario
-                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud 
                   left join tb007_documento as tb007 on tb007.co_documento = tb008.co_documento
-                  left join tb045_factura as tb045 on tb045.co_solicitud = tb026.co_solicitud
-                  where tb030.co_ruta =" . $_GET['codigo'] . " and tb060.in_anulado = false order by co_factura asc";
+                  left join tb045_factura as tb045 on tb045.co_odp = tb060.co_orden_pago
+                  where tb030.co_ruta =" . $_GET['codigo'] . " and tb060.in_anulado = false order by co_factura asc) as tabla";
 
         // echo var_dump($sql);  exit();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
@@ -921,7 +918,7 @@ class PDF_Flo extends PDF_FlowingBlock
     {
 
         $conex = new ConexionComun();
-        $sql = "select  nu_factura, 
+        $sql = "select distinct  nu_factura, 
                           fe_emision, 
                           nu_base_imponible,                           
                           nu_iva_factura, 
@@ -947,7 +944,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $conex = new ConexionComun();
 
-        $sql = "select tb085.co_categoria,
+        $sql = "select tb087.co_presupuesto_movimiento,tb085.co_categoria,
                          anio,
                          nu_ejecutor as ue,
                          tb080.nu_sector||'.'||nu_proyecto_ac as pac,
@@ -958,17 +955,23 @@ class PDF_Flo extends PDF_FlowingBlock
                          nu_se as se,
                          nu_sse as sse,
                          nu_fi as f,
-                         sum(monto) as monto
+                         sum(tb087.nu_monto) as monto
                   from  tb052_compras as tb052 
                   left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras 
-                  left join tb085_presupuesto as tb085 on tb085.id = tb053.co_presupuesto
+				  left join tb087_presupuesto_movimiento as tb087 on (tb087.co_detalle_compra = tb053.co_detalle_compras)
+                  left join tb085_presupuesto as tb085 on tb085.id = tb087.co_partida
                   left join tb084_accion_especifica as tb084 on tb085.id_tb084_accion_especifica = tb084.id
                   left join tb083_proyecto_ac as tb083 on tb084.id_tb083_proyecto_ac = tb083.id
                   left join tb082_ejecutor as tb082 on tb082.id = tb083.id_tb082_ejecutor
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud                               
                  left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector                 
-                  where tb030.co_ruta =" . $_GET['codigo'] . " 
-                   group by 1,2,3,4,5,6,7,8,9,10,11 limit 8";
+                 where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2
+                  group by 1,2,3,4,5,6,7,8,9,10,11,12 
+				 order by tb087.co_presupuesto_movimiento desc
+				 limit (select case when count(distinct co_presupuesto) > 8 then 8 else count(distinct co_presupuesto) end  from  tb052_compras as tb052 
+                  left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras
+				left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud 
+				where tb030.co_ruta =" . $_GET['codigo'] . ")";
 
         // echo var_dump($sql); exit();                  
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
@@ -980,7 +983,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $conex = new ConexionComun();
 
-        $sql = "select tb085.co_categoria,
+        $sql = "select tb087.co_presupuesto_movimiento,tb085.co_categoria,
                          anio,
                          nu_ejecutor as ue,
                          tb080.nu_sector||'.'||nu_proyecto_ac as pac,
@@ -991,17 +994,23 @@ class PDF_Flo extends PDF_FlowingBlock
                          nu_se as se,
                          nu_sse as sse,
                          nu_fi as f,
-                         sum(monto) as monto
+                         sum(tb087.nu_monto) as monto
                   from  tb052_compras as tb052 
                   left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras 
-                  left join tb085_presupuesto as tb085 on tb085.id = tb053.co_presupuesto
+				  left join tb087_presupuesto_movimiento as tb087 on (tb087.co_detalle_compra = tb053.co_detalle_compras)
+                  left join tb085_presupuesto as tb085 on tb085.id = tb087.co_partida
                   left join tb084_accion_especifica as tb084 on tb085.id_tb084_accion_especifica = tb084.id
                   left join tb083_proyecto_ac as tb083 on tb084.id_tb083_proyecto_ac = tb083.id
                   left join tb082_ejecutor as tb082 on tb082.id = tb083.id_tb082_ejecutor
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud                               
                  left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector                 
-                  where tb030.co_ruta =" . $_GET['codigo'] . " 
-                   group by 1,2,3,4,5,6,7,8,9,10,11 limit 5000 offset 8";
+                 where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2
+                  group by 1,2,3,4,5,6,7,8,9,10,11,12 
+				 order by tb087.co_presupuesto_movimiento desc
+				 limit (select count(distinct co_presupuesto)  from  tb052_compras as tb052 
+                  left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras
+				left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud 
+				where tb030.co_ruta =" . $_GET['codigo'] . ") OFFSET 8";
 
         // echo var_dump($sql); exit();                  
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);

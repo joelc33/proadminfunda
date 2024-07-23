@@ -381,17 +381,6 @@ class SolicitudActions extends sfActions
                 $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
 
                 while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    
-                    Tb087PresupuestoMovimientoPeer::movimientoPartida(
-                        $con,
-                        $this->getUser()->getAttribute('ejercicio'),
-                        $this->getUser()->getAttribute('codigo'),
-                        $reg["co_presupuesto"],
-                        1,
-                        $reg["monto"],
-                        '',
-                        $reg["co_detalle_compras"]
-                    );
 
                     $cc = new Criteria();
                     $cc->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
@@ -408,7 +397,17 @@ class SolicitudActions extends sfActions
                         $cotizacion["co_detalle_cotizacion"],
                         ''
                     );
-
+                    
+                    Tb087PresupuestoMovimientoPeer::movimientoPartida(
+                        $con,
+                        $this->getUser()->getAttribute('ejercicio'),
+                        $this->getUser()->getAttribute('codigo'),
+                        $reg["co_presupuesto"],
+                        1,
+                        $reg["monto"],
+                        '',
+                        $reg["co_detalle_compras"]
+                    );
 
                 }
 
