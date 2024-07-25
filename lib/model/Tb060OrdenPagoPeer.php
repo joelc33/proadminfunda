@@ -1252,6 +1252,18 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     $FeEmision = date("Y-m-d");
                 }
 
+                $cs = new Criteria();
+                $cs->clearSelectColumns();
+                $cs->addSelectColumn(Tb027TipoSolicitudPeer::IN_ODP_AVANCE);
+                $cs->addJoin(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD,Tb026SolicitudPeer::CO_TIPO_SOLICITUD);
+                $cs->add(Tb026SolicitudPeer::CO_SOLICITUD, $co_solicitud);
+                $stmts = Tb062LiquidacionPagoPeer::doSelectStmt($cs);
+                $datos = $stmts->fetch(PDO::FETCH_ASSOC);
+                $tipo = 2;
+                if($datos["in_odp_avance"]){
+                    $tipo = 1;
+                }
+
                 $Tb060OrdenPago = new Tb060OrdenPago();
                 $Tb060OrdenPago->setCoSolicitud($co_solicitud)
                     //->setFeEmision(date('Y-m-d'))
@@ -1267,6 +1279,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     ->setMoTotal($monto_total)
                     ->setCoRuta($co_ruta)
                     ->setInPagado(FALSE)
+                    ->setCoTipoOdp($tipo)
                     ->save($con);
 
 
