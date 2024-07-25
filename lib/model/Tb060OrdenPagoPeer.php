@@ -1008,7 +1008,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 break;
 
-            case 64:
+          /*  case 64:
                 //Servicios Nuevo
 
                 $c = new Criteria();
@@ -1035,7 +1035,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
                 BasePeer::doDelete($wherec, $con);
 
-                break;
+                break;*/
 
             case 65:
                 //Obras
