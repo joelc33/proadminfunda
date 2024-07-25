@@ -899,8 +899,11 @@ class PDF_Flo extends PDF_FlowingBlock
                           numero_compra,
                           nu_total_retencion, 
                           case when total_pagar is null then tb052.monto_total else total_pagar end total_pagar,
-                          nu_factura
+                          nu_factura,
+                          case when tb027_tipo_solicitud.in_odp_avance = false then 'X' else '' end as permanente,
+						  case when tb027_tipo_solicitud.in_odp_avance = true then 'X' else '' end as avance
                   from   tb026_solicitud as tb026
+                  left join tb027_tipo_solicitud ON tb027_tipo_solicitud.co_tipo_solicitud = tb026.co_tipo_solicitud                
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud  
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud                                                  
                   left join tb060_orden_pago as tb060 on tb060.co_ruta = tb030.co_ruta
@@ -1108,7 +1111,7 @@ class PDF_Flo extends PDF_FlowingBlock
 }
 
 
-$pdf=new PDF_Flo('P','mm','letter');
+/*$pdf=new PDF_Flo('P','mm','letter');
 $pdf->AliasNbPages();
 $pdf->PrintChapter();
 
@@ -1126,11 +1129,11 @@ $update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".
 ////echo $update; exit();
 $comm->Execute($update);    
 $pdf->SetMargins(0, 0);
-$pdf->Output($dir, 'F');
+$pdf->Output($dir, 'F');*/
 
 
-/*$pdf = new PDF_Flo('P', 'mm', 'letter');
+$pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetMargins(0, 0);
 $pdf->SetDisplayMode('default');
-$pdf->Output();*/
+$pdf->Output();
