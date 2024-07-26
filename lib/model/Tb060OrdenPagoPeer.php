@@ -1229,11 +1229,21 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $cant += 1;
 
+                $cd = new Criteria();
+                $cd->clearSelectColumns();
+                $cd->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
+                $stmtd = Tb052ComprasPeer::doSelectStmt($cd);
+                $datosFecha = $stmtd->fetch(PDO::FETCH_ASSOC);
+
+                list($anio,$mes,$dia) = $datosFecha["fecha_compra"];
+
+                $date = mktime(0, 0, 0, $mes,$dia, $anio);
+
                 if ($co_tipo_solicitud != 28 && $co_tipo_solicitud != 38) {
                     if (date("Y") > $ejercicio) {
                         $tx_serial = $ejercicio . '12-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
                     } else {
-                        $tx_serial = date('Ym') . '-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
+                        $tx_serial = date('Ym',$date) . '-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
                     }
                 } else {
                     $tx_serial = '';
@@ -1242,7 +1252,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 if (date("Y") > $ejercicio) {
                     $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . $ejercicio . '12-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
                 } else {
-                    $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . date('Ym') . '-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
+                    $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . date('Ym',$date) . '-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
                 }
 
                 if (date("Y") > $ejercicio) {
