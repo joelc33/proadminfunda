@@ -1307,6 +1307,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $wherec->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
 
                 $updc = new Criteria();
+                $updc->add(Tb052ComprasPeer::NU_ORDEN_COMPRA, $tx_docuemnto_odp);
                 $updc->add(Tb052ComprasPeer::MONTO_TOTAL, $monto_total);
 
                 BasePeer::doUpdate($wherec, $updc, $con);
