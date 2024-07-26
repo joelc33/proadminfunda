@@ -953,7 +953,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $conex = new ConexionComun();
 
-        $sql = "select tb087.co_presupuesto_movimiento,tb085.co_categoria,
+        $sql = "select tb085.co_categoria,
                          anio,
                          nu_ejecutor as ue,
                          tb080.nu_sector||'.'||nu_proyecto_ac as pac,
@@ -974,13 +974,9 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb082_ejecutor as tb082 on tb082.id = tb083.id_tb082_ejecutor
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud                               
                  left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector                 
-                 where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2
-                  group by 1,2,3,4,5,6,7,8,9,10,11,12 
-				 order by tb087.co_presupuesto_movimiento desc
-				 limit (select case when count(distinct co_presupuesto) > 8 then 8 else count(distinct co_presupuesto) end  from  tb052_compras as tb052 
-                  left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras
-				left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud 
-				where tb030.co_ruta =" . $_GET['codigo'] . ")";
+                 where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2 and tb087.in_activo = true
+                  group by 1,2,3,4,5,6,7,8,9,10,11
+				 limit 8";
 
         // echo var_dump($sql); exit();                  
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
@@ -992,7 +988,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $conex = new ConexionComun();
 
-        $sql = "select tb087.co_presupuesto_movimiento,tb085.co_categoria,
+        $sql = "select tb085.co_categoria,
                          anio,
                          nu_ejecutor as ue,
                          tb080.nu_sector||'.'||nu_proyecto_ac as pac,
@@ -1013,13 +1009,9 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb082_ejecutor as tb082 on tb082.id = tb083.id_tb082_ejecutor
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud                               
                  left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector                 
-                 where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2
-                  group by 1,2,3,4,5,6,7,8,9,10,11,12 
-				 order by tb087.co_presupuesto_movimiento desc
-				 limit (select count(distinct co_presupuesto)  from  tb052_compras as tb052 
-                  left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras
-				left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud 
-				where tb030.co_ruta =" . $_GET['codigo'] . ") OFFSET 8";
+                 where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2 and tb087.in_activo = true
+                  group by 1,2,3,4,5,6,7,8,9,10,11 
+				 limit 5000 OFFSET 8";
 
         // echo var_dump($sql); exit();                  
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
