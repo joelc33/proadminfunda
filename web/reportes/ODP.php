@@ -236,7 +236,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetFont('Times', 'B', 8);
                 $this->SetY(35);
                 $this->SetX(144); //
-                $this->MultiCell(65, 4, utf8_decode('FECHA DE EMISIÓN:                      ') . date("d/m/Y", strtotime($this->datos[0]['fecha_odp'])), 0, 0, 'L', 0);
+                $this->MultiCell(65, 4, utf8_decode('FECHA DE EMISIÓN:                      ') . date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), 0, 0, 'L', 0);
                 //$anio = date("Y");
                 $anio = $this->datos[0]['anio'];
                 $this->SetX(109);
