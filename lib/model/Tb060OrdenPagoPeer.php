@@ -414,11 +414,21 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
             $cant += 1;
 
+            $cd = new Criteria();
+            $cd->clearSelectColumns();
+            $cd->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
+            $stmtd = Tb052ComprasPeer::doSelectStmt($cd);
+            $datosFecha = $stmtd->fetch(PDO::FETCH_ASSOC);
+
+            list($anio, $mes, $dia) = explode('-', $datosFecha["fecha_compra"]);
+
+            $date = mktime(0, 0, 0, $mes, $dia, $anio);
+
             if ($co_tipo_solicitud != 28 && $co_tipo_solicitud != 38) {
                 if (date("Y") > $ejercicio) {
                     $tx_serial = $ejercicio . '12-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
                 } else {
-                    $tx_serial = date('Ym') . '-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
+                    $tx_serial = date('Ym',$date) . '-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
                 }
             } else {
                 $tx_serial = '';
@@ -427,7 +437,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             if (date("Y") > $ejercicio) {
                 $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . $ejercicio . '12-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
             } else {
-                $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . date('Ym') . '-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
+                $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . date('Ym',$date) . '-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
             }
 
             if (date("Y") > $ejercicio) {
@@ -1008,7 +1018,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 break;
 
-          /*  case 64:
+                /*  case 64:
                 //Servicios Nuevo
 
                 $c = new Criteria();
@@ -1235,15 +1245,15 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmtd = Tb052ComprasPeer::doSelectStmt($cd);
                 $datosFecha = $stmtd->fetch(PDO::FETCH_ASSOC);
 
-                list($anio,$mes,$dia) = $datosFecha["fecha_compra"];
+                list($anio, $mes, $dia) = explode('-', $datosFecha["fecha_compra"]);
 
-                $date = mktime(0, 0, 0, $mes,$dia, $anio);
+                $date = mktime(0, 0, 0, $mes, $dia, $anio);
 
                 if ($co_tipo_solicitud != 28 && $co_tipo_solicitud != 38) {
                     if (date("Y") > $ejercicio) {
                         $tx_serial = $ejercicio . '12-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
                     } else {
-                        $tx_serial = date('Ym',$date) . '-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
+                        $tx_serial = date('Ym', $date) . '-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
                     }
                 } else {
                     $tx_serial = '';
@@ -1252,7 +1262,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 if (date("Y") > $ejercicio) {
                     $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . $ejercicio . '12-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
                 } else {
-                    $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . date('Ym',$date) . '-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
+                    $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . date('Ym', $date) . '-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
                 }
 
                 if (date("Y") > $ejercicio) {
@@ -1265,12 +1275,12 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $cs = new Criteria();
                 $cs->clearSelectColumns();
                 $cs->addSelectColumn(Tb027TipoSolicitudPeer::IN_ODP_AVANCE);
-                $cs->addJoin(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD,Tb026SolicitudPeer::CO_TIPO_SOLICITUD);
+                $cs->addJoin(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, Tb026SolicitudPeer::CO_TIPO_SOLICITUD);
                 $cs->add(Tb026SolicitudPeer::CO_SOLICITUD, $co_solicitud);
                 $stmts = Tb062LiquidacionPagoPeer::doSelectStmt($cs);
                 $datos = $stmts->fetch(PDO::FETCH_ASSOC);
                 $tipo = 2;
-                if($datos["in_odp_avance"]){
+                if ($datos["in_odp_avance"]) {
                     $tipo = 1;
                 }
 
@@ -1295,7 +1305,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $wherec = new Criteria();
                 $wherec->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
-              
+
                 $updc = new Criteria();
                 $updc->add(Tb052ComprasPeer::MONTO_TOTAL, $monto_total);
 
