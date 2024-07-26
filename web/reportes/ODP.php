@@ -282,11 +282,11 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->RoundedRect(150, 48, 25, 5, 1.5, '0010', '', $style);
                 $this->SetY($Y);
                 $this->RoundedRect(175, 48, 35, 5, 1.5, '0100', '', $style);
-                $this->SetWidths(array(25, 35));
+                $this->SetWidths(array(25, 45,20));
                 $this->SetAligns(array("L", "L"));
                 $this->SetFont('Times', '', 8);
                 $this->SetX(150);
-                $this->Row(array('SIST PATRIA: ', 'TRANSFERENCIA: X'), 0, 0);
+                $this->Row(array('SIST PATRIA: ', 'TRANSFERENCIA:         X'), 0, 0);
                 $this->SetAligns(array("L"));
                 $this->SetWidths(array(150));
                 $this->SetFont('Times', 'B', 10);
@@ -348,7 +348,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->Row(array(utf8_decode('DOCUMENTOS Y RETENCIONES')), 0, 0);
                 $this->SetFillColor(255, 255, 255);
                 $this->SetAligns(array("C", "C", "C", "C", "C", "C", "C", "C"));
-                $this->SetWidths(array(20, 30, 15, 43, 20, 25, 20, 27));
+                $this->SetWidths(array(25, 25, 15, 43, 20, 25, 20, 27));
                 $this->SetFont('Times', '', 8);
                 $Y = $this->GetY();
                 $this->RoundedRect(10, 83, 200, 50, 1.5, '1111', '', $style);
