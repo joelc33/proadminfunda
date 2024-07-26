@@ -880,7 +880,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $conex = new ConexionComun();
         $sql = "select distinct * from (select distinct          tb008.tx_razon_social,
                          (tb007.inicial||'-'||tb008.tx_rif) as tx_rif,     
-                         case when tb045.fe_emision is null then tb060.fe_emision else tb045.fe_emision end as fe_pago,                    
+                         case when tb045.fe_emision is null then tb052.fecha_compra else tb045.fe_emision end as fe_pago,                    
                          SUBSTRING(upper(substr(tb052.tx_observacion,1,250)), 1, 47) as tx_observacion,
                          tb001.nb_usuario,
                          tb052.anio,
@@ -1117,7 +1117,7 @@ class PDF_Flo extends PDF_FlowingBlock
 }
 
 
-$pdf=new PDF_Flo('P','mm','letter');
+/*$pdf=new PDF_Flo('P','mm','letter');
 $pdf->AliasNbPages();
 $pdf->PrintChapter();
 
@@ -1135,11 +1135,11 @@ $update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".
 ////echo $update; exit();
 $comm->Execute($update);    
 $pdf->SetMargins(0, 0);
-$pdf->Output($dir, 'F');
+$pdf->Output($dir, 'F');*/
 
-/*
+
 $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetMargins(0, 0);
 $pdf->SetDisplayMode('default');
-$pdf->Output();*/
+$pdf->Output();
