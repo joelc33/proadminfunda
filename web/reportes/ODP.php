@@ -429,7 +429,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetAligns(array("R"));
                 $this->SetX(183);
                 $this->SetWidths(array(27));
-                $this->Row(array(number_format($this->datos[0]['mo_pagar'], 2, ',', '.')), 0, 0);
+                $this->Row(array(number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
 
                 $this->SetX(35);
                 $this->SetWidths(array(120));
@@ -508,7 +508,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetFont('Times', 'B', 12);
                 $this->SetAligns(array("L", "R"));
                 $this->SetWidths(array(140, 60));
-                $this->Row(array('', number_format($this->datos[0]['mo_pagar'], 2, ',', '.')), 0, 0);
+                $this->Row(array('', number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
                 $this->SetWidths(array(60, 80, 60));
                 $this->SetFont('Times', 'B', 8);
 
@@ -904,7 +904,7 @@ class PDF_Flo extends PDF_FlowingBlock
                           tb045.co_compra as nu_compra, 
                           numero_compra,
                           nu_total_retencion, 
-                          case when total_pagar is null then tb052.monto_total else total_pagar end total_pagar,
+                          case when mo_pagar is null then tb052.monto_total else mo_pagar end total_pagar,
                           nu_factura,
                           case when tb027_tipo_solicitud.in_odp_avance = false then 'X' else '' end as permanente,
 						  case when tb027_tipo_solicitud.in_odp_avance = true then 'X' else '' end as avance
