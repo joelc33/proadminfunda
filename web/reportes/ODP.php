@@ -385,7 +385,7 @@ class PDF_Flo extends PDF_FlowingBlock
                             }
                                
 
-                            $this->Row(array($documento, $soporte, date("d/m/Y", strtotime($this->datos[0]['fe_pago'])),utf8_decode($this->datos[0]['tx_observacion']), number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format(22, 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
+                            $this->Row(array($documento, $soporte, date("d/m/Y", strtotime($this->datos[0]['fe_pago'])),utf8_decode($this->datos[0]['tx_observacion']), number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
                             //$this->SetX(142);
@@ -493,7 +493,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->RoundedRect(150, $Y2, 60, 5, 1.5, '1100', '', $style);
 
                 $this->SetY($Y2);
-                $this->Row(array('BANCO', 'NUMERO DE CUENTA', 'MONTO EN Bs.S QUE CANCELA'), 0, 0);
+                $this->Row(array('BANCO', 'NUMERO DE CUENTA', 'MONTO EN Bs. QUE CANCELA'), 0, 0);
                 $Y2 = $this->GetY();
 
                 $this->SetY($Y2);
@@ -508,7 +508,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetFont('Times', 'B', 12);
                 $this->SetAligns(array("L", "R"));
                 $this->SetWidths(array(140, 60));
-                $this->Row(array('', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
+                $this->Row(array('', number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
                 $this->SetWidths(array(60, 80, 60));
                 $this->SetFont('Times', 'B', 8);
 
