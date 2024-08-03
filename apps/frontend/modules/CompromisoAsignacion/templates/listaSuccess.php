@@ -240,7 +240,7 @@
                         width: 300,
                         menuDisabled: true,
                         sortable: true,
-                        dataIndex: 'tx_concepto'
+                        dataIndex: 'tx_observacion'
                     },
                     {
                         header: 'Creado Por',
@@ -344,7 +344,7 @@
                         name: 'co_proceso'
                     },
                     {
-                        name: 'tx_concepto'
+                        name: 'tx_observacion'
                     },
                     {
                         name: 'in_reporte'

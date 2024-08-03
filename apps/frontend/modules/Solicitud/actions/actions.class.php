@@ -385,8 +385,8 @@ class SolicitudActions extends sfActions
                     $cc = new Criteria();
                     $cc->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
                     $stmtc = Tb207DetalleCotizacionPeer::doSelectStmt($cc);
-                    $cotizacion= $stmtc->fetch(PDO::FETCH_ASSOC);            
-                   
+                    $cotizacion = $stmtc->fetch(PDO::FETCH_ASSOC);
+
                     Tb087PresupuestoMovimientoPeer::movimientoPartida(
                         $con,
                         $this->getUser()->getAttribute('ejercicio'),
@@ -397,7 +397,7 @@ class SolicitudActions extends sfActions
                         $cotizacion["co_detalle_cotizacion"],
                         ''
                     );
-                    
+
                     Tb087PresupuestoMovimientoPeer::movimientoPartida(
                         $con,
                         $this->getUser()->getAttribute('ejercicio'),
@@ -408,7 +408,6 @@ class SolicitudActions extends sfActions
                         '',
                         $reg["co_detalle_compras"]
                     );
-
                 }
 
                 $Tb030Ruta = Tb030RutaPeer::retrieveByPK($this->getCoRuta($co_solicitud));
@@ -439,24 +438,53 @@ class SolicitudActions extends sfActions
     public function executeEnviarEntidades(sfWebRequest $request)
     {
 
-        $co_solicitud = $this->getRequestParameter("co_solicitud");
-        $co_usuario = $this->getUser()->getAttribute('codigo');
+        $con = Propel::getConnection();
 
-        $in_carga_datos = $this->getInCargarDatos($co_solicitud);
-        $estatus = Tb030RutaPeer::getValidarCargarDatos($co_solicitud);
 
-        if ($in_carga_datos != true) {
-            $estatus = $in_carga_datos;
+        try {
+            $co_solicitud = $this->getRequestParameter("co_solicitud");
+            $co_usuario = $this->getUser()->getAttribute('codigo');
+
+            $in_carga_datos = $this->getInCargarDatos($co_solicitud);
+            $estatus = Tb030RutaPeer::getValidarCargarDatos($co_solicitud);
+
+            if ($in_carga_datos != true) {
+                $estatus = $in_carga_datos;
+            }
+
+            if ($estatus == $in_carga_datos) {
+
+                $Tb030Ruta = Tb030RutaPeer::retrieveByPK($this->getCoRuta($co_solicitud));
+                $Tb030Ruta->setCoEstatusRuta(2);
+                $Tb030Ruta->setCoUsuarioActualizo($co_usuario);
+                $Tb030Ruta->save($con);
+
+                $datos_solicitud = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
+
+                //compromisos de asignacion (pagos sin facturas)
+                if ($datos_solicitud->getCoProceso() == 68) {
+
+                    $c = new Criteria();
+                    $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
+                    $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
+                    $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
+
+                    while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $reg["co_presupuesto"], 1, $reg["monto"], '', $reg["co_detalle_compras"]);
+                        Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $reg["co_presupuesto"], 2, $reg["monto"], '', $reg["co_detalle_compras"]);
+                    }
+                }
+            }
+
+            $con->commit();
+
+        } catch (PropelException $e) {
+            $con->rollback();
+            $data = json_encode(array(
+                "success" => false,
+                "msg" =>  $e->getMessage()
+            ));
         }
-
-        if ($estatus == $in_carga_datos) {
-
-            $Tb030Ruta = Tb030RutaPeer::retrieveByPK($this->getCoRuta($co_solicitud));
-            $Tb030Ruta->setCoEstatusRuta(2);
-            $Tb030Ruta->setCoUsuarioActualizo($co_usuario);
-            $Tb030Ruta->save();
-        }
-
 
 
         $this->data = json_encode(array(
@@ -609,10 +637,9 @@ class SolicitudActions extends sfActions
 
 
                 //Contabilidad Retenciones
-                if($Tb030Ruta->getCoProceso()==8){
+                if ($Tb030Ruta->getCoProceso() == 8) {
 
                     Tb045FacturaPeer::setRetenciones($con, $Tb030Ruta->getCoSolicitud(), $co_usuario, $co_ruta, $this->getUser()->getAttribute('ejercicio'));
-
                 }
 
                 $Tb030Ruta->setCoEstatusRuta($co_estatus)

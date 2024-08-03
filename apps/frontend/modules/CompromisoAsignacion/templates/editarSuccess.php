@@ -54,6 +54,14 @@
                     type: 'string'
                 },
                 {
+                    name: 'tx_descripcion',
+                    type: 'string'
+                },
+                {
+                    name: 'fe_compromiso',
+                    type: 'string'
+                },
+                {
                     name: 'monto',
                     type: 'number'
                 }
@@ -224,13 +232,13 @@
                 width: 100
             });*/
 
-            this.fe_compromiso = new Ext.form.DateField({
+          /*  this.fe_compromiso = new Ext.form.DateField({
                 fieldLabel: 'Fecha',
                 name: 'tb146_compromiso_asignacion[fe_compromiso]',
                 value: this.OBJ.fe_compromiso,
                 allowBlank: false,
                 width: 100
-            });
+            });*/
 
             this.nu_monto = new Ext.form.NumberField({
                 fieldLabel: 'Monto Total',
@@ -244,9 +252,9 @@
                 title: 'Datos de la Asignación',
                 items: [
                     this.co_tipo_proceso,
-                    this.tx_descripcion,
+                    this.tx_descripcion
                   //  this.nu_cancelacion,
-                    this.fe_compromiso
+                //    this.fe_compromiso
                   //  this.nu_monto
                 ]
             });
@@ -344,8 +352,8 @@
                 }
             });
 
-            if (this.OBJ.co_compras != '') {
-                CompromisoAsignacionEditar.main.store_lista.baseParams.co_compras = this.OBJ.co_compras;
+            if (this.OBJ.co_solicitud != '') {
+                CompromisoAsignacionEditar.main.store_lista.baseParams.co_solicitud = this.OBJ.co_solicitud;
                 this.store_lista.load({
                     callback: function() {
                         CompromisoAsignacionEditar.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
