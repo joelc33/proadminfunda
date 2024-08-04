@@ -282,7 +282,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->RoundedRect(150, 48, 25, 5, 1.5, '0010', '', $style);
                 $this->SetY($Y);
                 $this->RoundedRect(175, 48, 35, 5, 1.5, '0100', '', $style);
-                $this->SetWidths(array(25, 45,20));
+                $this->SetWidths(array(25, 45, 20));
                 $this->SetAligns(array("L", "L"));
                 $this->SetFont('Times', '', 8);
                 $this->SetX(150);
@@ -299,7 +299,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetY($Y - 3);
                 $this->SetX(138);
 
-              //  echo var_dump($valores['nu_monto']); exit();
+                //  echo var_dump($valores['nu_monto']); exit();
                 $VALOR = '**********' . number_format($valores['nu_monto'], 2, ',', '.') . ' Bs. S';
                 $this->SetFont('Times', '', 9);
                 $this->Ln(3);
@@ -328,7 +328,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->Row(array('A FAVOR DE: ' . $this->datos[0]['tx_rif'] . ' - ' . utf8_decode($this->datos[0]['tx_razon_social']) . ' ' . utf8_decode($this->datos[0]['rep'])), 0, 0);
 
                 $Y = $this->GetY();
-             /*   $this->RoundedRect(10, 78, 200, 15, 1.5, '1111', '', $style);
+                /*   $this->RoundedRect(10, 78, 200, 15, 1.5, '1111', '', $style);
                 $this->SetY(78);
                 $this->SetX(10);
                 $this->Row(array('POR CONCEPTO DE: ' . utf8_decode($this->datos[0]['tx_observacion'])), 0, 0);
@@ -340,7 +340,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetAligns(array("C"));
                 $this->SetFillColor(201, 199, 199);
 
-               /* $Y = $this->GetY();
+                /* $Y = $this->GetY();
                 $this->RoundedRect(10, 93, 200, 5, 1.5, '1001', '', $style);
                 $this->SetY(93);*/
 
@@ -377,15 +377,15 @@ class PDF_Flo extends PDF_FlowingBlock
 
                             $documento = "";
                             $soporte = "";
-                            if (!empty($this->datos[0]['nu_factura'])){
+                            if (!empty($this->datos[0]['nu_factura'])) {
                                 $documento = 'Fact-' . $this->datos[0]['nu_factura'];
                                 $soporte = $this->datos[0]['numero_compra'];
-                            }else{
+                            } else {
                                 $documento = $this->datos[0]['numero_compra'];
                             }
-                               
 
-                            $this->Row(array($documento, $soporte, date("d/m/Y", strtotime($this->datos[0]['fe_pago'])),utf8_decode($this->datos[0]['tx_observacion']), number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
+
+                            $this->Row(array($documento, $soporte, date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), utf8_decode($this->datos[0]['tx_observacion']), number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
                             //$this->SetX(142);
@@ -401,7 +401,10 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->MultiCell(200, 50, '', 0, 0, 'L', 0);
                     $this->SetY($Y);
                     $this->SetX(10);
-                    $this->Row(array($this->datos[0]['tx_documento_odp'], '', date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), utf8_decode($this->datos[0]['tx_observacion']),  number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
+                    //  $this->Row(array($this->datos[0]['tx_documento_odp'], '', date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), utf8_decode($this->datos[0]['tx_observacion']),  number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
+                    foreach ($this->datos as $k => $data) {
+                        $this->Row(array($data['numero_compra'], 'ccc', date("d/m/Y", strtotime($data['fe_pago'])), utf8_decode($data['tx_observacion']),  number_format($data['monto_total'], 2, ',', '.'), '', '0.00', number_format($data['monto_total'], 2, ',', '.')), 0, 0);
+                    }
 
                     $j++;
                 }
@@ -429,7 +432,9 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetAligns(array("R"));
                 $this->SetX(183);
                 $this->SetWidths(array(27));
+                //$this->Row(array(number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
                 $this->Row(array(number_format($this->datos[0]['total_pagar'], 2, ',', '.')), 0, 0);
+
 
                 $this->SetX(35);
                 $this->SetWidths(array(120));
@@ -906,6 +911,7 @@ class PDF_Flo extends PDF_FlowingBlock
                           nu_total_retencion, 
                           case when mo_pagar is null then tb052.monto_total else mo_pagar end total_pagar,
                           nu_factura,
+						  tb052.monto_total,
                           case when tb027_tipo_solicitud.in_odp_avance = false then 'X' else '' end as permanente,
 						  case when tb027_tipo_solicitud.in_odp_avance = true then 'X' else '' end as avance
                   from   tb026_solicitud as tb026
@@ -1108,7 +1114,7 @@ class PDF_Flo extends PDF_FlowingBlock
     }
 }
 
-
+/*
 $pdf=new PDF_Flo('P','mm','letter');
 $pdf->AliasNbPages();
 $pdf->PrintChapter();
@@ -1128,11 +1134,10 @@ $update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".
 $comm->Execute($update);    
 $pdf->SetMargins(0, 0);
 $pdf->Output($dir, 'F');
+*/
 
-/*
 $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetMargins(0, 0);
 $pdf->SetDisplayMode('default');
 $pdf->Output();
-*/
