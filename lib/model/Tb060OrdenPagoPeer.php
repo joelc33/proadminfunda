@@ -1302,16 +1302,22 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     ->setCoTipoOdp($tipo)
                     ->save($con);
 
+                $datos_solicitud = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
 
-                $wherec = new Criteria();
-                $wherec->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
+                if($datos_solicitud->getCoProceso()!=68){
 
-                $updc = new Criteria();
-                $updc->add(Tb052ComprasPeer::NU_ORDEN_COMPRA, $tx_docuemnto_odp);
-                $updc->add(Tb052ComprasPeer::MONTO_TOTAL, $monto_total);
+                    $wherec = new Criteria();
+                    $wherec->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
+    
+                    $updc = new Criteria();
+                    $updc->add(Tb052ComprasPeer::NU_ORDEN_COMPRA, $tx_docuemnto_odp);
+                    $updc->add(Tb052ComprasPeer::MONTO_TOTAL, $monto_total);
+    
+                    BasePeer::doUpdate($wherec, $updc, $con);   
 
-                BasePeer::doUpdate($wherec, $updc, $con);
+                }
 
+              
 
                 /*  $compra = Tb052ComprasPeer::retrieveByPK($co_solicitud);
                         if($compra->getMontoTotal() == 0){
