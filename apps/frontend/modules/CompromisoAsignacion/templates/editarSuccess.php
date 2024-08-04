@@ -455,17 +455,23 @@
                                 solicitudLista.main.anular.disable();
                             });
                             CompromisoAsignacionEditar.main.winformPanel_.close();
-                            CompromisoAsignacionEditar.main.co_solicitud = action.result.co_solicitud;
 
-                            solicitudLista.main.msg = Ext.get('formulariocontribuyente');
-                            solicitudLista.main.msg.load({
-                                url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/editar",
-                                scripts: true,
-                                text: "Cargando..",
-                                params: {
-                                    co_solicitud: CompromisoAsignacionEditar.main.co_solicitud
-                                }
-                            });
+                            if (CompromisoAsignacionEditar.main.OBJ.co_solicitud == '') {
+
+                                CompromisoAsignacionEditar.main.co_solicitud = action.result.co_solicitud;
+
+                                solicitudLista.main.msg = Ext.get('formulariocontribuyente');
+                                solicitudLista.main.msg.load({
+                                    url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/editar",
+                                    scripts: true,
+                                    text: "Cargando..",
+                                    params: {
+                                        co_solicitud: CompromisoAsignacionEditar.main.co_solicitud
+                                    }
+                                });
+
+                            }
+
                         }
                     });
 
