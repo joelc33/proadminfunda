@@ -1047,7 +1047,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 break;*/
 
-            case 65:
+           /* case 65:
                 //Obras
 
                 $c = new Criteria();
@@ -1104,7 +1104,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 BasePeer::doDelete($wherec, $con);
 
                 break;
-
+            */
             case 43:
                 //Prestaciones Sociales
 
