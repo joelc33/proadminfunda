@@ -13,27 +13,7 @@
                 value: 0
             });
 
-            this.tx_descripcion = new Ext.form.TextArea({
-                fieldLabel: 'Detalle',
-                name: 'tb146_compromiso_asignacion[tx_descripcion]',
-                allowBlank: false,
-                width: 500
-            });
-
-            this.fe_compromiso = new Ext.form.DateField({
-                fieldLabel: 'Fecha',
-                name: 'tb146_compromiso_asignacion[fe_compromiso]',
-                allowBlank: false,
-                width: 100
-            });
-
-            this.fieldAsignacionPertida = new Ext.form.FieldSet({
-                title: 'Datos del Compromiso',
-                items: [
-                    this.tx_descripcion,
-                    this.fe_compromiso
-                ]
-            });
+           
 
             this.co_ejecutor = new Ext.form.ComboBox({
                 fieldLabel: 'Ente Ejecutor',
@@ -164,7 +144,7 @@
                         return false;
                     }
 
-                    var e = new CompromisoAsignacionEditar.main.Registro({
+                    var e = new agregarCompromiso.main.Registro({
                         co_detalle_compras: '',
                         co_ejecutor: listaAsignacion.main.co_ejecutor.getValue(),
                         tx_ejecutor: listaAsignacion.main.co_ejecutor.lastSelectionText,
@@ -174,24 +154,22 @@
                         tx_accion: listaAsignacion.main.co_accion.lastSelectionText,
                         co_partida: listaAsignacion.main.co_partida.getValue(),
                         tx_partida: listaAsignacion.main.co_partida.lastSelectionText,
-                        fe_compromiso: listaAsignacion.main.fe_compromiso.getValue(),
-                        tx_descripcion: listaAsignacion.main.tx_descripcion.getValue(),
                         monto: listaAsignacion.main.mo_pagar.getValue()
                     });
 
-                    var cant = CompromisoAsignacionEditar.main.store_lista.getCount();
-                    (cant == 0) ? 0: CompromisoAsignacionEditar.main.store_lista.getCount() + 1;
-                    CompromisoAsignacionEditar.main.store_lista.insert(cant, e);
+                    var cant = agregarCompromiso.main.store_lista.getCount();
+                    (cant == 0) ? 0: agregarCompromiso.main.store_lista.getCount() + 1;
+                    agregarCompromiso.main.store_lista.insert(cant, e);
 
-                    CompromisoAsignacionEditar.main.gridPanel.getView().refresh();
+                    agregarCompromiso.main.gridPanel.getView().refresh();
 
-                    CompromisoAsignacionEditar.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
-                        store: CompromisoAsignacionEditar.main.store_lista,
+                    agregarCompromiso.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
+                        store: agregarCompromiso.main.store_lista,
                         campo: 'monto'
                     });
 
-                    CompromisoAsignacionEditar.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(CompromisoAsignacionEditar.main.total) + "</b></span>");
-                    CompromisoAsignacionEditar.main.mo_total.setValue(CompromisoAsignacionEditar.main.total);
+                    agregarCompromiso.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(agregarCompromiso.main.total) + "</b></span>");
+                    agregarCompromiso.main.mo_total.setValue(agregarCompromiso.main.total);
 
                     Ext.utiles.msg('Mensaje', "La Asignacion se agrego exitosamente");
                     listaAsignacion.main.winformPanel_.close();
@@ -214,7 +192,6 @@
                 autoScroll: true,
                 bodyStyle: 'padding:10px;',
                 items: [
-                    this.fieldAsignacionPertida,
                     this.co_ejecutor,
                     this.co_proyecto,
                     this.co_accion,

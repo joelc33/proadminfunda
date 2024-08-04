@@ -1,15 +1,13 @@
 <script type="text/javascript">
-    Ext.ns("CompromisoAsignacionEditar");
-    CompromisoAsignacionEditar.main = {
+    Ext.ns("agregarCompromiso");
+    agregarCompromiso.main = {
         init: function() {
 
             this.OBJ = paqueteComunJS.funcion.doJSON({
                 stringData: '<?php echo $data ?>'
             });
-            //<Stores de fk>
-            this.storeCO_PROVEEDOR = this.getStoreCO_PROVEEDOR();
+            //<Stores de fk>           
             this.storeCO_SOLICITUD = this.getStoreCO_SOLICITUD();
-            this.storeCO_DOCUMENTO = this.getStoreCO_DOCUMENTO();
             this.storeCO_PARTIDA = this.getStoreCO_PARTIDA();
             this.storeCO_PROYECTO = this.getStoreCO_PROYECTO();
             this.storeCO_ACCION = this.getStoreCO_ACCION();
@@ -54,14 +52,6 @@
                     type: 'string'
                 },
                 {
-                    name: 'tx_descripcion',
-                    type: 'string'
-                },
-                {
-                    name: 'fe_compromiso',
-                    type: 'string'
-                },
-                {
                     name: 'monto',
                     type: 'number'
                 }
@@ -77,30 +67,24 @@
                 name: 'co_compromiso_asignacion',
                 value: this.OBJ.co_compromiso_asignacion
             });
-            //</ClavePrimaria>
-
-            this.co_proveedor = new Ext.form.Hidden({
-                name: 'tb026_solicitud[co_proveedor]',
-                value: this.OBJ.co_proveedor
-            });
 
             this.co_solicitud = new Ext.form.Hidden({
-                name: 'tb026_solicitud[co_solicitud]',
+                name: 'tb146_compromiso_asignacion[co_solicitud]',
                 value: this.OBJ.co_solicitud
             });
 
             this.co_usuario = new Ext.form.Hidden({
-                name: 'tb026_solicitud[co_usuario]',
+                name: 'tb146_compromiso_asignacion[co_usuario]',
                 value: this.OBJ.co_usuario
             });
 
             this.co_detalle_compra = new Ext.form.Hidden({
-                name: 'tb026_solicitud[co_detalle_compra]',
+                name: 'tb146_compromiso_asignacion[co_detalle_compra]',
                 value: this.OBJ.co_detalle_compras
             });
 
             this.co_compras = new Ext.form.Hidden({
-                name: 'tb026_solicitud[co_compras]',
+                name: 'tb146_compromiso_asignacion[co_compras]',
                 value: this.OBJ.co_compras
             });
 
@@ -112,150 +96,32 @@
 
 
             this.nu_cancelacion = new Ext.form.DisplayField({
-                value: "<span style='color:black;font-size:15px;'><b>N° Cancelación: </b>" + CompromisoAsignacionEditar.main.OBJ.nu_cancelacion + "</b></span>"
+                value: "<span style='color:black;font-size:15px;'><b>N° Cancelación: </b>" + agregarCompromiso.main.OBJ.nu_cancelacion + "</b></span>"
             });
 
-            this.co_tipo_proceso = new Ext.form.ComboBox({
-                fieldLabel: 'Tipo Proceso',
-                store: this.storeCO_TIPO_PROCESO,
-                typeAhead: true,
-                valueField: 'co_tipo_solicitud',
-                displayField: 'tx_tipo_solicitud',
-                hiddenName: 'tb026_solicitud[co_tipo_solicitud]',
-                forceSelection: true,
-                resizable: true,
-                triggerAction: 'all',
-                selectOnFocus: true,
-                mode: 'local',
-                width: 300,
-                allowBlank: false
-            });
-            this.storeCO_TIPO_PROCESO.load();
-
-            paqueteComunJS.funcion.seleccionarComboByCo({
-                objCMB: this.co_tipo_proceso,
-                value: this.OBJ.co_tipo_solicitud,
-                objStore: this.storeCO_TIPO_PROCESO
-            });
-
-            this.co_documento = new Ext.form.ComboBox({
-                fieldLabel: 'Co documento',
-                store: this.storeCO_DOCUMENTO,
-                typeAhead: true,
-                valueField: 'co_documento',
-                displayField: 'inicial',
-                hiddenName: 'tb026_solicitud[co_documento]',
-                forceSelection: true,
-                resizable: true,
-                triggerAction: 'all',
-                selectOnFocus: true,
-                mode: 'local',
-                width: 50,
-                allowBlank: false
-            });
-            this.storeCO_DOCUMENTO.load();
-            paqueteComunJS.funcion.seleccionarComboByCo({
-                objCMB: this.co_documento,
-                value: (this.OBJ.co_documento == '') ? 4 : this.OBJ.co_documento,
-                objStore: this.storeCO_DOCUMENTO
-            });
-
-            this.tx_rif = new Ext.form.TextField({
-                name: 'tb026_solicitud[tx_rif]',
-                value: this.OBJ.tx_rif,
-                allowBlank: false,
-                width: 130
-            });
-            this.co_documento.on("blur", function() {
-                if (CompromisoAsignacionEditar.main.tx_rif.getValue() != '') {
-                    CompromisoAsignacionEditar.main.verificarProveedor();
-                }
-            });
-
-            this.tx_rif.on("blur", function() {
-                CompromisoAsignacionEditar.main.verificarProveedor();
-            });
-
-            this.compositefieldCIRIF = new Ext.form.CompositeField({
-                fieldLabel: 'Cedula/Rif',
-                width: 185,
-                items: [
-                    this.co_documento,
-                    this.tx_rif,
-                ]
-            });
-
-
-            this.tx_razon_social = new Ext.form.TextField({
-                fieldLabel: 'Razon Social',
-                name: 'tb026_solicitud[tx_razon_social]',
-                value: this.OBJ.tx_razon_social,
-                readOnly: (this.OBJ.co_factura != '') ? true : false,
-                style: (this.OBJ.co_factura != '') ? 'background:#c9c9c9;' : '',
-                allowBlank: false,
-                width: 600
-            });
-
-            this.tx_direccion = new Ext.form.TextField({
-                fieldLabel: 'Direccion',
-                name: 'tb026_solicitud[tx_direccion]',
-                value: this.OBJ.tx_direccion,
-                allowBlank: false,
-                readOnly: (this.OBJ.co_factura != '') ? true : false,
-                style: (this.OBJ.co_factura != '') ? 'background:#c9c9c9;' : '',
-                width: 600
-            });
-
-            this.fieldProveedor = new Ext.form.FieldSet({
-                title: 'Datos del Beneficiario',
-                items: [
-                    this.compositefieldCIRIF,
-                    this.tx_razon_social,
-                    this.tx_direccion
-                ]
-            });
 
 
             this.tx_descripcion = new Ext.form.TextArea({
                 fieldLabel: 'Descripción',
-                name: 'tb026_solicitud[tx_descripcion]',
+                name: 'tb146_compromiso_asignacion[tx_descripcion]',
                 value: this.OBJ.tx_descripcion,
                 allowBlank: false,
                 width: 500
             });
 
-            /*  this.nu_cancelacion = new Ext.form.NumberField({
-                  fieldLabel: 'Nro. Cancelación',
-                  name: 'tb026_solicitud[nu_cancelacion]',
-                  value: this.OBJ.nu_cancelacion,
-                  allowBlank: false,
-                  width: 100
-              });*/
-
-            /*  this.fe_compromiso = new Ext.form.DateField({
-                  fieldLabel: 'Fecha',
-                  name: 'tb026_solicitud[fe_compromiso]',
-                  value: this.OBJ.fe_compromiso,
-                  allowBlank: false,
-                  width: 100
-              });*/
-
-            this.nu_monto = new Ext.form.NumberField({
-                fieldLabel: 'Monto Total',
-                name: 'tb026_solicitud[nu_monto]',
-                value: this.OBJ.nu_monto,
+            this.fe_compromiso = new Ext.form.DateField({
+                fieldLabel: 'Fecha',
+                name: 'tb146_compromiso_asignacion[fe_compromiso]',
+                value: this.OBJ.fe_compromiso,
                 allowBlank: false,
-                width: 500
+                width: 100
             });
 
             this.fieldAsignacion = new Ext.form.FieldSet({
                 title: 'Datos de la Asignación',
                 items: [
-                    this.co_tipo_proceso,
-                    this.tx_descripcion
-                    //  this.nu_cancelacion,
-                    //    this.fe_compromiso
-                    //  this.nu_monto
+                    this.tx_descripcion,
+                    this.fe_compromiso
                 ]
             });
 
@@ -265,28 +131,9 @@
                 handler: function() {
                     this.msg = Ext.get('formularioAgregar');
                     this.msg.load({
-                        url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/agregarCompromiso',
+                        url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/agregarAsignacion',
                         scripts: true,
-                        text: "Cargando..",
-                        params: {
-                            co_solicitud: CompromisoAsignacionEditar.main.OBJ.co_solicitud
-                        }
-                    });
-                }
-            });
-
-            this.editar = new Ext.Button({
-                text: 'Editar',
-                iconCls: 'icon-editar',
-                handler: function() {
-                    this.msg = Ext.get('formularioAgregar');
-                    this.msg.load({
-                        url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/agregarCompromiso',
-                        scripts: true,
-                        text: "Cargando..",
-                        params: {
-                            co_compras: CompromisoAsignacionEditar.main.gridPanel.getSelectionModel().getSelected().get('co_compras')
-                        }
+                        text: "Cargando.."
                     });
                 }
             });
@@ -294,13 +141,13 @@
             this.botonEliminar = new Ext.Button({
                 text: 'Eliminar',
                 iconCls: 'icon-eliminar',
+                id: 'eliminar',
                 handler: function(boton) {
-                    CompromisoAsignacionEditar.main.eliminar();
+                    agregarCompromiso.main.eliminar();
                 }
             });
 
             this.botonEliminar.disable();
-            this.editar.disable();
 
             this.monto_total = new Ext.form.DisplayField({
                 value: "<span style='font-size:12px;'><b>Monto Total: </b>0</b></span>"
@@ -315,42 +162,43 @@
                 loadMask: true,
                 height: 200,
                 width: 840,
-                tbar: [this.agregar, '-', this.editar, '-', this.botonEliminar],
+                tbar: [this.agregar, '-', this.botonEliminar],
                 columns: [
                     new Ext.grid.RowNumberer(),
                     {
-                        header: 'co_compras',
+                        header: 'co_detalle_compras',
                         hidden: true,
+                        width: 80,
                         menuDisabled: true,
-                        dataIndex: 'co_compras'
+                        dataIndex: 'co_detalle_compras'
                     },
                     {
-                        header: 'Serial',
-                        width: 100,
+                        header: 'Ente Ejecutor',
+                        width: 206,
                         menuDisabled: true,
-                        dataIndex: 'numero_compra'
+                        dataIndex: 'tx_ejecutor'
                     },
                     {
-                        header: 'Fecha',
-                        width: 100,
+                        header: 'Proyecto/Ac',
+                        width: 226,
                         menuDisabled: true,
-                        dataIndex: 'fecha_compra'
+                        dataIndex: 'tx_proyecto'
                     },
                     {
-                        header: 'Descripcion',
-                        width: 480,
+                        header: 'Partida',
+                        width: 226,
                         menuDisabled: true,
-                        dataIndex: 'tx_observacion'
+                        dataIndex: 'tx_partida'
                     },
                     {
                         header: 'Monto',
                         width: 130,
                         menuDisabled: true,
-                        dataIndex: 'monto_total'
+                        dataIndex: 'monto'
                     }
                 ],
                 bbar: new Ext.ux.StatusBar({
-                    id: 'basic-statusbar-compromiso',
+                    id: 'basic-statusbar',
                     autoScroll: true,
                     defaults: {
                         style: 'color:black;font-size:30px;',
@@ -365,8 +213,7 @@
                 stateful: true,
                 listeners: {
                     cellclick: function(Grid, rowIndex, columnIndex, e) {
-                        CompromisoAsignacionEditar.main.botonEliminar.enable();
-                        CompromisoAsignacionEditar.main.editar.enable();
+                        agregarCompromiso.main.botonEliminar.enable();
                     }
                 }
             });
@@ -378,58 +225,45 @@
 
 
 
-            if (this.OBJ.co_solicitud != '') {
-                CompromisoAsignacionEditar.main.store_lista.baseParams.co_solicitud = this.OBJ.co_solicitud;
+            if (this.OBJ.co_compras != '') {
+                agregarCompromiso.main.store_lista.baseParams.co_compras = this.OBJ.co_compras;
                 this.store_lista.load({
                     callback: function() {
-                        CompromisoAsignacionEditar.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
-                            store: CompromisoAsignacionEditar.main.store_lista,
-                            campo: 'monto_total'
+                        agregarCompromiso.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
+                            store: agregarCompromiso.main.store_lista,
+                            campo: 'monto'
                         });
 
-                        CompromisoAsignacionEditar.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(CompromisoAsignacionEditar.main.total) + "</b></span>");
-                        CompromisoAsignacionEditar.main.mo_total.setValue(CompromisoAsignacionEditar.main.total);
+                        agregarCompromiso.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(agregarCompromiso.main.total) + "</b></span>");
+                        agregarCompromiso.main.mo_total.setValue(agregarCompromiso.main.total);
                     }
                 });
-                CompromisoAsignacionEditar.main.co_tipo_proceso.readOnly = true;
-                CompromisoAsignacionEditar.main.co_tipo_proceso.style = 'background:#c9c9c9;';
-                CompromisoAsignacionEditar.main.co_documento.readOnly = true;
-                CompromisoAsignacionEditar.main.co_documento.style = 'background:#c9c9c9;';
-                CompromisoAsignacionEditar.main.tx_rif.readOnly = true;
-                CompromisoAsignacionEditar.main.tx_rif.style = 'background:#c9c9c9;';
-                this.fieldDatosPartida.show();
-            } else {
-                this.fieldDatosPartida.hide();
             }
-
-
-
-
 
             this.guardar = new Ext.Button({
                 text: 'Guardar',
                 iconCls: 'icon-guardar',
                 handler: function() {
 
-                    if (!CompromisoAsignacionEditar.main.formPanel_.getForm().isValid()) {
+                    if (!agregarCompromiso.main.formPanel_.getForm().isValid()) {
                         Ext.Msg.alert("Alerta", "Debe ingresar los campos en rojo");
                         return false;
                     }
 
-                    /* if (parseFloat(CompromisoAsignacionEditar.main.mo_total.getValue()) != parseFloat(CompromisoAsignacionEditar.main.nu_monto.getValue())) {
+                    /* if (parseFloat(agregarCompromiso.main.mo_total.getValue()) != parseFloat(agregarCompromiso.main.nu_monto.getValue())) {
                          Ext.Msg.alert("Alerta", "El Monto total debe coincidir con el de la suma de las asignaciones");
                          return false;
                      }*/
 
                     var lista_asignacion = paqueteComunJS.funcion.getJsonByObjStore({
-                        store: CompromisoAsignacionEditar.main.gridPanel.getStore()
+                        store: agregarCompromiso.main.gridPanel.getStore()
                     });
 
-                    CompromisoAsignacionEditar.main.hiddenJsonAsignacion.setValue(lista_asignacion);
+                    agregarCompromiso.main.hiddenJsonAsignacion.setValue(lista_asignacion);
 
-                    CompromisoAsignacionEditar.main.formPanel_.getForm().submit({
+                    agregarCompromiso.main.formPanel_.getForm().submit({
                         method: 'POST',
-                        url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/guardar',
+                        url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/guardarCompromiso',
                         waitMsg: 'Enviando datos, por favor espere..',
                         waitTitle: 'Enviando',
                         failure: function(form, action) {
@@ -447,25 +281,24 @@
                                     buttons: Ext.MessageBox.OK
                                 });
                             }
-                            solicitudLista.main.store_lista.baseParams.paginar = 'si';
-                            solicitudLista.main.store_lista.baseParams.in_ventanilla = 'true';
-                            solicitudLista.main.store_lista.load();
-                            solicitudLista.main.store_lista.on('load', function() {
-                                solicitudLista.main.estado.disable();
-                                solicitudLista.main.anular.disable();
-                            });
-                            CompromisoAsignacionEditar.main.winformPanel_.close();
-                            CompromisoAsignacionEditar.main.co_solicitud = action.result.co_solicitud;
+                            CompromisoAsignacionEditar.main.store_lista.baseParams.paginar = 'si';
+                            CompromisoAsignacionEditar.main.store_lista.baseParams.in_ventanilla = 'true';
+                            CompromisoAsignacionEditar.main.store_lista.load({
+                                callback: function() {
+                                    CompromisoAsignacionEditar.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
+                                        store: CompromisoAsignacionEditar.main.store_lista,
+                                        campo: 'monto_total'
+                                    });
 
-                            solicitudLista.main.msg = Ext.get('formulariocontribuyente');
-                            solicitudLista.main.msg.load({
-                                url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/editar",
-                                scripts: true,
-                                text: "Cargando..",
-                                params: {
-                                    co_solicitud: CompromisoAsignacionEditar.main.co_solicitud
+                                    CompromisoAsignacionEditar.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(CompromisoAsignacionEditar.main.total) + "</b></span>");
+                                    CompromisoAsignacionEditar.main.mo_total.setValue(CompromisoAsignacionEditar.main.total);
+
+                                    CompromisoAsignacionEditar.main.editar.disable();
+                                    CompromisoAsignacionEditar.main.botonEliminar.disable();
                                 }
                             });
+                            agregarCompromiso.main.winformPanel_.close();
+
                         }
                     });
 
@@ -477,7 +310,7 @@
                 text: 'Salir',
                 //    iconCls: 'icon-cancelar',
                 handler: function() {
-                    CompromisoAsignacionEditar.main.winformPanel_.close();
+                    agregarCompromiso.main.winformPanel_.close();
                 }
             });
 
@@ -502,8 +335,6 @@
                     this.co_compromiso_asignacion,
                     this.co_compras,
                     this.hiddenJsonAsignacion,
-                    this.co_proveedor,
-                    this.fieldProveedor,
                     this.fieldAsignacion,
                     this.fieldDatosPartida,
                     this.co_solicitud,
@@ -513,14 +344,14 @@
 
 
             this.winformPanel_ = new Ext.Window({
-                title: 'Pagos sin Factura',
+                title: 'Agregar Asignación',
                 modal: true,
                 constrain: true,
                 width: 900,
                 frame: true,
                 closabled: true,
                 autoHeight: true,
-                //  tbar: tbar,
+                tbar: tbar,
                 items: [
                     this.formPanel_
                 ],
@@ -612,11 +443,11 @@
                 method: 'GET',
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/cargarDisponible',
                 params: {
-                    co_partida: CompromisoAsignacionEditar.main.co_partida.getValue()
+                    co_partida: agregarCompromiso.main.co_partida.getValue()
                 },
                 success: function(result, request) {
                     obj = Ext.util.JSON.decode(result.responseText);
-                    CompromisoAsignacionEditar.main.mo_disponible.setValue(paqueteComunJS.funcion.getNumeroFormateado(obj.data.mo_disponible));
+                    agregarCompromiso.main.mo_disponible.setValue(paqueteComunJS.funcion.getNumeroFormateado(obj.data.mo_disponible));
                 }
             });
         },
@@ -670,95 +501,80 @@
         },
         getLista: function() {
             this.store = new Ext.data.JsonStore({
-                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/storefkasignacion',
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/storefkcompromiso',
                 root: 'data',
                 fields: [{
-                        name: 'co_compras'
+                        name: 'co_detalle_compras'
                     },
                     {
-                        name: 'tx_observacion'
+                        name: 'tx_ejecutor'
                     },
                     {
-                        name: 'fecha_compra'
+                        name: 'tx_proyecto'
                     },
                     {
-                        name: 'numero_compra'
+                        name: 'tx_partida'
                     },
                     {
-                        name: 'monto_total'
+                        name: 'monto'
                     }
                 ]
             });
             return this.store;
         },
         eliminar: function() {
-            var s = CompromisoAsignacionEditar.main.gridPanel.getSelectionModel().getSelections();
+            var s = agregarCompromiso.main.gridPanel.getSelectionModel().getSelections();
 
-            var co_compras = CompromisoAsignacionEditar.main.gridPanel.getSelectionModel().getSelected().get('co_compras');
+            var co_detalle_compras = agregarCompromiso.main.gridPanel.getSelectionModel().getSelected().get('co_detalle_compras');
 
-            if (co_compras != '') {
+            if (co_detalle_compras != '') {
 
                 Ext.Ajax.request({
                     method: 'POST',
                     url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/eliminarAsignacion',
                     params: {
-                        co_compras: co_compras
+                        co_detalle_compras: co_detalle_compras
                     },
                     success: function(result, request) {
-                        //CompromisoAsignacionEditar.main.store_lista.load();
+                        //agregarCompromiso.main.store_lista.load();
                         Ext.utiles.msg('Mensaje', "La Asignacion se eliminó exitosamente");
                     }
                 });
 
             }
 
-            CompromisoAsignacionEditar.main.store_lista.baseParams.co_compras = CompromisoAsignacionEditar.main.OBJ.co_compras;
-            CompromisoAsignacionEditar.main.store_lista.load({
+            agregarCompromiso.main.store_lista.baseParams.co_compras = agregarCompromiso.main.OBJ.co_compras;
+            agregarCompromiso.main.store_lista.load({
                 callback: function() {
-                    CompromisoAsignacionEditar.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
-                        store: CompromisoAsignacionEditar.main.store_lista,
+                    agregarCompromiso.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
+                        store: agregarCompromiso.main.store_lista,
                         campo: 'monto'
                     });
 
-                    CompromisoAsignacionEditar.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(CompromisoAsignacionEditar.main.total) + "</b></span>");
-                    CompromisoAsignacionEditar.main.mo_total.setValue(CompromisoAsignacionEditar.main.total);
+                    agregarCompromiso.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(agregarCompromiso.main.total) + "</b></span>");
+                    agregarCompromiso.main.mo_total.setValue(agregarCompromiso.main.total);
                 }
             });
 
             for (var i = 0, r; r = s[i]; i++) {
-                CompromisoAsignacionEditar.main.store_lista.remove(r);
+                agregarCompromiso.main.store_lista.remove(r);
             }
-
-            CompromisoAsignacionEditar.main.store_lista.load({
-                callback: function() {
-                    CompromisoAsignacionEditar.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
-                        store: CompromisoAsignacionEditar.main.store_lista,
-                        campo: 'monto_total'
-                    });
-
-                    CompromisoAsignacionEditar.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(CompromisoAsignacionEditar.main.total) + "</b></span>");
-                    CompromisoAsignacionEditar.main.mo_total.setValue(CompromisoAsignacionEditar.main.total);
-
-                    CompromisoAsignacionEditar.main.editar.disable();
-                    CompromisoAsignacionEditar.main.botonEliminar.disable();
-                }
-            });
         },
         verificarProveedor: function() {
             Ext.Ajax.request({
                 method: 'GET',
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/verificarProveedor',
                 params: {
-                    co_documento: CompromisoAsignacionEditar.main.co_documento.getValue(),
-                    tx_rif: CompromisoAsignacionEditar.main.tx_rif.getValue()
+                    co_documento: agregarCompromiso.main.co_documento.getValue(),
+                    tx_rif: agregarCompromiso.main.tx_rif.getValue()
                 },
                 success: function(result, request) {
                     obj = Ext.util.JSON.decode(result.responseText);
                     if (!obj.data) {
-                        CompromisoAsignacionEditar.main.co_proveedor.setValue("");
-                        CompromisoAsignacionEditar.main.co_documento.setValue("");
-                        CompromisoAsignacionEditar.main.tx_rif.setValue("");
-                        CompromisoAsignacionEditar.main.tx_razon_social.setValue("");
+                        agregarCompromiso.main.co_proveedor.setValue("");
+                        agregarCompromiso.main.co_documento.setValue("");
+                        agregarCompromiso.main.tx_rif.setValue("");
+                        agregarCompromiso.main.tx_razon_social.setValue("");
 
                         Ext.Msg.show({
                             title: 'ALERTA',
@@ -772,15 +588,15 @@
 
                     } else {
 
-                        CompromisoAsignacionEditar.main.co_proveedor.setValue(obj.data.co_proveedor);
-                        CompromisoAsignacionEditar.main.tx_razon_social.setValue(obj.data.tx_razon_social);
-                        CompromisoAsignacionEditar.main.tx_direccion.setValue(obj.data.tx_direccion);
+                        agregarCompromiso.main.co_proveedor.setValue(obj.data.co_proveedor);
+                        agregarCompromiso.main.tx_razon_social.setValue(obj.data.tx_razon_social);
+                        agregarCompromiso.main.tx_direccion.setValue(obj.data.tx_direccion);
 
                     }
                 }
             });
         }
     };
-    Ext.onReady(CompromisoAsignacionEditar.main.init, CompromisoAsignacionEditar.main);
+    Ext.onReady(agregarCompromiso.main.init, agregarCompromiso.main);
 </script>
 <div id="formularioAgregar"></div>

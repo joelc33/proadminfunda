@@ -30,9 +30,9 @@ class CompromisoAsignacionActions extends sfActions
     {
     }
 
-    public function executeEditar(sfWebRequest $request)
+    public function executeAgregarCompromiso(sfWebRequest $request)
     {
-        $codigo = $this->getRequestParameter("co_solicitud");
+        $codigo = $this->getRequestParameter("co_compras");
         if ($codigo != '' || $codigo != null) {
             $c = new Criteria();
             $c->clearSelectColumns();
@@ -54,7 +54,7 @@ class CompromisoAsignacionActions extends sfActions
             $c->addJoin(Tb146CompromisoAsignacionPeer::CO_SOLICITUD, Tb026SolicitudPeer::CO_SOLICITUD);
             $c->addJoin(Tb146CompromisoAsignacionPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD);
             $c->addJoin(Tb146CompromisoAsignacionPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR);
-            $c->add(Tb146CompromisoAsignacionPeer::CO_SOLICITUD, $codigo);
+            $c->add(Tb052ComprasPeer::CO_COMPRAS, $codigo);
 
             $stmt = Tb146CompromisoAsignacionPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -82,7 +82,56 @@ class CompromisoAsignacionActions extends sfActions
                 "nu_cancelacion"               => "Por Asignar",
                 "fe_compromiso"                => "",
                 "nu_monto"                     => "",
+                "co_solicitud"                 => $this->getRequestParameter("co_solicitud")
+            ));
+        }
+    }
+
+    public function executeEditar(sfWebRequest $request)
+    {
+        $codigo = $this->getRequestParameter("co_solicitud");
+        if ($codigo != '' || $codigo != null) {
+            $c = new Criteria();
+            $c->clearSelectColumns();
+            //    $c->addSelectColumn(Tb052ComprasPeer::CO_COMPRAS);
+            $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD);
+            $c->addSelectColumn(Tb026SolicitudPeer::TX_OBSERVACION);
+            $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+            $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
+            $c->addSelectColumn(Tb008ProveedorPeer::TX_DIRECCION);
+            $c->addSelectColumn(Tb008ProveedorPeer::CO_DOCUMENTO);
+            $c->addSelectColumn(Tb026SolicitudPeer::CO_TIPO_SOLICITUD);
+
+            $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR);
+            $c->add(Tb026SolicitudPeer::CO_SOLICITUD, $codigo);
+
+            $stmt = Tb146CompromisoAsignacionPeer::doSelectStmt($c);
+            $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->data = json_encode(array(
+                "co_compromiso_asignacion"     => $campos["co_compromiso_asignacion"],
+                "co_proveedor"                 => $campos["co_proveedor"],
+                "tx_descripcion"               => $campos["tx_observacion"],
+                "nu_cancelacion"               => $campos["numero_compra"],
+                "fe_compromiso"                => $campos["fe_compromiso"],
+                "nu_monto"                     => $campos["nu_monto"],
                 "co_solicitud"                 => $codigo,
+                "co_ejecutor"                  => $campos["co_ejecutor"],
+                "co_compras"                   => $campos["co_compras"],
+                "tx_razon_social"              => $campos["tx_razon_social"],
+                "tx_rif"                       => $campos["tx_rif"],
+                "tx_direccion"                 => $campos["tx_direccion"],
+                "co_documento"                 => $campos["co_documento"],
+                "co_tipo_solicitud"            => $campos["co_tipo_solicitud"]
+            ));
+        } else {
+            $this->data = json_encode(array(
+                "co_compromiso_asignacion"     => "",
+                "co_proveedor"                 => "",
+                "tx_descripcion"               => "",
+                "nu_cancelacion"               => "Por Asignar",
+                "fe_compromiso"                => "",
+                "nu_monto"                     => "",
+                "co_solicitud"                 => ""
             ));
         }
     }
@@ -215,7 +264,8 @@ class CompromisoAsignacionActions extends sfActions
         }
     }
 
-    public function executeGuardar(sfWebRequest $request)
+
+    public function executeGuardarCompromiso(sfWebRequest $request)
     {
 
         $codigo = $this->getRequestParameter("co_compromiso_asignacion");
@@ -226,12 +276,9 @@ class CompromisoAsignacionActions extends sfActions
 
         try {
             if ($codigo != '' || $codigo != null) {
-                $tb146_compromiso_asignacion = Tb146CompromisoAsignacionPeer::retrieveByPk($codigo);
-                /*   $tb052_compras         = Tb052ComprasPeer::retrieveByPk($tb146_compromiso_asignacionForm["co_compras"]);*/
+                $tb146_compromiso_asignacion    = Tb146CompromisoAsignacionPeer::retrieveByPk($codigo);
+                $tb052_compras                  = Tb052ComprasPeer::retrieveByPk($tb146_compromiso_asignacionForm["co_compras"]);
             } else {
-
-
-                //$tb053_detalle_compras = new Tb053DetalleCompras();
 
                 $cs = new Criteria();
                 $cs->add(Tb136TipoDocumentoPeer::CO_TIPO_DOCUMENTO, $tb146_compromiso_asignacionForm["co_tipo_solicitud"]);
@@ -239,28 +286,6 @@ class CompromisoAsignacionActions extends sfActions
                 $resp = $stmts->fetch(PDO::FETCH_ASSOC);
 
                 $sigla = $resp["tx_sigla"];
-               
-                $tb026_solicitudForm = array(
-                    "co_tipo_solicitud"   => $tb146_compromiso_asignacionForm["co_tipo_solicitud"],
-                    "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-                    "fe_solicitud"        => date("d/m/Y"),
-                    "observacion"         => $tb146_compromiso_asignacionForm["tx_descripcion"],
-                    "codigo"              => $this->getUser()->getAttribute('codigo')
-                );
-
-                $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
-
-                if ($resp["success"] == true) {
-                    $tb146_compromiso_asignacionForm["co_solicitud"]      = $resp["co_solicitud"];
-                } else {
-                    $this->data = json_encode(array(
-                        "success" => false,
-                        "msg" =>  $resp["msg"]
-                    ));
-
-                    return;
-                }
-
 
                 $cs = new Criteria();
                 $cs->addJoin(Tb136TipoDocumentoPeer::CO_TIPO_DOCUMENTO, Tb027TipoSolicitudPeer::ID_136_TIPO_DOCUMENTO);
@@ -276,59 +301,56 @@ class CompromisoAsignacionActions extends sfActions
                     $serial =  $sigla . '-' . date("Ym")  . '-' .  Tb137ControlSerialPeer::getSerial($resp["co_tipo_documento"], $con, $this->getUser()->getAttribute('ejercicio'));
                 }
 
+                $datos_solicitud = Tb026SolicitudPeer::retrieveByPK($tb146_compromiso_asignacionForm["co_solicitud"]);
+
+                $tb052_compras = new Tb052Compras();
+                $tb052_compras->setTxObservacion($tb146_compromiso_asignacionForm["tx_descripcion"]);
+                $tb052_compras->setCoSolicitud($tb146_compromiso_asignacionForm["co_solicitud"]);
+               // $tb052_compras->setCoEjecutor($tb146_compromiso_asignacionForm["co_ejecutor"]);
+                $tb052_compras->setCoProveedor($datos_solicitud->getCoProveedor());
+                $tb052_compras->setCoTipoSolicitud($datos_solicitud->getCoTipoSolicitud());
+                $tb052_compras->setCoTipoSolicitud($tb146_compromiso_asignacionForm["co_tipo_solicitud"]);
+                $tb052_compras->setTxConcepto($tb146_compromiso_asignacionForm["tx_descripcion"]);
+                $tb052_compras->setAnio($this->getUser()->getAttribute('ejercicio'));
+                $tb052_compras->setNuIva(0);
+                $tb052_compras->setMontoIva(0);
+                $tb052_compras->setMontoSubTotal(0);
+                $tb052_compras->setMontoTotal(0);
+                $tb052_compras->setCoTipoMovimiento(0);
+                $tb052_compras->setNumeroCompra($serial);
+                $tb052_compras->setCoUsuario($this->getUser()->getAttribute('codigo'));
+                $tb052_compras->save($con);
+
+
                 $tb146_compromiso_asignacion = new Tb146CompromisoAsignacion();
-
-                $Tb026Solicitud = Tb026SolicitudPeer::retrieveByPK($tb146_compromiso_asignacionForm["co_solicitud"]);
-                $Tb026Solicitud->setCoTipoSolicitud($tb146_compromiso_asignacionForm["co_tipo_solicitud"]);
-                $Tb026Solicitud->setCoProveedor($tb146_compromiso_asignacionForm["co_proveedor"])->save($con);
-
-                $tb146_compromiso_asignacion->setCoProveedor($tb146_compromiso_asignacionForm["co_proveedor"]);
+                $tb146_compromiso_asignacion->setCoProveedor($datos_solicitud->getCoProveedor());
+                $tb146_compromiso_asignacion->setCoCompras($tb052_compras->getCoCompras());
                 $tb146_compromiso_asignacion->setTxDescripcion($tb146_compromiso_asignacionForm["tx_descripcion"]);
                 $tb146_compromiso_asignacion->setCoUsuario($this->getUser()->getAttribute('codigo'));
 
-                /*list($dia, $mes, $anio) = explode("/", $asignacionForm["fe_compromiso"]);
-                $fecha = $anio . "-" . $mes . "-" . $dia;*/
-                $fecha = date("d-m-Y");
+                list($dia, $mes, $anio) = explode("/", $tb146_compromiso_asignacionForm["fe_compromiso"]);
+                $fecha = $anio . "-" . $mes . "-" . $dia;
                 $tb146_compromiso_asignacion->setFeCompromiso($fecha);
-               
+
                 $tb146_compromiso_asignacion->setCoSolicitud($tb146_compromiso_asignacionForm["co_solicitud"]);
                 $tb146_compromiso_asignacion->save($con);
+
+                //$tb052_compras->setFechaCompra(date("Y-m-d")); 
+                if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
+                    $tb052_compras->setFechaCompra($this->getUser()->getAttribute('fe_cierre'));
+                } else {
+                    $tb052_compras->setFechaCompra($fecha);
+                }
+                
             }
 
             $listaAsignacion  = json_decode($json_asignacion, true);
 
-            
+
 
             foreach ($listaAsignacion  as $asignacionForm) {
 
                 if (empty($asignacionForm["co_detalle_compras"])) {
-
-                    $tb052_compras = new Tb052Compras();
-
-                    $tb052_compras->setCoUsuario($this->getUser()->getAttribute('codigo'));
-                    //$tb052_compras->setFechaCompra(date("Y-m-d")); 
-                    if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
-                        $tb052_compras->setFechaCompra($this->getUser()->getAttribute('fe_cierre'));
-                    } else {
-                        $tb052_compras->setFechaCompra($fecha);
-                    }
-
-
-                    $tb052_compras->setTxObservacion($asignacionForm["tx_descripcion"]);
-                    $tb052_compras->setCoSolicitud($tb146_compromiso_asignacionForm["co_solicitud"]);
-                    $tb052_compras->setCoEjecutor($asignacionForm["co_ejecutor"]);
-                    $tb052_compras->setCoTipoSolicitud($tb146_compromiso_asignacionForm["co_tipo_solicitud"]);
-                    $tb052_compras->setTxConcepto($asignacionForm["tx_descripcion"]);
-                    $tb052_compras->setAnio($this->getUser()->getAttribute('ejercicio'));
-                    $tb052_compras->setNuIva(0);
-                    $tb052_compras->setMontoIva(0);
-                    $tb052_compras->setMontoSubTotal(0);
-                    $tb052_compras->setMontoTotal($asignacionForm["monto"]);
-                    $tb052_compras->setCoTipoMovimiento(0);
-                    $tb052_compras->setNumeroCompra($serial);
-                    $tb052_compras->save($con);
-
-                    //$tb146_compromiso_asignacion->setNuCancelacion($serial);
 
                     $tb053_detalle_compras = new Tb053DetalleCompras();
                     $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
@@ -346,15 +368,16 @@ class CompromisoAsignacionActions extends sfActions
 
             $c = new Criteria();
             $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
-            $c->add(Tb052ComprasPeer::CO_SOLICITUD, $tb146_compromiso_asignacionForm["co_solicitud"]);
+            $c->add(Tb052ComprasPeer::CO_COMPRAS, $tb052_compras->getCoCompras());
             $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
 
             $monto = 0;
             while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $monto+=$reg["monto"];
+                $monto += $reg["monto"];
             }
 
             $tb146_compromiso_asignacion->setNuMonto($monto)->save($con);
+            $tb052_compras->setMontoTotal($monto)->save($con);
 
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb146_compromiso_asignacionForm["co_solicitud"]));
             $ruta->setInCargarDato(true)->save($con);
@@ -368,6 +391,79 @@ class CompromisoAsignacionActions extends sfActions
                 "msg" => 'Modificación realizada exitosamente'
             ));
             $con->commit();
+        } catch (PropelException $e) {
+            $con->rollback();
+            $this->data = json_encode(array(
+                "success" => false,
+                "msg" =>  $e->getMessage()
+            ));
+        }
+
+        $this->setTemplate('guardar');
+    }
+
+    public function executeGuardar(sfWebRequest $request)
+    {
+
+        
+        $tb026_solicitudForm = $this->getRequestParameter('tb026_solicitud');
+        $con = Propel::getConnection();
+        $con->beginTransaction();
+
+        try {
+            if ($tb026_solicitudForm["co_solicitud"] != '') {            
+                $Tb026Solicitud = Tb026SolicitudPeer::retrieveByPk($tb026_solicitudForm["co_solicitud"]);
+            } else {
+
+
+                //$tb053_detalle_compras = new Tb053DetalleCompras();
+
+                $cs = new Criteria();
+                $cs->add(Tb136TipoDocumentoPeer::CO_TIPO_DOCUMENTO, $tb026_solicitudForm["co_tipo_solicitud"]);
+                $stmts = Tb136TipoDocumentoPeer::doSelectStmt($cs);
+                $resp = $stmts->fetch(PDO::FETCH_ASSOC);
+
+                $sigla = $resp["tx_sigla"];
+
+                $datos_solicitud = array(
+                    "co_tipo_solicitud"   => $tb026_solicitudForm["co_tipo_solicitud"],
+                    "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
+                    "fe_solicitud"        => date("d/m/Y"),
+                    "observacion"         => $tb026_solicitudForm["tx_descripcion"],
+                    "codigo"              => $this->getUser()->getAttribute('codigo')
+                );
+
+                $resp = Tb026SolicitudPeer::setSolicitud($datos_solicitud, $con);
+
+                if ($resp["success"] == true) {
+
+                                        
+                    $Tb026Solicitud = Tb026SolicitudPeer::retrieveByPK($resp["co_solicitud"]);
+                    $Tb026Solicitud->setCoProveedor($tb026_solicitudForm["co_proveedor"])->save($con);
+
+                    $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($resp["co_solicitud"]));
+                    $ruta->setInCargarDato(true)->save($con);
+                } else {
+                    $this->data = json_encode(array(
+                        "success"       => false,
+                        "co_solicitud"  => $resp["co_solicitud"],
+                        "msg"           =>  $resp["msg"]
+                    ));
+
+                    return;
+                }              
+
+            }
+            $con->commit();
+            Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
+
+            $this->data = json_encode(array(
+                "success" => true,
+                "co_solicitud" => $resp["co_solicitud"],
+                "msg" => 'Registro guardado exitosamente'
+            ));
+            $con->commit();
+
         } catch (PropelException $e) {
             $con->rollback();
             $this->data = json_encode(array(
@@ -507,8 +603,8 @@ class CompromisoAsignacionActions extends sfActions
         $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);
         //  $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
         $c->addSelectColumn(Tb026SolicitudPeer::TX_OBSERVACION);
-       // $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
-      //  $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
+        // $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
+        //  $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
@@ -522,7 +618,7 @@ class CompromisoAsignacionActions extends sfActions
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD,  Criteria::JOIN);
         $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO,   Criteria::JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
-      //  $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD,  Criteria::JOIN);
+        //  $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD,  Criteria::JOIN);
 
         $c->addAnd(Tb027TipoSolicitudPeer::CO_PROCESO, 68);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
@@ -612,10 +708,10 @@ class CompromisoAsignacionActions extends sfActions
         $this->setTemplate('store');
     }
 
-    public function executeStorefkasignacion(sfWebRequest $request)
+    public function executeStorefkcompromiso(sfWebRequest $request)
     {
 
-        $co_solicitud = $this->getRequestParameter("co_solicitud");
+        $co_compras = $this->getRequestParameter("co_compras");
 
         $c = new Criteria();
         $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
@@ -628,8 +724,8 @@ class CompromisoAsignacionActions extends sfActions
         $c->addSelectColumn(Tb083ProyectoAcPeer::DE_PROYECTO_AC);
         $c->addSelectColumn(Tb085PresupuestoPeer::NU_PARTIDA);
         $c->addSelectColumn(Tb085PresupuestoPeer::DE_PARTIDA);
-        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS,Tb053DetalleComprasPeer::CO_COMPRAS);
-        $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
+        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
+        $c->add(Tb052ComprasPeer::CO_COMPRAS, $co_compras);
         $c->addJoin(Tb053DetalleComprasPeer::CO_PRESUPUESTO, Tb085PresupuestoPeer::ID);
         $c->addJoin(Tb085PresupuestoPeer::ID_TB084_ACCION_ESPECIFICA, Tb084AccionEspecificaPeer::ID);
         $c->addJoin(Tb084AccionEspecificaPeer::ID_TB083_PROYECTO_AC, Tb083ProyectoAcPeer::ID);
@@ -654,7 +750,39 @@ class CompromisoAsignacionActions extends sfActions
         $this->setTemplate('store');
     }
 
-    public function executeEliminarAsignacion(sfWebRequest $request)
+    public function executeStorefkasignacion(sfWebRequest $request)
+    {
+
+        $co_solicitud = $this->getRequestParameter("co_solicitud");
+
+        $c = new Criteria();
+        $c->addSelectColumn(Tb052ComprasPeer::CO_COMPRAS);
+        $c->addSelectColumn(Tb052ComprasPeer::TX_OBSERVACION);
+        $c->addSelectColumn(Tb052ComprasPeer::FECHA_COMPRA);
+        $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
+        $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
+        $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
+        $stmt = Tb052ComprasPeer::doSelectStmt($c);
+        $registros = array();
+        while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $registros[] = array(
+                "co_compras"     => trim($reg["co_compras"]),
+                "tx_observacion" => trim($reg["tx_observacion"]),
+                "fecha_compra"   => trim($reg["fecha_compra"]),
+                "numero_compra"  => trim($reg["numero_compra"]),
+                "monto_total"    => trim($reg["monto_total"]),
+            );
+        }
+        $this->data = json_encode(array(
+            "success"   =>  true,
+            "total"     =>  count($registros),
+            "data"      =>  $registros
+        ));
+
+        $this->setTemplate('store');
+    }
+
+   /* public function executeEliminarCompromiso(sfWebRequest $request)
     {
 
         $codigo = $this->getRequestParameter("co_detalle_compras");
@@ -663,10 +791,10 @@ class CompromisoAsignacionActions extends sfActions
         try {
             $con->beginTransaction();
             /*CAMPOS*/
-           $Tb053DetalleCompra = Tb053DetalleComprasPeer::retrieveByPk($codigo);
-       /*      Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $Tb053DetalleCompra->getCoPresupuesto(), 4, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
+          //  $Tb053DetalleCompra = Tb053DetalleComprasPeer::retrieveByPk($codigo);
+            /*      Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $Tb053DetalleCompra->getCoPresupuesto(), 4, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
             Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $Tb053DetalleCompra->getCoPresupuesto(), 13, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
-        */
+        
             $co_compras = $Tb053DetalleCompra->getCoCompras();
             $Tb053DetalleCompra->delete($con);
 
@@ -679,7 +807,65 @@ class CompromisoAsignacionActions extends sfActions
             $c->add(Tb052ComprasPeer::CO_SOLICITUD,  $co_solicitud);
             $cant = Tb052ComprasPeer::doCount($c);
 
-           // $Tb052Compra = Tb052ComprasPeer::retrieveByPk($co_compras);
+            // $Tb052Compra = Tb052ComprasPeer::retrieveByPk($co_compras);
+
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
+
+            if ($cant > 0) {
+                $ruta->setInCargarDato(true)->save($con);
+            } else {
+                $ruta->setInCargarDato(false)->save($con);
+            }
+
+
+            $this->data = json_encode(array(
+                "success" => true,
+                "msg" => 'Registro Borrado con exito!'
+            ));
+
+
+            $con->commit();
+        } catch (PropelException $e) {
+            $con->rollback();
+            $this->data = json_encode(array(
+                "success" => false,
+                //		    "msg" =>  $e->getMessage()
+                "msg" => 'Este registro no se puede borrar'
+            ));
+        }
+
+        $this->setTemplate('eliminar');
+    }*/
+
+    public function executeEliminarAsignacion(sfWebRequest $request)
+    {
+
+        $codigo = $this->getRequestParameter("co_compras");
+
+        $con = Propel::getConnection();
+        try {
+            $con->beginTransaction();
+
+            $datos_compra = Tb052ComprasPeer::retrieveByPK($codigo);
+            $co_solicitud = $datos_compra->getCoSolicitud();
+           
+            $wheredc = new Criteria();
+            $wheredc->add(Tb053DetalleComprasPeer::CO_COMPRAS,$codigo, Criteria::EQUAL);
+            BasePeer::doDelete($wheredc, $con);
+
+            $wherecc = new Criteria();
+            $wherecc->add(Tb146CompromisoAsignacionPeer::CO_COMPRAS,$codigo, Criteria::EQUAL);
+            BasePeer::doDelete($wherecc, $con);
+
+            $wherec = new Criteria();
+            $wherec->add(Tb052ComprasPeer::CO_COMPRAS,$codigo, Criteria::EQUAL);
+            BasePeer::doDelete($wherec, $con);
+
+            $c = new Criteria();
+            $c->add(Tb052ComprasPeer::CO_SOLICITUD,  $co_solicitud);
+            $cant = Tb052ComprasPeer::doCount($c);
+
+            // $Tb052Compra = Tb052ComprasPeer::retrieveByPk($co_compras);
 
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
 
