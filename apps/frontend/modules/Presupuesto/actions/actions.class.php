@@ -142,8 +142,9 @@ class PresupuestoActions extends sfActions
         $c->addSelectColumn(Tb026SolicitudPeer::FE_REGISTRO);
         $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);
         //  $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
-        $c->addSelectColumn(Tb052ComprasPeer::TX_CONCEPTO);
-        $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
+    //    $c->addSelectColumn(Tb052ComprasPeer::TX_CONCEPTO);
+     //   $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
+        $c->addSelectColumn(Tb026SolicitudPeer::TX_OBSERVACION);
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
@@ -158,7 +159,7 @@ class PresupuestoActions extends sfActions
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD,  Criteria::JOIN);
         $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO,   Criteria::JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD,  Criteria::LEFT_JOIN);
+      //  $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD,  Criteria::LEFT_JOIN);
 
 
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, 10);
@@ -191,7 +192,7 @@ class PresupuestoActions extends sfActions
             list($anio, $mes, $dia) = explode('-', $res["fe_registro"]);
             $registros[] = array(
                 "tx_proceso"        => trim($res["tx_proceso"]),
-                "tx_concepto"       => strtoupper(trim($res["tx_concepto"])),
+                "tx_concepto"       => strtoupper(trim($res["tx_observacion"])),
                 "co_proceso"        => trim($res["co_proceso"]),
                 "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
                 "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
