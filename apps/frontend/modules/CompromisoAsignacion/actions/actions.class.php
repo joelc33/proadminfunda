@@ -280,12 +280,8 @@ class CompromisoAsignacionActions extends sfActions
                 $tb052_compras                  = Tb052ComprasPeer::retrieveByPk($tb146_compromiso_asignacionForm["co_compras"]);
             } else {
 
-                $cs = new Criteria();
-                $cs->add(Tb136TipoDocumentoPeer::CO_TIPO_DOCUMENTO, $tb146_compromiso_asignacionForm["co_tipo_solicitud"]);
-                $stmts = Tb136TipoDocumentoPeer::doSelectStmt($cs);
-                $resp = $stmts->fetch(PDO::FETCH_ASSOC);
-
-                $sigla = $resp["tx_sigla"];
+                $datos_solicitud = Tb026SolicitudPeer::retrieveByPK($tb146_compromiso_asignacionForm["co_solicitud"]);
+                $tb146_compromiso_asignacionForm["co_tipo_solicitud"] = $datos_solicitud->getCoTipoSolicitud();
 
                 $cs = new Criteria();
                 $cs->addJoin(Tb136TipoDocumentoPeer::CO_TIPO_DOCUMENTO, Tb027TipoSolicitudPeer::ID_136_TIPO_DOCUMENTO);
