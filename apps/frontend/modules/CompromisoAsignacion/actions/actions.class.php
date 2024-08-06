@@ -295,10 +295,13 @@ class CompromisoAsignacionActions extends sfActions
 
                 $sigla = $resp["tx_sigla"];
 
+                list($dia, $mes, $anio) = explode("/", $tb146_compromiso_asignacionForm["fe_compromiso"]);
+                $fecha = $anio . "-" . $mes . "-" . $dia;
+
                 if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
                     $serial = $sigla . '-' . date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial($resp["co_tipo_documento"], $con, $this->getUser()->getAttribute('ejercicio'));
                 } else {
-                    $serial =  $sigla . '-' . date("Ym")  . '-' .  Tb137ControlSerialPeer::getSerial($resp["co_tipo_documento"], $con, $this->getUser()->getAttribute('ejercicio'));
+                    $serial =  $sigla . '-' . $anio.$mes  . '-' .  Tb137ControlSerialPeer::getSerial($resp["co_tipo_documento"], $con, $this->getUser()->getAttribute('ejercicio'));
                 }
 
                 $datos_solicitud = Tb026SolicitudPeer::retrieveByPK($tb146_compromiso_asignacionForm["co_solicitud"]);
@@ -328,10 +331,10 @@ class CompromisoAsignacionActions extends sfActions
                 $tb146_compromiso_asignacion->setTxDescripcion($tb146_compromiso_asignacionForm["tx_descripcion"]);
                 $tb146_compromiso_asignacion->setCoUsuario($this->getUser()->getAttribute('codigo'));
 
-                list($dia, $mes, $anio) = explode("/", $tb146_compromiso_asignacionForm["fe_compromiso"]);
-                $fecha = $anio . "-" . $mes . "-" . $dia;
-                $tb146_compromiso_asignacion->setFeCompromiso($fecha);
+                
 
+
+                $tb146_compromiso_asignacion->setFeCompromiso($fecha);
                 $tb146_compromiso_asignacion->setCoSolicitud($tb146_compromiso_asignacionForm["co_solicitud"]);
                 $tb146_compromiso_asignacion->save($con);
 
