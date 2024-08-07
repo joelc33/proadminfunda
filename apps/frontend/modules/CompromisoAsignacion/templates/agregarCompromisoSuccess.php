@@ -132,6 +132,10 @@
                     this.msg = Ext.get('formularioAgregar');
                     this.msg.load({
                         url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/agregarAsignacion',
+                        params:{
+                            co_compras: agregarCompromiso.main.OBJ.co_compras,
+                            tx_descripcion: agregarCompromiso.main.tx_descripcion.getValue()
+                        },
                         scripts: true,
                         text: "Cargando.."
                     });
@@ -236,8 +240,14 @@
 
                         agregarCompromiso.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(agregarCompromiso.main.total) + "</b></span>");
                         agregarCompromiso.main.mo_total.setValue(agregarCompromiso.main.total);
+
+
                     }
                 });
+
+            } else {
+
+                this.fieldDatosPartida.hide();
             }
 
             this.guardar = new Ext.Button({
@@ -255,13 +265,13 @@
                          return false;
                      }*/
 
-                    var lista_asignacion = paqueteComunJS.funcion.getJsonByObjStore({
-                        store: agregarCompromiso.main.gridPanel.getStore()
-                    });
+                    /* var lista_asignacion = paqueteComunJS.funcion.getJsonByObjStore({
+                         store: agregarCompromiso.main.gridPanel.getStore()
+                     });
 
-                    agregarCompromiso.main.hiddenJsonAsignacion.setValue(lista_asignacion);
+                     agregarCompromiso.main.hiddenJsonAsignacion.setValue(lista_asignacion);*/
 
-                    agregarCompromiso.main.formPanel_.getForm().submit({
+                     agregarCompromiso.main.formPanel_.getForm().submit({
                         method: 'POST',
                         url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/guardarCompromiso',
                         waitMsg: 'Enviando datos, por favor espere..',
@@ -297,8 +307,24 @@
                                     CompromisoAsignacionEditar.main.botonEliminar.disable();
                                 }
                             });
+
                             agregarCompromiso.main.winformPanel_.close();
 
+                            if (agregarCompromiso.main.OBJ.co_compras == '') {
+
+                                agregarCompromiso.main.co_compras = action.result.co_compras;
+
+                                solicitudLista.main.msg = Ext.get('formularioAgregar');
+                                solicitudLista.main.msg.load({
+                                    url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/agregarCompromiso",
+                                    scripts: true,
+                                    text: "Cargando..",
+                                    params: {
+                                        co_compras: agregarCompromiso.main.co_compras
+                                    }
+                                });
+
+                            }
                         }
                     });
 

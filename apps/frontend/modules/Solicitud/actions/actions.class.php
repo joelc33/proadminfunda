@@ -462,7 +462,7 @@ class SolicitudActions extends sfActions
                 $datos_solicitud = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
 
                 //compromisos de asignacion (pagos sin facturas)
-                if ($datos_solicitud->getCoProceso() == 68) {
+               /* if ($datos_solicitud->getCoProceso() == 68) {
 
                     $c = new Criteria();
                     $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
@@ -473,7 +473,7 @@ class SolicitudActions extends sfActions
                         Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $reg["co_presupuesto"], 1, $reg["monto"], '', $reg["co_detalle_compras"]);
                         Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $reg["co_presupuesto"], 2, $reg["monto"], '', $reg["co_detalle_compras"]);
                     }
-                }
+                }*/
             }
 
             $con->commit();

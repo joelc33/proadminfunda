@@ -3,6 +3,10 @@
     listaAsignacion.main = {
         init: function() {
 
+            this.OBJ = paqueteComunJS.funcion.doJSON({
+                stringData: '<?php echo $data ?>'
+            });
+
             this.storeCO_PARTIDA = this.getStoreCO_PARTIDA();
             this.storeCO_PROYECTO = this.getStoreCO_PROYECTO();
             this.storeCO_ACCION = this.getStoreCO_ACCION();
@@ -13,7 +17,17 @@
                 value: 0
             });
 
-           
+            this.co_compras = new Ext.form.Hidden({
+                name: 'partida[co_compras]',
+                value: this.OBJ.co_compras
+            });
+
+            this.tx_descripcion = new Ext.form.Hidden({
+                name: 'partida[tx_descripcion]',
+                value: this.OBJ.tx_descripcion
+            });
+
+
 
             this.co_ejecutor = new Ext.form.ComboBox({
                 fieldLabel: 'Ente Ejecutor',
@@ -22,7 +36,7 @@
                 valueField: 'id',
                 id: 'co_ejecutor',
                 displayField: 'ejecutor',
-                hiddenName: 'tb146_compromiso_asignacion[co_ejecutor]',
+                hiddenName: 'partida[co_ejecutor]',
                 forceSelection: true,
                 resizable: true,
                 triggerAction: 'all',
@@ -50,7 +64,7 @@
                 valueField: 'id',
                 id: 'co_proyecto',
                 displayField: 'de_proyecto_ac',
-                hiddenName: 'tb146_compromiso_asignacion[co_proyecto]',
+                hiddenName: 'partida[co_proyecto]',
                 forceSelection: true,
                 resizable: true,
                 triggerAction: 'all',
@@ -77,7 +91,7 @@
                 valueField: 'id',
                 id: 'co_accion',
                 displayField: 'accion_especifica',
-                hiddenName: 'tb146_compromiso_asignacion[co_accion]',
+                hiddenName: 'partida[co_accion]',
                 forceSelection: true,
                 resizable: true,
                 triggerAction: 'all',
@@ -100,7 +114,7 @@
                 typeAhead: true,
                 valueField: 'id',
                 displayField: 'de_partida',
-                hiddenName: 'tb146_compromiso_asignacion[co_presupuesto]',
+                hiddenName: 'partida[co_presupuesto]',
                 forceSelection: true,
                 resizable: true,
                 triggerAction: 'all',
@@ -117,7 +131,7 @@
 
             this.mo_disponible = new Ext.form.TextField({
                 fieldLabel: 'Monto Disponible',
-                name: 'mo_disponible',
+                name: 'partida[mo_disponible]',
                 readOnly: true,
                 style: 'background:#c9c9c9;',
                 width: 500
@@ -125,7 +139,7 @@
 
             this.mo_pagar = new Ext.form.TextField({
                 fieldLabel: 'Monto Asigancion',
-                name: 'mo_pagar',
+                name: 'partida[mo_pagar]',
                 width: 500
             });
 
@@ -144,35 +158,75 @@
                         return false;
                     }
 
-                    var e = new agregarCompromiso.main.Registro({
-                        co_detalle_compras: '',
-                        co_ejecutor: listaAsignacion.main.co_ejecutor.getValue(),
-                        tx_ejecutor: listaAsignacion.main.co_ejecutor.lastSelectionText,
-                        co_proyecto: listaAsignacion.main.co_proyecto.getValue(),
-                        tx_proyecto: listaAsignacion.main.co_proyecto.lastSelectionText,
-                        co_accion: listaAsignacion.main.co_accion.getValue(),
-                        tx_accion: listaAsignacion.main.co_accion.lastSelectionText,
-                        co_partida: listaAsignacion.main.co_partida.getValue(),
-                        tx_partida: listaAsignacion.main.co_partida.lastSelectionText,
-                        monto: listaAsignacion.main.mo_pagar.getValue()
+                    /*  var e = new agregarCompromiso.main.Registro({
+                          co_detalle_compras: '',
+                          co_ejecutor: listaAsignacion.main.co_ejecutor.getValue(),
+                          tx_ejecutor: listaAsignacion.main.co_ejecutor.lastSelectionText,
+                          co_proyecto: listaAsignacion.main.co_proyecto.getValue(),
+                          tx_proyecto: listaAsignacion.main.co_proyecto.lastSelectionText,
+                          co_accion: listaAsignacion.main.co_accion.getValue(),
+                          tx_accion: listaAsignacion.main.co_accion.lastSelectionText,
+                          co_partida: listaAsignacion.main.co_partida.getValue(),
+                          tx_partida: listaAsignacion.main.co_partida.lastSelectionText,
+                          monto: listaAsignacion.main.mo_pagar.getValue()
+                      });
+
+                      var cant = agregarCompromiso.main.store_lista.getCount();
+                      (cant == 0) ? 0: agregarCompromiso.main.store_lista.getCount() + 1;
+                      agregarCompromiso.main.store_lista.insert(cant, e);
+
+                      agregarCompromiso.main.gridPanel.getView().refresh();
+
+                      agregarCompromiso.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
+                          store: agregarCompromiso.main.store_lista,
+                          campo: 'monto'
+                      });
+
+                      agregarCompromiso.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(agregarCompromiso.main.total) + "</b></span>");
+                      agregarCompromiso.main.mo_total.setValue(agregarCompromiso.main.total);
+
+                      Ext.utiles.msg('Mensaje', "La Asignacion se agrego exitosamente");
+                      listaAsignacion.main.winformPanel_.close();*/
+
+
+                    listaAsignacion.main.formPanel_.getForm().submit({
+                        method: 'POST',
+                        url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/guardarPartidaAsignacion',
+                        waitMsg: 'Enviando datos, por favor espere..',
+                        waitTitle: 'Enviando',
+                        failure: function(form, action) {
+                            Ext.MessageBox.alert('Error en transacción', action.result.msg);
+                        },
+                        success: function(form, action) {
+                            if (action.result.success) {
+                                Ext.MessageBox.show({
+                                    title: 'Mensaje',
+                                    msg: action.result.msg,
+                                    closable: false,
+                                    icon: Ext.MessageBox.INFO,
+                                    resizable: false,
+                                    animEl: document.body,
+                                    buttons: Ext.MessageBox.OK
+                                });
+                            }
+                            agregarCompromiso.main.store_lista.baseParams.co_compras = listaAsignacion.main.OBJ.co_compras;
+                            agregarCompromiso.main.store_lista.load({
+                                callback: function() {
+                                    agregarCompromiso.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
+                                        store: agregarCompromiso.main.store_lista,
+                                        campo: 'monto'
+                                    });
+
+                                    agregarCompromiso.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(agregarCompromiso.main.total) + "</b></span>");
+                                    agregarCompromiso.main.mo_total.setValue(agregarCompromiso.main.total);
+
+
+                                }
+                            });
+                            listaAsignacion.main.winformPanel_.close();
+                        }
                     });
 
-                    var cant = agregarCompromiso.main.store_lista.getCount();
-                    (cant == 0) ? 0: agregarCompromiso.main.store_lista.getCount() + 1;
-                    agregarCompromiso.main.store_lista.insert(cant, e);
-
-                    agregarCompromiso.main.gridPanel.getView().refresh();
-
-                    agregarCompromiso.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
-                        store: agregarCompromiso.main.store_lista,
-                        campo: 'monto'
-                    });
-
-                    agregarCompromiso.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(agregarCompromiso.main.total) + "</b></span>");
-                    agregarCompromiso.main.mo_total.setValue(agregarCompromiso.main.total);
-
-                    Ext.utiles.msg('Mensaje', "La Asignacion se agrego exitosamente");
-                    listaAsignacion.main.winformPanel_.close();
 
                 }
             });
@@ -197,7 +251,9 @@
                     this.co_accion,
                     this.co_partida,
                     this.mo_disponible,
-                    this.mo_pagar
+                    this.mo_pagar,
+                    this.co_compras,
+                    this.tx_descripcion
                 ]
             });
 
