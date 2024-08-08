@@ -74,7 +74,7 @@ class PDF extends FPDF {
         $this->SetAligns(array("C","C","C","C","C","C","C","C","C","C"));       
         $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
         $this->Row(array('Decreto','Fecha','Monto','Fuente','Partida','Modificado','Aprobado','Comprometido','Pagado','Disponibilidad'),0,0);
-        $this->Line(10, 52, 380, 52);                  
+   //     $this->Line(10, 52, 380, 52);                  
         $this->SetAligns(array("C","C","R","L","L","R","R","R","R","R"));                
 
         $campo='';
