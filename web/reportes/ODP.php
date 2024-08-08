@@ -403,7 +403,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->SetX(10);
                     //  $this->Row(array($this->datos[0]['tx_documento_odp'], '', date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), utf8_decode($this->datos[0]['tx_observacion']),  number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
                     foreach ($this->datos as $k => $data) {
-                        $this->Row(array($data['numero_compra'], '', date("d/m/Y", strtotime($data['fe_pago'])), utf8_decode($data['tx_observacion']),  number_format($data['monto_total'], 2, ',', '.'), '', '0.00', number_format($data['monto_total'], 2, ',', '.')), 0, 0);
+                        $this->Row(array($data['tx_documento_odp'], '', date("d/m/Y", strtotime($data['fe_pago'])), utf8_decode($data['tx_observacion']),  number_format($data['monto_total'], 2, ',', '.'), '', '0.00', number_format($data['monto_total'], 2, ',', '.')), 0, 0);
                     }
 
                     $j++;
