@@ -647,7 +647,7 @@ class PDF_Flo extends PDF_FlowingBlock
                             $this->SetAligns(array("C", "C", "L", "R", "L", "R", "R"));
                             $this->SetWidths(array(20, 25, 44, 25, 25, 30, 31));
                             $this->SetX(10);
-                            $this->Row(array('Fact-' . $valor['nu_factura'], date("d/m/Y", strtotime($valor['fecha_odp'])), $valor['tx_concepto'], number_format($valor['nu_total'], 2, ',', '.'), utf8_decode('RETENCIÓN I.V.A'), number_format($valor['nu_iva_retencion'], 2, ',', '.'), number_format($valor['total_pagar'], 2, ',', '.')), 0, 0);
+                            $this->Row(array('Fact-' . $valor['nu_factura'], date("d/m/Y", strtotime($valor['fecha_odp'])), $valor['tx_concepto'], number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($valor['total_pagar'], 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
                             $this->SetX(124);
