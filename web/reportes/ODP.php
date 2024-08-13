@@ -402,8 +402,12 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->SetY($Y);
                     $this->SetX(10);
                     //  $this->Row(array($this->datos[0]['tx_documento_odp'], '', date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), utf8_decode($this->datos[0]['tx_observacion']),  number_format($valores['nu_monto'], 2, ',', '.'), '', '0.00', number_format($valores['nu_monto'], 2, ',', '.')), 0, 0);
+                    $cont = 0;
                     foreach ($this->datos as $k => $data) {
-                        $this->Row(array($data['tx_documento_odp'], '', date("d/m/Y", strtotime($data['fe_pago'])), utf8_decode($data['tx_observacion']),  number_format($data['monto_total'], 2, ',', '.'), '', '0.00', number_format($data['monto_total'], 2, ',', '.')), 0, 0);
+                        if ($cont < 5) {
+                            $this->Row(array($data['tx_documento_odp'], '', date("d/m/Y", strtotime($data['fe_pago'])), utf8_decode($data['tx_observacion']),  number_format($data['monto_total'], 2, ',', '.'), '', '0.00', number_format($data['monto_total'], 2, ',', '.')), 0, 0);
+                            $cont++;
+                        }
                     }
 
                     $j++;
@@ -599,10 +603,14 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->SetX(40);
                     $this->SetY(20);
                     $this->SetFont('courier', 'B', 10);
-                    $this->SetX(145);
+                    $this->SetX(155);
                     $this->SetFillColor(255, 255, 255);
-                    if ($this->datos[0]['tx_serial']) $nu_pago = $valor['tx_serial'];
-                    else $nu_pago = $valor['co_odp'];
+                    
+                    if ($this->datos[0]['tx_serial']) 
+                        $nu_pago = $valor['tx_serial'];
+                    else 
+                        $nu_pago = $valor['co_odp'];
+                    
                     $this->MultiCell(175, 20, 'ANEXOS ' . $nu_pago, 0, 1, 'J', 0);
                     $this->SetX(155); //COLUMNA
                     $this->SetFont('courier', '', 6);
@@ -618,7 +626,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->SetFont('courier', 'B', 8);
                     $this->Row(array(utf8_decode('DOCUMENTOS Y RETENCIONES')), 1, 1);
 
-                    $this->SetFillColor(255, 255, 255);
+                    /* $this->SetFillColor(255, 255, 255);
                     $this->SetAligns(array("L", "L"));
                     $this->SetWidths(array(40, 160));
                     $this->SetFont('courier', '', 6);
@@ -629,12 +637,24 @@ class PDF_Flo extends PDF_FlowingBlock
                     $Y = $this->GetY();
                     //$this->MultiCell(200,45,'',1,1,'L',1);
                     $this->SetY($Y);
-                    $this->SetAligns(array("C", "C", "L", "R", "L", "R", "R"));
+                    $this->SetAligns(array("C", "C", "L", "R", "L", "R", "R"));*/
+
+                    $this->SetFont('Times', 'B', 6);
+                    $this->SetFillColor(255, 255, 255);
+                    $this->SetAligns(array("C", "C", "C", "C", "C", "C", "C", "C"));
+                    $this->SetWidths(array(25, 25, 15, 43, 20, 25, 20, 27));
+                    $this->SetFont('Times', '', 8);
+                    $Y = $this->GetY();
+                    $this->SetY($Y);
+                    $this->SetX(10);
+                    $this->Row(array('DOCUM.', 'SOPORTE', 'FECHA', 'DESCRIPCION', 'TOTAL', 'RETENCIONES', 'MONTO', 'CANCELADO'), 1, 1);
                 }
 
                 $i++;
-            } elseif ($i > 1) { // Varias
+              
+            } elseif ($i == 2) { // Varias
 
+                $this->SetAligns(array("C", "C", "C", "L", "R", "L", "R", "R"));
                 $campo1 = '';
                 $this->lista_retenciones = $this->getRetenciones($valor['co_factura']);
                 $monto = 0;
@@ -658,12 +678,22 @@ class PDF_Flo extends PDF_FlowingBlock
                         $monto = $monto + $campo1['mo_retencion'];
                     }
                 } else {
-                    $Y = $this->GetY();
+                    /*$Y = $this->GetY();
                     //$this->MultiCell(200,50,'',0,0,'L',0);
                     $this->SetY($Y);
                     $this->SetAligns(array("C", "C", "L", "R", "L", "R", "R"));
                     //$this->SetX(10);
                     //   $this->Row(array('Fact-' . $valor['nu_factura'], date("d/m/Y", strtotime($valor['fecha_odp'])), $valor['tx_concepto'], number_format($valor['nu_total'], 2, ',', '.'), '', '', number_format($valor['total_pagar'], 2, ',', '.')), 0, 0);
+                    $j++;*/
+                    $cont = 0;
+
+
+                    foreach ($this->datos as $k => $data) {
+                        if ($cont >= 5) {
+                            $this->Row(array($data['tx_documento_odp'], '', date("d/m/Y", strtotime($data['fe_pago'])), utf8_decode($data['tx_observacion']),  number_format($data['monto_total'], 2, ',', '.'), '', '0.00', number_format($data['monto_total'], 2, ',', '.')), 0, 0);
+                        }
+                        $cont++;
+                    }
                     $j++;
                 }
 
@@ -695,6 +725,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $total_retencion = $total_retencion + $monto;
             $total_cancelado = $total - $total_retencion;
         }
+
 
         if (count($this->datos) > 1) {
             /*  $y = $this->getY();
@@ -893,7 +924,7 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb052.co_solicitud,
                          tb060.tx_serial,
                          tb060.co_orden_pago as co_odp,
-                         tb060.tx_documento_odp,
+                         case when tb052.numero_compra is null then tb060.tx_documento_odp else tb052.numero_compra end tx_documento_odp,
                          case when tb026.co_tipo_solicitud in (32,34) then (tb008.nb_representante_legal||'  C.I. '||tb008.nu_cedula_representante) else
                          '' end as rep,
                          tb060.co_tipo_odp,
@@ -1113,7 +1144,7 @@ class PDF_Flo extends PDF_FlowingBlock
         return  $datosSol[0];
     }
 }
-
+/*
 
 $pdf=new PDF_Flo('P','mm','letter');
 $pdf->AliasNbPages();
@@ -1134,11 +1165,10 @@ $update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".
 $comm->Execute($update);    
 $pdf->SetMargins(0, 0);
 $pdf->Output($dir, 'F');
+*/
 
-/*
 $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetMargins(0, 0);
 $pdf->SetDisplayMode('default');
 $pdf->Output();
-*/
