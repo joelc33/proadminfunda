@@ -10,7 +10,7 @@ class Tb024CuentaContablePeer extends BaseTb024CuentaContablePeer
         $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRESUPUESTO);
         $c->addJoin(Tb085PresupuestoPeer::ID, Tb053DetalleComprasPeer::CO_PRESUPUESTO);
         $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
-        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA);
+//        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA);
         
         if($co_producto!='')
           $c->add(Tb053DetalleComprasPeer::CO_PRODUCTO,$co_producto);
@@ -19,7 +19,8 @@ class Tb024CuentaContablePeer extends BaseTb024CuentaContablePeer
         }
 
 
-        $c->add(Tb045FacturaPeer::CO_SOLICITUD,$co_solicitud);
+//        $c->add(Tb045FacturaPeer::CO_SOLICITUD,$co_solicitud);
+        $c->add(Tb052ComprasPeer::CO_SOLICITUD,$co_solicitud);
         $stmt = Tb085PresupuestoPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
