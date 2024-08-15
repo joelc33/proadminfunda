@@ -507,7 +507,7 @@ class TransferenciaCuentaActions extends sfActions
                 $tb155_cuenta_bancaria_historico->setIdTb010Banco($tb066_transferencia_cuenta->getCoBancoDebito());
                 $tb155_cuenta_bancaria_historico->setIdTb154TipoCuentaMovimiento(3);
                 $tb155_cuenta_bancaria_historico->setIdTb153TipoDocumentoCuenta(3);
-                $tb155_cuenta_bancaria_historico->setIdTb156SubtipoDocumento(20);
+                $tb155_cuenta_bancaria_historico->setIdTb156SubtipoDocumento(1);
                 $tb155_cuenta_bancaria_historico->setMoSaldoNuevo($tb011_transferencia_debito->getMoDisponible() - $mo_debitar);
                 $tb155_cuenta_bancaria_historico->setMoSaldoAnterior($tb011_transferencia_debito->getMoDisponible());
                 $tb155_cuenta_bancaria_historico->setNuTransaccion('OT-' . $nu_transaccion);
@@ -529,7 +529,7 @@ class TransferenciaCuentaActions extends sfActions
                 $tb155_cuenta_bancaria_historico_credito->setIdTb010Banco($tb066_transferencia_cuenta->getCoBancoCredito());
                 $tb155_cuenta_bancaria_historico_credito->setIdTb154TipoCuentaMovimiento(6);
                 $tb155_cuenta_bancaria_historico_credito->setIdTb153TipoDocumentoCuenta(2);
-                $tb155_cuenta_bancaria_historico_credito->setIdTb156SubtipoDocumento(20);
+                $tb155_cuenta_bancaria_historico_credito->setIdTb156SubtipoDocumento(1);
                 $tb155_cuenta_bancaria_historico_credito->setMoSaldoNuevo($tb011_transferencia_credito->getMoDisponible() + $mo_debitar);
                 $tb155_cuenta_bancaria_historico_credito->setMoSaldoAnterior($tb011_transferencia_credito->getMoDisponible());
                 $tb155_cuenta_bancaria_historico_credito->setNuTransaccion('OT-' . $nu_transaccion);
