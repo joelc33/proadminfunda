@@ -190,45 +190,45 @@ class CuentaPorCobrarCreditoActions extends sfActions
                                   ->save($con);  
                     
                     
-                    $tb061_asiento_contable2 = new Tb061AsientoContable();
-                    $tb061_asiento_contable2->setMoDebe($tb142_cuenta_cobrarForm["mo_cuenta"])
-                                  ->setCoCuentaContable(60652)
-                                  ->setCoSolicitud($tb142_cuenta_cobrarForm["co_solicitud"])
-                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                                  ->setCreatedAt($fe_documento)
-                                  ->setCoTipoAsiento(12)
-                                  ->setInActivo(true)
-                                  ->save($con);        
-                    
-                    $tb061_asiento_contable2 = new Tb061AsientoContable();
-                    $tb061_asiento_contable2->setMoHaber($tb142_cuenta_cobrarForm["mo_cuenta"])
-                                  ->setCoCuentaContable(122224)
-                                  ->setCoSolicitud($tb142_cuenta_cobrarForm["co_solicitud"])
-                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                                  ->setCreatedAt($fe_documento)
-                                  ->setCoTipoAsiento(12)
-                                  ->setInActivo(true)
-                                  ->save($con);      
-                    
-                    $tb061_asiento_contable3 = new Tb061AsientoContable();
-                    $tb061_asiento_contable3->setMoDebe($tb142_cuenta_cobrarForm["mo_cuenta"])
-                                  ->setCoCuentaContable(122224)
-                                  ->setCoSolicitud($tb142_cuenta_cobrarForm["co_solicitud"])
-                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                                  ->setCreatedAt($fe_documento)
-                                  ->setCoTipoAsiento(12)
-                                  ->setInActivo(true)
-                                  ->save($con);        
-                    
-                    $tb061_asiento_contable3 = new Tb061AsientoContable();
-                    $tb061_asiento_contable3->setMoHaber($tb142_cuenta_cobrarForm["mo_cuenta"])
-                                  ->setCoCuentaContable($campos6["co_cuenta_contable"])
-                                  ->setCoSolicitud($tb142_cuenta_cobrarForm["co_solicitud"])
-                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                                  ->setCreatedAt($fe_documento)
-                                  ->setCoTipoAsiento(12)
-                                  ->setInActivo(true)
-                                  ->save($con);                       
+//                    $tb061_asiento_contable2 = new Tb061AsientoContable();
+//                    $tb061_asiento_contable2->setMoDebe($tb142_cuenta_cobrarForm["mo_cuenta"])
+//                                  ->setCoCuentaContable(60652)
+//                                  ->setCoSolicitud($tb142_cuenta_cobrarForm["co_solicitud"])
+//                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+//                                  ->setCreatedAt($fe_documento)
+//                                  ->setCoTipoAsiento(12)
+//                                  ->setInActivo(true)
+//                                  ->save($con);        
+//                    
+//                    $tb061_asiento_contable2 = new Tb061AsientoContable();
+//                    $tb061_asiento_contable2->setMoHaber($tb142_cuenta_cobrarForm["mo_cuenta"])
+//                                  ->setCoCuentaContable(122224)
+//                                  ->setCoSolicitud($tb142_cuenta_cobrarForm["co_solicitud"])
+//                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+//                                  ->setCreatedAt($fe_documento)
+//                                  ->setCoTipoAsiento(12)
+//                                  ->setInActivo(true)
+//                                  ->save($con);      
+//                    
+//                    $tb061_asiento_contable3 = new Tb061AsientoContable();
+//                    $tb061_asiento_contable3->setMoDebe($tb142_cuenta_cobrarForm["mo_cuenta"])
+//                                  ->setCoCuentaContable(122224)
+//                                  ->setCoSolicitud($tb142_cuenta_cobrarForm["co_solicitud"])
+//                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+//                                  ->setCreatedAt($fe_documento)
+//                                  ->setCoTipoAsiento(12)
+//                                  ->setInActivo(true)
+//                                  ->save($con);        
+//                    
+//                    $tb061_asiento_contable3 = new Tb061AsientoContable();
+//                    $tb061_asiento_contable3->setMoHaber($tb142_cuenta_cobrarForm["mo_cuenta"])
+//                                  ->setCoCuentaContable($campos6["co_cuenta_contable"])
+//                                  ->setCoSolicitud($tb142_cuenta_cobrarForm["co_solicitud"])
+//                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+//                                  ->setCreatedAt($fe_documento)
+//                                  ->setCoTipoAsiento(12)
+//                                  ->setInActivo(true)
+//                                  ->save($con);                       
                     
         $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb142_cuenta_cobrarForm["co_solicitud"]));
         $ruta->setInCargarDato(true)->save($con);
