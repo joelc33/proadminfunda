@@ -247,6 +247,7 @@ class BancoLibroActions extends sfActions
                                 //modelo fk tb010_banco.CO_BANCO
     public function executeStorefkidtb010banco(sfWebRequest $request){
         $c = new Criteria();
+        $c->add(Tb010BancoPeer::IN_ENTE, TRUE);
         $stmt = Tb010BancoPeer::doSelectStmt($c);
         $registros = array();
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
