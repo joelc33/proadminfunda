@@ -2,8 +2,6 @@
 Ext.ns("fondoPago");
 fondoPago.main = {
     
-co_factura_retencion: [],
-    
 init:function(){
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'<?php echo $data ?>'});
@@ -16,6 +14,10 @@ this.storeCO_TIPO_RETENCION = this.getStoreCO_TIPO_RETENCION();
 this.co_proveedor = new Ext.form.Hidden({
     name:'co_proveedor',
     value:this.OBJ.co_proveedor
+});
+
+this.co_factura_retencion = new Ext.form.Hidden({
+    name:'co_factura_retencion'
 });
 
 this.banco = new Ext.form.ComboBox({
@@ -212,7 +214,7 @@ var length = sm.selections.length
             
 }
 fondoPago.main.monto_disponible.setValue(mo_retencion);
-fondoPago.main.co_factura_retencion.push(record);
+fondoPago.main.co_factura_retencion.setValue(record);
        console.log(record);
             
     }
@@ -290,7 +292,7 @@ this.guardar = new Ext.Button({
                     tx_observacion: fondoPago.main.tx_observacion.getValue(),
                     fe_desde: fondoPago.main.fecha_inicio.value,
                     fe_hasta: fondoPago.main.fecha_fin.value,
-                    co_factura_retencion: fondoPago.main.co_factura_retencion,
+                    co_factura_retencion: fondoPago.main.co_factura_retencion.getValue(),
                     banco: fondoPago.main.banco.getValue(),
                     cuenta: fondoPago.main.cuenta.getValue()
         });

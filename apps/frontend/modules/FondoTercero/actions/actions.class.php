@@ -134,7 +134,7 @@ class FondoTerceroActions extends autoFondoTerceroActions
                 $tb026_solicitudForm = array(
                     "co_tipo_solicitud"   => 14,
                     "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-                    "fe_solicitud"        => date("d/m/Y"),
+                    "fe_solicitud"        => $tb069_fondo_terceroForm["fecha"],
                     "observacion"         => "Pago de Fondos de Terceros",
                     "codigo"              =>  $this->getUser()->getAttribute('codigo')
                 );
@@ -162,7 +162,10 @@ class FondoTerceroActions extends autoFondoTerceroActions
 
         /*Campo tipo DATE */
         list($dia, $mes, $anio) = explode("/",$tb069_fondo_terceroForm["fecha"]);
-        $fecha = $anio."-".$mes."-".$dia;
+        $fecha = $anio.'-'.$mes.'-'.$dia;
+        
+//        var_dump($fecha);
+//        exit();
 
         $tb069_fondo_tercero->setFeEmision($fecha);
        
@@ -215,18 +218,14 @@ class FondoTerceroActions extends autoFondoTerceroActions
 
                        $codigo = explode(',', $pagosForm["co_factura_retencion"]);
                        
-//                                                       var_dump($codigo);   
-//                        exit();                        
-                       $c  = new Criteria();
-                       $c->add(Tb046FacturaRetencionPeer::CO_FACTURA_RETENCION,$codigo, Criteria::IN);
-                       $stmt = Tb046FacturaRetencionPeer::doSelectStmt($c);
-                       
-                        var_dump($codigo);   
-                        exit();
+                      
+                       $c1  = new Criteria();
+                       $c1->add(Tb046FacturaRetencionPeer::CO_FACTURA_RETENCION,$pagosForm["co_factura_retencion"], Criteria::IN);
+                       $stmt1 = Tb046FacturaRetencionPeer::doSelectStmt($c1);
+
        
-                        while($registros = $stmt->fetch(PDO::FETCH_ASSOC)){
-                        var_dump($registros);   
-                        exit();
+                        while($registros = $stmt1->fetch(PDO::FETCH_ASSOC)){
+
                         $tb204_retencion_fondo_tercero = new Tb204RetencionFondoTercero();
                         $tb204_retencion_fondo_tercero->setCoFacturaRetencion($registros["co_factura_retencion"]);                                        
                         $tb204_retencion_fondo_tercero->setCoDetalleFondo($tb070_detalle_fondo->getCoDetalleFondo());
