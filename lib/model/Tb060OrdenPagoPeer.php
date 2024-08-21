@@ -825,6 +825,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $c->clearSelectColumns();
                 $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
                 $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+                $c->add(Tb045FacturaPeer::CO_ODP, NULL, Criteria::ISNULL);
                 $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
 
                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
