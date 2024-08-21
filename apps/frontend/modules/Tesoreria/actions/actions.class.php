@@ -440,7 +440,7 @@ class TesoreriaActions extends sfActions
         }
    }
    
-   protected function HistoricoPago($co_solicitud,$co_cuenta_bancaria,$monto_disponible_anterior,$monto_disponible_actual,$con){
+   protected function HistoricoPago($co_solicitud,$co_cuenta_bancaria,$monto_disponible_anterior,$monto_disponible_actual,$monto_total,$fecha,$con){
             //*******************HITORICO DE CUENTAS BANCARIAS***************************************************
             
             $tb15_solicitud = Tb026SolicitudPeer::retrieveByPk($co_solicitud);
@@ -605,8 +605,8 @@ class TesoreriaActions extends sfActions
             $Tb155CuentaBancariaHistorico = new Tb155CuentaBancariaHistorico();
             $Tb155CuentaBancariaHistorico->setInActivo(TRUE)
                                          ->setIdTb011CuentaBancaria($camposPago["co_cuenta_bancaria"])
-                                         ->setMoTransaccion($camposPago["nu_monto"])
-                                         ->setFeTransaccion($camposPago["fe_pago"])
+                                         ->setMoTransaccion($monto_total)
+                                         ->setFeTransaccion($fecha)
                                          ->setDeObservacion($camposPago["tx_tipo_solicitud"])
                                          ->setIdTb010Banco($camposPago["co_banco"])
                                          ->setIdTb154TipoCuentaMovimiento(3)
@@ -1243,7 +1243,7 @@ class TesoreriaActions extends sfActions
         $monto_total_egreso = $res_cuenta["mo_egreso"]+$monto_total;
         $monto_disponible_actual   = $res_cuenta["mo_ingreso"]-$monto_total_egreso;
         
-        $this->HistoricoPago($co_solicitud,$tb062PagosForm["co_cuenta"],$monto_disponible_anterior,$monto_disponible_actual,$con);
+        $this->HistoricoPago($co_solicitud,$tb062PagosForm["co_cuenta"],$monto_disponible_anterior,$monto_disponible_actual,$monto_total,$fecha,$con);
         
         $Tb011CuentaBancaria = Tb011CuentaBancariaPeer::retrieveByPK($res_cuenta["co_cuenta_bancaria"]);
         $Tb011CuentaBancaria->setMoEgreso($monto_total_egreso)->save($con);

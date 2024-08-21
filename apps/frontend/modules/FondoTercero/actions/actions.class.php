@@ -573,7 +573,7 @@ class FondoTerceroActions extends autoFondoTerceroActions
 
 
             
-        if($co_tipo_retencion==100) {
+        if($co_tipo_retencion==100 || $co_tipo_retencion==99) {
             
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -584,14 +584,14 @@ class FondoTerceroActions extends autoFondoTerceroActions
         $c->addSelectColumn(Tb046FacturaRetencionPeer::CO_FACTURA_RETENCION);
         $c->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb046FacturaRetencionPeer::CO_SOLICITUD);
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb046FacturaRetencionPeer::CO_SOLICITUD);
-//        $c->addJoin(Tb062LiquidacionPagoPeer::CO_ODP, Tb060OrdenPagoPeer::CO_ORDEN_PAGO);
-//        $c->addJoin(Tb063PagoPeer::CO_LIQUIDACION_PAGO, Tb062LiquidacionPagoPeer::CO_LIQUIDACION_PAGO);
+        $c->addJoin(Tb062LiquidacionPagoPeer::CO_ODP, Tb060OrdenPagoPeer::CO_ORDEN_PAGO);
+        $c->addJoin(Tb063PagoPeer::CO_LIQUIDACION_PAGO, Tb062LiquidacionPagoPeer::CO_LIQUIDACION_PAGO);
         $c->add(Tb046FacturaRetencionPeer::IN_PAGADO,NULL, Criteria::ISNULL);
         $c->add(Tb046FacturaRetencionPeer::CO_TIPO_RETENCION,$co_tipo_retencion);
         $c->add(Tb026SolicitudPeer::CO_PROVEEDOR,$co_proveedor);
         
-        $c->add(Tb060OrdenPagoPeer::FE_PAGO,$fe_inicio, Criteria::GREATER_EQUAL);
-        $c->addAnd(Tb060OrdenPagoPeer::FE_PAGO,$fe_fin, Criteria::LESS_EQUAL);
+        $c->add(Tb063PagoPeer::FE_PAGO,$fe_inicio, Criteria::GREATER_EQUAL);
+        $c->addAnd(Tb063PagoPeer::FE_PAGO,$fe_fin, Criteria::LESS_EQUAL);
 //        
         //echo $c->toString(); exit();
         $stmt = Tb046FacturaRetencionPeer::doSelectStmt($c);
