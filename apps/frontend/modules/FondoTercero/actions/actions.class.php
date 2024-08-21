@@ -60,7 +60,7 @@ class FondoTerceroActions extends autoFondoTerceroActions
         $this->data = json_encode(array(
                             "co_fondo_tercero"   => "",
                             "co_proveedor"         => "",
-                            "co_solicitud"         => $codigo,
+                            "co_solicitud"         => "",
                             "co_documento"       => "",
                             "tx_rif"     => "",
                             "tx_razon_social"       => "",
@@ -129,11 +129,33 @@ class FondoTerceroActions extends autoFondoTerceroActions
      try
       { 
         $con->beginTransaction();
+        
+
+                $tb026_solicitudForm = array(
+                    "co_tipo_solicitud"   => 14,
+                    "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
+                    "fe_solicitud"        => date("d/m/Y"),
+                    "observacion"         => "Pago de Fondos de Terceros",
+                    "codigo"              =>  $this->getUser()->getAttribute('codigo')
+                );
+    
+                $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
+    
+                if ($resp["success"] == true) {
+                    $co_solicitud = $resp["co_solicitud"];
+                } else {
+                    $this->data = json_encode(array(
+                        "success" => false,
+                        "msg" =>  $resp["msg"]
+                    ));
+    
+                    return;
+                }        
        
 /*CAMPOS*/
                                         
         /*Campo tipo BIGINT */
-        $tb069_fondo_tercero->setCoSolicitud($tb069_fondo_terceroForm["co_solicitud"]);
+        $tb069_fondo_tercero->setCoSolicitud($co_solicitud);
                                                         
         /*Campo tipo BIGINT */
         $tb069_fondo_tercero->setCoProveedor($tb069_fondo_terceroForm["co_proveedor"]);
@@ -141,6 +163,7 @@ class FondoTerceroActions extends autoFondoTerceroActions
         /*Campo tipo DATE */
         list($dia, $mes, $anio) = explode("/",$tb069_fondo_terceroForm["fecha"]);
         $fecha = $anio."-".$mes."-".$dia;
+
         $tb069_fondo_tercero->setFeEmision($fecha);
        
         /*Campo tipo VARCHAR */
@@ -157,8 +180,10 @@ class FondoTerceroActions extends autoFondoTerceroActions
         /*CAMPOS*/
         $tb069_fondo_tercero->save($con);
         
+
+        
         $delete = new Criteria();
-        $delete->add(Tb062LiquidacionPagoPeer::CO_SOLICITUD, $tb069_fondo_terceroForm["co_solicitud"]);
+        $delete->add(Tb062LiquidacionPagoPeer::CO_SOLICITUD, $co_solicitud);
         BasePeer::doDelete($delete, $con);
         
         $listaPagos  = json_decode($json_pagos,true);
@@ -167,7 +192,6 @@ class FondoTerceroActions extends autoFondoTerceroActions
           
                 if($pagosForm["co_detalle_fondo"]==''){
                     
-                    $Tb041TipoRetencion = Tb041TipoRetencionPeer::retrieveByPK($pagosForm["co_tipo_retencion"]);
         
                     list($dia,$mes,$anio) = explode("/", $pagosForm["fe_desde"]);
                     $fe_inicio = $anio.'-'.$mes.'-'.$dia;
@@ -175,115 +199,46 @@ class FondoTerceroActions extends autoFondoTerceroActions
                     list($dia,$mes,$anio) = explode("/", $pagosForm["fe_hasta"]);
                     $fe_fin = $anio.'-'.$mes.'-'.$dia;
                     
+                   
+                    $registros = $this->getMontoDisponible($tb069_fondo_terceroForm["co_proveedor"],$fe_inicio,$fe_fin,$pagosForm["co_tipo_retencion"]);
                     
-                    $registros = $this->getMontoDisponible($Tb041TipoRetencion->getCoCuentaContable(),$fe_inicio,$fe_fin,$pagosForm["co_tipo_retencion"]);
-                    
-                    if($registros['total']>0){                    
+                  
                         $tb070_detalle_fondo = new Tb070DetalleFondo();
                         $tb070_detalle_fondo->setCoFondoTercero($tb069_fondo_tercero->getCoFondoTercero());                                        
                         $tb070_detalle_fondo->setCoTipoRetencion($pagosForm["co_tipo_retencion"]);
                         $tb070_detalle_fondo->setMonto($pagosForm["monto"]);
-                        $tb070_detalle_fondo->setTxObservacion($pagosForm["tx_observacion"]);
+                        $tb070_detalle_fondo->setTxObservacion($tb069_fondo_terceroForm["tx_observacion"]);
                         $tb070_detalle_fondo->setCoUsuario($this->getUser()->getAttribute('codigo'));
                         $tb070_detalle_fondo->setFeDesde($fe_inicio);
                         $tb070_detalle_fondo->setFeHasta($fe_fin);
-                        $tb070_detalle_fondo->save($con);
-                        
+                        $tb070_detalle_fondo->save($con);        
 
-                        if($pagosForm["co_tipo_retencion"]==88) {
-
-                        $c = new Criteria();
-                        $c->clearSelectColumns();
-                        $c->setDistinct();
-                        $c->addSelectColumn(Tb046FacturaRetencionPeer::CO_FACTURA_RETENCION);
-                        $c->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb046FacturaRetencionPeer::CO_SOLICITUD);
-                        //$c->add(Tb046FacturaRetencionPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-                        //$c->add(Tb060OrdenPagoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-                        $c->add(Tb046FacturaRetencionPeer::CO_TIPO_RETENCION,$pagosForm["co_tipo_retencion"]);
-
-                        $c->add(Tb060OrdenPagoPeer::FE_PAGO,$fe_inicio, Criteria::GREATER_EQUAL);
-                        $c->addAnd(Tb060OrdenPagoPeer::FE_PAGO,$fe_fin, Criteria::LESS_EQUAL);
-                //        
-                        //echo $c->toString(); exit();
-                        $stmt = Tb046FacturaRetencionPeer::doSelectStmt($c);            
-
-                        }else{   
-
-                        if($pagosForm["co_tipo_retencion"]==92) {            
-
-                        $c = new Criteria();
-                        $c->clearSelectColumns();
-                        $c->setDistinct();
-                        $c->addSelectColumn(Tb046FacturaRetencionPeer::CO_FACTURA_RETENCION);
-                        $c->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb046FacturaRetencionPeer::CO_SOLICITUD);
-                        $c->addJoin(Tb062LiquidacionPagoPeer::CO_ODP, Tb060OrdenPagoPeer::CO_ORDEN_PAGO);
-                        $c->addJoin(Tb063PagoPeer::CO_LIQUIDACION_PAGO, Tb062LiquidacionPagoPeer::CO_LIQUIDACION_PAGO);
-                        $c->addJoin(Tb045FacturaPeer::CO_FACTURA, Tb046FacturaRetencionPeer::CO_FACTURA);
-                        $c->add(Tb060OrdenPagoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-                        $c->add(Tb045FacturaPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-                        $c->add(Tb046FacturaRetencionPeer::CO_TIPO_RETENCION,$pagosForm["co_tipo_retencion"]);
-
-                        $c->add(Tb063PagoPeer::FE_PAGO,$fe_inicio, Criteria::GREATER_EQUAL);
-                        $c->addAnd(Tb063PagoPeer::FE_PAGO,$fe_fin, Criteria::LESS_EQUAL);
-                        //echo $c->toString(); exit();
-
-                        $stmt = Tb046FacturaRetencionPeer::doSelectStmt($c);
-
-                        }else{
-
-                        $c = new Criteria();
-                        $c->clearSelectColumns();
-                        $c->setDistinct();
-                        $c->addSelectColumn(Tb046FacturaRetencionPeer::CO_FACTURA_RETENCION);
-                        $c->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb046FacturaRetencionPeer::CO_SOLICITUD);
-                        $c->addJoin(Tb062LiquidacionPagoPeer::CO_ODP, Tb060OrdenPagoPeer::CO_ORDEN_PAGO);
-                        $c->addJoin(Tb063PagoPeer::CO_LIQUIDACION_PAGO, Tb062LiquidacionPagoPeer::CO_LIQUIDACION_PAGO);
-                        $c->add(Tb060OrdenPagoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-                        $c->add(Tb046FacturaRetencionPeer::CO_TIPO_RETENCION,$pagosForm["co_tipo_retencion"]);
-
-                        $c->add(Tb063PagoPeer::FE_PAGO,$fe_inicio, Criteria::GREATER_EQUAL);
-                        $c->addAnd(Tb063PagoPeer::FE_PAGO,$fe_fin, Criteria::LESS_EQUAL);
-                        //echo $c->toString(); exit();
-
-                        $stmt = Tb046FacturaRetencionPeer::doSelectStmt($c);           
-                        }
-                        }                        
-    
+                       $codigo = explode(',', $pagosForm["co_factura_retencion"]);
+                       
+//                                                       var_dump($codigo);   
+//                        exit();                        
+                       $c  = new Criteria();
+                       $c->add(Tb046FacturaRetencionPeer::CO_FACTURA_RETENCION,$codigo, Criteria::IN);
+                       $stmt = Tb046FacturaRetencionPeer::doSelectStmt($c);
+                       
+                        var_dump($codigo);   
+                        exit();
+       
                         while($registros = $stmt->fetch(PDO::FETCH_ASSOC)){
-//                        var_dump($registros);   
-//                        exit();
+                        var_dump($registros);   
+                        exit();
                         $tb204_retencion_fondo_tercero = new Tb204RetencionFondoTercero();
                         $tb204_retencion_fondo_tercero->setCoFacturaRetencion($registros["co_factura_retencion"]);                                        
                         $tb204_retencion_fondo_tercero->setCoDetalleFondo($tb070_detalle_fondo->getCoDetalleFondo());
-                        $tb204_retencion_fondo_tercero->setcoSolicitud($tb069_fondo_terceroForm["co_solicitud"]);
-                        $tb204_retencion_fondo_tercero->save($con);                        
-
-                        }        
-
-
-                        $wherec = new Criteria();
-                        $wherec->add(Tb061AsientoContablePeer::CO_CUENTA_CONTABLE,$Tb041TipoRetencion->getCoCuentaContable());
-                        $wherec->add(Tb061AsientoContablePeer::CREATED_AT,$fe_inicio, Criteria::GREATER_EQUAL);
-                        $wherec->addAnd(Tb061AsientoContablePeer::CREATED_AT,$fe_fin, Criteria::LESS_EQUAL);
-
-
-                        $updc = new Criteria();
-                        $updc->add(Tb061AsientoContablePeer::CO_SOLICITUD_FONDO_TERCERO, $tb069_fondo_terceroForm["co_solicitud"]);
-
-                        BasePeer::doUpdate($wherec, $updc, $con);
+                        $tb204_retencion_fondo_tercero->setcoSolicitud($co_solicitud);
+                        $tb204_retencion_fondo_tercero->save($con);  
                         
-                        $wherec = new Criteria();
-                        $wherec->add(Tb134MovimientoContablePeer::CO_CUENTA_CONTABLE,$Tb041TipoRetencion->getCoCuentaContable());
-                        $wherec->add(Tb134MovimientoContablePeer::FE_MOVIMIENTO,$fe_inicio, Criteria::GREATER_EQUAL);
-                        $wherec->addAnd(Tb134MovimientoContablePeer::FE_MOVIMIENTO,$fe_fin, Criteria::LESS_EQUAL);
+                        $tb046_factura_retencion = Tb046FacturaRetencionPeer::retrieveByPK($registros["co_factura_retencion"]); 
+                        $tb046_factura_retencion->setInPagado(true);
+                        $tb046_factura_retencion->setFePago($fecha);
+                        $tb046_factura_retencion->save($con);                        
 
-                        $updc = new Criteria();
-                        $updc->add(Tb134MovimientoContablePeer::CO_SOLICITUD, $tb069_fondo_terceroForm["co_solicitud"]);
-                        $updc->add(Tb134MovimientoContablePeer::CO_USUARIO, $this->getUser()->getAttribute('codigo'));
-                        $updc->add(Tb134MovimientoContablePeer::IN_PAGADO, true);
-                        
-                        BasePeer::doUpdate($wherec, $updc, $con);
-                    }
+                        }                      
                     
                     
             }      
@@ -293,22 +248,88 @@ class FondoTerceroActions extends autoFondoTerceroActions
         }
         
         $Tb062LiquidacionPago = new Tb062LiquidacionPago();
-        $Tb062LiquidacionPago->setCoSolicitud($tb069_fondo_terceroForm["co_solicitud"])
+        $Tb062LiquidacionPago->setCoSolicitud($co_solicitud)
                        ->setFeEmision(date('Y-m-d'))
-                       //->setNuAnio(date('Y'))
                        ->setNuAnio( $this->getUser()->getAttribute('ejercicio'))
                        ->setMoPagar($monto)
-                       ->setMoPendiente($monto)
-                       ->setMoPagado(0)
-                       ->setCoTipoSolicitud($tb069_fondo_terceroForm["co_tipo_solicitud"])
+                       ->setMoPendiente(0)
+                       ->setMoPagado($monto)
+                        ->setTxObservacion($tb069_fondo_terceroForm["tx_observacion"])
+                       ->setCoTipoSolicitud(14)
                        ->save($con);      
         
+                foreach($listaPagos  as $pagosForm){
+          
+                if($pagosForm["co_detalle_fondo"]==''){
+                    
+            $tb063_pago = new Tb063Pago();
 
+            $tb063_pago->setCoLiquidacionPago($Tb062LiquidacionPago->getCoLiquidacionPago());
+            $tb063_pago->setCoFormaPago(2);
+            $tb063_pago->setCoBanco($pagosForm["banco"]);
+            $tb063_pago->setCoCuentaBancaria($pagosForm["cuenta"]);            
+            $tb063_pago->setFePago($fecha);
+            $tb063_pago->setNuMonto($pagosForm["monto"]);
+            $tb063_pago->setCoUsuario($this->getUser()->getAttribute('codigo'));
+            $tb063_pago->setTxObservacion($tb069_fondo_terceroForm["tx_observacion"]);
+            $tb063_pago->save($con);
+            
+            $cuenta = new Criteria();
+            $cuenta->add(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA, $pagosForm["cuenta"]);
+            $stmtcuenta = Tb011CuentaBancariaPeer::doSelectStmt($cuenta);
+            $res_cuenta = $stmtcuenta->fetch(PDO::FETCH_ASSOC);            
+            
+            $monto_disponible_anterior = $res_cuenta["mo_ingreso"]-$res_cuenta["mo_egreso"];
+            $monto_total_egreso = $res_cuenta["mo_egreso"]+$pagosForm["monto"];
+            $monto_disponible_actual   = $res_cuenta["mo_ingreso"]-$monto_total_egreso;
+            
+            $Tb155CuentaBancariaHistorico = new Tb155CuentaBancariaHistorico();
+            $Tb155CuentaBancariaHistorico->setInActivo(TRUE)
+                                         ->setIdTb011CuentaBancaria($pagosForm["cuenta"])
+                                         ->setMoTransaccion($pagosForm["monto"])
+                                         ->setFeTransaccion($fecha)
+                                         ->setDeObservacion($tb069_fondo_terceroForm["tx_observacion"])
+                                         ->setIdTb010Banco($pagosForm["banco"])
+                                         ->setIdTb154TipoCuentaMovimiento(3)
+                                         ->setIdTb153TipoDocumentoCuenta(3)
+                                         ->setNuTransaccion($Tb062LiquidacionPago->getTxSerial())
+                                         ->setCoSolicitud($co_solicitud)
+                                         ->setInConciliado(FALSE)
+                                         ->setMoSaldoAnterior($monto_disponible_anterior)
+                                         ->setMoSaldoNuevo($monto_disponible_actual)
+                                         ->save($con);            
+            
+            $Tb011CuentaBancaria = Tb011CuentaBancariaPeer::retrieveByPK($pagosForm["cuenta"]);
+            $Tb011CuentaBancaria->setMoEgreso($monto_total_egreso)->save($con);      
+            
+            $tb061_asiento_contable = new Tb061AsientoContable();
+            $tb061_asiento_contable->setMoHaber($pagosForm["monto"])
+                                   ->setCoSolicitud($co_solicitud)
+                                   ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                   ->setCoCuentaContable($res_cuenta["co_cuenta_contable"])
+                                   ->setCreatedAt($fecha)
+                                   ->setCoTipoAsiento(3)
+                                   ->save($con);        
+            
+            $Tb041TipoRetencion = Tb041TipoRetencionPeer::retrieveByPK($pagosForm["co_tipo_retencion"]);
+            
+            $tb061_asiento_contable = new Tb061AsientoContable();
+            $tb061_asiento_contable->setMoDebe($pagosForm["monto"])
+                                    ->setCoCuentaContable($Tb041TipoRetencion->getCoCuentaContable())
+                                    ->setCoSolicitud($co_solicitud)
+                                    ->setCreatedAt($fecha)
+                                    ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                    ->setCoTipoAsiento(3)
+                                    ->save($con);            
+            
+            
+                }
+                }
                 
-        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb069_fondo_terceroForm["co_solicitud"]));
-        $ruta->setInCargarDato(true)->save($con);
+        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
+        $ruta->setInCargarDato(true)->setCoEstatusRuta(2)->save($con);
         
-        $tb026_solicitud = Tb026SolicitudPeer::retrieveByPK($tb069_fondo_terceroForm["co_solicitud"]);
+        $tb026_solicitud = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
         $tb026_solicitud->setCoProveedor($tb069_fondo_terceroForm["co_proveedor"])->save($con);
         
         $con->commit();
@@ -467,7 +488,6 @@ class FondoTerceroActions extends autoFondoTerceroActions
         
         $c = new Criteria();
         $c->add(Tb041TipoRetencionPeer::CO_TIPO_RETENCION,$array_tipo_retencion,  Criteria::NOT_IN);
-        $c->add(Tb041TipoRetencionPeer::CO_CLASE_RETENCION,$co_clase_retencion);
         $c->add(Tb041TipoRetencionPeer::IN_ACTIVO,TRUE);
         $c->add(Tb071RetencionProveedorPeer::CO_PROVEEDOR,$co_proveedor);
         $c->addAscendingOrderByColumn(Tb041TipoRetencionPeer::CO_TIPO_RETENCION);
@@ -528,6 +548,7 @@ class FondoTerceroActions extends autoFondoTerceroActions
         $fe_desde           = $this->getRequestParameter('fe_desde');
         $fe_hasta           = $this->getRequestParameter('fe_hasta');
         $co_tipo_retencion  = $this->getRequestParameter('co_tipo_retencion');
+        $co_proveedor  = $this->getRequestParameter('co_proveedor');
         
         $Tb041TipoRetencion = Tb041TipoRetencionPeer::retrieveByPK($co_tipo_retencion);
         
@@ -539,81 +560,61 @@ class FondoTerceroActions extends autoFondoTerceroActions
         list($dia,$mes,$anio) = explode("/", $fe_hasta);
         $fe_fin = $anio.'-'.$mes.'-'.$dia;
                       
-        $registros = $this->getMontoDisponible($Tb041TipoRetencion->getCoCuentaContable(),$fe_inicio,$fe_fin,$co_tipo_retencion);
+        $registros = $this->getMontoDisponible($co_proveedor,$fe_inicio,$fe_fin,$co_tipo_retencion);
               
-        $this->data = json_encode(array(
-            "success"   => true,
-            "data"      => $registros
-        ));
-        $this->setTemplate('store');    
+      
+         $this->registros = json_encode(array(
+          "success"=> true,
+          "total"  => count($registros),
+          "data"   => $registros
+          ));   
     }
     
-    protected function getMontoDisponible($co_cuenta_contable,$fe_inicio,$fe_fin,$co_tipo_retencion){
-//        $c = new Criteria();
-//        $c->clearSelectColumns();
-//        $c->addSelectColumn('coalesce(SUM('. Tb061AsientoContablePeer::MO_HABER.'),0) as total');
-//        $c->add(Tb061AsientoContablePeer::CO_SOLICITUD_FONDO_TERCERO,NULL, Criteria::ISNULL);
-//        $c->add(Tb061AsientoContablePeer::CO_CUENTA_CONTABLE,$co_cuenta_contable);
-//        $c->add(Tb061AsientoContablePeer::CREATED_AT,$fe_inicio, Criteria::GREATER_EQUAL);
-//        $c->addAnd(Tb061AsientoContablePeer::CREATED_AT,$fe_fin, Criteria::LESS_EQUAL);
-//        
-  
-        if($fe_inicio>='2018-11-30'){
+    protected function getMontoDisponible($co_proveedor,$fe_inicio,$fe_fin,$co_tipo_retencion){
+
+
             
-        if($co_tipo_retencion==88) {
+        if($co_tipo_retencion==100) {
             
         $c = new Criteria();
         $c->clearSelectColumns();
-        $c->addSelectColumn('coalesce(SUM('.Tb046FacturaRetencionPeer::MO_RETENCION.'),0) as total');
+        $c->addSelectColumn(Tb046FacturaRetencionPeer::MO_RETENCION);
+        $c->addSelectColumn(Tb060OrdenPagoPeer::FE_PAGO);
+        $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD);
+        $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
+        $c->addSelectColumn(Tb046FacturaRetencionPeer::CO_FACTURA_RETENCION);
         $c->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb046FacturaRetencionPeer::CO_SOLICITUD);
-        //$c->add(Tb046FacturaRetencionPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-        //$c->add(Tb060OrdenPagoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb046FacturaRetencionPeer::CO_SOLICITUD);
+//        $c->addJoin(Tb062LiquidacionPagoPeer::CO_ODP, Tb060OrdenPagoPeer::CO_ORDEN_PAGO);
+//        $c->addJoin(Tb063PagoPeer::CO_LIQUIDACION_PAGO, Tb062LiquidacionPagoPeer::CO_LIQUIDACION_PAGO);
+        $c->add(Tb046FacturaRetencionPeer::IN_PAGADO,NULL, Criteria::ISNULL);
         $c->add(Tb046FacturaRetencionPeer::CO_TIPO_RETENCION,$co_tipo_retencion);
+        $c->add(Tb026SolicitudPeer::CO_PROVEEDOR,$co_proveedor);
         
         $c->add(Tb060OrdenPagoPeer::FE_PAGO,$fe_inicio, Criteria::GREATER_EQUAL);
         $c->addAnd(Tb060OrdenPagoPeer::FE_PAGO,$fe_fin, Criteria::LESS_EQUAL);
 //        
         //echo $c->toString(); exit();
         $stmt = Tb046FacturaRetencionPeer::doSelectStmt($c);
-
-        $registros = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        
-        return $registros;              
-            
+        $registros = array();
+          while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $registros[] = $row ;
+          }         
+          return $registros;  
         }else{   
-
-        if($co_tipo_retencion==92) {            
-            
-        $c = new Criteria();
-        $c->clearSelectColumns();
-        $c->addSelectColumn('coalesce(SUM('. Tb045FacturaPeer::NU_IVA_RETENCION.'),0) as total');
-        $c->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb046FacturaRetencionPeer::CO_SOLICITUD);
-        $c->addJoin(Tb062LiquidacionPagoPeer::CO_ODP, Tb060OrdenPagoPeer::CO_ORDEN_PAGO);
-        $c->addJoin(Tb063PagoPeer::CO_LIQUIDACION_PAGO, Tb062LiquidacionPagoPeer::CO_LIQUIDACION_PAGO);
-        $c->addJoin(Tb045FacturaPeer::CO_FACTURA, Tb046FacturaRetencionPeer::CO_FACTURA);
-        $c->add(Tb060OrdenPagoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-        $c->add(Tb045FacturaPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-        $c->add(Tb046FacturaRetencionPeer::CO_TIPO_RETENCION,$co_tipo_retencion);
-        
-        $c->add(Tb063PagoPeer::FE_PAGO,$fe_inicio, Criteria::GREATER_EQUAL);
-        $c->addAnd(Tb063PagoPeer::FE_PAGO,$fe_fin, Criteria::LESS_EQUAL);
-        //echo $c->toString(); exit();
-        
-        $stmt = Tb046FacturaRetencionPeer::doSelectStmt($c);
-
-        $registros = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        return $registros;
-        }else{
           
         $c = new Criteria();
         $c->clearSelectColumns();
-        $c->addSelectColumn('coalesce(SUM('. Tb046FacturaRetencionPeer::MO_RETENCION.'),0) as total');
+        $c->addSelectColumn(Tb046FacturaRetencionPeer::MO_RETENCION);
+        $c->addSelectColumn(Tb063PagoPeer::FE_PAGO);
+        $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD);
+        $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
+        $c->addSelectColumn(Tb046FacturaRetencionPeer::CO_FACTURA_RETENCION);
         $c->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb046FacturaRetencionPeer::CO_SOLICITUD);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb046FacturaRetencionPeer::CO_SOLICITUD);
         $c->addJoin(Tb062LiquidacionPagoPeer::CO_ODP, Tb060OrdenPagoPeer::CO_ORDEN_PAGO);
         $c->addJoin(Tb063PagoPeer::CO_LIQUIDACION_PAGO, Tb062LiquidacionPagoPeer::CO_LIQUIDACION_PAGO);
-        $c->add(Tb060OrdenPagoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
+        $c->add(Tb046FacturaRetencionPeer::IN_PAGADO,NULL, Criteria::ISNULL);
         $c->add(Tb046FacturaRetencionPeer::CO_TIPO_RETENCION,$co_tipo_retencion);
         
         $c->add(Tb063PagoPeer::FE_PAGO,$fe_inicio, Criteria::GREATER_EQUAL);
@@ -621,34 +622,15 @@ class FondoTerceroActions extends autoFondoTerceroActions
         //echo $c->toString(); exit();
         
         $stmt = Tb046FacturaRetencionPeer::doSelectStmt($c);
-
-        $registros = $stmt->fetch(PDO::FETCH_ASSOC);
+        $registros = array();
+          while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $registros[] = $row ;
+          }   
         
         return $registros;            
-        }
-        }
-        }else{
-            
-        $c = new Criteria();
-        $c->clearSelectColumns();
-        $c->addSelectColumn('coalesce(SUM('.Tb046FacturaRetencionPeer::MO_RETENCION.'),0) as total');
-        $c->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb046FacturaRetencionPeer::CO_SOLICITUD);
-        //$c->add(Tb046FacturaRetencionPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-        //$c->add(Tb060OrdenPagoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-        $c->add(Tb046FacturaRetencionPeer::CO_TIPO_RETENCION,$co_tipo_retencion);
         
-        $c->add(Tb060OrdenPagoPeer::FE_PAGO,$fe_inicio, Criteria::GREATER_EQUAL);
-        $c->addAnd(Tb060OrdenPagoPeer::FE_PAGO,$fe_fin, Criteria::LESS_EQUAL);
-//        
-        //echo $c->toString(); exit();
-        $stmt = Tb046FacturaRetencionPeer::doSelectStmt($c);
+        }
 
-        $registros = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        
-        return $registros;            
-            
-        }
         
     }
   

@@ -14,7 +14,10 @@ this.Registro = Ext.data.Record.create([
                      {name: 'monto', type: 'number'},
                      {name: 'tx_observacion', type:'string'},
                      {name: 'fe_desde', type:'string'},
-                     {name: 'fe_hasta', type:'string'}
+                     {name: 'fe_hasta', type:'string'},
+                     {name: 'co_factura_retencion', type:'string'},
+                     {name: 'banco', type: 'number'},
+                     {name: 'cuenta', type: 'number'}
                 ]);
 
 this.co_fondo_tercero = new Ext.form.Hidden({
@@ -122,17 +125,18 @@ this.nu_declaracion = new Ext.form.TextField({
 this.fecha = new Ext.form.DateField({
 	fieldLabel:'Fecha',
 	name:'fondo[fecha]',
-	value:this.OBJ.fe_emision,
+	value:new Date(),
 	allowBlank:false,
 	width:100,
-    minValue:this.OBJ.fe_ini,
-	maxValue:this.OBJ.fe_fin,
+        minValue:this.OBJ.fe_ini,
+        maxValue:new Date()  
 });
 
 this.tx_observacion = new Ext.form.TextArea({
-	fieldLabel:'Observacion',
+	fieldLabel:'Descripción',
 	name:'fondo[tx_observacion]',
 	value:this.OBJ.tx_observacion,
+        allowBlank:false,
 	width:770
 });
 
@@ -142,7 +146,7 @@ this.fieldDatos= new Ext.form.FieldSet({
           this.compositefieldCIRIF,
           this.tx_razon_social,
           this.tx_direccion,
-          this.nu_declaracion,
+//          this.nu_declaracion,
           this.fecha,
           this.tx_observacion          
        ]
@@ -204,7 +208,7 @@ this.gridPanel = new Ext.grid.GridPanel({
             {header: 'Tipo de Retencion', width:200, menuDisabled:true,dataIndex: 'tx_tipo_retencion'},
             {header: 'Fecha Desde', width:100, menuDisabled:true,dataIndex: 'fe_desde'},
             {header: 'Fecha Hasta', width:100, menuDisabled:true,dataIndex: 'fe_hasta'},
-            {header: 'Observación',width:200, menuDisabled:true,dataIndex: 'tx_observacion',renderer:textoLargo},
+//            {header: 'Observación',width:200, menuDisabled:true,dataIndex: 'tx_observacion',renderer:textoLargo},
             {header: 'Monto',width:150, menuDisabled:true,dataIndex: 'monto',renderer:renderMonto}
             
         ],
@@ -280,8 +284,8 @@ this.guardar = new Ext.Button({
                          buttons: Ext.MessageBox.OK
                      });
                  }
-                solicitudLista.main.store_lista.load();
-                Detalle.main.store_lista.load();
+//                solicitudLista.main.store_lista.load();
+//                Detalle.main.store_lista.load();
                  fondoEditar.main.winformPanel_.close();
              }
         });
