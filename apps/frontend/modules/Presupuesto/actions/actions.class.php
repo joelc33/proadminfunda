@@ -979,15 +979,11 @@ class PresupuestoActions extends sfActions
 
     public function executeAsignarPartidaServicio(sfWebRequest $request)
     {
-        $codigo =  $this->getRequestParameter("co_solicitud");
+        $codigo =  $this->getRequestParameter("co_factura");
 
         $c = new Criteria();
         $c->clearSelectColumns();
         $c->addSelectColumn(Tb045FacturaPeer::CO_SOLICITUD);
-        //        $c->addSelectColumn(Tb045FacturaPeer::ID_TB048_PRODUCTO);
-        //        $c->addSelectColumn(Tb045FacturaPeer::TX_CONCEPTO);
-        //        $c->addSelectColumn(Tb048ProductoPeer::TX_PRODUCTO);
-        //        $c->addSelectColumn(Tb048ProductoPeer::COD_PRODUCTO);
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
@@ -996,7 +992,7 @@ class PresupuestoActions extends sfActions
         $c->addJoin(Tb007DocumentoPeer::CO_DOCUMENTO, Tb008ProveedorPeer::CO_DOCUMENTO);
         $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR,  Tb045FacturaPeer::CO_PROVEEDOR);
         //$c->addJoin(Tb048ProductoPeer::CO_PRODUCTO, Tb045FacturaPeer::ID_TB048_PRODUCTO);
-        $c->add(Tb045FacturaPeer::CO_SOLICITUD, $codigo);
+        $c->add(Tb045FacturaPeer::CO_FACTURA, $codigo);
 
         $stmt = Tb045FacturaPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -1012,6 +1008,7 @@ class PresupuestoActions extends sfActions
         $datos_compra          = $this->getCoCompras($codigo);
         $campos["co_compras"]  = $datos_compra["co_compras"];
         $campos["co_ejecutor"] = $datos_compra["co_ejecutor"];
+        $campos["co_factura"]  = $codigo;
 
         $datos_detalle = $this->getDetallesCompra($campos["co_compras"]);
         $campos["co_partida"] = $datos_detalle["co_partida"];
@@ -1970,6 +1967,10 @@ class PresupuestoActions extends sfActions
                     ->setCoProyectoAc($co_proyecto)
                     ->setCoAccionEspecifica($co_accion)
                     ->save($con);
+
+                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $co_presupuesto, 1, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
+                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $co_presupuesto, 2, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
+             
 
                 $c = new Criteria();
                 $c->clearSelectColumns();
@@ -3103,6 +3104,90 @@ class PresupuestoActions extends sfActions
         ));
     }
 
+    public function executeStorelistaPartida(sfWebRequest $request)
+    {
+        $paginar    =   $this->getRequestParameter("paginar");
+        $co_factura      =   $this->getRequestParameter("co_factura");
+
+
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+        $c->addSelectColumn(Tb048ProductoPeer::TX_PRODUCTO);
+        $c->addSelectColumn(Tb048ProductoPeer::CO_PRODUCTO);
+        $c->addSelectColumn(Tb085PresupuestoPeer::NU_PARTIDA);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PARTIDA);
+        $c->addAsColumn('co_presupuesto', Tb085PresupuestoPeer::ID);
+        $c->addSelectColumn(Tb085PresupuestoPeer::DE_PARTIDA);
+        $c->addSelectColumn(Tb085PresupuestoPeer::MO_DISPONIBLE);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::MONTO);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::CO_ASIENTO_CONTABLE);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::IN_CALCULAR_IVA);
+        $c->addSelectColumn(Tb052ComprasPeer::CO_PROVEEDOR);
+        $c->addSelectColumn(Tb052ComprasPeer::NU_IVA);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::DETALLE);
+
+        $c->addSelectColumn(Tb045FacturaPeer::NU_FACTURA);
+
+        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
+        $c->addJoin(Tb053DetalleComprasPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO,  Criteria::LEFT_JOIN);
+        $c->addJoin(Tb053DetalleComprasPeer::CO_PARTIDA, Tb091PartidaPeer::ID, Criteria::LEFT_JOIN);
+        $c->addJoin(Tb053DetalleComprasPeer::CO_PRESUPUESTO, Tb085PresupuestoPeer::ID, Criteria::LEFT_JOIN);
+        $c->addJoin(Tb053DetalleComprasPeer::CO_FACTURA, Tb045FacturaPeer::CO_FACTURA, Criteria::LEFT_JOIN);
+
+        $c->add(Tb045FacturaPeer::CO_FACTURA, $co_factura);
+        $c->add(Tb053DetalleComprasPeer::IN_PRESUPUESTO, TRUE);
+
+
+        $cantidadTotal = Tb053DetalleComprasPeer::doCount($c);
+
+        $c->addAscendingOrderByColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+
+        //echo $c->toString(); exit();
+
+        $i = 0;
+
+        $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
+
+        while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+            $datos = $this->getTipoMovimiento($reg["co_detalle_compras"]);
+
+            $reg['co_presupuesto_movimiento'] = $datos["co_presupuesto_movimiento"];
+
+            if ($reg["co_presupuesto_movimiento"] == '') {
+                $reg["co_tipo_movimiento"] = 0;
+                $reg["tx_tipo_movimiento"] = 'PRE-COMPROMETIDO';
+            } else {
+                $reg["co_tipo_movimiento"] = $datos["id"];
+                $reg["tx_tipo_movimiento"] = strtoupper($datos["de_tipo_movimiento"]);
+            }
+
+            $reg["nu_partida"]               = ($reg["nu_partida"] == null) ? '' : $reg["nu_partida"];
+            $reg["de_partida"]               = ($reg["de_partida"] == null) ? '' : $reg["de_partida"];
+            $reg["mo_disponible"]            = ($reg["mo_disponible"] == null) ? '' : $reg["mo_disponible"];
+            $reg["co_partida"]               = ($reg["co_partida"] == null) ? '' : $reg["co_partida"];
+            $reg["co_presupuesto_movimiento"] = ($reg["co_presupuesto_movimiento"] == null) ? '' : $reg["co_presupuesto_movimiento"];
+
+            $mo_iva = $this->getIVA($reg["monto"], $reg["nu_iva"]);
+            $mo_retencion = $this->getIVARetencion($mo_iva, $reg["co_proveedor"]);
+
+            if ($reg["in_calcular_iva"] == true)
+                $reg["monto"] = $reg["monto"]; //+$mo_retencion;
+
+            $registros[] = $reg;
+        }
+
+
+        $this->data = json_encode(array(
+            "success"   =>  true,
+            "total"     =>  $cantidadTotal,
+            "data"      =>  $registros
+        ));
+
+        $this->setTemplate('storelista');
+    }
+
 
     public function executeStorelistaCompraPb(sfWebRequest $request)
     {
@@ -3315,8 +3400,14 @@ class PresupuestoActions extends sfActions
 
             $tb053_detalle_compras = Tb053DetalleComprasPeer::retrieveByPK($co_detalle_compras);
 
-            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $tb053_detalle_compras->getCoPresupuesto(), 4, $tb053_detalle_compras->getMonto(), '', $tb053_detalle_compras->getCoDetalleCompras());
+            $wherec = new Criteria();
+            $wherec->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $co_detalle_compras, Criteria::EQUAL);
+            BasePeer::doDelete($wherec, $con);            
+
+           /* Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $tb053_detalle_compras->getCoPresupuesto(), 4, $tb053_detalle_compras->getMonto(), '', $tb053_detalle_compras->getCoDetalleCompras());
             Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $tb053_detalle_compras->getCoPresupuesto(), 13, $tb053_detalle_compras->getMonto(), '', $tb053_detalle_compras->getCoDetalleCompras());
+            */
+
 
 
             $tb053_detalle_compras->setCoPresupuesto(null)

@@ -124,7 +124,7 @@ this.agregar_partida.disable();
 this.quitar_partida.disable();
 
 this.gridPanel = new Ext.grid.GridPanel({
-        title:'Detalle de la Compra',
+        title:'Detalle',
         iconCls: 'icon-libro',
         store: this.store_lista,
         loadMask:true,
@@ -136,10 +136,10 @@ this.gridPanel = new Ext.grid.GridPanel({
             {header: 'co_detalle_compras', hidden: true,width:80, menuDisabled:true,dataIndex: 'co_detalle_compras'},    
             {header: 'id_partida', hidden: true,width:80, menuDisabled:true,dataIndex: 'co_partida'}, 
             {header: 'co_tipo_movimiento', hidden: true,width:80, menuDisabled:true,dataIndex: 'co_tipo_movimiento'}, 
-            {header: 'Estatus',width:130, menuDisabled:true,dataIndex: 'tx_tipo_movimiento'},    
+            //{header: 'Estatus',width:130, menuDisabled:true,dataIndex: 'tx_tipo_movimiento'},    
             {header: 'Servicio',width:200, menuDisabled:true,dataIndex: 'tx_producto',renderer:textoLargo},                
-            {header: 'Cod. Partida', width:120, menuDisabled:true,dataIndex: 'nu_partida'},
-            {header: 'Partida',width:220, menuDisabled:true,dataIndex: 'de_partida',renderer:textoLargo},
+            {header: 'Cod. Partida', width:220, menuDisabled:true,dataIndex: 'nu_partida'},
+            {header: 'Partida',width:250, menuDisabled:true,dataIndex: 'de_partida',renderer:textoLargo},
             {header: 'Monto Disponible',width:180, menuDisabled:true,dataIndex: 'mo_disponible',renderer:renderMontoDisponible},
             {header: 'Monto',width:180, menuDisabled:true,dataIndex: 'monto',renderer:renderMonto}
         ], 
@@ -168,8 +168,10 @@ this.gridPanel = new Ext.grid.GridPanel({
             ContabilidadEditar.main.agregar_partida.enable();
             
             if(ContabilidadEditar.main.nu_partida==''){
+                ContabilidadEditar.main.agregar_partida.enable();
                 ContabilidadEditar.main.quitar_partida.disable();
             }else{
+                ContabilidadEditar.main.agregar_partida.disable();
                 ContabilidadEditar.main.quitar_partida.enable();
             }
           
@@ -302,7 +304,7 @@ this.winformPanel_ = new Ext.Window({
 this.winformPanel_.show();
 },
 getCargarGrid: function(){
-    ContabilidadEditar.main.store_lista.baseParams.co_compra=ContabilidadEditar.main.OBJ.co_compras;
+    ContabilidadEditar.main.store_lista.baseParams.co_factura=ContabilidadEditar.main.OBJ.co_factura;
     this.store_lista.load({
         callback: function(){
             ContabilidadEditar.main.total_pagar = paqueteComunJS.funcion.getSumaColumnaGrid({
@@ -329,13 +331,13 @@ verificarPartidas: function(){
                 });
             }, this);
             
-            if(flag == true){
+           /* if(flag == true){
                  Ext.get('co_ejecutor').setStyle('background-color','#c9c9c9');
                  ContabilidadEditar.main.co_ejecutor.setReadOnly(true);
             }else{
                  Ext.get('co_ejecutor').setStyle('background-color','#FFFFFF');
                  ContabilidadEditar.main.co_ejecutor.setReadOnly(false);
-            }
+            }*/
             
 },
 afectar_partida: function(){
@@ -384,7 +386,7 @@ getStoreCO_EJECUTOR:function(){
     return this.store;
 },getLista: function(){
     this.store = new Ext.data.JsonStore({
-    url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/storelistaCompra',
+    url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/storelistaPartida',
     root:'data',
     fields:[
                 {name: 'co_partida'},
