@@ -37,6 +37,7 @@ class DirectorioActions extends sfActions
     $co_documento     =   $this->getRequestParameter("co_documento");
     $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
     $tx_razon_social  =   $this->getRequestParameter("tx_razon_social");
+    $co_tipo_solicitud  =   $this->getRequestParameter("co_tipo_solicitud");
     
     $c = new Criteria();  
     $c->clearSelectColumns();
@@ -60,6 +61,11 @@ class DirectorioActions extends sfActions
     if($co_solicitud!=''){
         $c->add(Tb026SolicitudPeer::CO_SOLICITUD,$co_solicitud);
     }
+
+    if($co_tipo_solicitud!=''){
+        $c->add(Tb026SolicitudPeer::CO_TIPO_SOLICITUD,$co_tipo_solicitud);
+    }
+
                               
     $c->setIgnoreCase(true);
     $c->addSelectColumn(Tb030RutaPeer::CO_PROCESO);

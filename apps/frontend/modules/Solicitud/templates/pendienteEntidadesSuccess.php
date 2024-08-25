@@ -14,7 +14,8 @@
             this.co_tipo_solicitud;
             this.co_proceso;
 
-            this.storeCO_PROCESO = this.getStoreCO_PROCESO();
+            this.storeCO_PROCESO      = this.getStoreCO_PROCESO();
+            this.storeCO_TIPO_PROCESO = this.getStoreCO_TIPO_PROCESO();
 
             this.storeCO_DOCUMENTO = this.getStoreCO_DOCUMENTO();
 
@@ -46,6 +47,25 @@
                 allowBlank: false
             });
             this.storeCO_PROCESO.load();
+
+            this.co_tipo_proceso = new Ext.form.ComboBox({
+                fieldLabel: 'Tipo Proceso',
+                store: this.storeCO_TIPO_PROCESO,
+                typeAhead: true,
+                valueField: 'co_tipo_solicitud',
+                displayField: 'tx_tipo_solicitud',
+                hiddenName: 'co_tipo_solicitud',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                emptyText: 'Seleccione...',
+                selectOnFocus: true,
+                mode: 'local',
+                width: 400,
+                resizable: true,
+                allowBlank: false
+            });
+            this.storeCO_TIPO_PROCESO.load();
 
             this.co_documento = new Ext.form.ComboBox({
                 fieldLabel: 'documento',
@@ -109,7 +129,8 @@
                     this.compositefieldCIRIF,
                     this.tx_razon_social,
                     this.co_solicitud,
-                    this.co_proceso
+                    this.co_proceso,
+                    this.co_tipo_proceso
 
                 ],
                 keys: [{
@@ -443,6 +464,20 @@
                     },
                     {
                         name: 'id_ruta'
+                    }
+                ]
+            });
+            return this.store;
+        },
+        getStoreCO_TIPO_PROCESO(){
+            this.store = new Ext.data.JsonStore({
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/storefkcotiposolicitud',
+                root: 'data',
+                fields: [{
+                        name: 'co_tipo_solicitud'
+                    },
+                    {
+                        name: 'tx_tipo_solicitud'
                     }
                 ]
             });

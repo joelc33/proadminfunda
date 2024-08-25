@@ -462,7 +462,7 @@ class SolicitudActions extends sfActions
                 $datos_solicitud = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
 
                 //compromisos de asignacion (pagos sin facturas)
-               /* if ($datos_solicitud->getCoProceso() == 68) {
+                /* if ($datos_solicitud->getCoProceso() == 68) {
 
                     $c = new Criteria();
                     $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
@@ -477,7 +477,6 @@ class SolicitudActions extends sfActions
             }
 
             $con->commit();
-
         } catch (PropelException $e) {
             $con->rollback();
             $data = json_encode(array(
@@ -534,14 +533,104 @@ class SolicitudActions extends sfActions
         $this->setTemplate('store');
     }
 
+    
+
+    public function executeStorefkcotiposolicitudProcesado(sfWebRequest $request)
+    {
+
+        $registro_proceso = Tb028ProcesoPeer::getListaProcesoAsignado($this->getUser()->getAttribute('codigo'));
+        $registro_tramite = Tb006TipoSolicitudUsuarioPeer::getListaTramiteAsignado($this->getUser()->getAttribute('codigo'));
+
+
+        $c = new Criteria();
+        $c->setDistinct();
+        $c->addJoin(Tb006TipoSolicitudUsuarioPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+        $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
+        $c->add(Tb006TipoSolicitudUsuarioPeer::CO_USUARIO, $this->getUser()->getAttribute('codigo'));
+        $c->add(Tb027TipoSolicitudPeer::IN_VER, true);
+        $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, $registro_tramite, Criteria::IN);
+        $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
+        $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA, array(2), Criteria::IN);
+        $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
+
+
+        $c->addAscendingOrderByColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
+
+        $stmt = Tb027TipoSolicitudPeer::doSelectStmt($c);
+
+        while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $registros[] = $reg;
+        }
+
+        $this->data = json_encode(array(
+            "success"   =>  true,
+            "total"     =>  count($registros),
+            "data"      =>  $registros
+        ));
+        $this->setTemplate('store');
+    }
+
+    public function executeStorefkcotiposolicitudDirectorio(sfWebRequest $request)
+    {
+
+        $registro_proceso = Tb028ProcesoPeer::getListaProcesoAsignado($this->getUser()->getAttribute('codigo'));
+        $registro_tramite = Tb006TipoSolicitudUsuarioPeer::getListaTramiteAsignado($this->getUser()->getAttribute('codigo'));
+
+
+        $c = new Criteria();
+        $c->setDistinct();
+        $c->addJoin(Tb006TipoSolicitudUsuarioPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+        $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
+        $c->add(Tb006TipoSolicitudUsuarioPeer::CO_USUARIO, $this->getUser()->getAttribute('codigo'));
+        $c->add(Tb027TipoSolicitudPeer::IN_VER, true);
+        $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, $registro_tramite, Criteria::IN);
+        $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
+        $c->addAnd(Tb030RutaPeer::IN_ANULAR,NULL, Criteria::ISNULL);
+        $c->addAnd(Tb030RutaPeer::IN_ACTUAL,true);
+        $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
+
+
+        $c->addAscendingOrderByColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
+
+        $stmt = Tb027TipoSolicitudPeer::doSelectStmt($c);
+
+        while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $registros[] = $reg;
+        }
+
+        $this->data = json_encode(array(
+            "success"   =>  true,
+            "total"     =>  count($registros),
+            "data"      =>  $registros
+        ));
+        $this->setTemplate('store');
+    }
+
 
     public function executeStorefkcotiposolicitud(sfWebRequest $request)
     {
 
+        $registro_proceso = Tb028ProcesoPeer::getListaProcesoAsignado($this->getUser()->getAttribute('codigo'));
+        $registro_tramite = Tb006TipoSolicitudUsuarioPeer::getListaTramiteAsignado($this->getUser()->getAttribute('codigo'));
+
+
         $c = new Criteria();
+        $c->setDistinct();
         $c->addJoin(Tb006TipoSolicitudUsuarioPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+        $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
         $c->add(Tb006TipoSolicitudUsuarioPeer::CO_USUARIO, $this->getUser()->getAttribute('codigo'));
         $c->add(Tb027TipoSolicitudPeer::IN_VER, true);
+        $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, $registro_tramite, Criteria::IN);
+        $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
+        $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+        $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2), Criteria::IN);
+        $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
+        $c->addAnd(Tb030RutaPeer::IN_ACTUAL, true);
+        $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
+
 
         $c->addAscendingOrderByColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
 
@@ -939,14 +1028,20 @@ class SolicitudActions extends sfActions
 
 
 
+
+
+    
+
+
     public function executeStorelista(sfWebRequest $request)
     {
 
-        $limit         =   $this->getRequestParameter("limit", 15);
-        $start         =   $this->getRequestParameter("start", 0);
-        $in_ventanilla =   $this->getRequestParameter("in_ventanilla");
-        $co_proceso    =   $this->getRequestParameter("co_proceso");
-        $co_solicitud  =   $this->getRequestParameter("co_solicitud");
+        $limit                =   $this->getRequestParameter("limit", 15);
+        $start                =   $this->getRequestParameter("start", 0);
+        $in_ventanilla        =   $this->getRequestParameter("in_ventanilla");
+        $co_proceso           =   $this->getRequestParameter("co_proceso");
+        $co_tipo_solicitud    =   $this->getRequestParameter("co_tipo_solicitud");
+        $co_solicitud         =   $this->getRequestParameter("co_solicitud");
 
         $co_documento     =   $this->getRequestParameter("co_documento");
         $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
@@ -967,6 +1062,9 @@ class SolicitudActions extends sfActions
             $c->add(Tb008ProveedorPeer::TX_RAZON_SOCIAL, '%' . $tx_razon_social . '%', Criteria::LIKE);
         }
 
+        if ($co_tipo_solicitud != '') {
+            $c->add(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, $co_tipo_solicitud);
+        }
 
 
 
@@ -1086,6 +1184,7 @@ class SolicitudActions extends sfActions
         $co_documento     =   $this->getRequestParameter("co_documento");
         $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
         $tx_razon_social  =   $this->getRequestParameter("tx_razon_social");
+        $co_tipo_solicitud	  =   $this->getRequestParameter("co_tipo_solicitud");
 
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -1103,6 +1202,11 @@ class SolicitudActions extends sfActions
 
         if ($tx_razon_social != '') {
             $c->add(Tb008ProveedorPeer::TX_RAZON_SOCIAL, '%' . $tx_razon_social . '%', Criteria::LIKE);
+        }
+
+
+        if ($co_tipo_solicitud != '') {
+            $c->add(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, $co_tipo_solicitud);
         }
 
 
@@ -1354,6 +1458,8 @@ class SolicitudActions extends sfActions
 
         $this->DatosDetalle();
     }
+
+
 
     public function executeDetalleEntidades(sfWebRequest $request)
     {
