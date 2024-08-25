@@ -476,6 +476,41 @@ class ServicioBasicoFacturaActions extends sfActions
     }
 
 
+    public function executeVerificarFactura(sfWebRequest $request)
+    {
+        $cf = new Criteria();
+        $cf->add(Tb045FacturaPeer::CO_SOLICITUD,$this->getRequestParameter('co_solicitud'));
+        $cantidadFactura = Tb045FacturaPeer::doCount($cf);
+
+        if($cantidadFactura==0){
+            $this->data = json_encode(array(
+                "success" => false,
+                "msg" =>  'Para enviar el pago de servicio debe tener por lo menos una factura cargada'
+            ));
+        }else{
+            $cc = new Criteria();
+            $cc->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA,Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+            $cc->addJoin(Tb052ComprasPeer::CO_COMPRAS,Tb053DetalleComprasPeer::CO_COMPRAS);
+            $cc->add(Tb052ComprasPeer::CO_SOLICITUD,$this->getRequestParameter('co_solicitud'));
+            $cantidadPartida = Tb087PresupuestoMovimientoPeer::doCount($cc);
+
+            if($cantidadPartida==0){
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" =>  'Para enviar el pago de servicio debe asignar las partidas'
+                ));
+            }else{
+                $this->data = json_encode(array(
+                    "success" => true,
+                    "msg" => 'Ok'
+                ));
+            }
+
+        }
+
+        $this->setTemplate('guardar');
+
+    }
 
     public function executeGuardar(sfWebRequest $request)
     {
@@ -558,131 +593,6 @@ class ServicioBasicoFacturaActions extends sfActions
             $tb052_compras->save($con);
 
             $total_pagar = 0;
-            /* foreach($listaFactura  as $v){
-        
-            if($v["co_detalle_compras"]==''){
-                
-                $tb045_factura = new Tb045Factura();
-                $tb045_factura->setNuFactura($v["nu_factura"]);
-                  
-                if(date("Y")>$this->getUser()->getAttribute('ejercicio')){
-                    $fe_cierre = $this->getUser()->getAttribute('fe_cierre'); 
-                }else{
-                    $fe_cierre =date("Y-m-d"); 
-                }                
-        
-                list($dia, $mes, $anio) = explode("/",$v["fe_emision"]);
-                $fecha = $anio."-".$mes."-".$dia;
-                $tb045_factura->setFeEmision($fecha);
-
-
-                $tb045_factura->setNuBaseImponible($v["nu_base_imponible"]);
-                $tb045_factura->setNuTotal($v["nu_total"]);
-                $tb045_factura->setTotalPagar($v["nu_total_pagar"]);
-                $tb045_factura->setCoSolicitud($tb045_facturaForm["co_solicitud"]);
-                $tb045_factura->setCoProveedor($tb045_facturaForm["co_proveedor"]);
-                $tb045_factura->setCoRamo($tb045_facturaForm["co_ramo"]);
-                $tb045_factura->setNuControl($v["nu_control"]);
-                $tb045_factura->setCoCompra($tb052_compras->getCoCompras());
-
-            
-                $tb045_factura->setCoIvaFactura($v["co_iva_factura"]);
-                $tb045_factura->setNuIvaFactura($v["nu_iva_factura"]);
-                $tb045_factura->setCoIvaRetencion($v["co_iva_retencion"]);
-                $tb045_factura->setNuIvaRetencion($v["nu_iva_retencion"]);
-                $tb045_factura->setNuTotalRetencion($v["nu_total_retencion"]);
-                $tb045_factura->setTxConcepto($v["tx_concepto"]) ;
-                $tb045_factura->setFeRegistro($fe_cierre);
-                $tb045_factura->setNuExento($v["nu_exento"]);
-                $tb045_factura->setSubTotalCs($v["sub_total_cs"]);
-                $tb045_factura->setNuIvaCs($v["co_iva_cs"]);
-
-                
-                $tb045_factura->save($con);
-                
-                
-                $tb053_detalle_compras = new Tb053DetalleCompras();
-                $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
-                $tb053_detalle_compras->setNuCantidad(1);
-                $tb053_detalle_compras->setCoProducto($v["co_producto"]);
-                $tb053_detalle_compras->setDetalle($v["tx_concepto"]);
-                $tb053_detalle_compras->setPrecioUnitario($v["total_pagar"]);
-                //$tb053_detalle_compras->setMonto($v["total_pagar"]);
-                $tb053_detalle_compras->setMonto($v["nu_base_imponible"]+$v["nu_exento"]);
-                $tb053_detalle_compras->setInCalcularIva(true);
-                $tb053_detalle_compras->setCoFactura($tb045_factura->getCoFactura());
-                $tb053_detalle_compras->save($con); 
-                
-                
-//                $tb129_detalle_factura  = new Tb129DetalleFactura();
-//                $tb129_detalle_factura->setCoProducto($v["co_producto"])
-//                                      ->setCantProducto(1)
-//                                      ->setMoUnitario($v["total_pagar"])
-//                                      ->setMoTotal($v["total_pagar"])
-//                                      ->setCoFactura($tb045_factura->getCoFactura())
-//                                      ->save($con);
-                
-                $total_pagar = $total_pagar+$v["total_pagar"];
-
-                if($v["nu_iva_retencion"]>0){
-                    $tb046_factura_retencion = new Tb046FacturaRetencion();
-                    $tb046_factura_retencion->setCoFactura($tb045_factura->getCoFactura());
-                    $tb046_factura_retencion->setCoTipoRetencion(92);
-                    $tb046_factura_retencion->setMoRetencion($v["nu_iva_retencion"]);
-                    $tb046_factura_retencion->setPoRetencion($v["co_iva_retencion"]);
-                    $tb046_factura_retencion->setCoSolicitud($tb045_facturaForm["co_solicitud"]);
-                    $tb046_factura_retencion->save($con);
-                }
-                
-                if($v["mo_iva_cs"]>0){
-                    $tb046_factura_retencion = new Tb046FacturaRetencion();
-                    $tb046_factura_retencion->setCoFactura($tb045_factura->getCoFactura());
-                    $tb046_factura_retencion->setCoTipoRetencion(171);
-                    $tb046_factura_retencion->setMoRetencion($v["mo_iva_cs"]);
-                    $tb046_factura_retencion->setPoRetencion($v["co_iva_cs"]);
-                    $tb046_factura_retencion->setCoSolicitud($tb045_facturaForm["co_solicitud"]);
-                    $tb046_factura_retencion->save($con);
-                }                
-                
-                    $listaDetalleFactura  = json_decode($v["json_detalle_retencion"],true);
-
-                    foreach($listaDetalleFactura  as $vp){
-                        $tb046_factura_retencion_dos = new Tb046FacturaRetencion();
-                        $tb046_factura_retencion_dos->setCoFactura($tb045_factura->getCoFactura());
-                        $tb046_factura_retencion_dos->setCoTipoRetencion($vp["co_tipo_retencion"]);
-                        $tb046_factura_retencion_dos->setMoRetencion($vp["nu_valor"]);
-                        $tb046_factura_retencion_dos->setPoRetencion($vp["po_deduccion"]);
-                        $tb046_factura_retencion_dos->setCoSolicitud($tb045_facturaForm["co_solicitud"]);
-                        $tb046_factura_retencion_dos->save($con);                        
-                    }
-
-                
-
-                $monto_iva = $v["nu_iva_factura"] + $v["mo_iva_cs"];
-
-                /*$wherec = new Criteria();
-                $wherec->add(Tb053DetalleComprasPeer::CO_COMPRAS, $tb052_compras->getCoCompras());
-                $wherec->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336);
-                BasePeer::doDelete($wherec, $con);*/
-            /*    
-                if($monto_iva > 0){        
-                    $tb053_detalle_compras = new Tb053DetalleCompras();
-                    $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());                                        
-                    $tb053_detalle_compras->setCoProducto(19336); //IMPUESTO AL VALOR AGREGADO (IVA)
-                    $tb053_detalle_compras->setNuCantidad(1);
-                    $tb053_detalle_compras->setPrecioUnitario(round($monto_iva,2));
-                    $tb053_detalle_compras->setMonto(round($monto_iva,2));
-                    $tb053_detalle_compras->setDetalle('IMPUESTO AL VALOR AGREGADO (IVA)');
-                    $tb053_detalle_compras->setCoPartida($tb052_comprasForm["co_partida_iva"]);
-                    $tb053_detalle_compras->setCoUnidadProducto(638);
-                    $tb053_detalle_compras->setInCalcularIva(false);
-                    $tb053_detalle_compras->setCoFactura($tb045_factura->getCoFactura());
-                    $tb053_detalle_compras->save($con);        
-                }
-
-            }
-        
-        }*/
 
             $tb052_compras->setMontoTotal($total_pagar);
             $tb052_compras->save($con);
@@ -698,8 +608,9 @@ class ServicioBasicoFacturaActions extends sfActions
             Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
 
             $this->data = json_encode(array(
-                "success" => true,
-                "msg" => 'Factura cargada exitosamente!'
+                "success"       => true,
+                "msg"           => 'Factura cargada exitosamente!',
+                "co_solicitud"  => $tb045_facturaForm["co_solicitud"]
             ));
         } catch (PropelException $e) {
             $con->rollback();

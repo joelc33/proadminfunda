@@ -454,10 +454,11 @@
                                     buttons: Ext.MessageBox.OK
                                 });
                             }
-                            //ServicioBasicoFacturaLista.main.store_lista.load();
+                            solicitudLista.main.store_lista.load(); 
                             ServicioBasicoFacturaEditar.main.winformPanel_.close();
 
-                            if (ServicioBasicoFacturaEditar.main.OBJ.co_solicitud == '') {
+                  
+                            if (ServicioBasicoFacturaEditar.main.OBJ.co_solicitud == null) {
 
                                 ServicioBasicoFacturaEditar.main.co_solicitud = action.result.co_solicitud;
 

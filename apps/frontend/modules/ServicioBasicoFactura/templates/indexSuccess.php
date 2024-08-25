@@ -80,16 +80,40 @@
                 handler: function() {
 
                     /* */
+
                     Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar este tramite?', function(boton) {
                         if (boton == "yes") {
-                            this.msg = Ext.get('formulariosolicitud');
-                            this.msg.load({
-                                url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/enviarEntidades",
+
+                            Ext.Ajax.request({
+                                method: 'POST',
+                                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/ServicioBasicoFactura/verificarFactura',
                                 params: {
                                     co_solicitud: solicitudLista.main.gridPanel_.getSelectionModel().getSelected().get('co_solicitud')
                                 },
-                                scripts: true,
-                                text: "Cargando.."
+                                failure: function(result, request) {
+                                    Ext.MessageBox.alert('Error en transacción', action.result.msg);
+                                },
+                                success: function(result, request) {
+
+                                    obj = Ext.util.JSON.decode(result.responseText);
+                                    console.log(obj.success);
+                                    if (obj.success == true) {
+
+                                        this.msg = Ext.get('formulariosolicitud');
+                                        this.msg.load({
+                                            url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/enviarEntidades",
+                                            params: {
+                                                co_solicitud: solicitudLista.main.gridPanel_.getSelectionModel().getSelected().get('co_solicitud')
+                                            },
+                                            scripts: true,
+                                            text: "Cargando.."
+                                        });
+
+                                    } else {
+                                        Ext.MessageBox.alert('Error en transacción', obj.msg);
+                                    }
+
+                                }
                             });
                         }
                     }); /**/
@@ -199,7 +223,7 @@
                     }
                     ?>
                     this.formulario, '-',
-                  //  this.detalle, '-',
+                    //  this.detalle, '-',
                     this.estado, '-',
                     this.anular
                 ],
