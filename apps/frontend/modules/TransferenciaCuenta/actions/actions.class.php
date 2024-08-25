@@ -315,7 +315,8 @@ class TransferenciaCuentaActions extends sfActions
         $c->addSelectColumn(Tb066TransferenciaCuentaPeer::CO_CUENTA_CONTABLE_CREDITO);
         $c->addSelectColumn(Tb066TransferenciaCuentaPeer::CO_CUENTA_CONTABLE_DEBITO);
         $c->addSelectColumn(Tb066TransferenciaCuentaPeer::CO_TIPO_RETENCION);
-
+        $c->addSelectColumn(Tb026SolicitudPeer::TX_OBSERVACION);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD,Tb066TransferenciaCuentaPeer::CO_SOLICITUD);
         $c->add(Tb066TransferenciaCuentaPeer::CO_SOLICITUD, $codigo);
 
         $stmt = Tb056ContratoComprasPeer::doSelectStmt($c);
@@ -345,7 +346,8 @@ class TransferenciaCuentaActions extends sfActions
             "tx_banco_creditar" => $datos_credito["tx_banco"],
             "nu_saldo_creditar" => number_format($datos_credito["mo_disponible"], 0, ',', '.'),
             "co_transferencia_cuenta" => $campos["co_transferencia_cuenta"],
-            "co_tipo_retencion" => $campos["co_tipo_retencion"]
+            "co_tipo_retencion" => $campos["co_tipo_retencion"],
+            "tx_observacion" => $campos["tx_observacion"]
         ));
     }
 
@@ -366,6 +368,7 @@ class TransferenciaCuentaActions extends sfActions
         $co_banco_debitar             =   $this->getRequestParameter("co_banco_debitar");
         $co_cuenta_bancaria_debitar   =   $this->getRequestParameter("co_cuenta_bancaria_debitar");
         $saldo_disponible             =   $this->getRequestParameter("saldo_disponible");
+        $tx_concepto                  =   $this->getRequestParameter("tx_concepto");
 
         $tx_cuenta_debitar            =   $this->getRequestParameter("tx_cuenta_debitar");
         $tx_cuenta_bancaria_debitar   =   $this->getRequestParameter("tx_cuenta_bancaria_debitar");
@@ -396,7 +399,7 @@ class TransferenciaCuentaActions extends sfActions
                     "co_tipo_solicitud"   => 18,
                     "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
                     "fe_solicitud"        => date("d/m/Y"),
-                    "observacion"         => "Transferencia entre cuentas",
+                    "observacion"         => $tx_concepto,
                     "codigo"              =>  $this->getUser()->getAttribute('codigo')
                 );
     
@@ -503,7 +506,7 @@ class TransferenciaCuentaActions extends sfActions
                 $tb155_cuenta_bancaria_historico->setIdTb011CuentaBancaria($tb066_transferencia_cuenta->getCoCuentaBancariaDebito());
                 $tb155_cuenta_bancaria_historico->setMoTransaccion($tb066_transferencia_cuenta->getMoDebito());
                 $tb155_cuenta_bancaria_historico->setFeTransaccion($tb066_transferencia_cuenta->getCreatedAt('Y-m-d'));
-                $tb155_cuenta_bancaria_historico->setDeObservacion('Transferencia entre Cuentas: solicitud Nº:' . $tb066_transferencia_cuenta->getCoSolicitud());
+                $tb155_cuenta_bancaria_historico->setDeObservacion('Transferencia entre Cuentas: solicitud Nº:' . $tb066_transferencia_cuenta->getCoSolicitud().' '.$tx_concepto);
                 $tb155_cuenta_bancaria_historico->setIdTb010Banco($tb066_transferencia_cuenta->getCoBancoDebito());
                 $tb155_cuenta_bancaria_historico->setIdTb154TipoCuentaMovimiento(3);
                 $tb155_cuenta_bancaria_historico->setIdTb153TipoDocumentoCuenta(3);

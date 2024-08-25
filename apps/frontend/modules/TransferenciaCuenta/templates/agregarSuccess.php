@@ -331,6 +331,14 @@
                 value: this.OBJ.nu_saldo_creditar
             });
 
+            this.tx_concepto = new Ext.form.TextArea({
+                fieldLabel: 'Descripcion',
+                name: 'tx_concepto',
+                allowBlank: false,
+                value:this.OBJ.tx_observacion,
+                width: 500
+            });
+
             this.co_tipo_retencion = new Ext.form.ComboBox({
                 fieldLabel: 'Fondo Tercero',
                 store: this.storeCO_TIPO_RETENCION,
@@ -364,7 +372,7 @@
                     this.tx_cuenta_debitar,
                     this.nu_saldo_debitar,
                     this.mo_debitar,
-                    this.co_cuenta_debita
+                    this.co_cuenta_debita                    
                 ]
             });
 
@@ -375,8 +383,8 @@
                     this.tx_cuenta_creditar,
                     this.nu_saldo_creditar,
                     this.co_cuenta_creditar,
-                    this.co_tipo_retencion
-                ]
+                    this.co_tipo_retencion,
+                    this.tx_concepto]
             });
 
 
