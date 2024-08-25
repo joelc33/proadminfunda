@@ -1005,7 +1005,7 @@ class PresupuestoActions extends sfActions
         $campos["tx_concepto"] = $campos["tx_concepto"];
         $campos["co_producto"] = $campos["id_tb048_producto"];
 
-        $datos_compra          = $this->getCoCompras($codigo);
+        $datos_compra          = $this->getCoCompras($campos["co_solicitud"]);
         $campos["co_compras"]  = $datos_compra["co_compras"];
         $campos["co_ejecutor"] = $datos_compra["co_ejecutor"];
         $campos["co_factura"]  = $codigo;
