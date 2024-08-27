@@ -107,6 +107,7 @@
                 valueField: 'co_unidad_producto',
                 displayField: 'tx_unidad_producto',
                 hiddenName: 'co_unidad_producto',
+                id: 'co_unidad_producto',
                 forceSelection: true,
                 resizable: true,
                 triggerAction: 'all',
@@ -192,12 +193,12 @@
                 name: 'in_exento',
                 listeners: {
                     check: function(checkbox, isChecked) {
-                       if(this.getValue()){
-                        listaProducto.main.co_iva_factura.setValue(0);
-                        listaProducto.main.co_iva_factura.readOnly = true;                        
-                       }else{
-                        listaProducto.main.co_iva_factura.readOnly = false;                        
-                       }
+                        if (this.getValue()) {
+                            listaProducto.main.co_iva_factura.setValue(0);
+                            listaProducto.main.co_iva_factura.readOnly = true;
+                        } else {
+                            listaProducto.main.co_iva_factura.readOnly = false;
+                        }
                     }
 
                 }
@@ -290,7 +291,10 @@
                         });
 
 
+                        Ext.get('co_unidad_producto').setStyle('background-color', '');
+                        listaProducto.main.co_unidad_producto.setReadOnly(false);
 
+                      
                         listaProducto.main.storeCO_UNIDAD.load();
                         listaProducto.main.storeCO_UNIDAD.on('load', function() {
                             if (listaProducto.main.store_lista.getAt(rowIndex).get('co_unidad_producto') != '') {
@@ -299,8 +303,16 @@
                                     listaProducto.main.co_unidad_producto.selectByValue(listaProducto.main.store_lista.getAt(rowIndex).get('co_unidad_producto'));
 
                                 } catch (err) {}
+
+
+
                             }
                         });
+
+                        if (listaProducto.main.store_lista.getAt(rowIndex).get('co_detalle_requisicion') != '') {
+                            Ext.get('co_unidad_producto').setStyle('background-color', '#c9c9c9');
+                            listaProducto.main.co_unidad_producto.setReadOnly(true);
+                        }
                     }
                 },
                 bbar: new Ext.PagingToolbar({
@@ -382,7 +394,7 @@
                     listaProducto.main.store_lista.load();
                     proyecto.main.getTotal();
 
-                   // proyecto.main.getVerificarIVA();
+                    // proyecto.main.getVerificarIVA();
 
                     Ext.utiles.msg('Mensaje', "El producto se agrego exitosamente");
 
