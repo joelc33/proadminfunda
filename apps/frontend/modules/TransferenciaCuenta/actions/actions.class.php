@@ -387,6 +387,7 @@ class TransferenciaCuentaActions extends sfActions
         $co_solicitud                 =   $this->getRequestParameter("co_solicitud");
         $co_transferencia_cuenta      =   $this->getRequestParameter("co_transferencia_cuenta");
         $co_tipo_retencion      =   $this->getRequestParameter("co_tipo_retencion");
+        $fecha      =   $this->getRequestParameter("fecha");
 
         $con = Propel::getConnection();
 
@@ -398,7 +399,7 @@ class TransferenciaCuentaActions extends sfActions
                 $tb026_solicitudForm = array(
                     "co_tipo_solicitud"   => 18,
                     "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-                    "fe_solicitud"        => date("d/m/Y"),
+                    "fe_solicitud"        => $fecha,
                     "observacion"         => $tx_concepto,
                     "codigo"              =>  $this->getUser()->getAttribute('codigo')
                 );
@@ -505,7 +506,7 @@ class TransferenciaCuentaActions extends sfActions
                 $tb155_cuenta_bancaria_historico->setInActivo(true);
                 $tb155_cuenta_bancaria_historico->setIdTb011CuentaBancaria($tb066_transferencia_cuenta->getCoCuentaBancariaDebito());
                 $tb155_cuenta_bancaria_historico->setMoTransaccion($tb066_transferencia_cuenta->getMoDebito());
-                $tb155_cuenta_bancaria_historico->setFeTransaccion($tb066_transferencia_cuenta->getCreatedAt('Y-m-d'));
+                $tb155_cuenta_bancaria_historico->setFeTransaccion($fecha);
                 $tb155_cuenta_bancaria_historico->setDeObservacion('Transferencia entre Cuentas: solicitud Nº:' . $tb066_transferencia_cuenta->getCoSolicitud().' '.$tx_concepto);
                 $tb155_cuenta_bancaria_historico->setIdTb010Banco($tb066_transferencia_cuenta->getCoBancoDebito());
                 $tb155_cuenta_bancaria_historico->setIdTb154TipoCuentaMovimiento(3);
@@ -527,7 +528,7 @@ class TransferenciaCuentaActions extends sfActions
                 $tb155_cuenta_bancaria_historico_credito->setInActivo(true);
                 $tb155_cuenta_bancaria_historico_credito->setIdTb011CuentaBancaria($tb066_transferencia_cuenta->getCoCuentaBancariaCredito());
                 $tb155_cuenta_bancaria_historico_credito->setMoTransaccion($tb066_transferencia_cuenta->getMoDebito());
-                $tb155_cuenta_bancaria_historico_credito->setFeTransaccion($tb066_transferencia_cuenta->getCreatedAt('Y-m-d'));
+                $tb155_cuenta_bancaria_historico_credito->setFeTransaccion($fecha);
                 $tb155_cuenta_bancaria_historico_credito->setDeObservacion('Transferencia entre Cuentas: solicitud Nº:' . $tb066_transferencia_cuenta->getCoSolicitud());
                 $tb155_cuenta_bancaria_historico_credito->setIdTb010Banco($tb066_transferencia_cuenta->getCoBancoCredito());
                 $tb155_cuenta_bancaria_historico_credito->setIdTb154TipoCuentaMovimiento(6);

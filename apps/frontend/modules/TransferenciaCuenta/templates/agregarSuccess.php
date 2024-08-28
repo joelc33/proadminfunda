@@ -56,6 +56,16 @@
                 value: this.OBJ.tx_cuenta_debitar
             });
 
+
+            this.fecha = new Ext.form.DateField({
+                    fieldLabel:'Fecha',
+                    name:'fecha',
+                    value:new Date(),
+                    allowBlank:false,
+                    width:100,
+                    maxValue:new Date()  
+            });
+
             this.tx_cuenta_bancaria_debitar = new Ext.form.TextField({
                 fieldLabel: 'Cuenta Bancaria',
                 name: 'tx_cuenta_bancaria_debitar',
@@ -384,7 +394,8 @@
                     this.nu_saldo_creditar,
                     this.co_cuenta_creditar,
                     this.co_tipo_retencion,
-                    this.tx_concepto]
+                    this.tx_concepto,
+                    this.fecha]
             });
 
 
