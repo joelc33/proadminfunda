@@ -222,8 +222,38 @@ class CotizacionActions extends sfActions
     if ($codigo != '' || $codigo != null) {
       $tb206_cotizacion    = Tb206CotizacionPeer::retrieveByPk($codigo);
     } else {
+
+      $ce = new Criteria();
+      $ce->add(Tb015EmpresaPeer::CO_EMPRESA, 1);
+      $stmte = Tb015EmpresaPeer::doSelectStmt($ce);
+      $datos_empresa = $stmte->fetch(PDO::FETCH_ASSOC);
+
+      $cc = new Criteria();
+      $cc->add(Tb208TipoCotizacionPeer::CO_TIPO_COTIZACION, $tb206_cotizacionForm["co_tipo_cotizacion"]);
+      $stmtc = Tb208TipoCotizacionPeer::doSelectStmt($cc);
+      $datos_tipo_cotizacion = $stmtc->fetch(PDO::FETCH_ASSOC);
+
+      $c = new Criteria();
+      $c->add(Tb058TpContratoPeer::CO_TP_CONTRATO, $tb206_cotizacionForm["co_tipo_modalidad"]);
+      $stmt = Tb058TpContratoPeer::doSelectStmt($c);
+      $datos_tipo_modalidad = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      $cs = new Criteria();
+      $cs->add(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, $datos_tipo_cotizacion['co_tipo_solicitud']);
+      $stmts = Tb027TipoSolicitudPeer::doSelectStmt($cs);
+      $datos_solicitud = $stmts->fetch(PDO::FETCH_ASSOC);
+
+
+      $cc = new Criteria();
+      $cc->add(Tb136TipoDocumentoPeer::CO_TIPO_DOCUMENTO, $datos_solicitud['id_136_tipo_documento']);
+      $stmtc = Tb136TipoDocumentoPeer::doSelectStmt($cc);
+      $datos_documento = $stmtc->fetch(PDO::FETCH_ASSOC);
+
       $tb206_cotizacion = new Tb206Cotizacion();
-      $serial = 'PB-' . date("Ym") . '-' . Tb137ControlSerialPeer::getSerial(13, $con, $this->getUser()->getAttribute('ejercicio'));
+      $serial = $datos_documento['tx_sigla'].'-'.$datos_empresa['tx_sigla_serial'].'-'.$datos_tipo_modalidad['tx_sigla'].'-'.'SC'.'-'.date("Y") . '-' . Tb137ControlSerialPeer::getSerial($datos_solicitud['id_136_tipo_documento'], $con, $this->getUser()->getAttribute('ejercicio'),$tb206_cotizacionForm["co_tipo_modalidad"]);
+    
+    
+     
     }
     $tb206_cotizacion->setNumeroCotizacion($serial);
 
