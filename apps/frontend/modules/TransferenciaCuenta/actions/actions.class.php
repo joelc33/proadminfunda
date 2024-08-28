@@ -387,7 +387,9 @@ class TransferenciaCuentaActions extends sfActions
         $co_solicitud                 =   $this->getRequestParameter("co_solicitud");
         $co_transferencia_cuenta      =   $this->getRequestParameter("co_transferencia_cuenta");
         $co_tipo_retencion      =   $this->getRequestParameter("co_tipo_retencion");
-        $fecha      =   $this->getRequestParameter("fecha");
+        $fecha_solicitud = $this->getRequestParameter("fecha");
+        list($dia,$mes,$anio) = explode("/", $this->getRequestParameter("fecha"));
+        $fecha = $anio.'-'.$mes.'-'.$dia;
 
         $con = Propel::getConnection();
 
@@ -399,7 +401,7 @@ class TransferenciaCuentaActions extends sfActions
                 $tb026_solicitudForm = array(
                     "co_tipo_solicitud"   => 18,
                     "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-                    "fe_solicitud"        => $fecha,
+                    "fe_solicitud"        => $fecha_solicitud,
                     "observacion"         => $tx_concepto,
                     "codigo"              =>  $this->getUser()->getAttribute('codigo')
                 );

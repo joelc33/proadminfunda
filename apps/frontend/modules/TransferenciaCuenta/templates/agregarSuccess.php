@@ -60,7 +60,6 @@
             this.fecha = new Ext.form.DateField({
                     fieldLabel:'Fecha',
                     name:'fecha',
-                    value:new Date(),
                     allowBlank:false,
                     width:100,
                     maxValue:new Date()  
@@ -382,6 +381,7 @@
                     this.tx_cuenta_debitar,
                     this.nu_saldo_debitar,
                     this.mo_debitar,
+                    this.fecha,
                     this.co_cuenta_debita                    
                 ]
             });
@@ -394,8 +394,8 @@
                     this.nu_saldo_creditar,
                     this.co_cuenta_creditar,
                     this.co_tipo_retencion,
-                    this.tx_concepto,
-                    this.fecha]
+                    this.tx_concepto
+                    ]
             });
 
 
