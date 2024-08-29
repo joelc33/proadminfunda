@@ -458,6 +458,38 @@ class ServicioBasicoFacturaActions extends sfActions
                 $tb053_detalle_compras->save($con);
             }
 
+
+            $c = new Criteria();
+            $c->clearSelectColumns();
+            $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
+            $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
+            $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
+            //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
+            //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
+            $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+            $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+            //echo $c->toString(); exit();
+            $stmt = Tb045FacturaPeer::doSelectStmt($c);
+            $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
+            $nu_monto =  $campos["total"];
+            $monto_total = $campos["total"];
+            $retencion =  $campos["total_retencion"];
+            $total_retencion = $retencion;
+
+
+            $nu_monto_total = $nu_monto - $total_retencion;
+
+            $wherec = new Criteria();
+            $wherec->add(Tb052ComprasPeer::CO_SOLICITUD, $tb045_facturaForm["co_solicitud"]);
+
+            $updc = new Criteria();
+            $updc->add(Tb052ComprasPeer::MONTO_TOTAL, $nu_monto_total);
+
+            BasePeer::doUpdate($wherec, $updc, $con);
+
+
             $con->commit();
 
             $this->data = json_encode(array(
@@ -479,37 +511,35 @@ class ServicioBasicoFacturaActions extends sfActions
     public function executeVerificarFactura(sfWebRequest $request)
     {
         $cf = new Criteria();
-        $cf->add(Tb045FacturaPeer::CO_SOLICITUD,$this->getRequestParameter('co_solicitud'));
+        $cf->add(Tb045FacturaPeer::CO_SOLICITUD, $this->getRequestParameter('co_solicitud'));
         $cantidadFactura = Tb045FacturaPeer::doCount($cf);
 
-        if($cantidadFactura==0){
+        if ($cantidadFactura == 0) {
             $this->data = json_encode(array(
                 "success" => false,
                 "msg" =>  'Para enviar el pago de servicio debe tener por lo menos una factura cargada'
             ));
-        }else{
+        } else {
             $cc = new Criteria();
-            $cc->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA,Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
-            $cc->addJoin(Tb052ComprasPeer::CO_COMPRAS,Tb053DetalleComprasPeer::CO_COMPRAS);
-            $cc->add(Tb052ComprasPeer::CO_SOLICITUD,$this->getRequestParameter('co_solicitud'));
+            $cc->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+            $cc->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
+            $cc->add(Tb052ComprasPeer::CO_SOLICITUD, $this->getRequestParameter('co_solicitud'));
             $cantidadPartida = Tb087PresupuestoMovimientoPeer::doCount($cc);
 
-            if($cantidadPartida==0){
+            if ($cantidadPartida == 0) {
                 $this->data = json_encode(array(
                     "success" => false,
                     "msg" =>  'Para enviar el pago de servicio debe asignar las partidas'
                 ));
-            }else{
+            } else {
                 $this->data = json_encode(array(
                     "success" => true,
                     "msg" => 'Ok'
                 ));
             }
-
         }
 
         $this->setTemplate('guardar');
-
     }
 
     public function executeGuardar(sfWebRequest $request)
@@ -925,7 +955,7 @@ class ServicioBasicoFacturaActions extends sfActions
 
         $c->addJoin(Tb048ProductoPeer::CO_PRODUCTO, Tb053DetalleComprasPeer::CO_PRODUCTO);
         $c->addJoin(Tb045FacturaPeer::CO_FACTURA, Tb053DetalleComprasPeer::CO_FACTURA);
-        $c->add(Tb053DetalleComprasPeer::CO_PRODUCTO,19336,Criteria::NOT_EQUAL);
+        $c->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336, Criteria::NOT_EQUAL);
         $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
 
         // echo $c->toString(); exit();
