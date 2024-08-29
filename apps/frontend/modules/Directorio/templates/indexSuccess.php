@@ -250,7 +250,7 @@
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'tx_serial',
-                        renderer: renderDatosOdp
+                        renderer: renderRectificacion
                     },
                     {
                         header: 'Nro de Acta',
