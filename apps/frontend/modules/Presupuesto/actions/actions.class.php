@@ -512,6 +512,7 @@ class PresupuestoActions extends sfActions
         /************************************/
 
     
+        echo $c->toString(); exit();
         // $c->add(Tb052ComprasPeer::CO_SOLICITUD,$codigo);        
 
         $stmt = Tb052ComprasPeer::doSelectStmt($c);
