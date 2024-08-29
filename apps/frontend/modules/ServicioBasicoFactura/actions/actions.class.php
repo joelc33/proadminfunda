@@ -477,16 +477,8 @@ class ServicioBasicoFacturaActions extends sfActions
 
             $nu_monto_total = $nu_monto - $total_retencion;
 
-            echo $nu_monto_total; exit(); 
-
-            $wherec = new Criteria();
-            $wherec->add(Tb052ComprasPeer::CO_SOLICITUD, $tb045_facturaForm["co_solicitud"]);
-
-            $updc = new Criteria();
-            $updc->add(Tb052ComprasPeer::MONTO_TOTAL, $nu_monto_total);
-
-            BasePeer::doUpdate($wherec, $updc, $con);
-
+            $compra = Tb052ComprasPeer::retrieveByPK($v["co_compra"]);    
+            $compra->setMontoTotal($nu_monto_total)->save($con);
 
             $con->commit();
 
