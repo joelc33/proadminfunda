@@ -390,7 +390,7 @@ class PDF_Flo extends PDF_FlowingBlock
                             }
 
 
-                            $this->Row(array($documento, $soporte, date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), utf8_decode($this->datos[0]['tx_observacion']), number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($this->datos[0]['nu_total'] - ($this->datos[0]["nu_iva_retencion"] + $this->datos[0]['nu_total_retencion']), 2, ',', '.')), 0, 0);
+                            $this->Row(array($documento, $soporte, date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), utf8_decode($this->datos[0]['tx_observacion']), number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($this->datos[0]['nu_total'] - ($this->datos[0]['nu_total_retencion']), 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
                             //$this->SetX(142);
@@ -675,7 +675,7 @@ class PDF_Flo extends PDF_FlowingBlock
                             $this->SetAligns(array("C", "C", "C", "L", "R", "L", "R", "R"));
                             $this->SetWidths(array(25, 25, 15, 43, 20, 25, 20, 27));
                             $this->SetX(10);
-                            $this->Row(array('Fact-' . $valor['nu_factura'], $valor["tx_concepto_factura"], date("d/m/Y", strtotime($valor['fecha_odp'])), $valor['tx_concepto'], number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($valor['nu_total'] - ($valor[0]["nu_iva_retencion"] + $valor['nu_total_retencion']), 2, ',', '.')), 0, 0);
+                            $this->Row(array('Fact-' . $valor['nu_factura'], $valor["tx_concepto_factura"], date("d/m/Y", strtotime($valor['fecha_odp'])), $valor['tx_concepto'], number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($valor['nu_total'] - ($valor['nu_total_retencion']), 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
                             $this->SetX(138);
@@ -728,7 +728,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->Row(array(number_format($valor['nu_total']-$valor['nu_total_retencion'], 2, ',', '.')), 0, 0);*/
 
 
-                $this->line(10, $y + 5, 210, $y + 5);
+                $this->line(10, $y, 210, $y);
 
                 $i++;
             }
@@ -1159,7 +1159,7 @@ class PDF_Flo extends PDF_FlowingBlock
     }
 }
 
-
+/*
 $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->AliasNbPages();
 $pdf->PrintChapter();
@@ -1179,11 +1179,11 @@ $update = "update tb030_ruta set tx_ruta_reporte = '" . $dir . "' where co_ruta 
 $comm->Execute($update);
 $pdf->SetMargins(0, 0);
 $pdf->Output($dir, 'F');
+*/
 
-/*
 $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetMargins(0, 0);
 $pdf->SetDisplayMode('default');
 $pdf->Output();
-*/
+
