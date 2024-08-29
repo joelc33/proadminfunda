@@ -812,6 +812,30 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $c->clearSelectColumns();
                 $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
                 $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
+                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
+                //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
+                //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
+                $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+                $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+                //echo $c->toString(); exit();
+                $stmt = Tb045FacturaPeer::doSelectStmt($c);
+                $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
+                $nu_monto =  $campos["total"];
+                $monto_total = $campos["total"];
+                $retencion =  $campos["total_retencion"];
+                $total_iva_retencion =  $campos["total_iva_retencion"];
+                $total_retencion = $retencion;
+
+                $wherec = new Criteria();
+                $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
+                BasePeer::doDelete($wherec, $con);
+
+              /*  $c = new Criteria();
+                $c->clearSelectColumns();
+                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
+                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
                 $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
                 $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
@@ -845,7 +869,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $total_iva_retencion =  $campos["total_iva_retencion"];
 
                 //$total_retencion = $retencion - $total_iva_retencion;   
-                $total_retencion = $retencion;
+                $total_retencion = $retencion;*/
                 break;
             case 38:
                 //Fondo de Tercero MASIVO           
