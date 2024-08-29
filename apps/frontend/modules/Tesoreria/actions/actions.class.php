@@ -1816,7 +1816,8 @@ class TesoreriaActions extends sfActions
                 "tx_rif"            => $tx_rif,
                 "tx_razon_social"   => $tx_razon_social,            
                 "fe_creacion"       => $dia.'-'.$mes.'-'.$anio,
-                "cant_revision"     => $cantidad
+                "cant_revision"     => $cantidad,
+                "co_ruta_odp"   => $this->getTxRutaReporte(10, $res["co_solicitud"])
             );
     }
 
