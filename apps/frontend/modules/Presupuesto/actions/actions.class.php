@@ -469,6 +469,7 @@ class PresupuestoActions extends sfActions
         $c->addSelectColumn(Tb052ComprasPeer::MONTO_SUB_TOTAL);
         $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
         $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
+        $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as nu_total');
         $c->addSelectColumn('SUM(' . Tb045FacturaPeer::TOTAL_PAGAR . ') as nu_total_pagar');
         $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as nu_iva_retencion');
         $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as nu_total_retencion');
@@ -531,7 +532,7 @@ class PresupuestoActions extends sfActions
 
         $encrip = new myConfig();
 
-        echo $campos["nu_total_pagar"]; exit();
+      //  echo $campos["nu_total_pagar"]; exit();
         $this->data = json_encode(array(
             "co_proveedor"          => $campos["co_proveedor"],
             "co_ruta"               => $encrip->encrypt($campos["co_ruta"]),
@@ -548,9 +549,9 @@ class PresupuestoActions extends sfActions
             "fecha"                 => $dia . '/' . $mes . '/' . $anio,
             "fe_fin"                => $campos["fecha_fin"],
             "tx_ramo"               => $campos["tx_ramo"],
-            "monto"                 => ($campos["nu_total_pagar"] == null) ? $campos["monto_total"] : $campos["nu_total_pagar"],
+            "monto"                 => ($campos["nu_total"] == null) ? $campos["monto_total"] : $campos["nu_total"],
             "monto_retenciones"     => $campos["nu_total_retencion"],
-            "total_pagar"           => ($campos["total_pagar"] == null) ? $campos["monto_total"] : $campos["total_pagar"],
+            "total_pagar"           => ($campos["nu_total_pagar"] == null) ? $campos["monto_total"] : $campos["nu_total_pagar"],
             "nu_iva"                => $campos["nu_iva"],
             "co_tipo_odp"           => $this->getCoTipoOdp($codigo),
             "tx_concepto"           => $campos1["tx_concepto"],
