@@ -464,22 +464,20 @@ class ServicioBasicoFacturaActions extends sfActions
             $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
             $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
             $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
-            //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
-            //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
             $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
             $c->add(Tb045FacturaPeer::CO_SOLICITUD, $tb045_facturaForm["co_solicitud"]);
-            //echo $c->toString(); exit();
+           // echo $c->toString(); exit();
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
             $nu_monto =  $campos["total"];
-            $monto_total = $campos["total"];
             $retencion =  $campos["total_retencion"];
             $total_retencion = $retencion;
 
 
             $nu_monto_total = $nu_monto - $total_retencion;
+
+            echo $nu_monto_total; exit(); 
 
             $wherec = new Criteria();
             $wherec->add(Tb052ComprasPeer::CO_SOLICITUD, $tb045_facturaForm["co_solicitud"]);
