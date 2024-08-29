@@ -11,6 +11,14 @@
 
             this.storeCO_DOCUMENTO = this.getStoreCO_DOCUMENTO();
             this.storeCO_TIPO_PROCESO = this.getStoreCO_TIPO_PROCESO();
+            
+            function renderDatosOdp(val, attr, record) {
+
+                if (val != '') {
+                    return '<a href="#" onclick="PresupuestoBase.main.getDatosOdp()">' + val + '</a>'
+                }
+
+            }            
 
             this.co_solicitud = new Ext.form.TextField({
                 fieldLabel: 'N° Solicitud',
@@ -191,12 +199,18 @@
                 columns: [
                     new Ext.grid.RowNumberer(),
                     {
+                        header: 'co_ruta_odp',
+                        hidden: true,
+                        menuDisabled: true,
+                        dataIndex: 'co_ruta_odp'
+                    },
+                    {
                         header: 'N° Solicitud',
                         width: 100,
                         menuDisabled: true,
                         dataIndex: 'co_solicitud',
                         renderer: renderRectificacion
-                    },
+                    },                    
                     {
                         header: 'RIF',
                         width: 100,
@@ -236,7 +250,7 @@
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'tx_serial',
-                        renderer: renderRectificacion
+                        renderer: renderDatosOdp
                     },
                     {
                         header: 'Nro de Acta',
@@ -390,7 +404,10 @@
                     },
                     {
                         name: 'tx_razon_social'
-                    }
+                    },
+                    {
+                        name: 'co_ruta_odp'
+                    }                    
                 ]
             });
             return this.store;
@@ -460,7 +477,10 @@
             pendienteEntidadesLista.main.formFiltroPrincipal.getForm().reset();
             pendienteEntidadesLista.main.store_lista.baseParams = {};
             pendienteEntidadesLista.main.store_lista.load();
-        }
+        },
+        getDatosOdp: function() {
+            window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_odp'));
+        },        
     };
     Ext.onReady(pendienteEntidadesLista.main.init, pendienteEntidadesLista.main);
 </script>

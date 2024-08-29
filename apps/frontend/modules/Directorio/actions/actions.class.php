@@ -139,6 +139,7 @@ class DirectorioActions extends sfActions
                 "tx_razon_social"   => $tx_razon_social,
                 "fe_creacion"       => $dia.'-'.$mes.'-'.$anio,
                 "cant_revision"     => $cantidad,
+                "co_ruta_odp"   => $this->getTxRutaReporte(10, $res["co_solicitud"])
                 //"co_reporte" => trim($res["co_reporte"]),
         );
     }
@@ -260,5 +261,20 @@ class DirectorioActions extends sfActions
         "data"      =>  $registros
         ));
     }
+    
+  public function getTxRutaReporte($co_proceso, $co_solicitud)
+  {
+
+
+    $encrip = new myConfig();
+
+    $cp = new Criteria();
+    $cp->add(Tb030RutaPeer::CO_SOLICITUD, $co_solicitud);
+    $cp->add(Tb030RutaPeer::CO_PROCESO, $co_proceso);
+    $stmt = Tb030RutaPeer::doSelectStmt($cp);
+    $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $encrip->encrypt($campos["co_ruta"]);
+  }    
   
 }
