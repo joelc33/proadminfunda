@@ -467,7 +467,7 @@ class ServicioBasicoFacturaActions extends sfActions
             //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
             //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
             $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
-            $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+            $c->add(Tb045FacturaPeer::CO_SOLICITUD, $tb045_facturaForm["co_solicitud"]);
             //echo $c->toString(); exit();
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
