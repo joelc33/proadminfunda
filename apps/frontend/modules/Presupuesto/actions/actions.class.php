@@ -512,7 +512,7 @@ class PresupuestoActions extends sfActions
         /************************************/
 
     
-        echo $c->toString(); exit();
+      //  echo $c->toString(); exit();
         // $c->add(Tb052ComprasPeer::CO_SOLICITUD,$codigo);        
 
         $stmt = Tb052ComprasPeer::doSelectStmt($c);
@@ -531,6 +531,7 @@ class PresupuestoActions extends sfActions
 
         $encrip = new myConfig();
 
+        echo $campos["nu_total_pagar"]; exit();
         $this->data = json_encode(array(
             "co_proveedor"          => $campos["co_proveedor"],
             "co_ruta"               => $encrip->encrypt($campos["co_ruta"]),
