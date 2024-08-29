@@ -469,7 +469,7 @@ class PresupuestoActions extends sfActions
         $c->addSelectColumn(Tb052ComprasPeer::MONTO_SUB_TOTAL);
         $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
         $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
-        $c->addSelectColumn('SUM(' . Tb045FacturaPeer::TOTAL_PAGAR . ') as nu_total');
+        $c->addSelectColumn('SUM(' . Tb045FacturaPeer::TOTAL_PAGAR . ') as nu_total_pagar');
         $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as nu_iva_retencion');
         $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as nu_total_retencion');
         $c->addSelectColumn(Tb052ComprasPeer::TX_CONCEPTO);
@@ -546,7 +546,7 @@ class PresupuestoActions extends sfActions
             "fecha"                 => $dia . '/' . $mes . '/' . $anio,
             "fe_fin"                => $campos["fecha_fin"],
             "tx_ramo"               => $campos["tx_ramo"],
-            "monto"                 => ($campos["nu_total"] == null) ? $campos["monto_total"] : $campos["nu_total"],
+            "monto"                 => ($campos["nu_total_pagar"] == null) ? $campos["monto_total"] : $campos["nu_total_pagar"],
             "monto_retenciones"     => $campos["nu_total_retencion"],
             "total_pagar"           => ($campos["total_pagar"] == null) ? $campos["monto_total"] : $campos["total_pagar"],
             "nu_iva"                => $campos["nu_iva"],
