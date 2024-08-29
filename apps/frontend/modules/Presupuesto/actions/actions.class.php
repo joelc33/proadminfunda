@@ -507,6 +507,7 @@ class PresupuestoActions extends sfActions
         $c->addGroupByColumn(Tb052ComprasPeer::TX_CONCEPTO);
         $c->addGroupByColumn(Tb052ComprasPeer::TX_OBSERVACION);
         $c->addGroupByColumn(Tb030RutaPeer::CO_RUTA);
+        $c->addGroupByColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
 
         // $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA,Criteria::LEFT_JOIN);
         $c->add(Tb052ComprasPeer::CO_SOLICITUD, $codigo);
