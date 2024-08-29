@@ -23,7 +23,7 @@ function formatoNro(val){
 function renderDatosOdp(val, attr, record) {
 
     if (val != '') {
-        return '<a href="#" onclick="PresupuestoBase.main.getDatosOdp()">' + val + '</a>'
+        return '<a href="#" onclick="pendientePagosLista.main.getDatosOdp()">' + val + '</a>'
     }
 
 }
