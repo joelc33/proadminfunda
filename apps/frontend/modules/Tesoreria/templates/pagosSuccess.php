@@ -217,7 +217,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'co_liquidacion_pago',hidden:true, menuDisabled:true,dataIndex: 'co_liquidacion_pago'},
-    {header: 'co_ruta',hidden:true, menuDisabled:true,dataIndex: 'co_ruta'},
+    {header: 'co_ruta_odp',hidden:true, menuDisabled:true,dataIndex: 'co_ruta_odp'},
     {header: 'N° Solicitud', width:100,menuDisabled:true,dataIndex: 'co_solicitud',renderer: renderRectificacion}, 
     {header: 'RIF', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_rif'},
     {header: 'Razon Social', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social',renderer: textoLargo},
@@ -326,7 +326,7 @@ getLista: function(){
     root:'data',
     fields:[ 
             {name: 'co_liquidacion_pago'},
-            {name: 'co_ruta'},
+            {name: 'co_ruta_odp'},
             {name: 'tx_tipo_solicitud'},
             {name: 'co_solicitud'},
             {name: 'fe_emision'},
@@ -406,7 +406,7 @@ aplicarFiltroByFormulario: function(){
 	pendientePagosLista.main.store_lista.load();
 },
 getDatosOdp: function() {
-window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta'));
+window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_odp'));
 }
 };
 Ext.onReady(pendientePagosLista.main.init, pendientePagosLista.main);
