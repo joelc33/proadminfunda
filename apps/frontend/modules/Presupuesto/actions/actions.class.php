@@ -469,9 +469,12 @@ class PresupuestoActions extends sfActions
         $c->addSelectColumn(Tb052ComprasPeer::MONTO_SUB_TOTAL);
         $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
         $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
-        $c->addSelectColumn(Tb045FacturaPeer::NU_TOTAL);
+      /*  $c->addSelectColumn(Tb045FacturaPeer::NU_TOTAL);
         $c->addSelectColumn(Tb045FacturaPeer::NU_TOTAL_RETENCION);
-        $c->addSelectColumn(Tb045FacturaPeer::TOTAL_PAGAR);
+        $c->addSelectColumn(Tb045FacturaPeer::TOTAL_PAGAR);*/
+        $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as nu_total');
+        $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as nu_iva_retencion');
+        $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as nu_total_retencion');
         $c->addSelectColumn(Tb052ComprasPeer::TX_CONCEPTO);
         $c->addSelectColumn(Tb052ComprasPeer::TX_OBSERVACION);
         $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
@@ -488,11 +491,29 @@ class PresupuestoActions extends sfActions
         $c->add(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
         /******JOEL MODIFICACION VALUACION***/
 
+        $c->addGroupByColumn(Tb008ProveedorPeer::CO_PROVEEDOR);
+        $c->addGroupByColumn(Tb008ProveedorPeer::CO_DOCUMENTO);
+        $c->addGroupByColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+        $c->addGroupByColumn(Tb008ProveedorPeer::TX_RIF);
+        $c->addGroupByColumn(Tb007DocumentoPeer::INICIAL);
+        $c->addGroupByColumn(Tb008ProveedorPeer::TX_DIRECCION);
+        $c->addGroupByColumn(Tb052ComprasPeer::CO_COMPRAS);
+        $c->addGroupByColumn(Tb052ComprasPeer::FECHA_COMPRA);
+        $c->addGroupByColumn(Tb052ComprasPeer::NU_IVA);
+        $c->addGroupByColumn(Tb052ComprasPeer::MONTO_IVA);
+        $c->addGroupByColumn(Tb052ComprasPeer::MONTO_SUB_TOTAL);
+        $c->addGroupByColumn(Tb052ComprasPeer::MONTO_TOTAL);
+        $c->addGroupByColumn(Tb052ComprasPeer::NUMERO_COMPRA);
+        $c->addGroupByColumn(Tb052ComprasPeer::TX_CONCEPTO);
+        $c->addGroupByColumn(Tb052ComprasPeer::TX_OBSERVACION);
+        $c->addGroupByColumn(Tb030RutaPeer::CO_RUTA);
+
         // $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA,Criteria::LEFT_JOIN);
         $c->add(Tb052ComprasPeer::CO_SOLICITUD, $codigo);
 
         /************************************/
 
+    
         // $c->add(Tb052ComprasPeer::CO_SOLICITUD,$codigo);        
 
         $stmt = Tb052ComprasPeer::doSelectStmt($c);
