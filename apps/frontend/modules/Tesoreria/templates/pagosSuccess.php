@@ -405,7 +405,7 @@ aplicarFiltroByFormulario: function(){
 	pendientePagosLista.main.store_lista.baseParams={};
 	pendientePagosLista.main.store_lista.load();
 },
-getDatosRequisicion: function() {
+getDatosOdp: function() {
 window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta'));
 }
 };
