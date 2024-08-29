@@ -469,10 +469,7 @@ class PresupuestoActions extends sfActions
         $c->addSelectColumn(Tb052ComprasPeer::MONTO_SUB_TOTAL);
         $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
         $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
-      /*  $c->addSelectColumn(Tb045FacturaPeer::NU_TOTAL);
-        $c->addSelectColumn(Tb045FacturaPeer::NU_TOTAL_RETENCION);
-        $c->addSelectColumn(Tb045FacturaPeer::TOTAL_PAGAR);*/
-        $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as nu_total');
+        $c->addSelectColumn('SUM(' . Tb045FacturaPeer::TOTAL_PAGAR . ') as nu_total');
         $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as nu_iva_retencion');
         $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as nu_total_retencion');
         $c->addSelectColumn(Tb052ComprasPeer::TX_CONCEPTO);
