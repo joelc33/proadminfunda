@@ -123,9 +123,8 @@ this.nu_declaracion = new Ext.form.TextField({
 });
 
 this.fecha = new Ext.form.DateField({
-	fieldLabel:'Fecha',
+	fieldLabel:'Fecha de Pago',
 	name:'fondo[fecha]',
-	value:new Date(),
 	allowBlank:false,
 	width:100,
         minValue:this.OBJ.fe_ini,
