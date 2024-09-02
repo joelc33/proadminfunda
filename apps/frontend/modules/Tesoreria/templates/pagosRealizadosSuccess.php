@@ -4,13 +4,21 @@ pendientePagosLista.main = {
 condicion:function(codigo){
     return (codigo=='0')?'NO':'SI';
 },
-init:function(){
+init:function(){    
 
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'<?php echo $data ?>'});
 
 this.storeCO_PROCESO = this.getStoreCO_PROCESO();
 
 this.storeCO_DOCUMENTO = this.getStoreCO_DOCUMENTO();
+
+function renderDatosOdp(val, attr, record) {
+
+    if (val != '') {
+        return '<a href="#" onclick="pendientePagosLista.main.getDatosOdp()">' + val + '</a>'
+    }
+
+}
 
 this.co_solicitud = new Ext.form.TextField({
 	fieldLabel:'N° Solicitud',
@@ -181,12 +189,13 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     ],
     columns: [
     new Ext.grid.RowNumberer(),
+    {header: 'co_ruta_odp',hidden:true, menuDisabled:true,dataIndex: 'co_ruta_odp'},
     {header: 'N° Solicitud', width:100,menuDisabled:true,dataIndex: 'co_solicitud',renderer: renderRectificacion}, 
     {header: 'RIF', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_rif'},
     {header: 'Razon Social', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social',renderer: textoLargo},
     {header: 'Tipo de solicitud', width:250,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud',renderer: renderRectificacion},
     {header: 'Proceso', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_proceso',renderer: renderRectificacion},
-    {header: 'ODP', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial',renderer: renderRectificacion},
+    {header: 'ODP', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial',renderer: renderDatosOdp},
 //    {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'fe_creacion',renderer: renderRectificacion}
     ],
     stripeRows: true,
@@ -286,6 +295,7 @@ getLista: function(){
     root:'data',
     fields:[ 
             {name: 'tx_login'},
+            {name: 'co_ruta_odp'},
             {name: 'tx_tipo_solicitud'},
             {name: 'co_solicitud'},
             {name: 'fe_creacion'},
@@ -360,6 +370,9 @@ aplicarFiltroByFormulario: function(){
 	pendientePagosLista.main.formFiltroPrincipal.getForm().reset();
 	pendientePagosLista.main.store_lista.baseParams={};
 	pendientePagosLista.main.store_lista.load();
+},
+getDatosOdp: function() {
+window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_odp'));
 }
 };
 Ext.onReady(pendientePagosLista.main.init, pendientePagosLista.main);

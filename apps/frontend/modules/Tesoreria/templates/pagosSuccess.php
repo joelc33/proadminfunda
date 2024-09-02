@@ -20,6 +20,14 @@ function formatoNro(val){
 	return '<p align="right">'+paqueteComunJS.funcion.getNumeroFormateado(val)+'</p>';
 }
 
+function renderDatosOdp(val, attr, record) {
+
+    if (val != '') {
+        return '<a href="#" onclick="pendientePagosLista.main.getDatosOdp()">' + val + '</a>'
+    }
+
+}
+
 this.co_solicitud = new Ext.form.TextField({
 	fieldLabel:'N° Solicitud',
 	name:'co_solicitud',
@@ -209,11 +217,12 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'co_liquidacion_pago',hidden:true, menuDisabled:true,dataIndex: 'co_liquidacion_pago'},
+    {header: 'co_ruta_odp',hidden:true, menuDisabled:true,dataIndex: 'co_ruta_odp'},
     {header: 'N° Solicitud', width:100,menuDisabled:true,dataIndex: 'co_solicitud',renderer: renderRectificacion}, 
     {header: 'RIF', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_rif'},
     {header: 'Razon Social', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social',renderer: textoLargo},
     {header: 'Tipo de solicitud', width:250,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud',renderer: renderRectificacion},
-    {header: 'Orden de Pago', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial',renderer: renderRectificacion},
+    {header: 'Orden de Pago', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial',renderer: renderDatosOdp},
     {header: 'Monto Pendiente', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'mo_pendiente',renderer: formatoNro},
     {header: 'Fecha ODP', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'fe_emision',renderer: renderRectificacion},
     {header: 'Descripción', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_concepto',renderer: textoLargo}
@@ -317,6 +326,7 @@ getLista: function(){
     root:'data',
     fields:[ 
             {name: 'co_liquidacion_pago'},
+            {name: 'co_ruta_odp'},
             {name: 'tx_tipo_solicitud'},
             {name: 'co_solicitud'},
             {name: 'fe_emision'},
@@ -394,6 +404,9 @@ aplicarFiltroByFormulario: function(){
 	pendientePagosLista.main.formFiltroPrincipal.getForm().reset();
 	pendientePagosLista.main.store_lista.baseParams={};
 	pendientePagosLista.main.store_lista.load();
+},
+getDatosOdp: function() {
+window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_odp'));
 }
 };
 Ext.onReady(pendientePagosLista.main.init, pendientePagosLista.main);
