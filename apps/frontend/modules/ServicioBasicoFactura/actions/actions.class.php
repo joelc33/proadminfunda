@@ -466,7 +466,7 @@ class ServicioBasicoFacturaActions extends sfActions
             $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
             $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
             $c->add(Tb045FacturaPeer::CO_SOLICITUD, $tb045_facturaForm["co_solicitud"]);
-           // echo $c->toString(); exit();
+            // echo $c->toString(); exit();
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -477,7 +477,7 @@ class ServicioBasicoFacturaActions extends sfActions
 
             $nu_monto_total = $nu_monto - $total_retencion;
 
-            $compra = Tb052ComprasPeer::retrieveByPK($v["co_compra"]);    
+            $compra = Tb052ComprasPeer::retrieveByPK($v["co_compra"]);
             $compra->setMontoTotal($nu_monto_total)->save($con);
 
             $con->commit();
@@ -583,6 +583,13 @@ class ServicioBasicoFacturaActions extends sfActions
             }
 
 
+            $c = new Criteria();
+            $c->clearSelectColumns();
+            $c->add(Tb040ProveedorRamoPeer::CO_PROVEEDOR, $tb045_facturaForm["co_proveedor"]);
+            $stmt = Tb040ProveedorRamoPeer::doSelectStmt($c);
+            $camposRamo = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
 
 
             $tb135_pago_servicio->setCoSolicitud($tb045_facturaForm["co_solicitud"])
@@ -598,7 +605,7 @@ class ServicioBasicoFacturaActions extends sfActions
                 $tb052_compras->setFechaCompra(date("Y-m-d"));
             }
             $tb052_compras->setTxObservacion($tb045_facturaForm["tx_concepto"]);
-            $tb052_compras->setCoRamo($tb045_facturaForm["co_ramo"]);
+            $tb052_compras->setCoRamo($camposRamo["co_ramo"]);
             $tb052_compras->setCoSolicitud($tb045_facturaForm["co_solicitud"]);
             $tb052_compras->setCoTipoSolicitud(26);
 
