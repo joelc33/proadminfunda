@@ -279,7 +279,7 @@ this.formPanel_ = new Ext.form.FormPanel({
                     this.co_solicitud,
                     this.fieldDatos,
 //                    this.fieldDatosSolicitud,
-                    this.fieldDatosEnte,
+                  //  this.fieldDatosEnte,
                     this.gridPanel
             ]
 });
