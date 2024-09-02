@@ -46,17 +46,24 @@ class PDF extends FPDF {
          foreach($this->lista_facturas as $key => $campo){ 
          $this->AddPage(); 
          $this->SetFont('Arial','B',8);
-         $this->Image("imagenes/escudosanfco.png", 20, 7,20);         
+
+         $this->empresa = $this->getDatosEmpresa(1);
+
+         //$this->Image("imagenes/escudosanfco.png", 20, 7,20);
+ 
+         if (!empty($this->empresa['tx_imagen_izq'])) {
+             $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+         }
 
          $this->SetTextColor(0,0,0);
          $this->SetY(10);
-         $this->SetX(140); // configura la linea donde comenzara escribir en el eje de y
+         $this->SetX(93); // configura la linea donde comenzara escribir en el eje de y
          $this->Cell(30,0,utf8_decode('REPÚBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
          $this->SetY(14);
-         $this->SetX(140); // configura la linea donde comenzara escribir en el eje de y
+         $this->SetX(93); // configura la linea donde comenzara escribir en el eje de y
          $this->Cell(30,0,utf8_decode('GOBERNACIÓN DEL ESTADO ZULIA'),0,0,'C');
          $this->SetY(18);
-         $this->SetX(140); // configura la linea donde comenzara escribir en el eje de y
+         $this->SetX(93); // configura la linea donde comenzara escribir en el eje de y
          $this->Cell(30,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C'); 
          $this->Ln(12);
          $this->SetFont('Arial','B',14);       
@@ -347,6 +354,29 @@ class PDF extends FPDF {
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol; 
   
+    }
+
+    function getDatosEmpresa($codigo)
+    {
+
+        $sql = "SELECT co_empresa, nb_empresa, nb_institucion, co_estado, co_municipio, tx_rif, tx_nit, 
+        tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
+        tx_sigla,
+        op_imagen->'izquierda'->0 as izquierda_x,
+        op_imagen->'izquierda'->1 as izquierda_y,
+        op_imagen->'izquierda'->2 as izquierda_w,
+        op_imagen->'centro'->0 as centro_x,
+        op_imagen->'centro'->1 as centro_y,
+        op_imagen->'centro'->2 as centro_w,
+        op_imagen->'derecha'->0 as derecha_x,
+        op_imagen->'derecha'->1 as derecha_y,
+        op_imagen->'derecha'->2 as derecha_w
+        FROM public.tb015_empresa
+        WHERE co_empresa = " . $codigo . ";";
+
+        $conex = new ConexionComun();
+        $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+        return  $datosSol[0];
     }
     
     function getPart()
