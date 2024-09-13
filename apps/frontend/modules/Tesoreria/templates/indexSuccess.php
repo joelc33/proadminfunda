@@ -72,7 +72,6 @@ this.fe_emision = new Ext.form.DateField({
     fieldLabel: 'Fecha',
     allowBlank:false,
     width:100,
-    value:new Date(),
     maxValue:new Date()    
 });
 
