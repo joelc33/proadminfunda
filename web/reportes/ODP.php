@@ -1025,7 +1025,7 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb082_ejecutor as tb082 on tb082.id = tb083.id_tb082_ejecutor
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud                               
                  left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector                 
-                 where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2
+                 where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2 and tb087.nu_monto > 0
                   group by 1,2,3,4,5,6,7,8,9,10,11
 				 limit 8";
 
