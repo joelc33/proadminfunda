@@ -240,7 +240,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 //$anio = date("Y");
                 $anio = $this->datos[0]['anio'];
                 $this->SetX(109);
-                $this->MultiCell(100, 4, 'FECHA DE VENCIMIENTO:          ' . '31/12/' . ($anio + 1), 0, 0, 'L', 0);
+                $this->MultiCell(100, 4, 'FECHA DE VENCIMIENTO:          ' . '31/12/' . ($anio+1), 0, 0, 'L', 0);
 
                 $Y = $this->GetY();
                 $this->RoundedRect(10, 43, 50, 5, 1.5, '1001', '', $style);
@@ -626,7 +626,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->SetX(155); //COLUMNA
                     //$anio = date("Y");
                     $anio = $this->datos[0]['anio'];
-                    $this->MultiCell(175, 3, utf8_decode('Fecha de Vencimiento: ') . '31/12/' . ($anio + 1), 0, 1, 'R', 0);
+                    $this->MultiCell(175, 3, utf8_decode('Fecha de Vencimiento: ') . '31/12/' . ($anio+1), 0, 1, 'R', 0);
                     $this->Ln(1);
                     $this->SetWidths(array(200));
                     $this->SetAligns(array("C"));
@@ -783,7 +783,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetX(155); //COLUMNA
             //$anio = date("Y");
             $anio = $this->datos[0]['anio'];
-            $this->MultiCell(175, 3, utf8_decode('Fecha de Vencimiento: ') . '31/12/' . ($anio + 1), 0, 1, 'R', 0);
+            $this->MultiCell(175, 3, utf8_decode('Fecha de Vencimiento: ') . '31/12/' . ($anio+1), 0, 1, 'R', 0);
             $this->Ln(1);
             $Y = $this->GetY();
             //$this->MultiCell(200,45,'',1,1,'L',1);
@@ -842,7 +842,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->SetX(155); //COLUMNA
                     //$anio = date("Y");
                     $anio = $this->datos[0]['anio'];
-                    $this->MultiCell(175, 3, utf8_decode('Fecha de Vencimiento: ') . '31/12/' . ($anio + 1), 0, 1, 'R', 0);
+                    $this->MultiCell(175, 3, utf8_decode('Fecha de Vencimiento: ') . '31/12/' . ($anio+1), 0, 1, 'R', 0);
                     $this->Ln(1);
                     $this->SetWidths(array(75, 125));
                     $this->SetAligns(array("C", "C"));
@@ -1025,7 +1025,7 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb082_ejecutor as tb082 on tb082.id = tb083.id_tb082_ejecutor
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud                               
                  left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector                 
-                 where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2 and tb087.in_activo = true
+                 where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2
                   group by 1,2,3,4,5,6,7,8,9,10,11
 				 limit 8";
 
