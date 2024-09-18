@@ -1621,6 +1621,7 @@ class TesoreriaActions extends sfActions
     $c->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb062LiquidacionPagoPeer::CO_SOLICITUD);
     
   //  $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD,$registro_tramite,Criteria::IN);
+    $c->addAnd(Tb062LiquidacionPagoPeer::MO_PENDIENTE,0,Criteria::GREATER_THAN);
     $c->addAnd(Tb030RutaPeer::CO_PROCESO,4,Criteria::IN);
     
     $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA,1);
