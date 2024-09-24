@@ -175,6 +175,7 @@ class PDF extends FPDF
             $TotalExcento =  0;
         }
         while ($i < 11) {
+            $this->SetX(15);
             $this->Row(array('', '', '', '', '', ''), 1, 1);
             $i++;
         }
