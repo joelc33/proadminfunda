@@ -80,8 +80,10 @@ class PDF extends FPDF
 
         $this->datos = $this->getOrdenes();
         $this->SetFont('Arial', 'B', 10);
+        $this->SetWidths(array(190));
         $this->SetAligns(array("J"));
-        $this->Row(array(utf8_decode($this->datos['tx_concepto'])), 0, 0);
+        $this->SetX(15);
+        $this->Row(array('     '.utf8_decode($this->datos['tx_concepto'])), 0, 0);
         $this->Ln(10);
         $this->SetFont('Arial', 'B', 9);
         $this->Cell(0, 0, utf8_decode('PRESUPUESTO BASE '), 0, 0, 'C');
@@ -126,6 +128,7 @@ class PDF extends FPDF
         $this->SetWidths(array(40, 160));
         $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
         $this->SetWidths(array(10, 65,30 ,20, 30, 35));
+        $this->SetX(15);
         $this->Row(array('ITEM', utf8_decode('DESCRIPCIÓN'), utf8_decode('PRESENTACIÓN'), utf8_decode('CANTIDAD'), utf8_decode('PRECIO UNITARIO'), utf8_decode('PRECIO TOTAL')), 1, 1);
         $this->SetAligns(array("C", "L", "C", "C", "C", "C"));
         $this->SetWidths(array(10, 65,30 ,20, 30, 35));
@@ -151,14 +154,16 @@ class PDF extends FPDF
                 $i++;
                             if($this->getY()>240){
                     $this->AddPage();
-                    $this->SetX(10);
+                    $this->SetX(15);
                     $this->SetY(40);
         $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
         $this->SetWidths(array(10, 65,30 ,20, 30, 35));
+        $this->SetX(15);
         $this->Row(array('ITEM', utf8_decode('DESCRIPCIÓN'), utf8_decode('PRESENTACIÓN'), utf8_decode('CANTIDAD'), utf8_decode('PRECIO UNITARIO'), utf8_decode('PRECIO TOTAL')), 1, 1);
         $this->SetAligns(array("C", "L", "C", "C", "C", "C"));
         $this->SetWidths(array(10, 65,30 ,20, 30, 35));
                             }
+                            $this->SetX(15);
                 $this->Row(array($item, utf8_decode($campo['tx_producto'] . ' - ' . $campo['detalle']), utf8_decode($campo['tx_unidad_producto']), utf8_decode($campo['nu_cantidad']), number_format($campo['precio_unitario'], 2, ',', '.'), number_format($campo['monto'], 2, ',', '.')), 1, 1);
                 //$SubTotal =     $SubTotal + round($campo['monto'],2);
                 $SubTotal =     $SubTotal + $campo['monto'];
@@ -178,12 +183,14 @@ class PDF extends FPDF
        // $total_iva = $this->datos['monto_iva'];
 
         $TotalGenerado = $SubTotal + $total_iva;
-
+        $this->SetX(15);
         $this->SetFont('Arial', 'B', 9);
         $this->SetAligns(array("R", "C"));
         $this->SetWidths(array(155, 35));
         $this->Row(array(utf8_decode('Sub-Total:'), number_format($SubTotal, 2, ',', '.')), 1, 1);
+        $this->SetX(15);
         $this->Row(array(utf8_decode('Total I.V.A '), number_format($total_iva, 2, ',', '.')), 1, 1);
+        $this->SetX(15);
 //        $this->Row(array(utf8_decode('Total Excento'), number_format($TotalExcento, 2, ',', '.')), 1, 1);
         $this->Row(array(utf8_decode('Total Generado'), number_format($TotalGenerado, 2, ',', '.')), 1, 1);
 

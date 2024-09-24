@@ -77,18 +77,22 @@ class PDF extends FPDF {
          $this->datos = $this->getOrdenes();
 
          $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
-          
+         
          $this->SetFont('Arial','',10);
          $this->Ln(5);
+         $this->SetX(25);
          $this->Cell(0,0,utf8_decode('Señor(a):'),0,0,'L');
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
+         $this->SetX(25);
          $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'L');
          $this->SetFont('Arial','B',8);
          $this->Ln(5);
+         $this->SetX(25);
          $this->Cell(0,0,utf8_decode('PRESIDENTE DE LA '.$this->empresa['nb_institucion']),0,0,'L');
          $this->SetFont('Arial','',8);
          $this->Ln(4);
+         $this->SetX(25);
          $this->Cell(0,0,utf8_decode('Su Despacho.'),0,0,'L');
          
          $this->SetFont('Arial','',10);
@@ -98,8 +102,11 @@ class PDF extends FPDF {
          
          $this->SetFont('Arial','',10);
          $this->Ln(10);
-         $this->MultiCell(200,5,utf8_decode('     La presente tiene como finalidad, solicitarle la adquisición de los siguientes ítems para el proceso, '.$this->datos['tx_concepto']),0,1,'L',1);
-         
+         $this->SetWidths(array(170));
+         $this->SetAligns(array("J"));
+         $this->SetX(25);
+         $this->Row(array(utf8_decode('     La presente tiene como finalidad, solicitarle la adquisición de los siguientes ítems para el proceso, '.$this->datos['tx_concepto'])), 0, 0);
+  
         // $this->line(1, 60, 220, 60);
 //         $this->SetFont('Arial','B',10);
 //         $this->SetFillColor(255, 255, 255);
