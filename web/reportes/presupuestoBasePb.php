@@ -21,7 +21,7 @@ class PDF extends FPDF
         }*/
 
         if (!empty($this->empresa['tx_imagen_cen'])) {
-            $this->Image("imagenes/" . $this->empresa['tx_imagen_cen'],  $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'],  $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
 
         /*if(!empty($this->empresa['tx_imagen_der'])){
@@ -43,17 +43,9 @@ class PDF extends FPDF
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(4);
         $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
-        $this->Ln(12);
-        $this->SetFont('Arial', 'B', 14);
-        $this->Cell(0, 0, utf8_decode('PRESUPUESTO BASE '), 0, 0, 'C');
 
-        //    $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
 
-        $this->Ln(5);
-        $this->SetTextColor(0, 0, 0);
-        $this->SetX(1);
 
-        $this->Ln(2);
     }
 
     function Footer()
@@ -84,52 +76,59 @@ class PDF extends FPDF
 
         $this->op_reporte = $this->getOpcionReporte($_GET['codigo']);
 
-        $this->Ln(1);
+        $this->Ln(15);
 
         $this->datos = $this->getOrdenes();
+        $this->SetFont('Arial', 'B', 10);
+        $this->SetAligns(array("J"));
+        $this->Row(array(utf8_decode($this->datos['tx_concepto'])), 0, 0);
+        $this->Ln(10);
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(0, 0, utf8_decode('PRESUPUESTO BASE '), 0, 0, 'C');
+        $this->Ln(5);
 
         //$this->line(1, 60, 220, 60);
-        $this->SetFont('Arial', 'B', 10);
-        $this->SetFillColor(255, 255, 255);
-        $this->SetWidths(array(60, 140));
-        $this->SetAligns(array("L", "L"));
+//        $this->SetFont('Arial', 'B', 10);
+//        $this->SetFillColor(255, 255, 255);
+//        $this->SetWidths(array(60, 140));
+//        $this->SetAligns(array("L", "L"));
+//        $this->SetWidths(array(200));
+//        $this->SetAligns(array("C"));
+//        $this->SetY(60);
+//        $this->SetFillColor(201, 199, 199);
+//        $this->Row(array(utf8_decode('DATOS DEL PRESUPUESTO BASE')), 1, 1);
+//        $this->SetFillColor(255, 255, 255);
+//        $this->SetWidths(array(100, 100));
+//        $Y = $this->GetY();
+//        $this->MultiCell(100, 10, '', 1, 1, 'L', 1);
+//        $this->SetY($Y);
+//        $this->SetX(110);
+//        $this->MultiCell(100, 10, '', 1, 1, 'L', 1);
+//        $this->SetY(68);
+//        $this->SetAligns(array("L", "L"));
+//        $this->SetFont('Arial', '', 9);
+//        $this->Row(array(utf8_decode('Código: ') . utf8_decode($this->datos['tx_serial_cotizacion']), utf8_decode('  FECHA:  ') . date("d/m/Y", strtotime($this->datos['fe_registro']))), 0, 0);
+//        $this->SetWidths(array(200));
+//        $this->Ln(2);
+//        $Y = $this->GetY() + 3;
+//        $this->MultiCell(200, 13, '', 1, 1, 'L', 1);
+//        $this->SetY($Y);
+//        $this->SetAligns(array("J"));
+//        $this->Row(array(utf8_decode('CONCEPTO: ') . utf8_decode($this->datos['tx_concepto'])), 0, 0);
+//        $this->SetFont('Arial', 'B', 9);
+//
+//        $concepto = $this->datos['tx_observacion'];
         $this->SetWidths(array(200));
         $this->SetAligns(array("C"));
-        $this->SetY(60);
         $this->SetFillColor(201, 199, 199);
-        $this->Row(array(utf8_decode('DATOS DEL PRESUPUESTO BASE')), 1, 1);
-        $this->SetFillColor(255, 255, 255);
-        $this->SetWidths(array(100, 100));
-        $Y = $this->GetY();
-        $this->MultiCell(100, 10, '', 1, 1, 'L', 1);
-        $this->SetY($Y);
-        $this->SetX(110);
-        $this->MultiCell(100, 10, '', 1, 1, 'L', 1);
-        $this->SetY(68);
-        $this->SetAligns(array("L", "L"));
-        $this->SetFont('Arial', '', 9);
-        $this->Row(array(utf8_decode('Código: ') . utf8_decode($this->datos['tx_serial_cotizacion']), utf8_decode('  FECHA:  ') . date("d/m/Y", strtotime($this->datos['fe_registro']))), 0, 0);
-        $this->SetWidths(array(200));
-        $this->Ln(2);
-        $Y = $this->GetY() + 3;
-        $this->MultiCell(200, 13, '', 1, 1, 'L', 1);
-        $this->SetY($Y);
-        $this->SetAligns(array("J"));
-        $this->Row(array(utf8_decode('CONCEPTO: ') . utf8_decode($this->datos['tx_concepto'])), 0, 0);
-        $this->SetFont('Arial', 'B', 9);
-
-        $concepto = $this->datos['tx_observacion'];
-        $this->SetWidths(array(200));
-        $this->SetAligns(array("C"));
-        $this->SetFillColor(201, 199, 199);
-        $this->Row(array(utf8_decode('ESPECIFICACIONES TÉCNICAS')), 1, 1);
+//        $this->Row(array(utf8_decode('ESPECIFICACIONES TÉCNICAS')), 1, 1);
         $this->SetFillColor(255, 255, 255);
         $this->SetWidths(array(40, 160));
         $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
-        $this->SetWidths(array(10, 70, 20, 30, 30, 40));
-        $this->Row(array('ITEM', utf8_decode('DESCRIPCIÓN'), utf8_decode('CANT.'), utf8_decode('UNIDAD DE MEDIDA'), utf8_decode('PRECIO UNITARIO'), utf8_decode('IMPORTE TOTAL')), 1, 1);
-        $this->SetAligns(array("C", "L", "C", "C", "R", "R"));
-        $this->SetWidths(array(10, 70, 20, 30, 30, 40));
+        $this->SetWidths(array(10, 70, 30,20, 30, 40));
+        $this->Row(array('ITEM', utf8_decode('DESCRIPCIÓN'), utf8_decode('PRESENTACIÓN'), utf8_decode('CANTIDAD'), utf8_decode('PRECIO UNITARIO'), utf8_decode('PRECIO TOTAL')), 1, 1);
+        $this->SetAligns(array("C", "L", "C", "C", "C", "C"));
+        $this->SetWidths(array(10, 70,30 ,20, 30, 40));
 
         $item = 0;
         $SubTotal = 0;
@@ -146,11 +145,21 @@ class PDF extends FPDF
             $this->SetFont('Arial', '', 9);
             //$iva = round(($campo['monto']*$campo['nu_iva'])/100, 2);
             $iva = $campo['monto_iva'];
-
+            
             if($campo['co_producto']!=19336){
                 $item = $item + 1;
                 $i++;
-                $this->Row(array($item, utf8_decode($campo['tx_producto'] . ' - ' . $campo['detalle']), utf8_decode($campo['nu_cantidad']), utf8_decode($campo['tx_unidad_producto']), number_format($campo['precio_unitario'], 2, ',', '.'), number_format($campo['monto'], 2, ',', '.')), 1, 1);
+                            if($this->getY()>240){
+                    $this->AddPage();
+                    $this->SetX(10);
+                    $this->SetY(40);
+        $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
+        $this->SetWidths(array(10, 70, 30,20, 30, 40));
+        $this->Row(array('ITEM', utf8_decode('DESCRIPCIÓN'), utf8_decode('PRESENTACIÓN'), utf8_decode('CANTIDAD'), utf8_decode('PRECIO UNITARIO'), utf8_decode('PRECIO TOTAL')), 1, 1);
+        $this->SetAligns(array("C", "L", "C", "C", "C", "C"));
+        $this->SetWidths(array(10, 70,30 ,20, 30, 40));
+                            }
+                $this->Row(array($item, utf8_decode($campo['tx_producto'] . ' - ' . $campo['detalle']), utf8_decode($campo['tx_unidad_producto']), utf8_decode($campo['nu_cantidad']), number_format($campo['precio_unitario'], 2, ',', '.'), number_format($campo['monto'], 2, ',', '.')), 1, 1);
                 //$SubTotal =     $SubTotal + round($campo['monto'],2);
                 $SubTotal =     $SubTotal + $campo['monto'];
             }else{
@@ -171,24 +180,20 @@ class PDF extends FPDF
         $TotalGenerado = $SubTotal + $total_iva;
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetAligns(array("R", "R"));
-        $this->SetWidths(array(150, 50));
+        $this->SetAligns(array("R", "C"));
+        $this->SetWidths(array(160, 40));
         $this->Row(array(utf8_decode('Sub-Total:'), number_format($SubTotal, 2, ',', '.')), 1, 1);
         $this->Row(array(utf8_decode('Total I.V.A '), number_format($total_iva, 2, ',', '.')), 1, 1);
-        $this->Row(array(utf8_decode('Total Excento'), number_format($TotalExcento, 2, ',', '.')), 1, 1);
+//        $this->Row(array(utf8_decode('Total Excento'), number_format($TotalExcento, 2, ',', '.')), 1, 1);
         $this->Row(array(utf8_decode('Total Generado'), number_format($TotalGenerado, 2, ',', '.')), 1, 1);
 
-        $this->SetY(230);
-        $this->SetX(72);
-        $this->SetFont('Arial', '', 9);
-        $this->MultiCell(72, 0, '', 1, 1, 'L', 1);
-        $this->SetY(230);
-        $this->SetX(72);
-        //$this->MultiCell(72,5,utf8_decode("Lcda. Milagros Arambulo"),0,'C');
-        $this->SetY(235);
-        $this->SetX(72);
-        $this->MultiCell(72, 5, utf8_decode("COORDINACIÓN DE COMPRAS"), 0, 'C');
-        //$this->MultiCell(72,5,utf8_decode("COORDINACIÓN DE COMPRAS"),1,10,'C',0);           
+         
+         $this->SetFont('Arial','B',10);
+         $this->Ln(15);
+         $this->Cell(200,10,utf8_decode($this->datos['nb_responsable']),0,0,'C'); 
+         $this->SetFont('Arial','B',10);
+         $this->Ln(10);
+         $this->Cell(200,10,utf8_decode($this->datos['cargo']),0,0,'C');            
 
         //         $this->ln();
         //         $this->SetAligns(array("C","C", "C"));
@@ -254,7 +259,9 @@ class PDF extends FPDF
                          tb206.created_at as fecha_compra,
                          tb039.co_solicitud,
                          tb206.tx_observacion,
-                         tb047.tx_ente,
+                         upper(tb047.tx_ente) as tx_ente, 
+                         upper(tb047.nb_responsable) as nb_responsable, 
+                         upper(tb047.cargo) as cargo, 
                          tb206.monto_iva,
                          tb206.nu_iva,
                          upper(tb039.tx_concepto) as tx_concepto
@@ -447,7 +454,7 @@ class PDF extends FPDF
     function getDatosEmpresa($codigo)
     {
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion, nb_presidente,
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,
@@ -511,9 +518,9 @@ $pdf->Output($dir, 'F');
 //header('Location: http://'.$_SERVER["SERVER_NAME"].'/index.php/reporte/index/i/'.$_GET["p"]);
 
 
-/*
-$pdf = new PDF('P', 'mm', 'letter');
-$pdf->PrintChapter();
-$pdf->SetDisplayMode('default');
-$pdf->Output();
-*/
+
+//$pdf = new PDF('P', 'mm', 'letter');
+//$pdf->PrintChapter();
+//$pdf->SetDisplayMode('default');
+//$pdf->Output();
+
