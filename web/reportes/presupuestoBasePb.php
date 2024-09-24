@@ -264,7 +264,7 @@ class PDF extends FPDF
                          upper(tb047.cargo) as cargo, 
                          tb206.monto_iva,
                          tb206.nu_iva,
-                         upper(tb039.tx_concepto) as tx_concepto
+                         upper(tb206.tx_observacion) as tx_concepto
                   from   tb039_requisiciones as tb039
                   left join tb206_cotizacion as tb206 on tb206.co_requisicion=tb039.co_requisicion  
                   left join tb027_tipo_solicitud as tb027 on tb027.co_tipo_solicitud=tb039.co_tipo_solicitud
