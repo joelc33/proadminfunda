@@ -160,7 +160,8 @@ class PDF extends FPDF {
         }
         while ($i<11) 
          {
-          $this->Row(array('','','',''),1,1);  
+             $this->SetX(25);
+          $this->Row(array('','',''),1,1);  
           $i++;
          }   
          foreach($this->lista_materiales as $key => $campo){
