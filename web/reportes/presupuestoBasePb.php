@@ -125,10 +125,10 @@ class PDF extends FPDF
         $this->SetFillColor(255, 255, 255);
         $this->SetWidths(array(40, 160));
         $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
-        $this->SetWidths(array(10, 70, 30,20, 30, 40));
+        $this->SetWidths(array(10, 65,30 ,20, 30, 35));
         $this->Row(array('ITEM', utf8_decode('DESCRIPCIÓN'), utf8_decode('PRESENTACIÓN'), utf8_decode('CANTIDAD'), utf8_decode('PRECIO UNITARIO'), utf8_decode('PRECIO TOTAL')), 1, 1);
         $this->SetAligns(array("C", "L", "C", "C", "C", "C"));
-        $this->SetWidths(array(10, 70,30 ,20, 30, 40));
+        $this->SetWidths(array(10, 65,30 ,20, 30, 35));
 
         $item = 0;
         $SubTotal = 0;
@@ -154,10 +154,10 @@ class PDF extends FPDF
                     $this->SetX(10);
                     $this->SetY(40);
         $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
-        $this->SetWidths(array(10, 70, 30,20, 30, 40));
+        $this->SetWidths(array(10, 65,30 ,20, 30, 35));
         $this->Row(array('ITEM', utf8_decode('DESCRIPCIÓN'), utf8_decode('PRESENTACIÓN'), utf8_decode('CANTIDAD'), utf8_decode('PRECIO UNITARIO'), utf8_decode('PRECIO TOTAL')), 1, 1);
         $this->SetAligns(array("C", "L", "C", "C", "C", "C"));
-        $this->SetWidths(array(10, 70,30 ,20, 30, 40));
+        $this->SetWidths(array(10, 65,30 ,20, 30, 35));
                             }
                 $this->Row(array($item, utf8_decode($campo['tx_producto'] . ' - ' . $campo['detalle']), utf8_decode($campo['tx_unidad_producto']), utf8_decode($campo['nu_cantidad']), number_format($campo['precio_unitario'], 2, ',', '.'), number_format($campo['monto'], 2, ',', '.')), 1, 1);
                 //$SubTotal =     $SubTotal + round($campo['monto'],2);
@@ -181,7 +181,7 @@ class PDF extends FPDF
 
         $this->SetFont('Arial', 'B', 9);
         $this->SetAligns(array("R", "C"));
-        $this->SetWidths(array(160, 40));
+        $this->SetWidths(array(155, 35));
         $this->Row(array(utf8_decode('Sub-Total:'), number_format($SubTotal, 2, ',', '.')), 1, 1);
         $this->Row(array(utf8_decode('Total I.V.A '), number_format($total_iva, 2, ',', '.')), 1, 1);
 //        $this->Row(array(utf8_decode('Total Excento'), number_format($TotalExcento, 2, ',', '.')), 1, 1);
