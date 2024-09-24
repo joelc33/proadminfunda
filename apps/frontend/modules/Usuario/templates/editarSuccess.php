@@ -128,7 +128,7 @@ this.storeCO_DOCUMENTO.load();
 });
 
 this.co_ente = new Ext.form.ComboBox({
-	fieldLabel:'Ente',
+	fieldLabel:'Unid/Depart',
 	store: this.storeCO_ENTE,
 	typeAhead: true,
 	valueField: 'co_ente',
