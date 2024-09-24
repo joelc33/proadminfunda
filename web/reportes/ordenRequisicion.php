@@ -19,7 +19,7 @@ class PDF extends FPDF {
         $this->SetTextColor(0, 0, 0);
         $this->SetY(12);
         $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
-        $this->Ln(4);       
+        $this->Ln(4);   
         $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
         $this->Ln(4);
         if (!empty($this->empresa['nb_institucion'])) 
@@ -30,13 +30,13 @@ class PDF extends FPDF {
         $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
         $this->Ln(4);
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
-        $this->Ln(12);
-        $this->SetFont('Arial', 'B', 14);
-        $this->Cell(0,0,utf8_decode('REQUISICIÓN '),0,0,'C');
-
-    //    $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
-        
         $this->Ln(5);
+        $this->SetFont('Arial', 'B', 8);
+//        $this->Cell(0,0,utf8_decode('REQUISICIÓN '),0,0,'C');
+
+//        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+        
+//        $this->Ln(5);
         $this->SetTextColor(0,0,0);
         $this->SetX(1);
 
@@ -70,65 +70,92 @@ class PDF extends FPDF {
     function ChapterBody() {
 
         $this->op_reporte = $this->getOpcionReporte($_GET['codigo']);
+        $this->empresa = $this->getDatosEmpresa(1);
 
          $this->Ln(1);
 
          $this->datos = $this->getOrdenes();
 
+         $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
+          
+         $this->SetFont('Arial','',10);
+         $this->Ln(5);
+         $this->Cell(0,0,utf8_decode('Señor(a):'),0,0,'L');
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'L');
+         $this->SetFont('Arial','B',8);
+         $this->Ln(5);
+         $this->Cell(0,0,utf8_decode('PRESIDENTE DE LA '.$this->empresa['nb_institucion']),0,0,'L');
+         $this->SetFont('Arial','',8);
+         $this->Ln(4);
+         $this->Cell(0,0,utf8_decode('Su Despacho.'),0,0,'L');
+         
+         $this->SetFont('Arial','',10);
+         $this->Ln(5);
+         $this->SetX(35);
+         $this->Cell(10,0,utf8_decode('Reciba un cordial y respetuoso saludo.'),0,0,'L');
+         
+         $this->SetFont('Arial','',10);
+         $this->Ln(10);
+         $this->MultiCell(200,5,utf8_decode('     La presente tiene como finalidad, solicitarle la adquisición de los siguientes ítems para el proceso, '.$this->datos['tx_concepto']),0,1,'L',1);
+         
         // $this->line(1, 60, 220, 60);
-         $this->SetFont('Arial','B',10);
-         $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(60,140));
-         $this->SetAligns(array("L","L"));
-         $this->SetWidths(array(200));
-         $this->SetAligns(array("C"));
-         $this->SetY(60);
-         $this->SetFillColor(201, 199, 199);
-         $this->Row(array(utf8_decode('DATOS DE LA REQUISICIÓN')),1,1);
-         $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(100,100)); 
-         $Y = $this->GetY();
-         $this->MultiCell(100,10,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(110);
-         $this->MultiCell(100,10,'',1,1,'L',1);
-         $this->SetY(68);
-         $this->SetAligns(array("L","L"));
-         $this->SetFont('Arial','',9);
-         $this->Row(array(utf8_decode('  REQUISICIÓN N°  ').$this->datos['nu_requisicion'],utf8_decode('  FECHA:  ').date("d/m/Y", strtotime($this->datos['fe_registro']))),0,0); 
-         $this->SetWidths(array(200));
-         $this->Ln(2);
-         $Y = $this->GetY()+3;
-         $this->MultiCell(200,13,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetAligns(array("J"));
-         $this->Row(array('  DEPARTAMENTO SOLICITANTE: '.utf8_decode($this->datos['tx_ente'])),0,0);
-        // $this->Row(array(' UNIDAD USUARIA: '),0,0);
-         $Y = $this->GetY();
-         $this->SetY($Y);
-         $this->MultiCell(200,11,'',1,1,'L',1);
-         $this->SetY($Y+1);
-         $this->Row(array('  CONCEPTO: '.utf8_decode($this->datos['tx_concepto'])),0,0);
+//         $this->SetFont('Arial','B',10);
+//         $this->SetFillColor(255, 255, 255);
+//         $this->SetWidths(array(60,140));
+//         $this->SetAligns(array("L","L"));
+//         $this->SetWidths(array(200));
+//         $this->SetAligns(array("C"));
+//         $this->SetY(60);
+//         $this->SetFillColor(201, 199, 199);
+//         $this->Row(array(utf8_decode('DATOS DE LA REQUISICIÓN')),1,1);
+//         $this->SetFillColor(255, 255, 255);
+//         $this->SetWidths(array(100,100)); 
+//         $Y = $this->GetY();
+//         $this->MultiCell(100,10,'',1,1,'L',1);
+//         $this->SetY($Y);
+//         $this->SetX(110);
+//         $this->MultiCell(100,10,'',1,1,'L',1);
+//         $this->SetY(68);
+//         $this->SetAligns(array("L","L"));
+//         $this->SetFont('Arial','',9);
+//         $this->Row(array(utf8_decode('  REQUISICIÓN N°  ').$this->datos['nu_requisicion'],utf8_decode('  FECHA:  ').date("d/m/Y", strtotime($this->datos['fe_registro']))),0,0); 
+//         $this->SetWidths(array(200));
+//         $this->Ln(2);
+//         $Y = $this->GetY()+3;
+//         $this->MultiCell(200,13,'',1,1,'L',1);
+//         $this->SetY($Y);
+//         $this->SetAligns(array("J"));
+//         $this->Row(array('  DEPARTAMENTO SOLICITANTE: '.utf8_decode($this->datos['tx_ente'])),0,0);
+//        // $this->Row(array(' UNIDAD USUARIA: '),0,0);
+//         $Y = $this->GetY();
+//         $this->SetY($Y);
+//         $this->MultiCell(200,11,'',1,1,'L',1);
+//         $this->SetY($Y+1);
+//         $this->Row(array('  CONCEPTO: '.utf8_decode($this->datos['tx_concepto'])),0,0);
          
          
          
          $this->SetWidths(array(200));
          $this->SetAligns(array("C"));
          $this->SetFillColor(201, 199, 199);
-         $this->Ln();
+         $this->Ln(5);
          $this->SetFont('Arial','B',10);
-         $this->Row(array('DETALLES DE MATERIALES'),1,1);
+//         $this->Row(array('DETALLES DE MATERIALES'),1,1);
          $this->SetFillColor(255, 255, 255);         
          $this->SetAligns(array("C","C","C","C"));
          $this->SetWidths(array(30,110,30,30)); 
-         $this->Row(array(utf8_decode('CÓDIGO'),utf8_decode('DESCRIPCIÓN DEL ITEM'),'CANTIDAD','UNIDAD'),1,1);         
-         $i = 0;
+         $this->SetX(25);
+         $this->Row(array(utf8_decode('PARTIDA NRO.'),utf8_decode('DESCRIPCIÓN'),'CANTIDAD'),1,1);         
+         $i = 1;
          $this->lista_materiales = $this->getMateriales();
          foreach($this->lista_materiales as $key => $campo){           
          $this->SetFont('Arial','',9);
          $this->SetAligns(array("C","L","C","C"));
          $this->SetWidths(array(30,110,30,30));
-         $this->Row(array(utf8_decode($campo['cod_producto']),utf8_decode($campo['tx_producto']).' - '.utf8_decode($campo['tx_observacion']),utf8_decode($campo['nu_cantidad']),utf8_decode($campo['tx_unidad_producto'])),1,1);
+         $this->SetX(25);
+         $this->Row(array(utf8_decode($i),utf8_decode($campo['tx_producto']).' - '.utf8_decode($campo['tx_observacion']),utf8_decode($campo['nu_cantidad'])),1,1);
          $i++;
         }
         while ($i<11) 
@@ -149,30 +176,39 @@ class PDF extends FPDF {
 //             $this->Row(array(utf8_decode('ESPECIFICACIONES TÉCNICAS / CÓDIGO: '.$campo['cod_producto'].' - ').utf8_decode($campo['tx_observacion'])),1,1);
         }
                  
-         $this->ln();
-         $this->SetAligns(array("C","C", "C"));
-	     $this->SetFillColor(201, 199, 199);
-         $this->SetWidths(array(65,70,65));
-         $this->SetFont('Arial','B',8);
+//         $this->ln();
+//         $this->SetAligns(array("C","C", "C"));
+//	     $this->SetFillColor(201, 199, 199);
+//         $this->SetWidths(array(65,70,65));
+//         $this->SetFont('Arial','B',8);
          //$this->Row(array('UNIDAD SOLICITANTE',utf8_decode('DIRECCIÓN DE COMPRAS Y SUMINISTRO'),utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS')),1,1);  
-         $this->Row(array(utf8_decode($this->op_reporte['de_unidad']),utf8_decode($this->op_reporte['de_ubicacion_admin']),utf8_decode($this->op_reporte['de_empresa'])),1,1);       
-         $this->SetFillColor(255,255,255);
-         $this->SetAligns(array("L", "L","L"));
-         $Y = $this->GetY();
-         $this->MultiCell(65,14,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(75);
-         $this->MultiCell(70,14,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(145);
-         $this->MultiCell(65,14,'',1,1,'L',1);
-         $this->SetY($Y+5);
-         $this->SetFont('Arial','',6);
-         $this->ln(8);
-         $this->Row(array('Solicitado por:','Registrado por:', 'Aprobado por:'),1,1);
+//         $this->Row(array(utf8_decode($this->op_reporte['de_unidad']),utf8_decode($this->op_reporte['de_ubicacion_admin']),utf8_decode($this->op_reporte['de_empresa'])),1,1);       
+//         $this->SetFillColor(255,255,255);
+//         $this->SetAligns(array("L", "L","L"));
+//         $Y = $this->GetY();
+//         $this->MultiCell(65,14,'',1,1,'L',1);
+//         $this->SetY($Y);
+//         $this->SetX(75);
+//         $this->MultiCell(70,14,'',1,1,'L',1);
+//         $this->SetY($Y);
+//         $this->SetX(145);
+//         $this->MultiCell(65,14,'',1,1,'L',1);
+//         $this->SetY($Y+5);
+//         $this->SetFont('Arial','',6);
+//         $this->ln(8);
+//         $this->Row(array('Solicitado por:','Registrado por:', 'Aprobado por:'),1,1);
          
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode('Atentamente.'),0,0,'C');         
+         $this->ln(10);
          
-         $this->ln();
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode($this->datos['nb_responsable']),0,0,'C'); 
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode($this->datos['cargo']),0,0,'C');          
          
          //$this->Cell(0,0,'Elaborado por: '.$this->datos['nb_usuario'],0,0,'L');
          $this->ln();
@@ -225,6 +261,11 @@ class PDF extends FPDF {
                          tb039.co_solicitud,
                          upper(tb039.tx_observacion) as tx_observacion,
                          upper(tb047.tx_ente) as tx_ente, 
+                         upper(tb047.nb_responsable) as nb_responsable, 
+                         upper(tb047.cargo) as cargo, 
+                         to_char(tb039.fe_registro,'dd') as dia,
+                         to_char(tb039.fe_registro,'mm') as mes,
+                         to_char(tb039.fe_registro,'yyyy') as anio,
                          nb_usuario
                   from   tb039_requisiciones as tb039                  
                   left join tb001_usuario as tb001 on tb001.co_usuario = tb039.co_usuario
@@ -271,7 +312,7 @@ class PDF extends FPDF {
 
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion,
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion, nb_presidente,
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,
