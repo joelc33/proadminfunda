@@ -167,9 +167,9 @@ class PDF extends FPDF {
                      $this->AddPage();
                      $this->Ln(20);
                      $this->SetFillColor(255, 255, 255); 
-                     $this->SetFont('Arial','B',8); 
+                     $this->SetFont('Arial','',8); 
                      $this->SetAligns(array("C","C","C","C"));
-                     $this->SetWidths(array(35,55,50,30));
+                     $this->SetWidths(array(35,75,30,30));
                      $this->SetX(25); 
                      $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','FUENTE FINANCIAMIENTO','MONTO (Bs.) DISPONIBLE TOTAL'),1,1);
          
