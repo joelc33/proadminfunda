@@ -11,34 +11,27 @@ class PDF extends FPDF {
 
         $this->empresa = $this->getDatosEmpresa(1);
 
-        //$this->Image("imagenes/escudosanfco.png", 100, 7,20);
-        if(!empty($this->empresa['tx_imagen_cen'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+        if (!empty($this->empresa['tx_imagen_izq'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'],  $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
 
-        $this->SetFont('Arial','B',8);
 
-        $this->SetTextColor(0,0,0);
-        $this->SetY(32);
-        $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
-        $this->Ln(4);
-        //$this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
-        //$this->Ln(4);
-        //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACION Y FINANZAS'),0,0,'C');
-        $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
-        $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('RIF. '.$this->empresa['tx_rif']),0,0,'C');
-        $this->Ln(12);
-        $this->SetFont('Arial','B',14);
-        $this->Cell(0,0,utf8_decode('CERTIFICACIÓN DE DISPONIBILIDAD PRESUPUESTARIA '),0,0,'C');
-     
-    //    $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
-        
-        $this->Ln(5);
-        $this->SetTextColor(0,0,0);
-        $this->SetX(1);
 
-        $this->Ln(2);
+        $this->SetFont('Arial', 'B', 8);
+
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        $this->Ln(4);
+        if (!empty($this->empresa['nb_institucion'])) {
+            $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
+            $this->Ln(4);
+        }
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
      
 
     }
@@ -68,27 +61,83 @@ class PDF extends FPDF {
     function ChapterBody() {
 
         $this->op_reporte = $this->getOpcionReporte($_GET['codigo']);
+        $this->empresa = $this->getDatosEmpresa(1);
 
-        $this->Ln(1);         
-        $this->datos = $this->getOrden();
+         $this->Ln(15);
+
+         $this->datos = $this->getOrden();
+            $this->SetFont('Arial','B',10);
+         $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
          
+         $this->SetFont('Arial','',10);
+         $this->Ln(15);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('Señor(a):'),0,0,'L');
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode($this->datos['nb_responsable']),0,0,'L');
+         $this->SetFont('Arial','B',8);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode($this->datos['cargo']),0,0,'L');
+         $this->SetFont('Arial','',8);
+         $this->Ln(4);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('Su Despacho.'),0,0,'L');
+         
+         $this->SetFont('Arial','',10);
+         $this->Ln(10);
+         $this->SetX(35);
+         $this->Cell(10,0,utf8_decode('Reciba un cordial y respetuoso saludo.'),0,0,'L');
+         
+         $this->SetFont('Arial','',10);
+         $this->Ln(10);
+         $this->SetWidths(array(170));
+         $this->SetAligns(array("J"));
+         $this->SetX(25);
+         $this->Row(array(utf8_decode('     La presente tiene la finalidad de solicitarle la disponibilidad presupuestaria para la ejecución del proceso de: '.$this->datos['tx_concepto']).'.'), 0, 0);
+  
+        $this->Ln(31);         
+        
+             $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode('Atentamente.'),0,0,'C');         
+         $this->ln(10);
+         
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode($this->empresa['nb_presidente']),0,0,'C'); 
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode('Presidente.'),0,0,'C');   
+         
+         $this->AddPage();
+         $this->Ln(15);
+         
+        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Ln(15);
-        $this->SetX(20);
-        $this->SetFont('Arial','B',10);
-        $this->Cell(0,0,utf8_decode('Ciudadano(a): '.$this->datos['nb_usuario']),0,0,'L');
-        $this->Ln(5);
-        $this->SetX(20);
-        //$this->Cell(0,0,utf8_decode($this->datos['tx_proceso']),0,0,'L');
-        //$this->Cell(0,0,utf8_decode('DIRECTOR DE COMPRAS Y SUMINISTRO'),0,0,'L');
-        $this->Cell(0,0,utf8_decode($this->op_reporte['ciudadano']),0,0,'L');
-        $this->Ln(5);
-        $this->SetX(20);
-        $this->Cell(0,0,utf8_decode('Su despacho.-'),0,0,'L');
-        
-        $this->Ln(10);
-        $this->SetTextColor(0,0,0);
-        $this->SetX(1);
-        
+        $this->SetFont('Arial','B',12);
+         $this->Cell(0, 0, utf8_decode('DISPONIBILIDAD PRESUPUESTARIA INICIAL'), 0, 0, 'C');
+         $this->Ln(15);
+         
+         $this->SetFont('Arial','',10);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('Señor(a):'),0,0,'L');
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'L');
+         $this->SetFont('Arial','B',8);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('PRESIDENTE DE LA '.$this->empresa['nb_institucion']),0,0,'L');
+         $this->SetFont('Arial','',8);
+         $this->Ln(4);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('Su Despacho.'),0,0,'L');
+
          
          $this->SetY(100);  
          $this->SetX(20);
@@ -96,40 +145,40 @@ class PDF extends FPDF {
          $montoletra = numtoletras($this->datos['monto'], 1);
          $montonum = number_format($this->datos['monto'], 2, ',','.');
          
-         $html='Por medio de la presente se CERTIFICA LA DISPONIBILIDAD PRESUPUESTARIA contemplada en el presente ejercicio fiscal, la cantidad de '.$montoletra.' ('.$montonum.'), para: ';
+         $html='     Por medio de la presente, se informa que en el presupuesto de egreso se encuentra contemplado el código presupuestario que se describe a continuación: ';
 
-         
-         $this->MultiCell(170,5,utf8_decode($html),0,1,'J',1);                           
-        
-         $this->SetFont('Arial','B',10);         
-         $this->Ln(5);
-         $this->SetX(20);
-         $this->MultiCell(170,5,utf8_decode('Descripción:').$this->datos['tx_concepto'],0,1,'C',1);                                    
-         $this->SetFont('Arial','',10);
-         $this->Ln(5);
-         $this->SetX(20);
-         $this->MultiCell(170,5,utf8_decode('A continuación se describen las partidas presupuestarias: '),0,1,'L',1);                                    
+         $this->SetX(25);
+         $this->MultiCell(170,5,utf8_decode($html),0,1,'J',1);                                                              
                           
                  
-         $this->SetWidths(array(180));
-         $this->SetAligns(array("C"));
-         $this->SetFillColor(201, 199, 199);
          $this->Ln();
-         $this->SetFont('Arial','B',9); 
-         $this->SetX(20); 
-         $this->Row(array(utf8_decode('PARTIDAS ASOCIADAS')),1,1);
          $this->SetFillColor(255, 255, 255); 
          $this->SetFont('Arial','B',8); 
-         $this->SetAligns(array("C","C","C"));
-         $this->SetWidths(array(70,80,30));
-         $this->SetX(20); 
-         $this->Row(array('PARTIDA','DENOMINACION','MONTO (Bs.)'),1,1);
-         $this->SetAligns(array("C","L","R"));          
+         $this->SetAligns(array("C","C","C","C"));
+         $this->SetWidths(array(35,75,30,30));
+         $this->SetX(25); 
+         $this->Row(array('CODIGO PRESUPUESTARIO','FUENTE FINANCIAMIENTO','DENOMINACION','MONTO (Bs.) DISPONIBLE TOTAL'),1,1);
+         $this->SetAligns(array("C","C","C","C"));         
          $this->SetFont('Arial','',8);
          $this->lista_partidas = $this->getPartidas();
          foreach($this->lista_partidas as $key => $campo){  
-          $this->SetX(20);   
-          $this->Row(array($campo['co_categoria'],utf8_decode($campo['de_partida']),number_format($campo['monto'], 2, ',','.')),1,1);
+             
+                            if($this->getY()>240){
+                     $this->AddPage();
+                     $this->Ln(20);
+                     $this->SetFillColor(255, 255, 255); 
+                     $this->SetFont('Arial','B',8); 
+                     $this->SetAligns(array("C","C","C","C"));
+                     $this->SetWidths(array(35,75,30,30));
+                     $this->SetX(25); 
+                     $this->Row(array('CODIGO PRESUPUESTARIO','FUENTE FINANCIAMIENTO','DENOMINACION','MONTO (Bs.) DISPONIBLE TOTAL'),1,1);
+         
+                            }             
+             
+          $this->SetX(25);   
+          $this->SetWidths(array(35,75,30,30));
+          $this->SetAligns(array("C","C","L","C"));
+          $this->Row(array(utf8_decode($campo['co_categoria']),utf8_decode($campo['de_partida']),$campo['tx_descripcion'],number_format($campo['monto'], 2, ',','.')),1,1);
           
          }
          
@@ -141,16 +190,18 @@ class PDF extends FPDF {
          $this->SetAligns(array("L"));  
          $this->SetFont('Arial','',10); 
          $this->Cell(170,5,utf8_decode('Sin más a que hacer referencia, me despido de usted.'),0,0,'L');         
-         $this->ln(25);
-         $this->SetX(20);
-         $this->Cell(170,5,utf8_decode('Atentamente'),0,0,'C');         	 
-
-         
-         $this->ln(35);
-         $this->SetX(20);
+         $this->ln(15);
          $this->SetFont('Arial','B',10);
-         //$this->Cell(170,5,utf8_decode('SUBSECRETARIA DE PRESUPUESTO'),0,0,'C'); 
-         $this->Cell(170,5,utf8_decode($this->op_reporte['cargo_firma']),0,0,'C');
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode('Atentamente.'),0,0,'C');         
+         $this->ln(10);
+         
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode($this->empresa['nb_presidente']),0,0,'C'); 
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode('Presidente.'),0,0,'C');   
          
 
     }
@@ -177,12 +228,16 @@ class PDF extends FPDF {
 
 	  $conex = new ConexionComun(); 
                     
-          $sql = "select sum(tb207.monto) as monto, tb206.tx_observacion, upper(tb039.tx_concepto) as tx_concepto
+          $sql = "select sum(tb207.monto) as monto, tb206.tx_observacion, upper(tb039.tx_concepto) as tx_concepto,                         
+                         upper(tb047.nb_responsable) as nb_responsable, 
+                         upper(tb047.cargo) as cargo 
                   from   tb206_cotizacion as tb206 
                   left join tb039_requisiciones as tb039 on tb039.co_solicitud = tb206.co_solicitud
-                  left join tb207_detalle_cotizacion as tb207 on tb206.co_cotizacion = tb207.co_cotizacion                   
+                  left join tb207_detalle_cotizacion as tb207 on tb206.co_cotizacion = tb207.co_cotizacion
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb206.co_solicitud and tb030.in_cargar_dato is true
-                  where tb030.co_ruta = ".$_GET['codigo']." group by tb206.co_cotizacion, tx_concepto"; 
+                  left join tb001_usuario as tb001 on tb001.co_usuario = tb030.co_usuario
+                  left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
+                  where tb030.co_ruta = ".$_GET['codigo']." group by tb206.co_cotizacion, tx_concepto, tb047.nb_responsable,tb047.cargo "; 
                   
          
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
@@ -198,19 +253,17 @@ class PDF extends FPDF {
                     
           $conex = new ConexionComun(); 
                     
-          $sql = "select distinct tb083.id_tb013_anio_fiscal||'-'||tb082.nu_ejecutor||'-'||tb085.co_categoria as co_categoria,
+          $sql = "select substring(tb085.co_categoria,18,50) as co_categoria,
                          tb085.de_partida,
-                         case when (tb207.in_calcular_iva) then tb207.monto else tb206.monto_iva end as monto,
-                         tb207.co_detalle_cotizacion
+                         sum(tb207.monto) as monto,
+                         tb140.tx_descripcion
                   from   tb206_cotizacion as tb206 
                   left join tb207_detalle_cotizacion as tb207 on tb207.co_cotizacion = tb206.co_cotizacion
                   left join tb085_presupuesto as tb085 on (tb085.id = tb207.co_presupuesto)
-                  left join tb084_accion_especifica as tb084 on tb085.id_tb084_accion_especifica = tb084.id
-                  left join tb083_proyecto_ac as tb083 on tb084.id_tb083_proyecto_ac = tb083.id
-                  left join tb082_ejecutor tb082 on tb082.id = tb083.id_tb082_ejecutor
-                  left join tb001_usuario as tb001 on tb001.co_ejecutor = tb082.id
-                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb206.co_solicitud and tb030.in_cargar_dato is true                              
-                  where tb030.co_ruta = ".$_GET['codigo']." order by tb207.co_detalle_cotizacion asc"; //$conex->decrypt($_GET['codigo']);
+                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb206.co_solicitud and tb030.in_cargar_dato is true
+                  left join tb140_tipo_ingreso as tb140 on tb140.co_tipo_ingreso = tb085.tip_ing::numeric
+                  where tb030.co_ruta = ".$_GET['codigo']."  group by co_categoria,tb085.de_partida,tb140.tx_descripcion
+                  order by co_categoria asc"; //$conex->decrypt($_GET['codigo']);
                   
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol;  
@@ -219,7 +272,7 @@ class PDF extends FPDF {
 
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion, nb_presidente,
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,
@@ -280,10 +333,10 @@ $update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".
 //echo $update; exit();
 $comm->Execute($update);    
 $pdf->Output($dir, 'F');
-/*
-$pdf=new PDF('P','mm','letter');
-$pdf->PrintChapter();
-$pdf->SetDisplayMode('default');
-$pdf->Output();*/
+
+//$pdf=new PDF('P','mm','letter');
+//$pdf->PrintChapter();
+//$pdf->SetDisplayMode('default');
+//$pdf->Output();
 
 ?>

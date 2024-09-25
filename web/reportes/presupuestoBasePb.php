@@ -20,7 +20,7 @@ class PDF extends FPDF
             $this->Image("imagenes/".$this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }*/
 
-        if (!empty($this->empresa['tx_imagen_cen'])) {
+        if (!empty($this->empresa['tx_imagen_izq'])) {
             $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'],  $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
 
@@ -276,7 +276,7 @@ class PDF extends FPDF
                   from   tb039_requisiciones as tb039
                   left join tb206_cotizacion as tb206 on tb206.co_requisicion=tb039.co_requisicion  
                   left join tb027_tipo_solicitud as tb027 on tb027.co_tipo_solicitud=tb039.co_tipo_solicitud
-                  left join tb001_usuario as tb001 on tb001.co_usuario = tb039.co_usuario
+                  left join tb001_usuario as tb001 on tb001.co_usuario = tb030.co_usuario
                   left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb039.co_solicitud
                   where tb030.co_ruta = " . $_GET['codigo']; //$conex->decrypt($_GET['codigo']);
@@ -503,32 +503,32 @@ class PDF extends FPDF
 }
 
 
-$pdf=new PDF('P','mm','letter');
-$pdf->AliasNbPages();
-$pdf->PrintChapter();
-//$pdf->PrintChapter2();
-$comm = new ConexionComun();
-$ruta = $comm->getRuta();
-
-//rmdir($ruta);
-//mkdir($ruta, 0777, true);    
-
-$dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
-
-
-$update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
-
-//echo $update; exit();
-$comm->Execute($update);    
-
-$pdf->Output($dir, 'F');
+//$pdf=new PDF('P','mm','letter');
+//$pdf->AliasNbPages();
+//$pdf->PrintChapter();
+////$pdf->PrintChapter2();
+//$comm = new ConexionComun();
+//$ruta = $comm->getRuta();
+//
+////rmdir($ruta);
+////mkdir($ruta, 0777, true);    
+//
+//$dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
+//
+//
+//$update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
+//
+////echo $update; exit();
+//$comm->Execute($update);    
+//
+//$pdf->Output($dir, 'F');
 
 //header('Location: http://'.$_SERVER["SERVER_NAME"].'/index.php/reporte/index/i/'.$_GET["p"]);
 
 
 
-//$pdf = new PDF('P', 'mm', 'letter');
-//$pdf->PrintChapter();
-//$pdf->SetDisplayMode('default');
-//$pdf->Output();
+$pdf = new PDF('P', 'mm', 'letter');
+$pdf->PrintChapter();
+$pdf->SetDisplayMode('default');
+$pdf->Output();
 
