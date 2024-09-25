@@ -165,12 +165,12 @@ class PDF extends FPDF {
          $this->Row(array(utf8_decode($i),utf8_decode($campo['tx_producto']).' - '.utf8_decode($campo['tx_observacion']),utf8_decode($campo['nu_cantidad'])),1,1);
          $i++;
         }
-        while ($i<11) 
-         {
-             $this->SetX(25);
-          $this->Row(array('','',''),1,1);  
-          $i++;
-         }   
+//        while ($i<11) 
+//         {
+//             $this->SetX(25);
+//          $this->Row(array('','',''),1,1);  
+//          $i++;
+//         }   
          foreach($this->lista_materiales as $key => $campo){
              
          if($this->getY()>220){

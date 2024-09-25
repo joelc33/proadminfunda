@@ -174,11 +174,11 @@ class PDF extends FPDF
             
             $TotalExcento =  0;
         }
-        while ($i < 11) {
-            $this->SetX(15);
-            $this->Row(array('', '', '', '', '', ''), 1, 1);
-            $i++;
-        }
+//        while ($i < 11) {
+//            $this->SetX(15);
+//            $this->Row(array('', '', '', '', '', ''), 1, 1);
+//            $i++;
+//        }
         //$total_iva = round(($SubTotal * $iva)/100,2);
         $total_iva = $TotalIVA;
        // $total_iva = $this->datos['monto_iva'];
@@ -276,9 +276,9 @@ class PDF extends FPDF
                   from   tb039_requisiciones as tb039
                   left join tb206_cotizacion as tb206 on tb206.co_requisicion=tb039.co_requisicion  
                   left join tb027_tipo_solicitud as tb027 on tb027.co_tipo_solicitud=tb039.co_tipo_solicitud
+                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb039.co_solicitud
                   left join tb001_usuario as tb001 on tb001.co_usuario = tb030.co_usuario
                   left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
-                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb039.co_solicitud
                   where tb030.co_ruta = " . $_GET['codigo']; //$conex->decrypt($_GET['codigo']);
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);

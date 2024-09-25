@@ -96,7 +96,7 @@ class PDF extends FPDF {
          $this->SetWidths(array(170));
          $this->SetAligns(array("J"));
          $this->SetX(25);
-         $this->Row(array(utf8_decode('     La presente tiene la finalidad de solicitarle la disponibilidad presupuestaria para la ejecución del proceso de: '.$this->datos['tx_concepto']).'.'), 0, 0);
+         $this->Row(array(utf8_decode('     La presente tiene la finalidad de solicitarle la disponibilidad presupuestaria para la ejecución del proceso de: '.$this->datos['tx_observacion']).'.'), 0, 0);
   
         $this->Ln(31);         
         
