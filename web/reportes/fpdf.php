@@ -1691,7 +1691,7 @@ function Row($data,$borde=0,$pintar=0)
     for($i=0;$i<count($data);$i++)
     {
         if($this->NbLines($this->widths[$i],$data[$i])<$nb){
-            $height[$i]=5*$nb;
+            $height[$i]=(5*$nb)/$this->NbLines($this->widths[$i],$data[$i]);
         }else{
             $height[$i]=5;
         }
