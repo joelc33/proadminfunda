@@ -175,7 +175,8 @@ class PDF extends FPDF {
          
                             }             
              
-          $this->SetX(25);   
+          $this->SetX(25);  
+          $this->SetFont('Arial','B',8); 
           $this->SetWidths(array(35,75,30,30));
           $this->SetAligns(array("C","C","L","C"));
           $this->Row(array(utf8_decode($campo['co_categoria']),$campo['de_partida'],$campo['tx_descripcion'],number_format($campo['monto'], 2, ',','.')),1,1);
