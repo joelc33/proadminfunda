@@ -1793,11 +1793,15 @@ class PresupuestoActions extends sfActions
 
                 if ($cant == 0) {
                     $ruta->setInCargarDato(true)->save($con);
+                                    $con->commit();
+                Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
                     
+                }else{
+                  $con->commit();   
                 }
 
-                $con->commit();
-                Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
+               
+
 
                 $this->data = json_encode(array(
                     "success" => true,
