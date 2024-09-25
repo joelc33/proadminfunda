@@ -157,7 +157,18 @@ class PDF extends FPDF {
          $this->Row(array(utf8_decode('PARTIDA NRO.'),utf8_decode('DESCRIPCIÓN'),'CANTIDAD'),1,1);         
          $i = 1;
          $this->lista_materiales = $this->getMateriales();
-         foreach($this->lista_materiales as $key => $campo){           
+         foreach($this->lista_materiales as $key => $campo){ 
+
+                            if($this->getY()>240){
+                     $this->AddPage();
+                     $this->Ln(20);
+                     $this->SetFillColor(255, 255, 255);         
+                     $this->SetAligns(array("C","C","C","C"));
+                     $this->SetWidths(array(30,110,30,30)); 
+                     $this->SetX(25);
+                     $this->Row(array(utf8_decode('PARTIDA NRO.'),utf8_decode('DESCRIPCIÓN'),'CANTIDAD'),1,1); 
+                            }               
+             
          $this->SetFont('Arial','',9);
          $this->SetAligns(array("C","L","C","C"));
          $this->SetWidths(array(30,110,30,30));
