@@ -159,7 +159,7 @@ class PDF extends FPDF {
          $this->SetX(25); 
          $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','FUENTE FINANCIAMIENTO','MONTO (Bs.) DISPONIBLE TOTAL'),1,1);
          $this->SetAligns(array("C","C","C","C"));         
-         $this->SetFont('Arial','',7);
+         $this->SetFont('Arial','',8);
          $this->lista_partidas = $this->getPartidas();
          foreach($this->lista_partidas as $key => $campo){  
              
