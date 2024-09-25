@@ -155,7 +155,7 @@ class PDF extends FPDF {
          $this->SetFillColor(255, 255, 255); 
          $this->SetFont('Arial','B',8); 
          $this->SetAligns(array("C","C","C","C"));
-         $this->SetWidths(array(35,55,50,30));
+         $this->SetWidths(array(35,75,30,30));
          $this->SetX(25); 
          $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','FUENTE FINANCIAMIENTO','MONTO (Bs.) DISPONIBLE TOTAL'),1,1);
          $this->SetAligns(array("C","C","C","C"));         
@@ -177,7 +177,7 @@ class PDF extends FPDF {
              $prueba = $campo['de_partida'];
                             
           $this->SetX(25);   
-          $this->SetWidths(array(35,55,50,30));
+          $this->SetWidths(array(35,75,30,30));
           $this->SetAligns(array("C","C","C","C"));
           $this->Row(array(utf8_decode($campo['co_categoria']),$prueba,utf8_decode($campo['tx_descripcion']),number_format($campo['monto'], 2, ',','.')),1,1);
           
@@ -316,28 +316,28 @@ class PDF extends FPDF {
 
 
 
-$pdf=new PDF('P','mm','letter');
-$pdf->AliasNbPages();
-$pdf->PrintChapter();
-
-$comm = new ConexionComun();
-$ruta = $comm->getRuta();
-
-//rmdir($ruta);
-//mkdir($ruta, 0777, true);    
-
-$dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
-
-
-$update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
-
-//echo $update; exit();
-$comm->Execute($update);    
-$pdf->Output($dir, 'F');
-
 //$pdf=new PDF('P','mm','letter');
+//$pdf->AliasNbPages();
 //$pdf->PrintChapter();
-//$pdf->SetDisplayMode('default');
-//$pdf->Output();
+//
+//$comm = new ConexionComun();
+//$ruta = $comm->getRuta();
+//
+////rmdir($ruta);
+////mkdir($ruta, 0777, true);    
+//
+//$dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
+//
+//
+//$update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
+//
+////echo $update; exit();
+//$comm->Execute($update);    
+//$pdf->Output($dir, 'F');
+
+$pdf=new PDF('P','mm','letter');
+$pdf->PrintChapter();
+$pdf->SetDisplayMode('default');
+$pdf->Output();
 
 ?>
