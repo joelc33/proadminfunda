@@ -174,7 +174,7 @@ class PDF extends FPDF {
                      $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','FUENTE FINANCIAMIENTO','MONTO (Bs.) DISPONIBLE TOTAL'),1,1);
          
                             }             
-             $prueba = $campo['de_partida'];
+             $prueba = utf8_decode($campo['de_partida']);
                             
           $this->SetX(25);   
           $this->SetWidths(array(35,75,30,30));
