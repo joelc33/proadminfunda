@@ -3387,7 +3387,8 @@ class PresupuestoActions extends sfActions
 
 
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($campos["co_solicitud"]));
-            $ruta->setInCargarDato(false)->save($con);
+            $ruta->setInCargarDato(false)->setTxRutaReporte('')->save($con);
+            
 
             $con->commit();
 
