@@ -112,6 +112,12 @@ this.quitar_partida= new Ext.Button({
                 obj = Ext.util.JSON.decode(result.responseText);
                 if(obj.success==true){
 		    ContabilidadEditar.main.getCargarGrid();
+                            pendienteEntidadesLista.main.store_lista.baseParams.paginar = 'si';
+                            pendienteEntidadesLista.main.store_lista.load();
+                            pendienteEntidadesLista.main.store_lista.on('load', function() {
+                                pendienteEntidadesLista.main.estado.disable();
+                                pendienteEntidadesLista.main.revision.disable();
+                            });                    
                     Ext.Msg.alert("Notificación",obj.msg);
                 }else{
                     Ext.Msg.alert("Notificación",obj.msg);
