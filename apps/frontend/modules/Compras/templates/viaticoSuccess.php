@@ -171,6 +171,11 @@
                         Ext.Msg.alert("Alerta", "Debe ingresar los campos en rojo");
                         return false;
                     }
+                    
+                    if(ViaticoEditar.main.gridPanelPartida.getStore().getCount()<=0){
+                        Ext.Msg.alert("Alerta","Debe agregar la partida");
+                        return false;
+                    }                    
 
                     var list = paqueteComunJS.funcion.getJsonByObjStore({
                         store: ViaticoEditar.main.gridPanel.getStore()
