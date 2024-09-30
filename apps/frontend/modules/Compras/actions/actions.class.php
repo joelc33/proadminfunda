@@ -1497,12 +1497,12 @@ class ComprasActions extends sfActions
                 $tb056_contrato_compras = new Tb056ContratoCompras();
             }
             $tb056_contrato_compras->setCoCompras($tb052_compras->getCoCompras());
-            list($dia, $mes, $anio) = explode("/", $tb052_comprasForm["fecha_inicio"]);
-            $fecha = $anio . "-" . $mes . "-" . $dia;
-            $tb056_contrato_compras->setFechaInicio($fecha);
-            list($dia, $mes, $anio) = explode("/", $tb052_comprasForm["fecha_fin"]);
-            $fecha = $anio . "-" . $mes . "-" . $dia;
-            $tb056_contrato_compras->setFechaFin($fecha);
+//            list($dia, $mes, $anio) = explode("/", $tb052_comprasForm["fecha_inicio"]);
+//            $fecha = $anio . "-" . $mes . "-" . $dia;
+//            $tb056_contrato_compras->setFechaInicio($fecha);
+//            list($dia, $mes, $anio) = explode("/", $tb052_comprasForm["fecha_fin"]);
+//            $fecha = $anio . "-" . $mes . "-" . $dia;
+//            $tb056_contrato_compras->setFechaFin($fecha);
             $tb056_contrato_compras->setCoRamo($tb052_comprasForm["co_ramo"]);
             $tb056_contrato_compras->setMonto($tb052_comprasForm["monto"]);
 
@@ -1512,6 +1512,7 @@ class ComprasActions extends sfActions
         $tb056_contrato_compras->setFechaEntrega($fecha);*/
             $tb056_contrato_compras->setTiempoGarantia($tb052_comprasForm["tiempo_garantia"]);
             $tb056_contrato_compras->setCoTpContrato($tb052_comprasForm["co_tp_contrato"]);
+            $tb056_contrato_compras->setTxEntrega($tb052_comprasForm["tx_entrega"]);
             $tb056_contrato_compras->setCoFuenteFinanciamiento($tb052_comprasForm["co_fuente_financiamiento"]);
             $tb056_contrato_compras->save($con);
 

@@ -312,25 +312,25 @@
                 width: 100
             });
 
-            this.PanelFecha = new Ext.Panel({
-                items: [{
-                    layout: 'column',
-                    defaults: {
-                        layout: 'form'
-                    },
-                    items: [{
-                            labelWidth: 100,
-                            columnWidth: .3,
-                            items: [this.fecha_inicio]
-                        },
-                        {
-                            labelWidth: 70,
-                            columnWidth: .3,
-                            items: [this.fecha_fin]
-                        }
-                    ]
-                }]
-            });
+//            this.PanelFecha = new Ext.Panel({
+//                items: [{
+//                    layout: 'column',
+//                    defaults: {
+//                        layout: 'form'
+//                    },
+//                    items: [{
+//                            labelWidth: 100,
+//                            columnWidth: .3,
+//                            items: [this.fecha_inicio]
+//                        },
+//                        {
+//                            labelWidth: 70,
+//                            columnWidth: .3,
+//                            items: [this.fecha_fin]
+//                        }
+//                    ]
+//                }]
+//            });
 
             this.forma_pago = new Ext.form.TextField({
                 fieldLabel: 'Forma de Pago',
@@ -372,10 +372,10 @@
             });
 
             this.tiempo_garantia = new Ext.form.TextField({
-                fieldLabel: 'Garantia',
+                fieldLabel: 'Garantias Solicitadas',
                 name: 'tb052_compras[tiempo_garantia]',
                 value: this.OBJ.tiempo_garantia,
-                width: 200
+                width: 775
             });
 
             this.forma_entrega = new Ext.form.TextField({
@@ -423,9 +423,17 @@
                 readOnly: true,
                 style: 'background:#c9c9c9;',
             });
+            
+            this.tx_entrega = new Ext.form.TextField({
+                fieldLabel: 'Fecha Entrega',
+                name: 'tb052_compras[tx_entrega]',
+                value: this.OBJ.tx_entrega,
+                allowBlank: false,
+                width: 775
+            });            
 
             this.tx_observacion = new Ext.form.TextArea({
-                fieldLabel: 'Observación',
+                fieldLabel: 'Anexos',
                 name: 'tb052_compras[tx_observacion]',
                 value: this.OBJ.tx_observacion,
                 allowBlank: false,
@@ -521,8 +529,10 @@
                 items: [
                     this.tx_concepto,
                    // this.nu_orden_compra,
-                    this.PanelFecha,
+//                    this.PanelFecha,
+                    this.tx_entrega,
                     this.in_responsabilidad_social,
+                    this.tiempo_garantia,
                     this.tx_observacion,
                 ]
             });
