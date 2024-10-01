@@ -440,7 +440,7 @@ class PDF_Flo extends PDF_FlowingBlock
 //        $this->SetX(35);
 //        $this->finishFlowingBlock();
         $this->SetY($Y);
-        $this->SetX(112);
+        $this->SetX(92);
         $this->newFlowingBlock(70, 5, '', 'J');
         $this->SetFont('Times', 'B', 8);
         $this->WriteFlowingBlock(utf8_decode('COMPROMISO RESP. SOCIAL: '));
