@@ -425,7 +425,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetY($Y); 
 
 
-        $this->newFlowingBlock(30, 5, '', 'J');
+        $this->newFlowingBlock(80, 5, '', 'J');
         $this->SetFont('Times', '', 8);
         $this->SetX(32);
         $this->WriteFlowingBlock('  ' . utf8_decode($this->punto['tiempo_garantia']));
@@ -443,16 +443,14 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(92);
         $this->newFlowingBlock(70, 5, '', 'J');
         $this->SetFont('Times', 'B', 8);
-        $this->WriteFlowingBlock(utf8_decode('COMPROMISO RESP. SOCIAL: '));
-        $this->SetFont('Times', '', 9);
         if ($this->punto['in_responsabilidad_social'] == t) {
             $inf1 = ' SI APLICA (EN  ESPECIES)';
         } else {
             $inf1 = ' NO APLICA';
         }
-        $this->WriteFlowingBlock($inf1);
+        $this->WriteFlowingBlock(utf8_decode('COMPROMISO RESP. SOCIAL: '.$inf1));
         $this->SetY($Y);
-        $this->SetX(183);
+        $this->SetX(120);
         $this->finishFlowingBlock();
 
         //$style2 = array('width' => 0.5, 'cap' => 'round', 'join' => 'miter', 'dash' => '2,10', 'color' => array(0,0,0));
