@@ -425,7 +425,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetY($Y); 
 
 
-        $this->newFlowingBlock(50, 5, '', 'J');
+        $this->newFlowingBlock(30, 5, '', 'J');
         $this->SetFont('Times', '', 8);
         $this->SetX(32);
         $this->WriteFlowingBlock('  ' . utf8_decode($this->punto['tiempo_garantia']));
@@ -838,7 +838,7 @@ $update = "update tb030_ruta set tx_ruta_reporte = '" . $dir . "' where co_ruta 
 $comm->Execute($update);
 $pdf->SetMargins(0, 0, 0);
 $pdf->Output($dir, 'F');
-
+//
 //$pdf=new PDF_Flo('P','mm','letter');
 //$pdf->PrintChapter();
 //$pdf->SetDisplayMode('default');
