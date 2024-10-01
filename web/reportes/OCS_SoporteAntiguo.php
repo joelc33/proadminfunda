@@ -441,7 +441,7 @@ class PDF_Flo extends PDF_FlowingBlock
 //        $this->finishFlowingBlock();
         $this->SetY($Y);
         $this->SetX(92);
-        $this->newFlowingBlock(70, 5, '', 'J');
+        $this->newFlowingBlock(90, 5, '', 'J');
         $this->SetFont('Times', 'B', 8);
         if ($this->punto['in_responsabilidad_social'] == t) {
             $inf1 = ' SI APLICA (EN  ESPECIES)';
