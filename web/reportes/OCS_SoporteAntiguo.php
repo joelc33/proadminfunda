@@ -586,7 +586,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->ln();
         $Y = $this->GetY();
-        if($Y>230){
+        if($Y>250){
         $this->addPage();
         $this->SetX(15);
         $this->SetY(230);
@@ -618,7 +618,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         }else{
         $this->SetX(15);
-        $this->SetY(230);
+        $this->SetY(240);
         $this->SetAligns(array("C", "C", "C", "C"));
         $this->SetFillColor(201, 199, 199);
         $this->SetWidths(array(46, 46, 48, 46));
@@ -639,9 +639,9 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetY($Y);
         $this->SetX(155);
         $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
-        $this->SetY($Y + 5);
+        $this->SetY($Y + 3);
         $this->SetFont('Arial', '', 6);
-        $this->ln(8);
+        $this->ln(6);
         $this->SetX(15);
         $this->Row(array('Realizado por:', 'Revisado por:', 'Aprobado por:', utf8_decode('Recibí conforme:')), 0, 0);            
         }
