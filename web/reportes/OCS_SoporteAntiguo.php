@@ -303,7 +303,7 @@ class PDF_Flo extends PDF_FlowingBlock
         foreach ($this->lista_materiales as $key => $campo) {
             $this->SetWidths(array(60, 20, 24, 28, 22, 29));
             $monto_prod =  ($campo['nu_cantidad'] * $campo['precio_unitario']);
-            $iva = ($monto_prod * $campo['nu_iva']) / 100;
+            $iva = $campo['mo_iva_producto'];
             $nu_iva = $campo['nu_iva'];
             if ($j == 0) {
                 $this->SetX(16);
@@ -746,7 +746,8 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb053.precio_unitario,
                          tb057.tx_unidad_producto,
                          tb052.monto_total,
-                         tb053.monto
+                         tb053.monto,
+                         tb053.mo_iva_producto
                   FROM tb052_compras as tb052
                   left join tb053_detalle_compras as tb053 on tb053.co_compras = tb052.co_compras and tb053.in_calcular_iva is true
                   left join tb048_producto as tb048 on tb053.co_producto = tb048.co_producto
