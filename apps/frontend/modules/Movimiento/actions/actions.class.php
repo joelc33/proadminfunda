@@ -199,7 +199,7 @@ class MovimientoActions extends sfActions
         
         $c->addJoin(Tb085PresupuestoPeer::ID,Tb087PresupuestoMovimientoPeer::CO_PARTIDA,Criteria::INNER_JOIN);
         $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA,Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS,Criteria::INNER_JOIN);        
-        $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS,Tb052ComprasPeer::CO_COMPRAS,Criteria::INNER_JOIN);
+        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS,Tb053DetalleComprasPeer::CO_COMPRAS,Criteria::INNER_JOIN);
         $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD,Tb026SolicitudPeer::CO_SOLICITUD,  Criteria::INNER_JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR,Tb008ProveedorPeer::CO_PROVEEDOR,Criteria::INNER_JOIN);
         $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO,Criteria::INNER_JOIN);
