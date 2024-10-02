@@ -301,6 +301,8 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->lista_materiales = $this->getMateriales();
 
         foreach ($this->lista_materiales as $key => $campo) {
+            
+            if($campo['in_calcular_iva']==true){
             $this->SetWidths(array(111, 20, 24, 28, 22, 29));
             $monto_prod =  ($campo['nu_cantidad'] * $campo['precio_unitario']);
             $iva = $campo['mo_iva_producto'];
@@ -326,9 +328,10 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetAligns(array("L", "C", "R", "R", "R", "R"));
             }
             $SubTotal =     $SubTotal + $monto_prod;
-            $TotalIVA =     $TotalIVA + $iva;
             $TotalExcento =  0;
-            $monto_total = $campo['monto_total'];
+            }else{
+            $TotalIVA =     $TotalIVA + $campo['monto'];    
+            }
         }
         //         $TotalGenerado= $monto_total;
         $TotalGenerado = $SubTotal + $TotalIVA;
@@ -348,7 +351,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetWidths(array(150, 40));
         $this->SetFont('Times', 'B', 8);
         $this->Row(array(utf8_decode('Sub-Total:'), number_format($SubTotal, 2, ',', '.')), 0, 0);
-        $this->Row(array(utf8_decode('Total I.V.A. ' . $nu_iva . ' %: '), number_format($TotalIVA, 2, ',', '.')), 0, 0);
+        $this->Row(array(utf8_decode('Total I.V.A. : '), number_format($TotalIVA, 2, ',', '.')), 0, 0);
 //        $this->Row(array(utf8_decode('Total Excento: '), number_format($TotalExcento, 2, ',', '.')), 0, 0);
         $this->SetFont('Times', 'B', 10);
         $this->Row(array('Total General', number_format($TotalGenerado, 2, ',', '.')), 0, 0);
@@ -747,9 +750,10 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb057.tx_unidad_producto,
                          tb052.monto_total,
                          tb053.monto,
-                         tb053.mo_iva_producto
+                         tb053.mo_iva_producto,
+                         tb053.in_calcular_iva
                   FROM tb052_compras as tb052
-                  left join tb053_detalle_compras as tb053 on tb053.co_compras = tb052.co_compras and tb053.in_calcular_iva is true
+                  left join tb053_detalle_compras as tb053 on tb053.co_compras = tb052.co_compras
                   left join tb048_producto as tb048 on tb053.co_producto = tb048.co_producto
                   left join tb057_unidad_producto as tb057 on tb057.co_unidad_producto = tb053.co_unidad_producto
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud
