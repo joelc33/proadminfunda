@@ -224,7 +224,7 @@ class MovimientoActions extends sfActions
         $cantidadTotal = Tb087PresupuestoMovimientoPeer::doCount($c);
         $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
         
-        echo $c->toString(); exit();
+        //echo $c->toString(); exit();
     
         $registros = "";
         while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
