@@ -214,7 +214,7 @@ class MovimientoActions extends sfActions
         $c->addJoin(Tb085PresupuestoPeer::NU_ANIO, Tb013AnioFiscalPeer::CO_ANIO_FISCAL);
         $c->add(Tb087PresupuestoMovimientoPeer::NU_MONTO,0, Criteria::GREATER_THAN);
         $c->add(Tb087PresupuestoMovimientoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-        $c->add(Tb060OrdenPagoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
+//        $c->add(Tb060OrdenPagoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
         $c->add(Tb013AnioFiscalPeer::CO_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
         
         $c->addAscendingOrderByColumn(Tb052ComprasPeer::CO_SOLICITUD);
