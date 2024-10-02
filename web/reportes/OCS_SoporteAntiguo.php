@@ -271,14 +271,14 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->SetY(70);
         $this->SetX(15);
-        $this->SetWidths(array(60, 22, 25, 29, 20, 30));
+        $this->SetWidths(array(111, 22, 25, 29, 20, 30));
         $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
         $this->SetFillColor(201, 199, 199);
         $this->SetFont('Times', 'B', 8);
         $this->SetTextColor(0, 0, 0);
-        $this->Row(array(utf8_decode('DESCRIPCIÓN'), 'CANTIDAD', 'PREC./UNIT.', 'SUB TOTAL', 'I.V.A', 'TOTAL'), 1, 1);
+        $this->Row(array(utf8_decode('DESCRIPCIÓN'), 'CANTIDAD', 'PREC./UNIT.', 'TOTAL'), 1, 1);
         $this->SetFillColor(255, 255, 255);
-        $this->SetWidths(array(60, 10, 23, 26, 18, 26));
+        $this->SetWidths(array(111, 10, 23, 26, 18, 26));
         $this->SetAligns(array("C", "C", "R", "R", "R", "R"));
         $this->SetX(15);
        
@@ -296,23 +296,23 @@ class PDF_Flo extends PDF_FlowingBlock
         $iva = 0;
 
 
-        $this->SetAligns(array("L", "R", "R", "R", "R", "R"));
+        $this->SetAligns(array("L", "C", "R", "R", "R", "R"));
         $this->SetFont('Times', '', 8);
         $this->lista_materiales = $this->getMateriales();
 
         foreach ($this->lista_materiales as $key => $campo) {
-            $this->SetWidths(array(60, 20, 24, 28, 22, 29));
+            $this->SetWidths(array(111, 20, 24, 28, 22, 29));
             $monto_prod =  ($campo['nu_cantidad'] * $campo['precio_unitario']);
             $iva = $campo['mo_iva_producto'];
             $nu_iva = $campo['nu_iva'];
             if ($j == 0) {
                 $this->SetX(16);
-                $this->Row(array(utf8_decode($campo['tx_producto']), utf8_decode($campo['nu_cantidad']), number_format($campo['precio_unitario'], 2, ',', '.'), number_format($monto_prod, 2, ',', '.'), number_format($iva, 2, ',', '.'), number_format(($monto_prod + $iva), 2, ',', '.')), 0, 0);
+                $this->Row(array(utf8_decode($campo['tx_producto']), utf8_decode($campo['nu_cantidad']), number_format($campo['precio_unitario'], 2, ',', '.'), number_format($monto_prod, 2, ',', '.')), 0, 0);
                 $j = 1;
             } else {
                 $this->SetFillColor(240, 240, 240);
                 $this->SetX(16);
-                $this->Row(array(utf8_decode($campo['tx_producto']), utf8_decode($campo['nu_cantidad']), number_format($campo['precio_unitario'], 2, ',', '.'), number_format($monto_prod, 2, ',', '.'), number_format($iva, 2, ',', '.'), number_format(($monto_prod + $iva), 2, ',', '.')), 0, 1);
+                $this->Row(array(utf8_decode($campo['tx_producto']), utf8_decode($campo['nu_cantidad']), number_format($campo['precio_unitario'], 2, ',', '.'), number_format($monto_prod, 2, ',', '.')), 0, 1);
                 $j = 0;
             }
 
@@ -320,9 +320,9 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->addPage();
                 $this->SetX(108);
                 $this->Row(array('ANEXOS' . $this->datos['numero_compra']), 0, 0);
-                $this->SetWidths(array(60, 10, 23, 26, 18, 26));
+                $this->SetWidths(array(111, 10, 23, 26, 18, 26));
                 $this->SetAligns(array("C", "C", "R", "R", "R", "R"));
-                $this->Row(array(utf8_decode('DESCRIPCIÓN'), 'CANTIDAD', 'PREC./UNIT.', 'SUB TOTAL', 'I.V.A', 'TOTAL'), 0, 0);
+                $this->Row(array(utf8_decode('DESCRIPCIÓN'), 'CANTIDAD', 'PREC./UNIT.', 'TOTAL'), 1, 1);
                 $this->SetAligns(array("L", "C", "R", "R", "R", "R"));
             }
             $SubTotal =     $SubTotal + $monto_prod;
