@@ -143,7 +143,7 @@ this.gridPanel_Comprometido = new Ext.grid.GridPanel({
         {header: 'Solicitud', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'co_solicitud'},
         {header: 'Monto', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'nu_monto',renderer:formatoNro},
         {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'created_at'},
-        {header: 'Orden de Pago', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial'},
+//        {header: 'Orden de Pago', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial'},
         {header: 'RIF', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_rif'},
         {header: 'Razon Social', width:300,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social'}        
 
@@ -170,7 +170,7 @@ this.gridPanel_Causado = new Ext.grid.GridPanel({
         {header: 'Solicitud', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'co_solicitud'},
         {header: 'Monto', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'nu_monto',renderer:formatoNro},
         {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'created_at'},
-        {header: 'Orden de Pago', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial'}, 
+//        {header: 'Orden de Pago', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial'}, 
         {header: 'RIF', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_rif'},
         {header: 'Razon Social', width:300,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social'}        
 
@@ -193,7 +193,7 @@ this.gridPanel_Pagado = new Ext.grid.GridPanel({
         {header: 'Solicitud', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'co_solicitud'},
         {header: 'Monto', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'nu_monto',renderer:formatoNro},
         {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'created_at'},
-        {header: 'Orden de Pago', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial'}, 
+//        {header: 'Orden de Pago', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial'}, 
         {header: 'RIF', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_rif'},
         {header: 'Razon Social', width:300,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social'}        
     ],
@@ -237,7 +237,7 @@ this.gridPanel_Disminucion = new Ext.grid.GridPanel({
         {header: 'Solicitud', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'co_solicitud'},
         {header: 'Monto', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'mo_distribucion',renderer:formatoNro},
         {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'created_at'},
-        {header: 'Orden de Pago', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial'}, 
+//        {header: 'Orden de Pago', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial'}, 
         {header: 'Nro', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'nu_modificacion'}, 
         {header: 'Descripción', width:400,  menuDisabled:true, sortable: true,  dataIndex: 'de_modificacion'}         
     ],
