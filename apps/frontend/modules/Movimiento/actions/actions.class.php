@@ -184,10 +184,10 @@ class MovimientoActions extends sfActions
         $c = new Criteria();
     
         $c->clearSelectColumns();
-        $c->setDistinct();
+//        $c->setDistinct();
         $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA);
         $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::NU_MONTO);
-        $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
+//        $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
         $c->addSelectColumn(Tb052ComprasPeer::CO_SOLICITUD);
        // $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::CREATED_AT);
         $c->addSelectColumn("cast(".Tb087PresupuestoMovimientoPeer::CREATED_AT." as date) as created_at");
@@ -200,8 +200,8 @@ class MovimientoActions extends sfActions
         $c->addJoin(Tb085PresupuestoPeer::ID,Tb087PresupuestoMovimientoPeer::CO_PARTIDA,Criteria::INNER_JOIN);
         $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA,Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS,Criteria::LEFT_JOIN);        
         $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS,Tb052ComprasPeer::CO_COMPRAS,Criteria::LEFT_JOIN);
-        $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD,Tb060OrdenPagoPeer::CO_SOLICITUD,Criteria::LEFT_JOIN);
-        $c->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD,Tb026SolicitudPeer::CO_SOLICITUD,  Criteria::LEFT_JOIN);
+//        $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD,Tb060OrdenPagoPeer::CO_SOLICITUD,Criteria::LEFT_JOIN);
+        $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD,Tb026SolicitudPeer::CO_SOLICITUD,  Criteria::LEFT_JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR,Tb008ProveedorPeer::CO_PROVEEDOR,Criteria::LEFT_JOIN);
         $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO,Criteria::LEFT_JOIN);
        
@@ -214,7 +214,7 @@ class MovimientoActions extends sfActions
         //$c->add(Tb087PresupuestoMovimientoPeer::IN_ACTIVO, TRUE);
         
         $c->addJoin(Tb085PresupuestoPeer::NU_ANIO, Tb013AnioFiscalPeer::CO_ANIO_FISCAL);
-       // $c->add(Tb013AnioFiscalPeer::IN_ACTIVO,TRUE);
+        $c->add(Tb087PresupuestoMovimientoPeer::NU_MONTO,0, Criteria::GREATER_THAN);
         $c->add(Tb087PresupuestoMovimientoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
         $c->add(Tb060OrdenPagoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
         $c->add(Tb013AnioFiscalPeer::CO_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
