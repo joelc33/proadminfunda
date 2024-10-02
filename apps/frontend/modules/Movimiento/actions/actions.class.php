@@ -197,12 +197,12 @@ class MovimientoActions extends sfActions
 
         $c->setIgnoreCase(true);
         
-        $c->addJoin(Tb085PresupuestoPeer::ID,Tb087PresupuestoMovimientoPeer::CO_PARTIDA,Criteria::INNER_JOIN);
-        $c->addJoin(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS,Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA,Criteria::INNER_JOIN);        
-        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS,Tb053DetalleComprasPeer::CO_COMPRAS,Criteria::INNER_JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD,Tb052ComprasPeer::CO_SOLICITUD,  Criteria::INNER_JOIN);
-        $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR,Tb026SolicitudPeer::CO_PROVEEDOR,Criteria::INNER_JOIN);
-        $c->addJoin(Tb007DocumentoPeer::CO_DOCUMENTO,Tb008ProveedorPeer::CO_DOCUMENTO, Criteria::INNER_JOIN);
+        $c->addJoin(Tb085PresupuestoPeer::ID,Tb087PresupuestoMovimientoPeer::CO_PARTIDA);
+        $c->addJoin(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS,Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA);        
+        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS,Tb053DetalleComprasPeer::CO_COMPRAS);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD,Tb052ComprasPeer::CO_SOLICITUD);
+        $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR,Tb026SolicitudPeer::CO_PROVEEDOR);
+        $c->addJoin(Tb007DocumentoPeer::CO_DOCUMENTO,Tb008ProveedorPeer::CO_DOCUMENTO);
         
         $c->add(Tb087PresupuestoMovimientoPeer::CO_PARTIDA,$id_tb085_presupuesto);
         if($co_tipo_movimiento == 1)
