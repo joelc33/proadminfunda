@@ -184,7 +184,7 @@ class MovimientoActions extends sfActions
         $c = new Criteria();
     
         $c->clearSelectColumns();
-        //$c->setDistinct();
+        $c->setDistinct();
         $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA);
         $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::NU_MONTO);
         $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
