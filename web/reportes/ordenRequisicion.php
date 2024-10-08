@@ -46,8 +46,8 @@ class PDF extends FPDF {
     }
 
     function Footer() {
-	$this->SetFont('Arial','',9);     
-	$this->SetY(-20);      
+//	$this->SetFont('Arial','',9);     
+//	$this->SetY(-20);      
     }
 
     function dwawCell($title,$data) {
