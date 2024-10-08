@@ -161,8 +161,9 @@ class PDF extends FPDF {
 
                             if($this->getY()>220){
                      $this->AddPage();
-                     $this->Ln(20);
+                     
                      $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
+                     $this->Ln(20);
                      $this->SetFillColor(255, 255, 255);         
                      $this->SetAligns(array("C","C","C","C"));
                      $this->SetWidths(array(30,110,30,30)); 
