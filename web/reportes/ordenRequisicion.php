@@ -184,13 +184,13 @@ class PDF extends FPDF {
 //         }   
          foreach($this->lista_materiales as $key => $campo){
              
-         if($this->getY()>220){
-             $this->addPage();
-
-	 }             
-         $this->SetAligns(array("L"));
-         $this->SetWidths(array(200));
-         $this->SetFont('Arial','B',9);
+//         if($this->getY()>220){
+//             $this->addPage();
+//
+//	 }             
+//         $this->SetAligns(array("L"));
+//         $this->SetWidths(array(200));
+//         $this->SetFont('Arial','B',9);
 //         if ($campo['tx_observacion'])
 //             $this->Row(array(utf8_decode('ESPECIFICACIONES TÉCNICAS / CÓDIGO: '.$campo['cod_producto'].' - ').utf8_decode($campo['tx_observacion'])),1,1);
         }
