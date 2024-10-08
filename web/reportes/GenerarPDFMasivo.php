@@ -71,7 +71,7 @@ foreach ($datos_ruta as $key => $value) {
 
    $i++;
 
-   $definicion =  $_SERVER["SERVER_NAME"].'/gobel/web/reportes/'.$value['nb_reporte_orden'].'.php?codigo='.$value['co_ruta'];
+   $definicion =  $_SERVER["SERVER_NAME"].'/proadmin/web/reportes/'.$value['nb_reporte_orden'].'.php?codigo='.$value['co_ruta'];
 
    //echo $definicion;
    //exit();
