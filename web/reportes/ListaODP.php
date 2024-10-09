@@ -141,7 +141,7 @@ class PDF extends FPDF {
         
         $sql = "  select distinct tb060.tx_serial, tb060.co_solicitud, 
                         case when(tb060.co_solicitud is not null) then prov1.tx_razon_social 
-                        else prov2.tx_razon_social end as beneficiario , tb060.created_at as fecha , 
+                        else prov2.tx_razon_social end as beneficiario , tb060.fe_emision as fecha , 
                         case when tb060.in_anulado = true then 'Anulada' else 
                         case when tb060.in_pagado = true then 'Pagada' else 'Pendiente' end end as estatus, 
                         tb060.mo_total as monto 
