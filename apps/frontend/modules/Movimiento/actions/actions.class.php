@@ -329,7 +329,7 @@ class MovimientoActions extends sfActions
         $c->setDistinct();
         $c->addSelectColumn(Tb097ModificacionDetallePeer::MO_DISTRIBUCION);
         $c->addSelectColumn(Tb096PresupuestoModificacionPeer::NU_MODIFICACION);
-        $c->addSelectColumn(Tb096PresupuestoModificacionPeer::CREATED_AT);
+        $c->addSelectColumn(Tb096PresupuestoModificacionPeer::FE_MODIFICACION);
         $c->addSelectColumn(Tb096PresupuestoModificacionPeer::DE_MODIFICACION);
         $c->addSelectColumn(Tb096PresupuestoModificacionPeer::CO_SOLICITUD);
         $c->addSelectColumn(Tb097ModificacionDetallePeer::ID);
@@ -360,7 +360,7 @@ class MovimientoActions extends sfActions
 
             $registros[] = array(
                 "mo_distribucion"          => trim($res["mo_distribucion"]),
-                "created_at"               => trim($dia.'/'.$mes.'/'.$anio),
+                "fe_modificacion"               => trim($dia.'/'.$mes.'/'.$anio),
                 "co_solicitud"             => $res["co_solicitud"],
                 "de_modificacion"          => $res["de_modificacion"], 
                 "nu_modificacion"                => $res["nu_modificacion"]

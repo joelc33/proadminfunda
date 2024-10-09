@@ -215,7 +215,7 @@ this.gridPanel_Aumento = new Ext.grid.GridPanel({
     new Ext.grid.RowNumberer(),
         {header: 'Solicitud', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'co_solicitud'},
         {header: 'Monto', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'mo_distribucion',renderer:formatoNro},
-        {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'created_at'},
+        {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'fe_modificacion'},
         {header: 'Nro', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'nu_modificacion'}, 
         {header: 'Descripción', width:400,  menuDisabled:true, sortable: true,  dataIndex: 'de_modificacion'}        
     ],
@@ -236,7 +236,7 @@ this.gridPanel_Disminucion = new Ext.grid.GridPanel({
     new Ext.grid.RowNumberer(),
         {header: 'Solicitud', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'co_solicitud'},
         {header: 'Monto', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'mo_distribucion',renderer:formatoNro},
-        {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'created_at'},
+        {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'fe_modificacion'},
 //        {header: 'Orden de Pago', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial'}, 
         {header: 'Nro', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'nu_modificacion'}, 
         {header: 'Descripción', width:400,  menuDisabled:true, sortable: true,  dataIndex: 'de_modificacion'}         
@@ -422,7 +422,7 @@ getListaMovimiento: function(){
     fields:[
             {name: 'de_tipo_movimiento'},
             {name: 'mo_distribucion'},
-            {name: 'created_at'},
+            {name: 'fe_modificacion'},
             {name: 'co_solicitud'},
             {name: 'de_modificacion'},
             {name: 'nu_modificacion'}
