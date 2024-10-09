@@ -354,7 +354,7 @@ class MovimientoActions extends sfActions
         $registros = "";
         while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
 
-            list($fecha,$hora)      = explode(" ", $res["created_at"]);
+            list($fecha,$hora)      = explode(" ", $res["fe_modificacion"]);
             list($anio,$mes,$dia)   = explode("-", $fecha);
 
 
