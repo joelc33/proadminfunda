@@ -228,7 +228,7 @@ this.fieldDatos1 = new Ext.form.FieldSet({
             this.co_proveedor,
 			this.compositefieldCIRIF,
 			this.tx_razon_social,
-			this.de_soporte,
+//			this.de_soporte,
 			this.id_tb143_cuenta_concepto,
 			this.id_tb144_clase_ingreso,
 			this.de_descripcion,

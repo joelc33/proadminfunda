@@ -125,7 +125,7 @@ class CuentaPorCobrarCreditoActions extends sfActions
         $fecha = date("Y-m-d H:i:s");
         //$tb142_cuenta_cobrar->setCreatedAt($fecha);
         $tb142_cuenta_cobrar->setUpdatedAt($fecha);
-        $tb142_cuenta_cobrar->setDeSoporte($tb142_cuenta_cobrarForm["de_soporte"]);
+//        $tb142_cuenta_cobrar->setDeSoporte($tb142_cuenta_cobrarForm["de_soporte"]);
         $tb142_cuenta_cobrar->setIdTb143CuentaConcepto($tb142_cuenta_cobrarForm["id_tb143_cuenta_concepto"]);
         $tb142_cuenta_cobrar->setIdTb144ClaseIngreso($tb142_cuenta_cobrarForm["id_tb144_clase_ingreso"]);
         $tb142_cuenta_cobrar->setDeDescripcion($tb142_cuenta_cobrarForm["de_descripcion"]);
