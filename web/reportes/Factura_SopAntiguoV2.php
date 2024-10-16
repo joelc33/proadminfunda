@@ -206,7 +206,7 @@ class PDF extends FPDF {
         $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
         $this->Ln(4);
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');     
-            $this->Ln(8);
+//            $this->Ln(8);
 
             $this->SetWidths(array(140,30, 30));
             $this->SetAligns(array("L","R","L"));
