@@ -582,9 +582,9 @@ class PDF extends FPDF {
                          tb052.nu_orden_compra,
                          tb060.tx_serial,
                          case when(tb045.co_iva_factura = 0) then nu_total else '0' end as monto_excento,
-                         to_char(tb045.fe_registro,'dd') as dia,
-                         to_char(tb045.fe_registro,'mm') as mes,
-                         to_char(tb045.fe_registro,'yyyy') as anio
+                         to_char(tb045.fe_emision,'dd') as dia,
+                         to_char(tb045.fe_emision,'mm') as mes,
+                         to_char(tb045.fe_emision,'yyyy') as anio
                   from   tb026_solicitud as tb026
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud                                                   
                   left join tb045_factura as tb045 on tb045.co_compra = tb052.co_compras
@@ -619,10 +619,10 @@ class PDF extends FPDF {
                           tx_tipo_retencion,
                           tb041.co_tipo_retencion,
                           lpad(co_factura_retencion::text, 8, '0'::text) as co_factura_retencion,
-                          --lpad(nu_comprobante::text, 8, '0'::text) as nu_comprobante,
-                          to_char(tb045.fe_registro,'dd') as dia,
-                          to_char(tb045.fe_registro,'mm') as mes,
-                          to_char(tb045.fe_registro,'yyyy') as anio
+                          lpad(nu_comprobante::text, 8, '0'::text) as nu_comprobante,
+                          to_char(tb045.fe_emision,'dd') as dia,
+                          to_char(tb045.fe_emision,'mm') as mes,
+                          to_char(tb045.fe_emision,'yyyy') as anio
                   from   tb045_factura as tb045     
                   left join tb046_factura_retencion as tb046 on tb046.co_factura = tb045.co_factura
                   left join tb041_tipo_retencion as tb041 on tb041.co_tipo_retencion = tb046.co_tipo_retencion
