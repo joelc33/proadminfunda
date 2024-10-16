@@ -297,7 +297,7 @@ class PDF extends FPDF {
             $this->SetFont('Arial','',9);
             $this->Row(array(utf8_decode('Nombre o Razón Social.: ').$campo['tx_razon_social'],utf8_decode('R.I.F.:  ').$campo['tx_rif']),1,1);         
             $this->SetWidths(array(160));
-            $this->Row(array(utf8_decode('Dirección: ').$campo['tx_direccion']),1,1);             
+            $this->Row(array(utf8_decode('Dirección: ').utf8_decode($campo['tx_direccion'])),1,1);             
  
             $this->Ln(7);
 
