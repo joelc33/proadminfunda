@@ -189,13 +189,23 @@ class PDF extends FPDF {
                 $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
             }*/
 
-            $this->SetTextColor(0,0,0);
-             $this->SetY(12);
-             $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
-             $this->Ln(4);
-             $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
-             $this->Ln(5);
-             $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');        
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
+        $this->Ln(4);       
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        $this->Ln(4);
+        if (!empty($this->empresa['nb_institucion'])) 
+        {
+            $agente_retencion = utf8_decode($this->empresa['nb_institucion']);
+            $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
+            $this->Ln(4);
+        }else{
+        $agente_retencion = utf8_decode($this->empresa['nb_empresa']);    
+        }
+        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');     
             $this->Ln(8);
 
             $this->SetWidths(array(140,30, 30));
@@ -270,10 +280,10 @@ class PDF extends FPDF {
             $this->SetWidths(array(110,50));                 
             $this->SetFont('Arial','',9);          
             //$this->Row(array(utf8_decode('Empresa.: GOBERNACIÓN DEL EDO. ZULIA'),utf8_decode('R.I.F.:  G-200036524')),1,1);    
-            $this->Row(array(utf8_decode('Nombre o Razón Social.: '.$this->empresa['nb_empresa']),utf8_decode('R.I.F.: '.$this->empresa['tx_rif'])),1,1);              
+            $this->Row(array(utf8_decode('Nombre o Razón Social.: '.$agente_retencion),utf8_decode('R.I.F.: '.$this->empresa['tx_rif'])),1,1);              
             $this->SetWidths(array(160));
             //$this->Row(array(utf8_decode('Dirección: AV. BELLA VISTA EDIFICIO FEDERAL MARACAIBO EDO. ZULIA')),1,1);  
-            $this->Row(array(utf8_decode('Dirección: '.$this->empresa['tx_direccion'])),1,1);            
+            $this->Row(array(utf8_decode('Dirección: '.utf8_decode($this->empresa['tx_direccion']))),1,1);            
             
             $this->Ln(5); 
             $this->SetFillColor(201, 199, 199);
@@ -362,10 +372,10 @@ class PDF extends FPDF {
             $this->SetWidths(array(150,50));                 
             $this->SetFont('Arial','',9);          
             //$this->Row(array(utf8_decode('Empresa.: GOBERNACIÓN DEL EDO. ZULIA'),utf8_decode('R.I.F.:  G-200036524')),1,1);    
-            $this->Row(array(utf8_decode('Nombre o Razón Social.: '.$this->empresa['nb_empresa']),utf8_decode('R.I.F.: '.$this->empresa['tx_rif'])),1,1);              
+            $this->Row(array(utf8_decode('Nombre o Razón Social.: '.$agente_retencion),utf8_decode('R.I.F.: '.$this->empresa['tx_rif'])),1,1);              
             $this->SetWidths(array(200));
             //$this->Row(array(utf8_decode('Dirección: AV. BELLA VISTA EDIFICIO FEDERAL MARACAIBO EDO. ZULIA')),1,1);  
-            $this->Row(array(utf8_decode('Dirección: '.$this->empresa['tx_direccion'])),1,1);            
+            $this->Row(array(utf8_decode('Dirección: '.utf8_decode($this->empresa['tx_direccion']))),1,1);            
             
             $this->SetFillColor(201, 199, 199);
             $this->SetFont('Arial','B',10);
@@ -444,10 +454,10 @@ class PDF extends FPDF {
             $this->SetWidths(array(150,50));                 
             $this->SetFont('Arial','',9);          
             //$this->Row(array(utf8_decode('Empresa.: GOBERNACIÓN DEL EDO. ZULIA'),utf8_decode('R.I.F.:  G-200036524')),1,1);    
-            $this->Row(array(utf8_decode('Nombre o Razón Social.: '.$this->empresa['nb_empresa']),utf8_decode('R.I.F.: '.$this->empresa['tx_rif'])),1,1);              
+            $this->Row(array(utf8_decode('Nombre o Razón Social.: '.$agente_retencion),utf8_decode('R.I.F.: '.$this->empresa['tx_rif'])),1,1);              
             $this->SetWidths(array(200));
             //$this->Row(array(utf8_decode('Dirección: AV. BELLA VISTA EDIFICIO FEDERAL MARACAIBO EDO. ZULIA')),1,1);  
-            $this->Row(array(utf8_decode('Dirección: '.$this->empresa['tx_direccion'])),1,1);            
+            $this->Row(array(utf8_decode('Dirección: '.utf8_decode($this->empresa['tx_direccion']))),1,1);            
             
             $this->SetFillColor(201, 199, 199);
             $this->SetFont('Arial','B',10);
