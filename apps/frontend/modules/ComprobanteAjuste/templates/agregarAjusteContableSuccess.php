@@ -80,9 +80,7 @@ this.fecha = new Ext.form.DateField({
 	fieldLabel:'Fecha',
 	name:'fecha',
         //readOnly:true,
-        value:this.OBJ.fecha,
-        minValue:this.OBJ.fecha_inicial,
-	maxValue:this.OBJ.fecha,
+	maxValue:new Date,
         allowBlank:false,
 	width:100
 });
@@ -96,10 +94,12 @@ this.descripcion = new Ext.form.TextField({
 
 this.fieldAfectar= new Ext.form.FieldSet({
         title: 'Datos de Comprobante',
-        items:[ this.tipo_asiento,
-                this.monto,
+        items:[ 
+        
                 this.fecha,
                 this.descripcion,
+                this.tipo_asiento,
+                this.monto,
                 this.compositefieldCuenta
        ]
 });
@@ -164,6 +164,14 @@ this.winformPanel_.show();
        var mo_debito =  0;
        var mo_credito =  agregarAjuste.main.monto.getValue();           
       }
+      var co_cuenta_contable = agregarAjuste.main.co_cuenta_contable.getValue();
+    var reg = ComprobanteAjuste.main.store_lista.find('co_cuenta_contable', co_cuenta_contable, 0, true, false);
+
+    if (reg >= 0) {
+        
+        Ext.utiles.msg('Mensaje', "La cuenta contable ya se encuentra agregada");
+    }else{
+        
        
         var e = new ComprobanteAjuste.main.Registro({  
             co_cuenta_contable: agregarAjuste.main.co_cuenta_contable.getValue(),
@@ -177,16 +185,22 @@ this.winformPanel_.show();
             mo_credito:mo_credito
         });
                 
+    
+                
         var cant = ComprobanteAjuste.main.store_lista.getCount();
        
         (cant == 0) ? 0 : ComprobanteAjuste.main.store_lista.getCount() + 1;
         ComprobanteAjuste.main.store_lista.insert(cant, e);
 
         ComprobanteAjuste.main.gridPanel.getView().refresh();
+        agregarAjuste.main.tipo_asiento.clearValue();
+        agregarAjuste.main.cuenta.setValue('');
+        agregarAjuste.main.denominacion.setValue('');
         
-        Ext.utiles.msg('Mensaje', "El registro se agregó exitosamente");
-        
-        agregarAjuste.main.winformPanel_.close();
+        Ext.utiles.msg('Mensaje', "El registro se agregó exitosamente");        
+
+    }
+//        agregarAjuste.main.winformPanel_.close();
 },
 getDataTipoAsiento: function(){
 var store =  new Ext.data.JsonStore({

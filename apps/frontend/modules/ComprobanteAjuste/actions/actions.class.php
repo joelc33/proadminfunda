@@ -60,6 +60,21 @@ class ComprobanteAjusteActions extends sfActions
         
     }
     
+  public function executeIndexSolicitud(sfWebRequest $request)
+  {
+    $this->data = json_encode(array(
+      "co_rol"            => $this->getUser()->getAttribute('rol'),
+      "co_usuario"        => $this->getUser()->getAttribute('codigo'),
+      "in_activo"         => $this->getUser()->getAttribute('in_activo'),
+      "tx_tipo_solicitud" => $this->getRequestParameter("tx_tipo_solicitud"),
+      "co_tipo_solicitud" => 47,
+      "tx_url"            => $this->getRequestParameter("tx_url"),
+
+    ));
+
+    $this->getRequest()->setAttribute('in_activo', $this->getUser()->getAttribute('in_activo'));
+  }    
+    
     public function executeDistribucion(sfWebRequest $request)
     {     
 
@@ -444,28 +459,156 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
         { 
           $con->beginTransaction();  
                            
+                if($co_solicitud=='' || $co_solicitud==null){
+                $tb026_solicitudForm = array(
+                    "co_tipo_solicitud"   => 47,
+                    "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
+                    "fe_solicitud"        => date("d/m/Y"),
+                    "observacion"         => "Comprobante Contable",
+                    "codigo"              =>  $this->getUser()->getAttribute('codigo')
+                );
+    
+                $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
+    
+                if ($resp["success"] == true) {
+                    $co_solicitud = $resp["co_solicitud"];
+                } else {
+                    $this->data = json_encode(array(
+                        "success" => false,
+                        "msg" =>  $resp["msg"]
+                    ));
+    
+                    return;
+                }
+                }
           
             $listaCuenta  = json_decode($json_cuenta,true);
+            $mo_debe = 0;
+            $mo_haber = 0;
+
+            foreach($listaCuenta  as $v){
+                 
+            $fecha = $v["fecha"];
+            $mo_debe = $mo_debe + $v["mo_debito"];
+            $mo_haber = $mo_haber + $v["mo_credito"];
+            }  
             
+
+            
+             list($anio,$mes,$dia ) = explode("-", $fecha);           
+            
+           $sql_correlativo ="SELECT  extract(year from '".$fecha."'::date)||''||lpad(cast(extract(month from '".$fecha."'::date) as varchar(2)), 2, '0')||''||lpad((count(distinct co_solicitud)+1::numeric)::text, 4, '0') as nu_comprobante 
+	   FROM  tb194_ajuste_contable as t1
+	   WHERE extract(year from fecha) = extract(year from '".$fecha."'::date) AND extract(month from fecha) = extract(month from '".$fecha."'::date) and in_aprobado = true";
+
+
+           
+           $stmt1 = $con->prepare($sql_correlativo);
+           $stmt1->execute();            
+           $correlativo = $stmt1->fetch(PDO::FETCH_ASSOC); 
+           
+            $c = new Criteria();
+            $c->clearSelectColumns();    
+            $c->addSelectColumn(Tb176ComprobanteContablePeer::CO_COMPROBANTE_CONTABLE);
+            $c->add(Tb176ComprobanteContablePeer::CO_SOLICITUD,$co_solicitud);
+            $stmt = Tb176ComprobanteContablePeer::doSelectStmt($c);
+
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);      
+           
+            if($res["co_comprobante_contable"]!='' || $res["co_comprobante_contable"]!=null){
+            $Tb176ComprobanteContable = Tb176ComprobanteContablePeer::retrieveByPK($res["co_comprobante_contable"]);   
+            $Tb176ComprobanteContable->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                              ->setMoDebito($mo_debe)
+                              ->setMoCredito($mo_haber)
+                              ->setInContabilizado(TRUE)
+                              ->setInCerrado(FALSE)
+                              ->setFeContabilizado(date("Y-m-d"))
+                              ->setCoSolicitud($co_solicitud)
+                              ->save($con);            
+
+            }else{
+            $Tb176ComprobanteContable = new Tb176ComprobanteContable();
+            $Tb176ComprobanteContable->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                              ->setMoDebito($mo_debe)
+                              ->setMoCredito($mo_haber)
+                              ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
+                              ->setCoTipoAsiento(15)
+                              ->setFeComprobante($fecha)
+                              ->setCreatedAt(date("Y-m-d"))
+                              ->setInContabilizado(TRUE)
+                              ->setInCerrado(FALSE)
+                                ->setFeContabilizado(date("Y-m-d"))
+                              ->setCoSolicitud($co_solicitud)
+                              ->save($con);
+            $nu_comprobante = $anio.str_pad($mes, 2, "0", STR_PAD_LEFT).str_pad($Tb176ComprobanteContable->getCoComprobanteContable(), 5, "0", STR_PAD_LEFT);
+            $Tb176ComprobanteContable->setNuComprobante($nu_comprobante)->save($con);
+            }
+            
+           
+
+//                var_dump($sql_correlativo);
+//           exit();      
             foreach($listaCuenta  as $v){    
                 
                 if ($v["co_ajuste_contable"]==''){                    
                     $tb194_asiento_contable = new Tb194AjusteContable();
                     $tb194_asiento_contable->setCoSolicitud($co_solicitud)
-                                                     ->setCoCuentaContable($v["co_cuenta_contable"])
-                                                     ->setMoDebe($v["mo_debito"])
-                                                     ->setMoHaber($v["mo_credito"])
-                                                     ->setFecha($v["fecha"])
-                                                     ->setDescripcion($v["descripcion"])
-                                                     ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                                                     ->setCoTipoAsiento($v["co_tipo_asiento"])
-                                                     ->setInRechazado(false)
-                                                     ->save($con);                   
+                     ->setCoCuentaContable($v["co_cuenta_contable"])
+                     ->setMoDebe($v["mo_debito"])
+                     ->setMoHaber($v["mo_credito"])
+                     ->setFecha($v["fecha"])
+                     ->setDescripcion($v["descripcion"])
+                     ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                     ->setCoTipoAsiento($v["co_tipo_asiento"])
+                     ->setNuComprobante($correlativo["nu_comprobante"])
+                     ->setInAprobado(true)
+                     ->setInRechazado(false)
+                     ->save($con);
+                    
+                    $tb061_aiento_contable = new Tb061AsientoContable();
+                    $tb061_aiento_contable->setCoSolicitud($co_solicitud);
+                    $tb061_aiento_contable->setCoCuentaContable($v["co_cuenta_contable"]);
+                    $tb061_aiento_contable->setMoDebe($v["mo_debito"]);
+                    $tb061_aiento_contable->setMoHaber($v["mo_credito"]);
+                    $tb061_aiento_contable->setCreatedAt($v["fecha"]);
+                    $tb061_aiento_contable->setCoUsuario($this->getUser()->getAttribute('codigo'));
+                    $tb061_aiento_contable->setCoTipoAsiento(15);
+                    $tb061_aiento_contable->setInActivo(TRUE);
+                    $tb061_aiento_contable->save($con); 
+
+                    $Tb177DetComprobante = new Tb177DetComprobante();
+                    $Tb177DetComprobante->setCoComprobanteContable($Tb176ComprobanteContable->getCoComprobanteContable())
+                                        ->setMoCredito($v["mo_credito"])
+                                        ->setMoDebito($v["mo_debito"])                       
+                                        ->setCoCuentaContable($v["co_cuenta_contable"])
+                                        ->setCoSolicitud($co_solicitud)
+                                        ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                        ->setFeMovimiento($v["fecha"])
+                                        ->save($con);     
+                    
+                    $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($v["co_cuenta_contable"]);
+
+                    $tb024_cuenta_contable->setPreCre($tb024_cuenta_contable->getPreCre() + $v["mo_credito"]);
+
+                    $tb024_cuenta_contable->setPreDeb($tb024_cuenta_contable->getPreDeb() + $v["mo_debito"]);
+
+                    $tb024_cuenta_contable->save($con);                     
+
+                    
                 }
             }
-
+            
+              
+            
+         if($mo_debe==$mo_haber){
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud)); 
-            $ruta->setInCargarDato(true)->save($con);
+            $ruta->setInCargarDato(true)->save($con);                   
+        }else{
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud)); 
+            $ruta->setInCargarDato(false)->save($con);             
+        }           
+
+
             Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta()); 
           
           
@@ -1109,8 +1252,38 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
 	$con->beginTransaction();
 	/*CAMPOS*/
 	$tb194_asiento_contable = Tb194AjusteContablePeer::retrieveByPk($codigo);
+        
+            $c1 = new Criteria();
+            $c1->clearSelectColumns();    
+            $c1->addSelectColumn(Tb176ComprobanteContablePeer::CO_COMPROBANTE_CONTABLE);
+            $c1->add(Tb176ComprobanteContablePeer::CO_SOLICITUD,$tb194_asiento_contable->getCoSolicitud());
+            $stmt1 = Tb176ComprobanteContablePeer::doSelectStmt($c1);
+
+            $res1 = $stmt1->fetch(PDO::FETCH_ASSOC);      
+           
+            if($res1["co_comprobante_contable"]){
+                
+            $Tb176ComprobanteContable = Tb176ComprobanteContablePeer::retrieveByPK($res1["co_comprobante_contable"]);   
+
+            
+            }       
+        
+//            var_dump($Tb176ComprobanteContable->getInCerrado());
+//            exit();
+            if($Tb176ComprobanteContable->getInCerrado()==false){
+        
 	$tb194_asiento_contable->setInRechazado(true);
         $tb194_asiento_contable->save($con);
+        
+        $wherec = new Criteria();
+        $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $tb194_asiento_contable->getCoSolicitud(), Criteria::EQUAL);
+        $wherec->add(Tb061AsientoContablePeer::CO_CUENTA_CONTABLE, $tb194_asiento_contable->getCoCuentaContable(), Criteria::EQUAL);
+        BasePeer::doDelete($wherec, $con);   
+        
+        $wherec1 = new Criteria();
+        $wherec1->add(Tb177DetComprobantePeer::CO_SOLICITUD, $tb194_asiento_contable->getCoSolicitud(), Criteria::EQUAL);
+        $wherec1->add(Tb177DetComprobantePeer::CO_CUENTA_CONTABLE, $tb194_asiento_contable->getCoCuentaContable(), Criteria::EQUAL);
+        BasePeer::doDelete($wherec1, $con);         
         
         $c = new Criteria();
         $c->clearSelectColumns();        
@@ -1130,11 +1303,35 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb194_asiento_contable->getCoSolicitud())); 
             $ruta->setInCargarDato(false)->save($con);                    
         }
+                    $Tb176ComprobanteContable->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                              ->setMoDebito($res["mo_debe"])
+                              ->setMoCredito($res["mo_haber"])
+                              ->save($con);
+
+            
+            $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($tb194_asiento_contable->getCoCuentaContable());
+
+            $tb024_cuenta_contable->setPreCre($tb024_cuenta_contable->getPreCre() - $tb194_asiento_contable->getMoHaber());
+
+            $tb024_cuenta_contable->setPreDeb($tb024_cuenta_contable->getPreDeb() - $tb194_asiento_contable->getMoHaber());
+
+            $tb024_cuenta_contable->save($con);  
+            
+            
+            
 		$this->data = json_encode(array(
 			    "success" => true,
 			    "msg" => 'Registro Borrado con exito!'
 		));
 	$con->commit();
+        
+        
+            }else{
+            		$this->data = json_encode(array(
+			    "success" => false,
+			    "msg" => 'El registro no se puede eliminar ya que el comprobante esta cerrado!'
+		));    
+            }
 	}catch (PropelException $e)
 	{
 	$con->rollback();
@@ -1402,7 +1599,7 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
         $c = new Criteria();
 
     if($this->getRequestParameter("BuscarBy")=="true"){
-        if($nu_cuenta_contable!=""){$c->add(Tb024CuentaContablePeer::NU_CUENTA_CONTABLE,'%'.$nu_cuenta_contable.'%',Criteria::ILIKE);}
+        if($nu_cuenta_contable!=""){$c->add(Tb024CuentaContablePeer::NU_CUENTA_CONTABLE,$nu_cuenta_contable.'%',Criteria::ILIKE);}
         if($tx_descripcion!=""){$c->add(Tb024CuentaContablePeer::TX_DESCRIPCION,'%'.$tx_descripcion.'%',Criteria::ILIKE);}
         if($nu_nivel!=""){$c->add(Tb024CuentaContablePeer::NU_NIVEL,$nu_nivel);}
     }        
@@ -1414,12 +1611,13 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
         $c->addSelectColumn(Tb024CuentaContablePeer::PRE_DEB);
         $c->addSelectColumn(Tb024CuentaContablePeer::PRE_CRE);
         $c->setIgnoreCase(true);
-        $cantidadTotal = Tb024CuentaContablePeer::doCount($c);
 
+        $c->add(Tb024CuentaContablePeer::TX_TIPO, 'S');
+        $c->add(Tb024CuentaContablePeer::NU_NIVEL, 8, Criteria::NOT_IN);
+//        $c->addAscendingOrderByColumn(Tb024CuentaContablePeer::NU_NIVEL);
+        $c->addAscendingOrderByColumn(Tb024CuentaContablePeer::NU_CUENTA_CONTABLE);
+        $cantidadTotal = Tb024CuentaContablePeer::doCount($c);
         $c->setLimit($limit)->setOffset($start);
-        //$c->add(Tb024CuentaContablePeer::NU_NIVEL, 1);
-        $c->addAscendingOrderByColumn(Tb024CuentaContablePeer::NU_NIVEL);
-        $c->addAscendingOrderByColumn(Tb024CuentaContablePeer::CO_CUENTA_CONTABLE);
 
         $stmt = Tb024CuentaContablePeer::doSelectStmt($c);
         $registros = "";
@@ -1555,6 +1753,142 @@ where co_cuenta_contable = 2643";
             ));
         
         }
-    }    
+    }
+
+  public function executeStorelista(sfWebRequest $request)
+  {
+
+    $limit         =   $this->getRequestParameter("limit", 15);
+    $start         =   $this->getRequestParameter("start", 0);
+    $in_ventanilla =   $this->getRequestParameter("in_ventanilla");
+    $co_proceso    =   $this->getRequestParameter("co_proceso");
+    $co_solicitud  =   $this->getRequestParameter("co_solicitud");
+
+    $co_documento     =   $this->getRequestParameter("co_documento");
+    $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
+    $tx_razon_social  =   $this->getRequestParameter("tx_razon_social");
+
+    $c = new Criteria();
+    $c->clearSelectColumns();
+
+    if ($co_documento != '') {
+      $c->add(Tb007DocumentoPeer::CO_DOCUMENTO, $co_documento);
+    }
+
+    if ($nu_cedula_rif != '') {
+      $c->add(Tb008ProveedorPeer::TX_RIF, $nu_cedula_rif);
+    }
+
+    if ($tx_razon_social != '') {
+      $c->add(Tb008ProveedorPeer::TX_RAZON_SOCIAL, '%' . $tx_razon_social . '%', Criteria::LIKE);
+    }
+
+
+
+
+    if ($co_solicitud != '') {
+      $c->add(Tb026SolicitudPeer::CO_SOLICITUD, $co_solicitud);
+    }
+
+    if ($in_ventanilla == 'true') {
+      $c->add(Tb030RutaPeer::NU_ORDEN, 1);
+    } else {
+      $c->add(Tb030RutaPeer::NU_ORDEN, 1,  Criteria::GREATER_THAN);
+
+      if ($co_proceso != '') {
+        $c->add(Tb028ProcesoPeer::CO_PROCESO, $co_proceso);
+      } else {
+
+        $registro_proceso = Tb028ProcesoPeer::getListaProcesoAsignado($this->getUser()->getAttribute('codigo'));
+
+
+        $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
+      }
+    }
+
+
+    $registro_proceso = Tb028ProcesoPeer::getListaProcesoAsignado($this->getUser()->getAttribute('codigo'));
+    $registro_tramite = Tb006TipoSolicitudUsuarioPeer::getListaTramiteAsignado($this->getUser()->getAttribute('codigo'));
+
+    $c->setIgnoreCase(true);
+    $c->addSelectColumn(Tb030RutaPeer::CO_PROCESO);
+    $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
+    $c->addSelectColumn(Tb028ProcesoPeer::TX_PROCESO);
+    $c->addSelectColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
+    $c->addSelectColumn(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+    $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD);
+    $c->addSelectColumn(Tb001UsuarioPeer::TX_LOGIN);
+    $c->addSelectColumn(Tb026SolicitudPeer::FE_REGISTRO);
+    $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);
+    $c->addSelectColumn(Tb030RutaPeer::TX_RUTA_REPORTE);
+    $c->addSelectColumn(Tb176ComprobanteContablePeer::NU_COMPROBANTE);
+    $c->addSelectColumn(Tb176ComprobanteContablePeer::MO_CREDITO);
+    $c->addSelectColumn(Tb176ComprobanteContablePeer::MO_DEBITO);
+    $c->addSelectColumn(Tb176ComprobanteContablePeer::FE_COMPROBANTE);
+
+
+    $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD,  Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb176ComprobanteContablePeer::CO_SOLICITUD,  Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD,  Criteria::JOIN);
+    $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO,   Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
+
+    $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, 47);
+    $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
+
+    $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+    $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2), Criteria::IN);
+    $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
+    $c->addAnd(Tb030RutaPeer::IN_ACTUAL, true);
+    $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
+
+    $cantidadTotal = Tb026SolicitudPeer::doCount($c);
+
+    $c->setLimit($limit)->setOffset($start);
+    $c->addDescendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
+
+    $stmt = Tb026SolicitudPeer::doSelectStmt($c);
+    $registros = array();
+    $encrip = new myConfig();
+    while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+      $cantidad = Tb026SolicitudPeer::getCantRevision($res["co_solicitud"]);
+
+      $tx_rif = $res["inicial"] . "-" . $res["tx_rif"];
+      $tx_razon_social = strtoupper($res["tx_razon_social"]);
+
+      list($anio, $mes, $dia) = explode("-", $res["fe_oficio"]);
+      $fecha = $dia . '/' . $mes . '/' . $anio;
+
+      list($anio, $mes, $dia) = explode('-', $res["fe_comprobante"]);
+      $registros[] = array(
+        "tx_proceso"        => trim($res["tx_proceso"]),
+        "tx_concepto"       => strtoupper(trim($res["tx_concepto"])),
+        "co_proceso"        => trim($res["co_proceso"]),
+        "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
+        "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
+        "co_solicitud"      => trim($res["co_solicitud"]),
+        "tx_login"          => trim($res["tx_login"]),
+        "tx_serial"         => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
+        "in_reporte"        => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
+        "co_ruta"           => $encrip->encrypt($res["co_ruta"]),
+        "fe_creacion"       => $dia . '-' . $mes . '-' . $anio,
+        "cant_revision"     => $cantidad,
+        "de_modificacion"   => trim($res["de_modificacion"]),
+        "nu_modificacion"   => trim($res["nu_modificacion"]),
+        "nu_oficio"         => trim($res["nu_oficio"]),
+          "nu_comprobante"         => trim($res["nu_comprobante"]),
+          "mo_debito"         => trim($res["mo_debito"]),
+          "mo_credito"         => trim($res["mo_credito"]),
+        "fe_oficio"         => $fecha
+      );
+    }
+
+    $this->data = json_encode(array(
+      "success"   =>  true,
+      "total"     =>  $cantidadTotal,
+      "data"      =>  $registros
+    ));
+  }    
     
 }

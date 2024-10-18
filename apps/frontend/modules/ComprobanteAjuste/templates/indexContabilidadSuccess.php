@@ -54,10 +54,10 @@ this.guardar = new Ext.Button({
             campo:'mo_credito'
             });  
             
-        if(parseFloat(this.monto_debito)!=parseFloat(this.monto_credito)){
-        Ext.Msg.alert("Alerta","La Suma de Debitos y creditos deben ser iguales");
-        return false;
-        }            
+//        if(parseFloat(this.monto_debito)!=parseFloat(this.monto_credito)){
+//        Ext.Msg.alert("Alerta","La Suma de Debitos y creditos deben ser iguales");
+//        return false;
+//        }            
         
         var list_partida = paqueteComunJS.funcion.getJsonByObjStore({
                 store:ComprobanteAjuste.main.gridPanel.getStore()
@@ -86,7 +86,7 @@ this.guardar = new Ext.Button({
                      });
                      
                 }    
-                
+                solicitudLista.main.store_lista.load();
                 ComprobanteAjuste.main.winformPanel_.close();
                 
              }
@@ -136,7 +136,7 @@ this.botonEliminar = new Ext.Button({
 this.botonEliminar.disable();
 
 this.gridPanel = new Ext.grid.GridPanel({
-        title:'Cuenta de Ajuste',
+        title:'Lista de Comprobantes',
         iconCls: 'icon-libro',
         store: this.store_lista,
         loadMask:true,
@@ -150,8 +150,8 @@ this.gridPanel = new Ext.grid.GridPanel({
             {header: 'Cuenta', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_cuenta'},
             {header: 'Denominacion',width:460, menuDisabled:true,dataIndex: 'denominacion',renderer:textoLargo},
             {header: 'Tipo de Asiento',width:120, menuDisabled:true,dataIndex: 'tx_tipo_asiento',renderer:textoLargo},
-            {header: 'Debito',width:150, menuDisabled:true,dataIndex: 'mo_debito',renderer:renderMonto},
-            {header: 'Credito',width:150, menuDisabled:true,dataIndex: 'mo_credito',renderer:renderMonto},
+            {header: 'Debito',width:100, menuDisabled:true,dataIndex: 'mo_debito',renderer:renderMonto},
+            {header: 'Credito',width:100, menuDisabled:true,dataIndex: 'mo_credito',renderer:renderMonto},
             {header: 'Fecha',width:90, menuDisabled:true,dataIndex: 'fecha'},
             {header: 'Descripcion',width:260, menuDisabled:true,dataIndex: 'descripcion',renderer:textoLargo}
         ],
@@ -179,7 +179,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Comprobante de Ajuste Contable',
+    title:'Comprobante Contable',
     modal:true,
     constrain:true,
     width:1200,
@@ -227,16 +227,24 @@ eliminar:function(){
             url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/ComprobanteAjuste/eliminarCuenta',
             params:{
                 co_ajuste_contable: co_ajuste_contable
-            },
+            },             
             success:function(result, request ) {
-                Ext.utiles.msg('Mensaje', "La Cuenta se eliminó exitosamente");               
+                obj = Ext.util.JSON.decode(result.responseText);
+                if(obj.success==false){
+                Ext.utiles.msg('Mensaje', obj.msg);     
+                }else{   
+                solicitudLista.main.store_lista.load();
+                Ext.utiles.msg('Mensaje', "La Cuenta se eliminó exitosamente");    
+                        for(var i = 0, r; r = s[i]; i++){
+              ComprobanteAjuste.main.store_lista.remove(r);
+                        }
+        }
+                
             }});
             
         }
        
-        for(var i = 0, r; r = s[i]; i++){
-              ComprobanteAjuste.main.store_lista.remove(r);
-        }
+
 }
 };
 Ext.onReady(ComprobanteAjuste.main.init, ComprobanteAjuste.main);

@@ -193,9 +193,9 @@ class CierreContableActions extends sfActions
         
         $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($reg["co_cuenta_contable"]);
 
-        $tb024_cuenta_contable->setPreCre($reg["mo_credito"]);
+        $tb024_cuenta_contable->setPreCre($tb024_cuenta_contable->getPreCre() + $reg["mo_credito"]);
         
-        $tb024_cuenta_contable->setPreDeb($reg["mo_debito"]);
+        $tb024_cuenta_contable->setPreDeb($tb024_cuenta_contable->getPreDeb() + $reg["mo_debito"]);
         
         $tb024_cuenta_contable->save($con);
         }        

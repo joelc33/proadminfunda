@@ -25,8 +25,8 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'co_cuenta_contable',hidden:true, menuDisabled:true,dataIndex: 'co_cuenta_contable'},
     {header: 'Cuenta', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_cuenta'},
     {header: 'Denominación', width:500,  menuDisabled:true, sortable: true,  dataIndex: 'tx_descripcion',renderer:textoLargo},
-    {header: 'Nivel', width:60,  menuDisabled:true, sortable: true,  dataIndex: 'nu_nivel'},
-    {header: 'Saldo Mes', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'saldo',renderer:renderMonto},
+//    {header: 'Nivel', width:60,  menuDisabled:true, sortable: true,  dataIndex: 'nu_nivel'},
+//    {header: 'Saldo Mes', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'saldo',renderer:renderMonto},
     ],
     stripeRows: true,
     autoScroll:true,
@@ -80,8 +80,8 @@ this.formFiltroPrincipal = new Ext.form.FormPanel({
     padding:'10px',
     items   : [
         this.tx_descripcion,
-        this.nu_cuenta_contable,
-        this.nu_nivel
+        this.nu_cuenta_contable
+//        this.nu_nivel
     ],
     keys: [{
             key:[Ext.EventObject.ENTER],
