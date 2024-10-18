@@ -88,7 +88,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','',9);
          $this->SetAligns(array("L","L","L","L"));
          $this->SetWidths(array(50,50,50,50));         
-         $this->Row(array(utf8_decode('No.FACTURA: ').$campo['nu_factura'],utf8_decode('No.COMPRA: ').$campo['numero_compra'], 'No.CONTROL: '.$campo['nu_control'], utf8_decode('MONTO:  ').number_format($campo['nu_total'], 2, ',','.')),1,1);
+         $this->Row(array(utf8_decode('No.FACTURA: ').$campo['nu_factura'],utf8_decode('No.COMPRA: ').$campo['nu_orden_compra'], 'No.CONTROL: '.$campo['nu_control'], utf8_decode('MONTO:  ').number_format($campo['nu_total'], 2, ',','.')),1,1);
          $this->SetWidths(array(200)); 
          $this->Row(array(utf8_decode('FECHA EMISION: '.$campo['fe_emision'])),1,1);
          $this->Row(array(utf8_decode('SEÑOR(ES): '.$campo['tx_razon_social']).'- R.I.F: '.utf8_decode($campo['tx_rif'])),1,1);                  
