@@ -252,6 +252,19 @@ this.mo_pagado = new Ext.form.NumberField({
             tooltip : '',
             readOnly: true
    });
+   
+this.tx_descripcion = new Ext.form.TextArea({
+	fieldLabel:'Descripción',
+	name:'Pagos[tx_descripcion]',
+        value: '<?php echo $tx_observacion; ?>',
+	width:240,
+        allowBlank:false,
+        listeners: {
+        change: function(field, newValue, oldValue) {
+        field.setValue(newValue.toUpperCase());
+    }
+}   
+});   
 
 this.formpanel = new Ext.FormPanel({
       width: 400,
@@ -272,6 +285,7 @@ this.formpanel = new Ext.FormPanel({
 //             recaudacion.formulario.referencia,
              recaudacion.formulario.mo_pendiente,
              recaudacion.formulario.mo_pagado,
+             recaudacion.formulario.tx_descripcion
 //             recaudacion.formulario.gridPanel
          ]
 
@@ -448,8 +462,11 @@ this.total_pagado = paqueteComunJS.funcion.getSumaColumnaGrid({
 
 if(recaudacion.formulario.co_tipo_odp.getValue()==1){
     Ext.get('monto').setStyle('background-color','#c9c9c9');
-    recaudacion.formulario.monto.setReadOnly(true);    
+    recaudacion.formulario.monto.setReadOnly(true);
+    recaudacion.formulario.tx_descripcion.setReadOnly(true);
 
+}else{
+   recaudacion.formulario.tx_descripcion.setValue(''); 
 }
 
 //if(cant>1){

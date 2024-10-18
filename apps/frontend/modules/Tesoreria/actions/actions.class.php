@@ -18,6 +18,7 @@ class TesoreriaActions extends sfActions
        $this->co_solicitud = $this->getRequestParameter('co_solicitud');
        $this->co_tipo_solicitud = $this->getRequestParameter('co_tipo_solicitud');
        $this->co_tipo_odp = $this->getRequestParameter('co_tipo_odp');
+       $this->tx_observacion = $this->getTxObservacion($this->co_solicitud);
   
   }
   
@@ -440,7 +441,7 @@ class TesoreriaActions extends sfActions
         }
    }
    
-   protected function HistoricoPago($co_solicitud,$co_cuenta_bancaria,$monto_disponible_anterior,$monto_disponible_actual,$monto_total,$fecha,$con){
+   protected function HistoricoPago($co_solicitud,$co_cuenta_bancaria,$monto_disponible_anterior,$monto_disponible_actual,$monto_total,$fecha,$con,$tx_descripcion){
             //*******************HITORICO DE CUENTAS BANCARIAS***************************************************
             
             $tb15_solicitud = Tb026SolicitudPeer::retrieveByPk($co_solicitud);
@@ -502,7 +503,7 @@ class TesoreriaActions extends sfActions
                                          ->setIdTb011CuentaBancaria($camposPago["co_cuenta_bancaria"])
                                          ->setMoTransaccion($reg["nu_monto"])
                                          ->setFeTransaccion($camposPago["fe_pago"])
-                                         ->setDeObservacion($camposPago["tx_tipo_solicitud"])
+                                         ->setDeObservacion($tx_descripcion)
                                          ->setIdTb010Banco($camposPago["co_banco"])
                                          ->setIdTb154TipoCuentaMovimiento(3)
                                          ->setIdTb153TipoDocumentoCuenta(3)
@@ -553,7 +554,7 @@ class TesoreriaActions extends sfActions
                                          ->setIdTb011CuentaBancaria($camposPago["co_cuenta_bancaria"])
                                          ->setMoTransaccion($camposPago["nu_monto"])
                                          ->setFeTransaccion($camposPago["fe_pago"])
-                                         ->setDeObservacion($camposPago["tx_tipo_solicitud"])
+                                         ->setDeObservacion($tx_descripcion)
                                          ->setIdTb010Banco($camposPago["co_banco"])
                                          ->setIdTb154TipoCuentaMovimiento(3)
                                          ->setIdTb153TipoDocumentoCuenta(3)
@@ -607,7 +608,7 @@ class TesoreriaActions extends sfActions
                                          ->setIdTb011CuentaBancaria($camposPago["co_cuenta_bancaria"])
                                          ->setMoTransaccion($monto_total)
                                          ->setFeTransaccion($fecha)
-                                         ->setDeObservacion($camposPago["tx_tipo_solicitud"])
+                                         ->setDeObservacion($tx_descripcion)
                                          ->setIdTb010Banco($camposPago["co_banco"])
                                          ->setIdTb154TipoCuentaMovimiento(3)
                                          ->setIdTb153TipoDocumentoCuenta(3)
@@ -1243,7 +1244,7 @@ class TesoreriaActions extends sfActions
         $monto_total_egreso = $res_cuenta["mo_egreso"]+$monto_total;
         $monto_disponible_actual   = $res_cuenta["mo_ingreso"]-$monto_total_egreso;
         
-        $this->HistoricoPago($co_solicitud,$tb062PagosForm["co_cuenta"],$monto_disponible_anterior,$monto_disponible_actual,$monto_total,$fecha,$con);
+        $this->HistoricoPago($co_solicitud,$tb062PagosForm["co_cuenta"],$monto_disponible_anterior,$monto_disponible_actual,$monto_total,$fecha,$con,$tb062PagosForm["tx_descripcion"]);
         
         $Tb011CuentaBancaria = Tb011CuentaBancariaPeer::retrieveByPK($res_cuenta["co_cuenta_bancaria"]);
         $Tb011CuentaBancaria->setMoEgreso($monto_total_egreso)->save($con);
@@ -2325,6 +2326,16 @@ public function executeCheque(){
     $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
     return $encrip->encrypt($campos["co_ruta"]);
-  }    
+  }
+  
+  public function getTxObservacion($co_solicitud)
+  {
+    $c = new Criteria();
+    $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
+    $stmt = Tb052ComprasPeer::doSelectStmt($c);
+    $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $campos["tx_observacion"];
+  }  
      
 }

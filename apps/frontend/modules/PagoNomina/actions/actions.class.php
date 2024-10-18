@@ -503,7 +503,7 @@ if($data->sheets[0]['cells'][$i][2]==''){
             if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
                 $tb052_compras->setFechaCompra($this->getUser()->getAttribute('fe_cierre'));
             } else {
-                $tb052_compras->setFechaCompra(date("Y-m-d"));
+                $tb052_compras->setFechaCompra($fecha);
             }
             $tb052_compras->setCoSolicitud($tb132_pago_nomina_masivoForm["co_solicitud"]);
             $tb052_compras->setCoTipoSolicitud(23);
