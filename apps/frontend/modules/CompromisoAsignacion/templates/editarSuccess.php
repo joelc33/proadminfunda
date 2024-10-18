@@ -326,7 +326,7 @@
                     },
                     {
                         header: 'Serial',
-                        width: 100,
+                        width: 150,
                         menuDisabled: true,
                         dataIndex: 'numero_compra'
                     },
@@ -338,7 +338,7 @@
                     },
                     {
                         header: 'Descripcion',
-                        width: 480,
+                        width: 430,
                         menuDisabled: true,
                         dataIndex: 'tx_observacion'
                     },

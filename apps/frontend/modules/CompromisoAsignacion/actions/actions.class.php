@@ -807,7 +807,7 @@ class CompromisoAsignacionActions extends sfActions
         $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
         $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
         $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
-        $c->addDescendingOrderByColumn(Tb052ComprasPeer::CO_COMPRAS);
+        $c->addAscendingOrderByColumn(Tb052ComprasPeer::CO_COMPRAS);
         $stmt = Tb052ComprasPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
