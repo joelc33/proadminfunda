@@ -58,7 +58,7 @@ class CompromisoAsignacionActions extends sfActions
             $c->addJoin(Tb146CompromisoAsignacionPeer::CO_SOLICITUD, Tb026SolicitudPeer::CO_SOLICITUD);
             $c->addJoin(Tb146CompromisoAsignacionPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD);
             $c->addJoin(Tb146CompromisoAsignacionPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR);
-            $c->add(Tb052ComprasPeer::CO_COMPRAS, $codigo);
+            $c->add(Tb146CompromisoAsignacionPeer::CO_COMPRAS, $codigo);
 
             $stmt = Tb146CompromisoAsignacionPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
