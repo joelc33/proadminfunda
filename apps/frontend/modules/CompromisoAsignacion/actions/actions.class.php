@@ -56,7 +56,7 @@ class CompromisoAsignacionActions extends sfActions
             $c->addSelectColumn(Tb026SolicitudPeer::CO_TIPO_SOLICITUD);
 
             $c->addJoin(Tb146CompromisoAsignacionPeer::CO_SOLICITUD, Tb026SolicitudPeer::CO_SOLICITUD);
-            $c->addJoin(Tb146CompromisoAsignacionPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD);
+            $c->addJoin(Tb146CompromisoAsignacionPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
             $c->addJoin(Tb146CompromisoAsignacionPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR);
             $c->add(Tb146CompromisoAsignacionPeer::CO_COMPRAS, $codigo);
 
