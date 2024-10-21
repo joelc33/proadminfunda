@@ -459,6 +459,8 @@ class CompromisoAsignacionActions extends sfActions
         try {
             if ($tb026_solicitudForm["co_solicitud"] != '') {
                 $Tb026Solicitud = Tb026SolicitudPeer::retrieveByPk($tb026_solicitudForm["co_solicitud"]);
+                $Tb026Solicitud->setTxObservacion($tb026_solicitudForm["tx_descripcion"]);
+                $Tb026Solicitud->save($con);
                 $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb026_solicitudForm["co_solicitud"]));
             } else {
 
