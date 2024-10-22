@@ -25,6 +25,19 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         return $campos["tx_serial"];
     }
+    
+    static public function getODPPagosRealizados($co_orden_pago)
+    {
+        $c = new Criteria();
+        $c->add(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, $co_orden_pago);
+        $c->add(Tb060OrdenPagoPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+
+        $stmt = Tb060OrdenPagoPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $campos["tx_serial"];
+    }    
+    
 
     static public function getNuOrdenPago($co_solicitud, $con, $ejercicio)
     {
