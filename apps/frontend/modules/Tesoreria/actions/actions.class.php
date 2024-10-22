@@ -1747,11 +1747,6 @@ class TesoreriaActions extends sfActions
         $c->add(Tb026SolicitudPeer::CO_SOLICITUD,$co_solicitud);
     }
     
-    if($in_ventanilla=='true'){
-        $c->add(Tb030RutaPeer::NU_ORDEN,1);
-    }else{
-        $c->add(Tb030RutaPeer::NU_ORDEN,1,  Criteria::GREATER_THAN);
-    }
     
     if($tx_serial!=''){
         $c->add(Tb060OrdenPagoPeer::TX_SERIAL,$tx_serial);
@@ -1798,7 +1793,7 @@ class TesoreriaActions extends sfActions
     
     $c->setLimit($limit)->setOffset($start);
     $c->addDescendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
-        
+
     $stmt = Tb026SolicitudPeer::doSelectStmt($c);
     $registros = "";
     while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
