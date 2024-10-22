@@ -284,9 +284,9 @@ this.gridPagosR = new  Ext.grid.GridPanel({
         new Ext.grid.RowNumberer(),
         {header: 'co_pago',width:60 , hidden:true,groupable: false,sortable: true,  dataIndex: 'co_pago'},
         {header: 'co_liquidacion_pago',width:60 , hidden:true,groupable: false,sortable: true,  dataIndex: 'co_liquidacion_pago'},
-        {header: 'Forma de pago', width: 100,hideable: false,groupable: false, sortable: true,  dataIndex: 'tx_forma_pago'},
+        {header: 'Banco', width: 100,hideable: false,groupable: false, sortable: true,  dataIndex: 'tx_banco'},
         {header: 'N° Cheque/Tranf', width:100 , sortable: true,groupable: false,  dataIndex: 'nu_pago'},
-        {header: 'Bancos', width:80 , sortable: true,groupable: false,  dataIndex: 'tx_banco',renderer:textoLargo},
+//        {header: 'Bancos', width:80 , sortable: true,groupable: false,  dataIndex: 'tx_banco',renderer:textoLargo},
         {header: 'Cuenta', width:100 , sortable: true,groupable: false,  dataIndex: 'tx_cuenta_bancaria',renderer:textoLargo},
         {header: 'Fecha Pago', width:100 , sortable: true,groupable: false,  dataIndex: 'fe_pago'},
         {header: 'Monto Pagado',width: 200, sortable: true,groupable: false, xtype: 'numbercolumn',format: '0,0.00 Bs', dataIndex: 'nu_monto'},
@@ -395,7 +395,7 @@ fgetR: function(){
                 field: 'co_pago',
                 direction: "ASC"
             },
-            groupField:'tx_forma_pago'
+            groupField:'tx_banco'
 
     });
     return this.Store;
