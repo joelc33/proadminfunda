@@ -956,6 +956,7 @@ class PDF_Flo extends PDF_FlowingBlock
                           case when mo_pagar is null then tb052.monto_total else mo_pagar end total_pagar,
                           nu_factura,
 						  tb052.monto_total,
+                                                  tb052.co_compras,
                           case when tb027_tipo_solicitud.in_odp_avance = false then 'X' else '' end as permanente,
 						  case when tb027_tipo_solicitud.in_odp_avance = true then 'X' else '' end as avance
                   from   tb026_solicitud as tb026
@@ -968,7 +969,7 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb007_documento as tb007 on tb007.co_documento = tb008.co_documento
                   left join tb045_factura as tb045 on tb045.co_odp = tb060.co_orden_pago
                   where tb030.co_ruta =" . $_GET['codigo'] . " and tb060.in_anulado = false) as tabla 
-                  order by co_factura asc";
+                  order by co_factura asc, co_compras asc";
 
         // echo var_dump($sql);  exit();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
