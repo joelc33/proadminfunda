@@ -1481,6 +1481,7 @@ class TesoreriaActions extends sfActions
          
         $this->data = json_encode(array(
                     "success" => true,
+                    "co_pago" => $tb063_pago->getCoPago(),
                     "msg" => 'Proceso realizado exitosamente'
                 ));
        

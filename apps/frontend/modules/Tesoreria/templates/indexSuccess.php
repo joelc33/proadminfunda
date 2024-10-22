@@ -291,7 +291,12 @@ this.formpanel = new Ext.FormPanel({
 
 });
 
-
+this.guardar = new Ext.Button({
+    text:'Procesar',
+    iconCls:'icon-save',
+    handler: this.onRecaudar
+});
+        
 
 this.win = new Ext.Window({
    title:'Datos del Pago',
@@ -300,11 +305,8 @@ this.win = new Ext.Window({
    items:[recaudacion.formulario.formpanel],
    buttonAlign:'center',
    buttons:[
-        {
-            text:'Procesar',
-            iconCls:'icon-save',
-            handler: this.onRecaudar
-        }]
+            this.guardar
+           ]
 });
 
 this.win.show();
@@ -348,6 +350,8 @@ onRecaudar : function(btn, ev) {
         store:recaudacion.formulario.gridPanel.getStore()
         });
         recaudacion.formulario.hiddenJsonPago.setValue(list);
+        
+         recaudacion.formulario.guardar.setDisabled(true);
        
         
   recaudacion.formulario.formpanel.form.submit({
@@ -361,7 +365,7 @@ onRecaudar : function(btn, ev) {
                  buttons: Ext.MessageBox.OK
              });
 
-            // window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/ventanilla/web/reportes/reporte_propaganda.php?codigo='+recaudacion.formulario.OBJ.co_ingvar_declaracion);
+             window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/soportePago.php?codigo='+action.result.co_pago);
          
 //            PagosPanel.main.storeP.load(); 
 //            PagosPanel.main.storeP.load(); 
