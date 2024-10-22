@@ -698,8 +698,10 @@ class PDF_Flo extends PDF_FlowingBlock
 
                     foreach ($this->datos as $k => $data) {
                         if ($cont >= 5) {
+                            if($i == 2){
                             $this->Row(array($data['tx_documento_odp'], '', date("d/m/Y", strtotime($data['fe_pago'])), utf8_decode($data['tx_observacion']),  number_format($data['monto_total'], 2, ',', '.'), '', '0.00', number_format($data['monto_total'], 2, ',', '.')), 0, 0);
-                        }
+                            }
+                            }
                         $cont++;
                     }
                     $j++;
