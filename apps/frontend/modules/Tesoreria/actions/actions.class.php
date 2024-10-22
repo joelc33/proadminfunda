@@ -1758,6 +1758,9 @@ class TesoreriaActions extends sfActions
       
                               
     $c->setIgnoreCase(true);
+    $c->setDistinct();
+    $c->addSelectColumn(Tb063PagoPeer::CO_PAGO);
+    $c->addSelectColumn(Tb062LiquidacionPagoPeer::CO_ODP);
     $c->addSelectColumn(Tb030RutaPeer::CO_PROCESO);
     $c->addSelectColumn(Tb028ProcesoPeer::TX_PROCESO);
     $c->addSelectColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
@@ -1779,6 +1782,8 @@ class TesoreriaActions extends sfActions
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
     $c->addJoin(Tb028ProcesoPeer::CO_PROCESO, Tb030RutaPeer::CO_PROCESO);
     $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO);
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb062LiquidacionPagoPeer::CO_SOLICITUD);
+    $c->addJoin(Tb062LiquidacionPagoPeer::CO_LIQUIDACION_PAGO, Tb063PagoPeer::CO_LIQUIDACION_PAGO);
     
    // $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD,$registro_tramite,Criteria::IN);
     $c->addAnd(Tb030RutaPeer::CO_PROCESO,4,Criteria::IN);
@@ -1811,11 +1816,13 @@ class TesoreriaActions extends sfActions
                 "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
                 "co_solicitud"      => trim($res["co_solicitud"]),
                 "tx_login"          => trim($res["tx_login"]),
-                "tx_serial"         => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
+                "tx_serial"         => trim(Tb060OrdenPagoPeer::getODPPagosRealizados($res["co_odp"])),
                 "tx_rif"            => $tx_rif,
                 "tx_razon_social"   => $tx_razon_social,            
                 "fe_creacion"       => $dia.'-'.$mes.'-'.$anio,
                 "cant_revision"     => $cantidad,
+                "co_pago"           => trim($res["co_pago"]),
+                "co_odp"           => trim($res["co_odp"]),
                 "co_ruta_odp"   => $this->getTxRutaReporte(10, $res["co_solicitud"])
             );
     }

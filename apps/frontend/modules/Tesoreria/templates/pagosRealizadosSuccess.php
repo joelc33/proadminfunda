@@ -14,8 +14,16 @@ this.storeCO_DOCUMENTO = this.getStoreCO_DOCUMENTO();
 
 function renderDatosOdp(val, attr, record) {
 
-    if (val != '') {
+    if (val != '' || val != null) {
         return '<a href="#" onclick="pendientePagosLista.main.getDatosOdp()">' + val + '</a>'
+    }
+
+}
+
+function renderComprobante(val, attr, record) {
+
+    if (val != '' || val != null) {
+        return '<a href="#" onclick="pendientePagosLista.main.getDatosComprobante()"> Imprimir</a>'
     }
 
 }
@@ -196,7 +204,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     {header: 'Tipo de solicitud', width:250,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_solicitud',renderer: renderRectificacion},
     {header: 'Proceso', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_proceso',renderer: renderRectificacion},
     {header: 'ODP', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_serial',renderer: renderDatosOdp},
-//    {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'fe_creacion',renderer: renderRectificacion}
+    {header: 'Comprobante de pago', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'co_pago',renderer: renderComprobante}
     ],
     stripeRows: true,
     autoScroll:true,
@@ -212,25 +220,25 @@ this.gridPanel_ = new Ext.grid.GridPanel({
             pendientePagosLista.main.estado.disable();  
          }        
         
-         var msg = Ext.get('detalle');
-         msg.load({
-                url: '<?php echo $_SERVER['SCRIPT_NAME']?>/Tesoreria/detalleRealizados',
-                scripts: true,
-                params:
-                {
-                    codigo: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_solicitud'),
-                    co_tipo_solicitud: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_tipo_solicitud'),
-                    co_proceso: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_proceso')
-
-                },
-                text: 'Cargando...'
-         });
-        
-    
-         if(panel_detalle.collapsed == true)
-         {
-            panel_detalle.toggleCollapse();
-         } 
+//         var msg = Ext.get('detalle');
+//         msg.load({
+//                url: '<?php echo $_SERVER['SCRIPT_NAME']?>/Tesoreria/detalleRealizados',
+//                scripts: true,
+//                params:
+//                {
+//                    codigo: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_solicitud'),
+//                    co_tipo_solicitud: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_tipo_solicitud'),
+//                    co_proceso: pendientePagosLista.main.store_lista.getAt(rowIndex).get('co_proceso')
+//
+//                },
+//                text: 'Cargando...'
+//         });
+//        
+//    
+//         if(panel_detalle.collapsed == true)
+//         {
+//            panel_detalle.toggleCollapse();
+//         } 
     
     }},
     bbar: new Ext.PagingToolbar({
@@ -305,6 +313,7 @@ getLista: function(){
             {name: 'co_proceso'},
             {name: 'tx_rif'},
             {name: 'tx_razon_social'},
+            {name: 'co_pago'},
             {name: 'tx_serial'}
            ]
     });
@@ -373,6 +382,9 @@ aplicarFiltroByFormulario: function(){
 },
 getDatosOdp: function() {
 window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_odp'));
+},
+getDatosComprobante: function() {
+    window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/../reportes/SoportePago.php?codigo="+pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_pago'));
 }
 };
 Ext.onReady(pendientePagosLista.main.init, pendientePagosLista.main);
