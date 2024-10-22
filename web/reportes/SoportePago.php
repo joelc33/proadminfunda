@@ -1,42 +1,164 @@
 <?php
 include("ConexionComun.php");
-include('fpdf.php');
+//include('fpdf.php');
+require('flowing_block.php');
 
 
-class PDF extends FPDF {
+class PDF_Flo extends PDF_FlowingBlock
+{
     public $title;
     public $conexion;
+    
+    function SetLineStyle($style)
+    {
+        extract($style);
+        if (isset($width)) {
+            $width_prev = $this->LineWidth;
+            $this->SetLineWidth($width);
+            $this->LineWidth = $width_prev;
+        }
+        if (isset($cap)) {
+            $ca = array('butt' => 0, 'round' => 1, 'square' => 2);
+            if (isset($ca[$cap]))
+                $this->_out($ca[$cap] . ' J');
+        }
+        if (isset($join)) {
+            $ja = array('miter' => 0, 'round' => 1, 'bevel' => 2);
+            if (isset($ja[$join]))
+                $this->_out($ja[$join] . ' j');
+        }
+        if (isset($dash)) {
+            $dash_string = '';
+            if ($dash) {
+                $tab = explode(',', $dash);
+                $dash_string = '';
+                foreach ($tab as $i => $v) {
+                    if ($i > 0)
+                        $dash_string .= ' ';
+                    $dash_string .= sprintf('%.2F', $v);
+                }
+            }
+            if (!isset($phase) || !$dash)
+                $phase = 0;
+            $this->_out(sprintf('[%s] %.2F d', $dash_string, $phase));
+        }
+        if (isset($color)) {
+            list($r, $g, $b) = $color;
+            $this->SetDrawColor($r, $g, $b);
+        }
+    }
+    function RoundedRect($x, $y, $w, $h, $r, $round_corner = '1111', $style = '', $border_style = null, $fill_color = null)
+    {
+        if ('0000' == $round_corner) // Not rounded
+            $this->Rect($x, $y, $w, $h, $style, $border_style, $fill_color);
+        else { // Rounded
+            if (!(false === strpos($style, 'F')) && $fill_color) {
+                list($red, $g, $b) = $fill_color;
+                $this->SetFillColor($red, $g, $b);
+            }
+            switch ($style) {
+                case 'F':
+                    $border_style = null;
+                    $op = 'f';
+                    break;
+                case 'FD':
+                case 'DF':
+                    $op = 'B';
+                    break;
+                default:
+                    $op = 'S';
+                    break;
+            }
+            if ($border_style)
+                $this->SetLineStyle($border_style);
+
+            $MyArc = 4 / 3 * (sqrt(2) - 1);
+
+            $this->_Point($x + $r, $y);
+            $xc = $x + $w - $r;
+            $yc = $y + $r;
+            $this->_Line($xc, $y);
+            if ($round_corner[0])
+                $this->_Curve($xc + ($r * $MyArc), $yc - $r, $xc + $r, $yc - ($r * $MyArc), $xc + $r, $yc);
+            else
+                $this->_Line($x + $w, $y);
+
+            $xc = $x + $w - $r;
+            $yc = $y + $h - $r;
+            $this->_Line($x + $w, $yc);
+
+            if ($round_corner[1])
+                $this->_Curve($xc + $r, $yc + ($r * $MyArc), $xc + ($r * $MyArc), $yc + $r, $xc, $yc + $r);
+            else
+                $this->_Line($x + $w, $y + $h);
+
+            $xc = $x + $r;
+            $yc = $y + $h - $r;
+            $this->_Line($xc, $y + $h);
+            if ($round_corner[2])
+                $this->_Curve($xc - ($r * $MyArc), $yc + $r, $xc - $r, $yc + ($r * $MyArc), $xc - $r, $yc);
+            else
+                $this->_Line($x, $y + $h);
+
+            $xc = $x + $r;
+            $yc = $y + $r;
+            $this->_Line($x, $yc);
+            if ($round_corner[3])
+                $this->_Curve($xc - $r, $yc - ($r * $MyArc), $xc - ($r * $MyArc), $yc - $r, $xc, $yc - $r);
+            else {
+                $this->_Line($x, $y);
+                $this->_Line($x + $r, $y);
+            }
+            $this->_out($op);
+        }
+    }
+
+    function _Point($x, $y)
+    {
+        $this->_out(sprintf('%.2F %.2F m', $x * $this->k, ($this->h - $y) * $this->k));
+    }
+
+    function _Line($x, $y)
+    {
+        $this->_out(sprintf('%.2F %.2F l', $x * $this->k, ($this->h - $y) * $this->k));
+    }
+
+    function _Curve($x1, $y1, $x2, $y2, $x3, $y3)
+    {
+        $this->_out(sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c', $x1 * $this->k, ($this->h - $y1) * $this->k, $x2 * $this->k, ($this->h - $y2) * $this->k, $x3 * $this->k, ($this->h - $y3) * $this->k));
+    }
+    function Line($x1, $y1, $x2, $y2, $style = null)
+    {
+        if ($style)
+            $this->SetLineStyle($style);
+        parent::Line($x1, $y1, $x2, $y2);
+    }
+    
     function Header() {
 
         $this->empresa = $this->getDatosEmpresa(1);
+        $this->datos = $this->getPagos();
 
-        //$this->Image("imagenes/escudosanfco.png", 100, 7,20);
-
-        /*if(!empty($this->empresa['tx_imagen_izq'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
-        }*/
-        
-        if(!empty($this->empresa['tx_imagen_cen'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+        if (!empty($this->empresa['tx_imagen_izq'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
 
-        /*if(!empty($this->empresa['tx_imagen_der'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
-        }*/
-
-        $this->SetFont('Arial','B',10);
-        $this->SetTextColor(0,0,0);
-        $this->SetY(32);
-        $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
-//        $this->Ln(6);
-//        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
-        $this->Ln(6);
-        //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACION Y FINANZAS'),0,0,'C');
-        $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
-        $this->Ln(5);
-        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');
-        $this->Ln(10);
-        $this->Cell(0,0,utf8_decode('SOPORTE DE PAGO'),0,0,'C');      
+        $this->SetFont('Arial', 'B', 9);
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        $this->Ln(4);
+        if (!empty($this->empresa['nb_institucion'])) {
+            $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
+            $this->Ln(4);
+        }
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
+         $this->Ln(10);
+         $this->Cell(0,0,utf8_decode('TRANSFERENCIA TERCEROS #'.$this->datos['nu_serial_pago']),0,0,'C');      
      
 
     }
@@ -67,114 +189,157 @@ class PDF extends FPDF {
 
          $this->Ln(1);
          $this->datos = $this->getPagos();
+        $montopagado = number_format($this->datos['mo_pagado'], 2, ',','.');
+         $style = array('width' => 0.1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0);
                           
          $this->AddPage();
         $this->Ln(5);
         $this->SetFont('Arial','',8);
-        $this->Cell(0,0,utf8_decode('San Francisco, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
+        $this->Cell(0,0,utf8_decode('Fecha Transferencia: '.$this->datos['fe_emision']),0,0,'R');
  
          $this->Ln(5);
-              
+         $this->RoundedRect(10, 50, 200, 15, 0.5, '1001', '', $style);
+              $this->Ln(5);
+          $this->SetFont('Arial','',8);
+         $this->SetX(25);
+         $this->Cell(200,5,utf8_decode('MONTO A PAGAR POR TRANSFERENCIA   ...............................................BS. '),0,0,'L');
+         $this->Cell(0,5,$montopagado.' *****',0,0,'R');
+        
+         $this->Ln(5);
+         $this->SetX(25);
+         $montoLetra = numtoletras($this->datos['mo_pagado'], 1);
+         $this->MultiCell(200,5,utf8_decode('LA CANTIDAD DE: '.$montoLetra),0,1,'L',1);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->MultiCell(200,5,utf8_decode('BENEFICIARIO DE LA TRANSFERENCIA'),0,1,'L',1);
          
-         $this->line(1, 60, 220, 60);
-         $this->SetFont('Arial','B',8);
-         $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(60,140));
-         $this->SetAligns(array("L","L"));
-         $this->SetWidths(array(200));
-         $this->SetAligns(array("C"));
-         $this->SetY(65);
-         $this->SetFillColor(201, 199, 199);
-         $this->Row(array(utf8_decode('DATOS GENERALES DEL PAGO')),1,1);
-         $this->SetFillColor(255, 255, 255);
-         $this->SetAligns(array("L","L","L","L","L","L","L","L"));         
-         $this->SetFont('Arial','',7);   
-         $this->SetWidths(array(40, 50, 45, 40, 25));        
-         $montopag = number_format($this->datos['mo_pagar'], 2, ',','.');
-         $montopagado = number_format($this->datos['mo_pagado'], 2, ',','.');
-         $montopend = number_format($this->datos['mo_pendiente'], 2, ',','.');
-         $this->Row(array('Nro. : '.$this->datos['nu_serial_pago'],'Monto a Pagar: '.$montopag,'Monto Pagado: '.$montopagado,'Monto Pendiente: '.$montopend, 'Fecha: '.$this->datos['fe_emision']),1,1);                           
-         $this->SetWidths(array(40,160));
-         $montoletra = numtoletras($this->datos['mo_pagar'], 1);        
-         $this->Row(array('Cantidad: ',$montoletra),1,1);                  
-         $this->Row(array(utf8_decode('Beneficiario:'),utf8_decode($this->datos['tx_razon_social'])),1,1); 
-         $this->Row(array('Cuenta Proveedor: ',$this->datos['nu_cuenta_bancaria']),1,1);
-         //$this->Row(array('Concepto: ',utf8_decode($this->datos['tx_concepto'])),1,1);
-         $this->SetFont('Arial','B',8);
-         $this->SetFillColor(255, 255, 255);         
-         $this->SetAligns(array("L","L"));
-         $this->SetWidths(array(200));
-         $this->SetAligns(array("C"));         
+          $this->Ln(5);
+         $this->RoundedRect(10, 75, 200, 10, 0.5, '1001', '', $style);
          
+         $this->SetX(25);
+         $this->MultiCell(200,5,utf8_decode($this->datos['tx_rif'].' - '.$this->datos['tx_razon_social']),0,1,'L',1);
          
-         $this->SetFillColor(201, 199, 199);
-         $this->Row(array(utf8_decode('DETALLES DEL PAGO')),1,1); 
-         $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(20,40,40,30,30,40)); 
-         $this->SetAligns(array("C","C","C","C","C","C")); 
-         $this->detalle_pago = $this->getDetallePago();
-         $item = 0;
-         $this->SetFont('Arial','B',6);
-         $this->Row(array('NRO.PAGO','BANCO','CUENTA/NRO.CHEQUE','TIPO TRANSACCION','FECHA','MONTO'),1,1);         
-         $this->SetFont('Arial','',6);
-         $total=0;
-         foreach($this->detalle_pago as $key => $campo){
-         $item++;
-         $this->SetAligns(array("C","C","C","C","C","R")); 
-         $this->Row(array($item,$campo['tx_banco'],$campo['cuenta'], $campo['tx_forma_pago'], $campo['fe_pago'],number_format($campo['nu_monto'], 2, ',','.')),1,1);         
-         $total=$total+$campo['nu_monto'];         
-         }  
-         $this->SetAligns(array("R","R"));     
-         $this->SetWidths(array(160, 40)); 
-         $this->SetFont('Arial','B',7);
-         $monto = number_format($total, 2, ',','.');  
-         $this->Row(array('Total',$monto),1,1);   
+         $this->Ln(5);
+         $this->RoundedRect(10, 95, 95, 15, 0.5, '1001', '', $style);
+         $this->RoundedRect(11, 96, 93, 13, 0.5, '1001', '', $style);
          
-         $this->ln();
-         $this->SetAligns(array("C","C", "C"));
-	 $this->SetFillColor(201, 199, 199);
-         $this->SetWidths(array(80,80,40));
-         $this->Row(array(utf8_decode('COORDINACIÓN DE TESORERIA'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),utf8_decode('ALCALDE')),1,1);
-         $this->SetFillColor(255,255,255);
-         $this->SetWidths(array(80,80,40));
-         $this->SetAligns(array("L", "L","L","L"));
-         $Y = $this->GetY();
-         $this->MultiCell(80,25,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(90);
-         $this->MultiCell(80,25,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(170);
-         $this->MultiCell(40,25,'',1,1,'L',1);
-         $this->SetY($Y);
-//         $this->SetX(170);
-//         $this->MultiCell(40,25,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetFont('Arial','',6);
-         $this->ln(20);
-         //$this->Row(array('Elaborado por: '.utf8_decode(strtoupper($this->datos['nb_usuario'])),'Conformado por: ','Alcalde: '),1,1);
-         $this->SetFillColor(201, 199, 199);
-         $this->SetWidths(array(200));
-         $this->SetAligns(array("C"));
-         $this->Row(array(utf8_decode('RECIBE CONFORME')),1,1);
-	     $this->SetFillColor(255,255,255);
-         $this->SetAligns(array("L","L","L"));
-         $this->SetWidths(array(50,50,100));
-         $Y = $this->GetY();
-         $this->MultiCell(80,20,utf8_decode('Nombre y Apellido: ').utf8_decode($this->datos['nb_representante_legal']),1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(90);
-         $this->MultiCell(40,20,utf8_decode('CI/RIF: '.$this->datos['inicial'].'-'.$this->datos['tx_rif']),1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(130);
-         $this->MultiCell(80,20,utf8_decode('Firma: '),1,1,'L',1);
+         $this->SetX(25);
+         $this->Cell(200,5,utf8_decode('BANCO Y CUENTA DESTINO'),0,0,'L');
+         $this->SetX(80);
+         $this->Cell(200,5,utf8_decode('MONTO'),0,0,'L');
 
-         $this->ln();
+         $this->RoundedRect(115, 95, 95, 15, 0.5, '1001', '', $style);
+         $this->RoundedRect(116, 96, 93, 13, 0.5, '1001', '', $style);
+
+         $this->SetX(125);
+         $this->Cell(200,5,utf8_decode('BANCO Y CUENTA ORIGEN'),0,0,'L');
+         $this->SetX(183);
+         $this->Cell(200,5,utf8_decode('MONTO'),0,0,'L');  
          
-         $this->Cell(0,0,utf8_decode('Usuario del sistema: '.utf8_decode($this->datos['nb_usuario'])),0,0,'L');
-         $this->ln();
-	 $this->SetY($this->GetY()+5);
-         $this->Cell(0,0,utf8_decode(''),0,0,'L');      
+         $this->Ln(10);
+         $this->SetX(25);
+         $this->Cell(200,5,utf8_decode($this->datos['tx_banco_proveedor']),0,0,'L');
+         $this->SetX(125);
+         $this->Cell(200,5,utf8_decode($this->datos['tx_banco']),0,0,'L');         
+          $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(200,5,$this->datos['nu_cuenta_bancaria'],0,0,'L');
+         $this->SetX(80);
+         $this->Cell(200,5,$montopagado,0,0,'L'); 
+         
+
+         $this->SetX(125);
+         $this->Cell(200,5,$this->datos['tx_cuenta_bancaria'],0,0,'L');
+         $this->SetX(183);
+         $this->Cell(200,5,$montopagado,0,0,'L'); 
+         
+         $this->Ln(10);
+         $this->RoundedRect(10, 120, 200, 10, 0.5, '1001', '', $style);
+         
+         $this->SetX(25);
+         $this->Cell(200,5,utf8_decode('MOTIVO DE LA TRANSFERENCIA'),0,0,'L');   
+         $this->Ln(10);
+         $this->SetX(25);
+         $this->MultiCell(200,5,utf8_decode($this->datos['de_observacion']),0,1,'L',1); 
+         
+          $this->RoundedRect(10, 135, 200, 10, 0.5, '1001', '', $style);
+          $this->RoundedRect(11, 136, 198, 8, 0.5, '1001', '', $style);
+         $this->Ln(10); 
+         $this->SetX(25);
+         $this->Cell(200,5,utf8_decode('ORDEN DE PAGO'),0,0,'L');
+         $this->SetX(80);
+         $this->Cell(200,5,utf8_decode('DEDUCCIÓN'),0,0,'L');          
+         $this->SetX(153);
+         $this->Cell(200,5,utf8_decode('TOTAL DEDUCCIONES'),0,0,'L');
+         
+          $this->RoundedRect(10, 150, 200, 50, 0.5, '1001', '', $style);
+          
+        $this->lista_retenciones = $this->getDeducciones($this->datos['co_orden_pago']);
+        
+        if ($this->lista_retenciones) {
+        $j = 1;
+            foreach ($this->lista_retenciones as $key => $campo1) {
+                if ($j == 1) {
+        $this->Ln(15);
+         $this->SetX(25);
+         $this->Cell(200,5,utf8_decode($this->datos['tx_serial']),0,0,'L');
+         $this->SetX(80);
+         $this->Cell(200,5,utf8_decode($campo1["tx_tipo_retencion"]),0,0,'L');
+         $this->SetX(153);
+         $this->Cell(200,5,number_format($campo1["mo_retencion"], 2, ',','.'),0,0,'L');
+          $j++;
+                } else {
+         $this->Ln(5);
+         $this->SetX(80);
+         $this->Cell(200,5,utf8_decode($campo1["tx_tipo_retencion"]),0,0,'L');
+         $this->SetX(153);
+         $this->Cell(200,5,number_format($campo1["mo_retencion"], 2, ',','.'),0,0,'L');
+                    
+                }
+
+            }
+        } else {
+
+         $this->Ln(15);
+         $this->SetX(25);
+         $this->Cell(200,5,utf8_decode($this->datos['tx_serial']),0,0,'L');
+        }          
+          
+          
+          
+          $this->RoundedRect(10, 205, 65, 20, 0.5, '1001', '', $style);
+          $this->RoundedRect(77, 205, 65, 20, 0.5, '1001', '', $style);
+          $this->RoundedRect(144, 205, 66, 20, 0.5, '1001', '', $style);
+          
+         $this->SetY(207); 
+         $this->SetX(20);
+         $this->Cell(200,5,utf8_decode('AUTORIZADO POR:'),0,0,'L');
+         $this->SetX(80);
+         $this->Cell(200,5,utf8_decode('AUTORIZADO POR:'),0,0,'L');          
+         $this->SetX(150);
+         $this->Cell(200,5,utf8_decode('ELABORADO POR:'),0,0,'L');
+         
+         $this->SetY(220); 
+         $this->SetX(20);
+         $this->Cell(200,5,utf8_decode('PRESIDENTE'),0,0,'L');
+         $this->SetX(80);
+         $this->Cell(200,5,utf8_decode('ADMINISTRADOR'),0,0,'L');          
+         $this->SetX(150);
+         $this->Cell(200,5,utf8_decode('TESORERÍA'),0,0,'L');          
+          
+          
+          $this->RoundedRect(10, 230, 65, 13, 0.5, '1001', '', $style);
+          $this->RoundedRect(77, 230, 65, 13, 0.5, '1001', '', $style);
+          $this->RoundedRect(144, 230, 66, 13, 0.5, '1001', '', $style);     
+
+         $this->SetY(232); 
+         $this->SetX(20);
+         $this->Cell(200,5,utf8_decode('NOMBRE Y APELLIDO'),0,0,'L');
+         $this->SetX(80);
+         $this->Cell(200,5,utf8_decode('C.I. O RIF'),0,0,'L');          
+         $this->SetX(150);
+         $this->Cell(200,5,utf8_decode('RECIBE CONFORME'),0,0,'L');          
+          
 
     }
 
@@ -199,27 +364,34 @@ class PDF extends FPDF {
           $conex = new ConexionComun();     
           $sql = " select tb008.tx_razon_social,
                           tb008.nb_representante_legal,
-                         tb008.tx_rif,
+                         inicial||'-'||tb008.tx_rif as tx_rif,
                          tb008.nu_cuenta_bancaria,
                          to_char(tb063.fe_pago,'dd-mm-yyyy') as fe_emision,
-                         tb062.tx_serial,
                          tb062.mo_pagar,
                          tb062.mo_pendiente,
-                         tb062.mo_pagado,
-                         tb039.tx_concepto,
+                         tb063.nu_monto as mo_pagado,
                          to_char(tb063.fe_pago,'dd') as dia,
                          to_char(tb063.fe_pago,'mm') as mes,
                          to_char(tb063.fe_pago,'yyyy') as anio,                          
                          tb001.nb_usuario,
                          tb063.nu_serial_pago,
-                         inicial                         
+                         tb010.tx_banco,
+                         tb010a.tx_banco as tx_banco_proveedor,
+                         tx_cuenta_bancaria,
+                         de_observacion,
+                         tb060.co_orden_pago,
+                         tb060.tx_serial
                    FROM tb026_solicitud as tb026     
-                   left join tb039_requisiciones as tb039 on tb039.co_solicitud = tb026.co_solicitud
                    left join tb062_liquidacion_pago as tb062 on tb062.co_solicitud = tb026.co_solicitud
                    left join tb008_proveedor as tb008 on tb008.co_proveedor=tb026.co_proveedor
                    left join tb063_pago as tb063 on tb063.co_liquidacion_pago = tb062.co_liquidacion_pago
                    left join tb001_usuario as tb001 on tb001.co_usuario = tb063.co_usuario 
                    left join tb007_documento as tb007 on tb007.co_documento = tb008.co_documento
+                   left join tb010_banco as tb010 on tb010.co_banco = tb063.co_banco
+                   left join tb010_banco as tb010a on tb010a.co_banco = tb008.co_banco
+                   left join tb011_cuenta_bancaria as tb011 on tb011.co_cuenta_bancaria = tb063.co_cuenta_bancaria
+                   left join tb155_cuenta_bancaria_historico as tb155 on tb155.co_solicitud = tb026.co_solicitud
+                   left join tb060_orden_pago as tb060 on tb060.co_orden_pago = tb062.co_odp
                    where tb063.co_pago = ".$_GET['codigo'];
 
                                
@@ -227,32 +399,23 @@ class PDF extends FPDF {
           return  $datosSol[0];                         
     }
 
-    function getDetallePago(){
+    function getDeducciones($co_odp){
 
 	  $conex = new ConexionComun();
-          $sql = "select tb063.fe_pago,
-                         tb062.fe_emision, 
-                         tb062.tx_serial, 
-                         to_char(tb063.fe_pago,'dd-mm-yyyy') as fe_pago, 
-                         tb063.nu_monto,
-                         tb074.tx_forma_pago,
-                         tb010.tx_banco,
-                         case when (co_cuenta_bancaria is not null) then                         
-                           (select t.tx_cuenta_bancaria from tb011_cuenta_bancaria as t where t.co_cuenta_bancaria = tb063.co_cuenta_bancaria)
-                         else
-                           (select t.tx_descripcion from tb079_chequera as t where t.co_chequera = tb063.co_chequera) end as cuenta 
-                  FROM tb063_pago as tb063
-                  left join tb062_liquidacion_pago as tb062 on tb063.co_liquidacion_pago = tb062.co_liquidacion_pago
-                  left join tb074_forma_pago as tb074 on tb074.co_forma_pago = tb063.co_forma_pago                  
-                  left join tb010_banco as tb010 on tb010.co_banco = tb063.co_banco
-                  where tb063.co_pago =  ".$_GET['codigo'];                       
+          $sql = "select distinct  nu_factura,
+                          mo_retencion,
+                          case when tb046.co_tipo_retencion = 92 then substr(tx_tipo_retencion,1,230)||' '||po_retencion||' %'  else substr(tx_tipo_retencion,1,230) end as tx_tipo_retencion
+                  from   tb045_factura as tb045     
+                  left join tb046_factura_retencion as tb046 on tb046.co_factura = tb045.co_factura
+                  left join tb041_tipo_retencion as tb041 on tb041.co_tipo_retencion = tb046.co_tipo_retencion
+                  where mo_retencion<>0 and tb045.in_anular is null and tb045.co_odp =  ".$co_odp;                       
            
           return $conex->ObtenerFilasBySqlSelect($sql);  
     }
 
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit,nb_institucion, 
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,
@@ -275,7 +438,7 @@ class PDF extends FPDF {
     
 }
 
-$pdf=new PDF('P','mm','letter');
+$pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->AliasNbPages();
 $pdf->PrintChapter();
 
@@ -296,7 +459,7 @@ $comm->Execute($update);
 $pdf->Output($dir, 'F');
 */
 
-$pdf=new PDF('P','mm','letter');
+$pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetDisplayMode('default');
 $pdf->Output();
