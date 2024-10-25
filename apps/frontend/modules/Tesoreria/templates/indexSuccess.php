@@ -471,7 +471,7 @@ if(recaudacion.formulario.co_tipo_odp.getValue()==1){
 
 }else{
    recaudacion.formulario.tx_descripcion.setValue(''); 
-   recaudacion.formulario.monto.setValue(''); 
+   recaudacion.formulario.monto.setValue(0); 
 }
 
 //if(cant>1){
