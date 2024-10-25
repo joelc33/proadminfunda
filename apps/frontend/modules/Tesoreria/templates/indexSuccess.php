@@ -464,15 +464,7 @@ this.total_pagado = paqueteComunJS.funcion.getSumaColumnaGrid({
             campo:'mo_pagado'
             });            
 
-if(recaudacion.formulario.co_tipo_odp.getValue()==1){
-    Ext.get('monto').setStyle('background-color','#c9c9c9');
-    recaudacion.formulario.monto.setReadOnly(true);
-    recaudacion.formulario.tx_descripcion.setReadOnly(true);
 
-}else{
-   recaudacion.formulario.tx_descripcion.setValue(''); 
-   recaudacion.formulario.monto.setValue(0); 
-}
 
 //if(cant>1){
 //    Ext.get('referencia').setStyle('background-color','#c9c9c9');
@@ -487,7 +479,15 @@ recaudacion.formulario.monto.setValue(this.tcancelar);
 recaudacion.formulario.mo_pendiente.setValue(this.total_pendiente);
 recaudacion.formulario.mo_pagado.setValue(this.total_pagado);
 recaudacion.formulario.displayfieldmonto.setValue("<span style='font-size:12px;'><b>Total a Pagar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(recaudacion.formulario.monto.getValue())+"</b></span>");
+if(recaudacion.formulario.co_tipo_odp.getValue()==1){
+    Ext.get('monto').setStyle('background-color','#c9c9c9');
+    recaudacion.formulario.monto.setReadOnly(true);
+    recaudacion.formulario.tx_descripcion.setReadOnly(true);
 
+}else{
+   recaudacion.formulario.tx_descripcion.setValue(''); 
+   recaudacion.formulario.monto.setValue(0); 
+}
 },
 /*
 *  FUNCION QUE CAPTURA LOS EVENTOS AL SELECCIONAR CADA UNO DE LOS COMBOS ANIDADOS
