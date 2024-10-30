@@ -1453,7 +1453,8 @@ class TesoreriaActions extends sfActions
          $sql_retencion = "SELECT  count(t1.co_factura_retencion) + 1 as correlativo
 	   FROM  tb046_factura_retencion as t1
 	   WHERE extract(year from fe_pago) = extract(year from '".$fecha."') and co_tipo_retencion = ".$reg["co_tipo_retencion"];
-
+         var_dump($sql_retencion);
+         exit();
          $stmt_retencion = $con->prepare($sql_retencion);
 
          $stmt_retencion->execute();
