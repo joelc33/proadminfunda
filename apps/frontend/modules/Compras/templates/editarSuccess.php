@@ -287,7 +287,7 @@
                 width: 100
             });
             this.fecha_entrega = new Ext.form.DateField({
-                fieldLabel: 'Fecha Entrega',
+                fieldLabel: 'Plazo de Entrega',
                 name: 'tb052_compras[fecha_entrega]',
                 value: this.OBJ.fecha_entrega,
                 allowBlank: false,
