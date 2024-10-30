@@ -1455,6 +1455,7 @@ class TesoreriaActions extends sfActions
 	   WHERE extract(year from fe_pago) = extract(year from '".$fecha."') and co_tipo_retencion = ".$reg["co_tipo_retencion"];
          var_dump($sql_retencion);
          exit();
+         
          $stmt_retencion = $con->prepare($sql_retencion);
 
          $stmt_retencion->execute();
