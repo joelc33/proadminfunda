@@ -27,8 +27,8 @@ class PDF extends FPDF {
             $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
             $this->Ln(4);
         }
-        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
-        $this->Ln(4);
+//        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
+//        $this->Ln(4);
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(5);
         $this->SetFont('Arial', 'B', 8);
@@ -105,7 +105,7 @@ class PDF extends FPDF {
          $this->SetWidths(array(170));
          $this->SetAligns(array("J"));
          $this->SetX(25);
-         $this->Row(array(utf8_decode('     La presente tiene como finalidad, solicitarle la adquisición de los siguientes ítems para el proceso, '.$this->datos['tx_concepto'])), 0, 0);
+         $this->Row(array(utf8_decode('     La presente tiene como finalidad, solicitarle los siguientes ítems para el proceso, '.$this->datos['tx_concepto'])), 0, 0);
   
         // $this->line(1, 60, 220, 60);
 //         $this->SetFont('Arial','B',10);
