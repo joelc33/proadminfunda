@@ -365,7 +365,7 @@ onRecaudar : function(btn, ev) {
                  buttons: Ext.MessageBox.OK
              });
 
-             window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/soportePago.php?codigo='+action.result.co_pago);
+             window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/SoportePago.php?codigo='+action.result.co_pago);
          
 //            PagosPanel.main.storeP.load(); 
 //            PagosPanel.main.storeP.load(); 

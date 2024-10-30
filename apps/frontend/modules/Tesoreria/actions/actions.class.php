@@ -1418,6 +1418,8 @@ class TesoreriaActions extends sfActions
                 $cp->clearSelectColumns();
                 $cp->addSelectColumn(Tb041TipoRetencionPeer::CO_CUENTA_CONTABLE);
                 $cp->addSelectColumn(Tb046FacturaRetencionPeer::MO_RETENCION);
+                $cp->addSelectColumn(Tb046FacturaRetencionPeer::CO_FACTURA_RETENCION);
+                $cp->addSelectColumn(Tb046FacturaRetencionPeer::CO_TIPO_RETENCION);
                 $cp->addSelectColumn(Tb046FacturaRetencionPeer::CO_FACTURA);
                 $cp->addJoin(Tb041TipoRetencionPeer::CO_TIPO_RETENCION, Tb046FacturaRetencionPeer::CO_TIPO_RETENCION, Criteria::LEFT_JOIN);
                 $cp->add(Tb046FacturaRetencionPeer::CO_SOLICITUD,$co_solicitud);
@@ -1446,7 +1448,22 @@ class TesoreriaActions extends sfActions
                                     ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                     ->setCoRuta($co_ruta)
                                     ->setCoTipoAsiento(3)
-                                    ->save($con);                
+                                    ->save($con); 
+
+         $sql_retencion = "SELECT  count(t1.co_factura_retencion) + 1 as correlativo
+	   FROM  tb046_factura_retencion as t1
+	   WHERE extract(year from fe_pago) = extract(year from $fecha) and co_tipo_retencion = ".$reg["co_tipo_retencion"];
+
+         $stmt_retencion = $con->prepare($sql_retencion);
+
+         $stmt_retencion->execute();
+
+         $row_retencion = $stmt_retencion->fetch(PDO::FETCH_ASSOC);        
+            
+                $tb046_factura_retencion = Tb046FacturaRetencionPeer::retrieveByPK($reg["co_factura_retencion"]); 
+                $tb046_factura_retencion->setNuComprobante($row_retencion["correlativo"]);
+                $tb046_factura_retencion->save($con);
+            
             }
             
             
