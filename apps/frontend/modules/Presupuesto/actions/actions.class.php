@@ -298,7 +298,7 @@ class PresupuestoActions extends sfActions
             $con->rollback();
             $this->data = json_encode(array(
                 "success" => false,
-                "msg" =>  "Ocurri un error al Generar la Orden de Pago"
+                "msg" =>  $e->getMessage()
             ));
         }
     }
