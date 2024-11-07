@@ -491,6 +491,12 @@
                 store: ContabilidadEditar.main.store_lista,
                 campo: 'nu_total'
             });
+            
+            if(ContabilidadEditar.main.total_pagar>0){
+              ContabilidadEditar.main.co_ramo.setReadOnly(true);
+        }else{
+            ContabilidadEditar.main.co_ramo.setReadOnly(false);
+        }
 
             ContabilidadEditar.main.monto_total_compra.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ContabilidadEditar.main.monto_total_factura) + "</b></span>");
             ContabilidadEditar.main.monto_total.setValue("<span style='font-size:12px;'><b>|  Total a Pagar: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ContabilidadEditar.main.total_pagar) + "</b></span>");

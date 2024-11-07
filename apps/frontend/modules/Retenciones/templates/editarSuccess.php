@@ -44,7 +44,7 @@ this.co_ramo = new Ext.form.ComboBox({
 	emptyText:'Seleccione ramo proveedor',
 	selectOnFocus: true,
 	mode: 'local',
-	width:230
+	width:330
 });
 this.storeCO_RAMO.load();
 	paqueteComunJS.funcion.seleccionarComboByCo({
@@ -65,11 +65,10 @@ this.co_documento = new Ext.form.ComboBox({
 	forceSelection:true,
 	resizable:true,
 	triggerAction: 'all',
-	emptyText:'Seleccione co_documento',
+	emptyText:'Seleccione tipo',
 	selectOnFocus: true,
 	mode: 'local',
 	width:130,
-	resizable:true,
 	allowBlank:false
 });
 this.storeCO_DOCUMENTO.load();
