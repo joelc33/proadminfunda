@@ -279,7 +279,7 @@
                 typeAhead: true,
                 valueField: 'co_ramo',
                 displayField: 'tx_ramo',
-                hiddenName: 'tb052_compras[co_ramo]',
+                hiddenName: 'co_ramo',
                 forceSelection: true,
                 resizable: true,
                 //readOnly:(this.OBJ.co_factura!='')?true:false,
