@@ -17,7 +17,12 @@ this.tx_ramo = new Ext.form.TextField({
 	name:'tb038_ramo[tx_ramo]',
 	value:this.OBJ.tx_ramo,
 	allowBlank:false,
-	width:200
+	width:200,
+        listeners: {
+        change: function(field, newValue, oldValue) {
+        field.setValue(newValue.toUpperCase());
+    }
+    }
 });
 
 this.guardar = new Ext.Button({
