@@ -102,7 +102,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'co_ramo',hidden:true, menuDisabled:true,dataIndex: 'co_ramo'},
-    {header: 'Ramo', width:250,  menuDisabled:true, sortable: true,  dataIndex: 'tx_ramo'},
+    {header: 'Ramo', width:550,  menuDisabled:true, sortable: true,  dataIndex: 'tx_ramo'},
     ],
     stripeRows: true,
     autoScroll:true,
