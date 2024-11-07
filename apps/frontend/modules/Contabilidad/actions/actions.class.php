@@ -538,13 +538,13 @@ class ContabilidadActions extends sfActions
         
         
                         
-       /* $wherec = new Criteria();
+        $wherec = new Criteria();
         $wherec->add(Tb056ContratoComprasPeer::CO_COMPRAS,$co_compra);
 
         $updc = new Criteria();
-        $updc->add(Tb056ContratoComprasPeer::CO_RAMO, $tb052_compras['co_ramo']);
+        $updc->add(Tb056ContratoComprasPeer::CO_RAMO, $co_ramo);
         
-        BasePeer::doUpdate($wherec, $updc, $con);*/
+        BasePeer::doUpdate($wherec, $updc, $con);
          
         foreach($listaFactura  as $v){
           
