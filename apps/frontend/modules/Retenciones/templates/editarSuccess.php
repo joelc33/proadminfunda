@@ -20,14 +20,37 @@ this.co_retencion = new Ext.form.Hidden({
     value:this.OBJ.co_retencion});
 //</ClavePrimaria>
 
-this.co_ramo = new Ext.form.Hidden({
-    name:'tb042_retencion[co_ramo]',
-    value:this.OBJ.co_ramo
-});
+//this.co_ramo = new Ext.form.Hidden({
+//    name:'tb042_retencion[co_ramo]',
+//    value:this.OBJ.co_ramo
+//});
 
 this.co_tipo_retencion = new Ext.form.Hidden({
     name:'tb042_retencion[co_tipo_retencion]',
     value:this.OBJ.co_tipo_retencion
+});
+
+
+this.co_ramo = new Ext.form.ComboBox({
+	fieldLabel:'Ramo Proveedor',
+	store: this.storeCO_RAMO,
+	typeAhead: true,
+	valueField: 'co_ramo',
+	displayField:'tx_ramo',
+	hiddenName:'tb042_retencion[co_ramo]',
+	forceSelection:true,
+	resizable:true,
+	triggerAction: 'all',
+	emptyText:'Seleccione ramo proveedor',
+	selectOnFocus: true,
+	mode: 'local',
+	width:230
+});
+this.storeCO_RAMO.load();
+	paqueteComunJS.funcion.seleccionarComboByCo({
+	objCMB: this.co_ramo,
+	value:  this.OBJ.co_ramo,
+	objStore: this.storeCO_RAMO
 });
 
 this.co_documento = new Ext.form.ComboBox({
@@ -208,7 +231,8 @@ RetencionesLista.main.mascara.hide();
         url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Retenciones/storefkcoramo',
         root:'data',
         fields:[
-            {name: 'co_ramo'}
+            {name: 'co_ramo'},
+            {name: 'tx_ramo'}
             ]
     });
     return this.store;
