@@ -627,7 +627,7 @@ class SolicitudActions extends sfActions
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
         $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
         $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2), Criteria::IN);
-        $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
+//        $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
         $c->addAnd(Tb030RutaPeer::IN_ACTUAL, true);
         $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
 
