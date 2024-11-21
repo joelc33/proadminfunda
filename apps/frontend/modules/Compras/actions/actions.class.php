@@ -2012,6 +2012,7 @@ class ComprasActions extends sfActions
 
             $stmt = Tb051DetalleRequisionProductoPeer::doSelectStmt($c);
             $registros = array();
+            $cantidad = 0;
             while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
                // $reg["tx_producto"] = $reg["tx_producto"];
@@ -2026,12 +2027,13 @@ class ComprasActions extends sfActions
                 if($cant>0){
                     $reg["nu_cantidad"] = $cant;
                     $registros[] = $reg;
+                    $cantidad++;
                 }
             }
 
             $this->data = json_encode(array(
                 "success"   =>  true,
-                "total"     =>  $cantidadTotal,
+                "total"     =>  $cantidad,
                 "data"      =>  $registros
             ));
         } else {
