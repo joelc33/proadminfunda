@@ -2005,7 +2005,7 @@ class ComprasActions extends sfActions
 
 
             $cantidadTotal = Tb051DetalleRequisionProductoPeer::doCount($c);
-            $c->setLimit($limit)->setOffset($start);
+//            $c->setLimit($limit)->setOffset($start);
             $c->addAscendingOrderByColumn(Tb048ProductoPeer::TX_PRODUCTO);
 
 
