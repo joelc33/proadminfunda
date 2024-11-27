@@ -85,6 +85,7 @@ class ContratoActions extends sfActions
     $c->addSelectColumn(Tb056ContratoComprasPeer::FECHA_ENTREGA);
     $c->addSelectColumn(Tb056ContratoComprasPeer::TIEMPO_GARANTIA);
     $c->addSelectColumn(Tb056ContratoComprasPeer::CO_RAMO);
+    $c->addSelectColumn(Tb056ContratoComprasPeer::TX_ENTREGA);
     $c->addSelectColumn(Tb056ContratoComprasPeer::MONTO);
     $c->addSelectColumn(Tb056ContratoComprasPeer::CO_TP_CONTRATO);
     $c->addSelectColumn(Tb056ContratoComprasPeer::CO_FUENTE_FINANCIAMIENTO);
