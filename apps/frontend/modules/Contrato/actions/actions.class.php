@@ -739,10 +739,10 @@ class ContratoActions extends sfActions
             $tb056_contrato_compras->setCoCompras($tb052_compras->getCoCompras());
             list($dia, $mes, $anio) = explode("/", $tb052_comprasForm["fecha_inicio"]);
             $fecha = $anio . "-" . $mes . "-" . $dia;
-            $tb056_contrato_compras->setFechaInicio($fecha);
+//            $tb056_contrato_compras->setFechaInicio($fecha);
             list($dia, $mes, $anio) = explode("/", $tb052_comprasForm["fecha_fin"]);
             $fecha = $anio . "-" . $mes . "-" . $dia;
-            $tb056_contrato_compras->setFechaFin($fecha);
+//            $tb056_contrato_compras->setFechaFin($fecha);
             $tb056_contrato_compras->setCoRamo($tb052_comprasForm["co_ramo"]);
             $tb056_contrato_compras->setMonto($tb052_comprasForm["monto"]);
 
