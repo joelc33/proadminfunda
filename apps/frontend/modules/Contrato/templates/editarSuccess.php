@@ -719,7 +719,7 @@
                         menuDisabled: true,
                         dataIndex: 'tx_producto',
                         renderer: textoLargo,
-                        editor: new Ext.form.NumberField({
+                        editor: new Ext.form.TextField({
                             allowBlank: false,
                             autoCreate: {
                                 tag: "input",
