@@ -714,18 +714,32 @@
                         dataIndex: 'cod_producto'
                     },
                     {
-                        header: 'Descripción',
+                        header: 'Descripción Producto',
                         width: 250,
                         menuDisabled: true,
                         dataIndex: 'tx_producto',
                         renderer: textoLargo
                     },
                     {
-                        header: 'Especificaciones',
+                        header: 'Descripción Oferta',
                         width: 180,
                         menuDisabled: true,
                         dataIndex: 'detalle',
-                        renderer: textoLargo
+                        renderer: textoLargo,
+                        editor: new Ext.form.TextField({
+                            allowBlank: false,
+                            autoCreate: {
+                                tag: "input",
+                                type: "text",
+                                autocomplete: "off",
+                                maxlength: 400
+                            },
+                            listeners: {
+                                change: function(field, newValue, oldValue) {
+                                    this.setValue(newValue.toUpperCase());
+                                }
+                            }                            
+                        }) 
                     },
                     {
                         header: 'Cant.',
