@@ -752,6 +752,7 @@ class ContratoActions extends sfActions
         $tb056_contrato_compras->setFechaEntrega($fecha);*/
             $tb056_contrato_compras->setTiempoGarantia($tb052_comprasForm["tiempo_garantia"]);
             $tb056_contrato_compras->setCoTpContrato($tb052_comprasForm["co_tp_contrato"]);
+            $tb056_contrato_compras->setTxEntrega($tb052_comprasForm["tx_entrega"]);
             $tb056_contrato_compras->setCoFuenteFinanciamiento($tb052_comprasForm["co_fuente_financiamiento"]);
             $tb056_contrato_compras->save($con);
 

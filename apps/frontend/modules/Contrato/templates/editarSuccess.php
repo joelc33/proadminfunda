@@ -222,7 +222,7 @@
                 fieldLabel: 'Razon Social',
                 name: 'tb008_proveedor[tx_razon_social]',
                 value: this.OBJ.tx_razon_social,
-                readOnly: (this.OBJ.co_factura != '') ? true : false,
+                readOnly:  true,
                 style: (this.OBJ.co_factura != '') ? 'background:#c9c9c9;' : '',
                 allowBlank: false,
                 width: 770
@@ -323,12 +323,12 @@
                 allowBlank: false,
                 width: 100
             });
-            this.fecha_entrega = new Ext.form.DateField({
-                fieldLabel: 'Fecha Entrega',
-                name: 'tb052_compras[fecha_entrega]',
-                value: this.OBJ.fecha_entrega,
+            this.tx_entrega = new Ext.form.TextField({
+                fieldLabel: 'Plazo de Entrega',
+                name: 'tb052_compras[tx_entrega]',
+                value: this.OBJ.tx_entrega,
                 allowBlank: false,
-                width: 100
+                width: 775
             });
 
             this.PanelFecha = new Ext.Panel({
@@ -449,7 +449,7 @@
             });
 
             this.tx_observacion = new Ext.form.TextArea({
-                fieldLabel: 'Observación',
+                fieldLabel: 'Anexos',
                 name: 'tb052_compras[tx_observacion]',
                 value: this.OBJ.tx_observacion,
                 allowBlank: false,
@@ -526,7 +526,8 @@
                     //this.tx_observacion,
                     //   this.co_tp_contrato,
                    // this.nu_orden_compra,
-                    this.PanelFecha,
+//                    this.PanelFecha,
+                    this.tx_entrega,
                     this.in_responsabilidad_social,
                     this.monto_contrato,
                     //     this.Panelforma,
