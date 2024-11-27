@@ -726,7 +726,12 @@
                                 type: "text",
                                 autocomplete: "off",
                                 maxlength: 400
-                            }
+                            },
+                            listeners: {
+                                change: function(field, newValue, oldValue) {
+                                    this.setValue(newValue.toUpperCase());
+                                }
+                            }                            
                         })                        
                     },
                     {
