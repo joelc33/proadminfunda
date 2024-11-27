@@ -714,10 +714,17 @@
                         dataIndex: 'cod_producto'
                     },
                     {
-                        header: 'Descripción',
+                        header: 'Descripción Producto',
                         width: 250,
                         menuDisabled: true,
                         dataIndex: 'tx_producto',
+                        renderer: textoLargo                       
+                    },
+                    {
+                        header: 'Descripción Oferta',
+                        width: 180,
+                        menuDisabled: true,
+                        dataIndex: 'detalle',
                         renderer: textoLargo,
                         editor: new Ext.form.TextField({
                             allowBlank: false,
@@ -732,14 +739,7 @@
                                     this.setValue(newValue.toUpperCase());
                                 }
                             }                            
-                        })                        
-                    },
-                    {
-                        header: 'Especificaciones',
-                        width: 180,
-                        menuDisabled: true,
-                        dataIndex: 'detalle',
-                        renderer: textoLargo
+                        }) 
                     },
                     {
                         header: 'Cant.',
