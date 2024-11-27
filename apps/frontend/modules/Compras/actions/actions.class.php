@@ -696,7 +696,7 @@ class ComprasActions extends sfActions
         if ($campos["co_compras"] != '') {
 
             $requisicion = $this->getRequisicion($this->getRequestParameter("co_solicitud"));
-            $this->co_requisicion = $requisicion["co_requisicion"];
+            $this->co_requisicion = $campos["co_requisicion"];
             list($anio, $mes, $dia) = explode("-", $campos["created_at"]);
 
             $this->data = json_encode(array(
