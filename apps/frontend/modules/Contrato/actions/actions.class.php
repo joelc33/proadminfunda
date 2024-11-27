@@ -144,6 +144,7 @@ class ContratoActions extends sfActions
         "co_solicitud_cotizacion"   => $campos["co_solicitud_cotizacion"],
         "tx_serial_cotizacion"      => $campos["tx_serial_cotizacion"],
         "forma_pago"                => $campos["forma_pago"],
+        "tx_entrega"                => $campos["tx_entrega"],
         "forma_entrega"             => $campos["forma_entrega"],
 
       ));
