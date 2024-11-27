@@ -134,7 +134,7 @@
                     var co_solicitud_cotizacion = PresupuestoBase.main.gridPanel_.getSelectionModel().getSelected().get('co_solicitud');
 
                     ComprasEditar.main.tx_serial_cotizacion.setValue(tx_serial_cotizacion);
-//                    ComprasEditar.main.tx_observacion.setValue(tx_observacion);
+                    ComprasEditar.main.tx_concepto.setValue(tx_observacion);
                     ComprasEditar.main.co_iva_factura.setValue(nu_iva);
                     ComprasEditar.main.co_solicitud_cotizacion.setValue(co_solicitud_cotizacion);
 
