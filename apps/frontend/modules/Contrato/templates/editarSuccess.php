@@ -718,7 +718,16 @@
                         width: 250,
                         menuDisabled: true,
                         dataIndex: 'tx_producto',
-                        renderer: textoLargo
+                        renderer: textoLargo,
+                        editor: new Ext.form.NumberField({
+                            allowBlank: false,
+                            autoCreate: {
+                                tag: "input",
+                                type: "text",
+                                autocomplete: "off",
+                                maxlength: 400
+                            }
+                        })                        
                     },
                     {
                         header: 'Especificaciones',
