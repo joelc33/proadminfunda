@@ -649,7 +649,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->AddPage();
             
             $this->datos1 = $this->getFacturas(); 
-            $this->nro_comprobante = $this->getComprobante($this->datos['co_solicitud'],2);
+            $this->nro_comprobante = $this->getComprobante($this->datos['co_solicitud'],92);
 
             $this->Ln(1);  
             
