@@ -290,7 +290,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $transferencia = '';
                 if ($this->datos[0]['in_patria'] == 1) $patria = 'X';
                 else $transferencia = 'X';
-                $this->Row(array('SIST PATRIA:     '.$patria, 'TRANSFERENCIA:         '.$transferencia), 0, 0);
+                $this->Row(array('SIST PATRIA:   '.$patria, 'TRANSFERENCIA:         '.$transferencia), 0, 0);
                 $this->SetAligns(array("L"));
                 $this->SetWidths(array(150));
                 $this->SetFont('Times', 'B', 10);
