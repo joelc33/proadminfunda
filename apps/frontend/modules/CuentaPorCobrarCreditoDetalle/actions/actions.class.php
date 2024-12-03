@@ -247,7 +247,7 @@ class CuentaPorCobrarCreditoDetalleActions extends sfActions
   public function executeStorelista(sfWebRequest $request)
   {
     $paginar    =   $this->getRequestParameter("paginar");
-    $limit      =   $this->getRequestParameter("limit",20);
+    $limit      =   $this->getRequestParameter("limit",100);
     $start      =   $this->getRequestParameter("start",0);
                 $id_tb142_cuenta_cobrar      =   $this->getRequestParameter("id_tb142_cuenta_cobrar");
             $de_cuota      =   $this->getRequestParameter("de_cuota");
