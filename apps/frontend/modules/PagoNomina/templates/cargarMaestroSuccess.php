@@ -43,12 +43,30 @@ this.fe_pago = new Ext.form.DateField({
 	maxValue:this.OBJ.fe_fin,
 });
 
+this.in_patria = new Ext.form.RadioGroup({
+        fieldLabel: '¿Patria?',  
+        width:200, 
+        allowBlank:false,
+        columns: 1, //muestra los radiobuttons en dos columnas
+        items: [
+                {boxLabel: 'SI',
+                name:'tb132_pago_nomina_masivo[in_patria]',
+                inputValue: '1'
+                },
+                {boxLabel: 'NO',
+                 name:'tb132_pago_nomina_masivo[in_patria]',
+                 inputValue: '2'
+                }
+                ]
+});
+
 this.fieldPago = new Ext.form.FieldSet({
 	title: 'Datos de la Nomina',
 	items:[this.co_pago_nomina,
                 this.co_solicitud,
                 this.tx_concepto,
-                this.fe_pago]
+                this.fe_pago,
+                this.in_patria]
 });
 
 this.fieldDocumento = new Ext.form.FieldSet({

@@ -515,6 +515,7 @@ if($data->sheets[0]['cells'][$i][2]==''){
             $tb052_compras->setMontoTotal($mo_total);
             $tb052_compras->setCoTipoMovimiento(0);
             $tb052_compras->setCoEjecutor($co_ejecutor);
+            $tb052_compras->setInPatria($tb132_pago_nomina_masivoForm["in_patria"]);
             $tb052_compras->setTxObservacion($tb132_pago_nomina_masivoForm["tx_concepto"]);
             $tb052_compras->save($con);
 
