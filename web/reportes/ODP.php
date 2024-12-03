@@ -286,7 +286,11 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetAligns(array("L", "L"));
                 $this->SetFont('Times', '', 8);
                 $this->SetX(150);
-                $this->Row(array('SIST PATRIA: ', 'TRANSFERENCIA:         X'), 0, 0);
+                $patria = '';
+                $transferencia = '';
+                if ($this->datos[0]['in_patria'] == 1) $patria = 'X';
+                else $transferencia = 'X';
+                $this->Row(array('SIST PATRIA: '.$patria, 'TRANSFERENCIA:         '.$transferencia), 0, 0);
                 $this->SetAligns(array("L"));
                 $this->SetWidths(array(150));
                 $this->SetFont('Times', 'B', 10);
@@ -954,7 +958,8 @@ class PDF_Flo extends PDF_FlowingBlock
                           substr(tb060.tx_concepto,1,500) as tx_concepto, 
                           tb045.co_compra as nu_compra, 
                           numero_compra,
-                          nu_total_retencion, 
+                          nu_total_retencion,
+                          in_patria,
                           case when mo_pagar is null then tb052.monto_total else mo_pagar end total_pagar,
                           nu_factura,
 						  tb052.monto_total,
