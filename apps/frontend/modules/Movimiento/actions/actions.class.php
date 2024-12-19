@@ -187,6 +187,7 @@ class MovimientoActions extends sfActions
 //        $c->setDistinct();
         $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA);
         $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::NU_MONTO);
+        $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO);
 //        $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
         $c->addSelectColumn(Tb052ComprasPeer::CO_SOLICITUD);
        // $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::CREATED_AT);
@@ -206,7 +207,7 @@ class MovimientoActions extends sfActions
         
         $c->add(Tb087PresupuestoMovimientoPeer::CO_PARTIDA,$id_tb085_presupuesto);
         if($co_tipo_movimiento == 1)
-            $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(1,4),Criteria::IN);
+            $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(1,4,17),Criteria::IN);
         else
             $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,$co_tipo_movimiento);
         //$c->add(Tb087PresupuestoMovimientoPeer::IN_ACTIVO, TRUE);
@@ -229,11 +230,17 @@ class MovimientoActions extends sfActions
 
             list($fecha,$hora)      = explode(" ", $res["created_at"]);
             list($anio,$mes,$dia)   = explode("-", $fecha);
+            
+            if($res["co_tipo_movimiento"]==17){
+            $nu_monto = $res["nu_monto"]*-1;    
+            }else{
+            $nu_monto = $res["nu_monto"];    
+            }
 
 
             $registros[] = array(
                 "de_tipo_movimiento"       => trim($res["de_tipo_movimiento"]),
-                "nu_monto"                 => trim($res["nu_monto"]),
+                "nu_monto"                 => trim($nu_monto),
                 "created_at"               => trim($dia.'/'.$mes.'/'.$anio),
                 "co_solicitud"             => $res["co_solicitud"],
                 "tx_serial"                => $res["tx_serial"], 
