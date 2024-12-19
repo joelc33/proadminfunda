@@ -206,10 +206,16 @@ class MovimientoActions extends sfActions
         $c->addJoin(Tb007DocumentoPeer::CO_DOCUMENTO,Tb008ProveedorPeer::CO_DOCUMENTO);
         
         $c->add(Tb087PresupuestoMovimientoPeer::CO_PARTIDA,$id_tb085_presupuesto);
-        if($co_tipo_movimiento == 1)
+        if($co_tipo_movimiento == 1){
             $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(1,4,17),Criteria::IN);
-        else
-            $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,$co_tipo_movimiento);
+        }else{
+          if($co_tipo_movimiento == 2){
+          $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(1,17),Criteria::IN);   
+          }else{
+          $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,$co_tipo_movimiento);   
+          }  
+        }
+            
         //$c->add(Tb087PresupuestoMovimientoPeer::IN_ACTIVO, TRUE);
         
         $c->addJoin(Tb085PresupuestoPeer::NU_ANIO, Tb013AnioFiscalPeer::CO_ANIO_FISCAL);
