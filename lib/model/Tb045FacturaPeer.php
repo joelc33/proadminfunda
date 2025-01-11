@@ -52,16 +52,23 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                 ->save($con);
 
 
-            $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
-            $tb087_presupuesto_movimiento->setCoPartida($res["co_presupuesto"])
-                ->setCoTipoMovimiento(2)
-                ->setNuMonto($monto)
-                ->setNuAnio($co_ejercicio)
-                ->setCoFactura($campos["co_factura"])
-                ->setCoUsuario($co_usuario)
-                ->setCoDetalleCompra($res["co_detalle_compra"])
-                ->setInActivo(true)
-                ->save($con);
+            $cd = new Criteria();
+            $cd->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $res["co_detalle_compra"]);
+            $cd->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO, 2);
+            $cant_causado = Tb087PresupuestoMovimientoPeer::doCount($cd);
+
+            if($cant_causado == 0){ 
+                $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
+                $tb087_presupuesto_movimiento->setCoPartida($res["co_presupuesto"])
+                    ->setCoTipoMovimiento(2)
+                    ->setNuMonto($monto)
+                    ->setNuAnio($co_ejercicio)
+                    ->setCoFactura($campos["co_factura"])
+                    ->setCoUsuario($co_usuario)
+                    ->setCoDetalleCompra($res["co_detalle_compra"])
+                    ->setInActivo(true)
+                    ->save($con);
+            }
 
             if ($mo_iva > 0) {
                 $ci = new Criteria();
