@@ -314,11 +314,15 @@ this.eliminar= new Ext.Button({
 });
 
 this.mo_pago = new Ext.form.DisplayField({
- value:"<span style='font-size:18px;'><b>Total Cuotas: </b>"+paqueteComunJS.funcion.getNumeroFormateado(0)+"</b></span>"
+ value:"<span style='font-size:14px;'><b>Total Cuotas: </b>"+paqueteComunJS.funcion.getNumeroFormateado(0)+"</b></span>"
+});
+
+this.mo_iva = new Ext.form.DisplayField({
+ value:"<span style='font-size:14px;'><b>Total IVA: </b>"+paqueteComunJS.funcion.getNumeroFormateado(0)+"</b></span>"
 });
 
 this.mo_diferencia = new Ext.form.DisplayField({
- value:"<span style='font-size:18px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(0)+"</b></span>"
+ value:"<span style='font-size:14px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(0)+"</b></span>"
 });
 
 this.bbar_monto = new Ext.ux.StatusBar({
@@ -329,6 +333,7 @@ this.bbar_monto = new Ext.ux.StatusBar({
   },
   items:[
     this.mo_diferencia,'-',
+    this.mo_iva,'-',
     this.mo_pago
   ]
 });
@@ -341,7 +346,7 @@ this.gridPanel = new Ext.grid.GridPanel({
         store: this.store_lista,
         loadMask:true,
         height:200,
-        width:660,
+        width:760,
         border:true,
         tbar:[
             this.nuevo,'-',this.editar,'-',this.eliminar
@@ -350,7 +355,10 @@ this.gridPanel = new Ext.grid.GridPanel({
         new Ext.grid.RowNumberer(),
             {header: 'id', hidden: true,width:80, menuDisabled:true,dataIndex: 'id'},
             {header: 'Cuota',width:200, menuDisabled:true,dataIndex: 'de_cuota'},
-			{header: 'Monto',width:200, menuDisabled:true, renderer: formatoNumero, dataIndex: 'mo_cuota'},
+			{header: 'Monto',width:150, menuDisabled:true, renderer: formatoNumero, dataIndex: 'mo_subtotal'},
+			{header: 'IVA',width:50, menuDisabled:true, renderer: formatoNumero, dataIndex: 'iva'},
+			{header: 'Monto IVA',width:100, menuDisabled:true, renderer: formatoNumero, dataIndex: 'mo_iva'},
+			{header: 'Monto Total',width:150, menuDisabled:true, renderer: formatoNumero, dataIndex: 'mo_cuota'},
             {header: 'Fecha de Pago',width:150, menuDisabled:true,dataIndex: 'fe_pago'}
         ],
         stripeRows: true,
@@ -445,7 +453,7 @@ this.salir = new Ext.Button({
 
 this.formPanel_ = new Ext.form.FormPanel({
     frame:false,
-    width:680,
+    width:780,
 	autoHeight:true,  
     autoScroll:true,
     bodyStyle:'padding:10px;',
@@ -464,7 +472,7 @@ this.winformPanel_ = new Ext.Window({
     title:'Formulario: Cuenta Por Pagar Credito',
     modal:true,
     constrain:true,
-	width:694,
+	width:794,
     frame:true,
     closabled:true,
     autoHeight:true,
@@ -570,9 +578,12 @@ this.winformPanel_.show();
 			{name: 'mo_cuota'},
 			{name: 'fe_pago'},
 			{name: 'in_activo'},
-                        {name: 'in_pago'},
+            {name: 'in_pago'},
 			{name: 'created_at'},
 			{name: 'updated_at'},
+			{name: 'iva'},
+			{name: 'mo_iva'},
+			{name: 'mo_subtotal'},
         ]
     });
     return this.store;
@@ -586,10 +597,17 @@ this.winformPanel_.show();
         campo:'mo_cuota'
     });
 
+    this.monto_iva = paqueteComunJS.funcion.getSumaColumnaGrid({
+        store:CuentaPorCobrarCreditoEditar.main.store_lista,
+        campo:'mo_iva'
+    });
+
+   
     this.mo_diponiblie = this.monto_total - this.monto_cuotas;
 
-    CuentaPorCobrarCreditoEditar.main.mo_pago.setValue("<span style='font-size:18px;'><b>Total Cuotas: </b>"+paqueteComunJS.funcion.getNumeroFormateado(this.monto_cuotas)+"</b></span>");
-    CuentaPorCobrarCreditoEditar.main.mo_diferencia.setValue("<span style='font-size:18px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(this.mo_diponiblie)+"</b></span>");
+    CuentaPorCobrarCreditoEditar.main.mo_pago.setValue("<span style='font-size:14px;'><b>Total Cuotas: </b>"+paqueteComunJS.funcion.getNumeroFormateado(this.monto_cuotas)+"</b></span>");
+    CuentaPorCobrarCreditoEditar.main.mo_iva.setValue("<span style='font-size:14px;'><b>Total IVA: </b>"+paqueteComunJS.funcion.getNumeroFormateado(this.monto_iva)+"</b></span>");
+    CuentaPorCobrarCreditoEditar.main.mo_diferencia.setValue("<span style='font-size:14px;'><b>Por Asignar: </b>"+paqueteComunJS.funcion.getNumeroFormateado(this.mo_diponiblie)+"</b></span>");
 
 }
 };

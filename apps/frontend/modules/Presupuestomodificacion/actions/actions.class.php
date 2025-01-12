@@ -14,12 +14,12 @@ class PresupuestomodificacionActions extends sfActions
   public function executeIndex(sfWebRequest $request)
   {
     $this->data = json_encode(array(
-      "co_rol"            => $this->getUser()->getAttribute('rol'),
-      "co_usuario"        => $this->getUser()->getAttribute('codigo'),
-      "in_activo"         => $this->getUser()->getAttribute('in_activo'),
+      "co_rol" => $this->getUser()->getAttribute('rol'),
+      "co_usuario" => $this->getUser()->getAttribute('codigo'),
+      "in_activo" => $this->getUser()->getAttribute('in_activo'),
       "tx_tipo_solicitud" => $this->getRequestParameter("tx_tipo_solicitud"),
       "co_tipo_solicitud" => 23,
-      "tx_url"            => $this->getRequestParameter("tx_url"),
+      "tx_url" => $this->getRequestParameter("tx_url"),
 
     ));
 
@@ -30,12 +30,12 @@ class PresupuestomodificacionActions extends sfActions
   public function executeListaCompromisoley(sfWebRequest $request)
   {
     $this->data = json_encode(array(
-      "co_rol"            => $this->getUser()->getAttribute('rol'),
-      "co_usuario"        => $this->getUser()->getAttribute('codigo'),
-      "in_activo"         => $this->getUser()->getAttribute('in_activo'),
+      "co_rol" => $this->getUser()->getAttribute('rol'),
+      "co_usuario" => $this->getUser()->getAttribute('codigo'),
+      "in_activo" => $this->getUser()->getAttribute('in_activo'),
       "tx_tipo_solicitud" => $this->getRequestParameter("tx_tipo_solicitud"),
       "co_tipo_solicitud" => 31,
-      "tx_url"            => $this->getRequestParameter("tx_url"),
+      "tx_url" => $this->getRequestParameter("tx_url"),
 
     ));
 
@@ -61,37 +61,37 @@ class PresupuestomodificacionActions extends sfActions
       $stmt = Tb096PresupuestoModificacionPeer::doSelectStmt($c);
       $campos = $stmt->fetch(PDO::FETCH_ASSOC);
       $this->data = json_encode(array(
-        "id"     => $campos["id"],
-        "id_tb095_tipo_modificacion"     => $campos["id_tb095_tipo_modificacion"],
-        "nu_modificacion"     => $campos["nu_modificacion"],
-        "fe_modificacion"     => $campos["fe_modificacion"],
-        "de_modificacion"     => $campos["de_modificacion"],
-        "de_justificacion"     => $campos["de_justificacion"],
-        "nu_oficio"     => $campos["nu_oficio"],
-        "fe_oficio"     => $campos["fe_oficio"],
-        "de_articulo_ley"     => $campos["de_articulo_ley"],
-        "mo_modificacion"     => $campos["mo_modificacion"],
-        "in_activo"     => $campos["in_activo"],
-        "created_at"     => $campos["created_at"],
-        "updated_at"     => $campos["updated_at"],
+        "id" => $campos["id"],
+        "id_tb095_tipo_modificacion" => $campos["id_tb095_tipo_modificacion"],
+        "nu_modificacion" => $campos["nu_modificacion"],
+        "fe_modificacion" => $campos["fe_modificacion"],
+        "de_modificacion" => $campos["de_modificacion"],
+        "de_justificacion" => $campos["de_justificacion"],
+        "nu_oficio" => $campos["nu_oficio"],
+        "fe_oficio" => $campos["fe_oficio"],
+        "de_articulo_ley" => $campos["de_articulo_ley"],
+        "mo_modificacion" => $campos["mo_modificacion"],
+        "in_activo" => $campos["in_activo"],
+        "created_at" => $campos["created_at"],
+        "updated_at" => $campos["updated_at"],
       ));
     } else {
       $this->data = json_encode(array(
-        "id"     => "",
-        "id_tb095_tipo_modificacion"     => "",
-        "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
-        "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
-        "nu_modificacion"     => "",
-        "fe_modificacion"     => "",
-        "de_modificacion"     => "",
-        "de_justificacion"     => "",
-        "nu_oficio"     => "",
-        "fe_oficio"     => "",
-        "de_articulo_ley"     => "",
-        "mo_modificacion"     => "",
-        "in_activo"     => "",
-        "created_at"     => "",
-        "updated_at"     => "",
+        "id" => "",
+        "id_tb095_tipo_modificacion" => "",
+        "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+        "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+        "nu_modificacion" => "",
+        "fe_modificacion" => "",
+        "de_modificacion" => "",
+        "de_justificacion" => "",
+        "nu_oficio" => "",
+        "fe_oficio" => "",
+        "de_articulo_ley" => "",
+        "mo_modificacion" => "",
+        "in_activo" => "",
+        "created_at" => "",
+        "updated_at" => "",
       ));
     }
   }
@@ -110,68 +110,68 @@ class PresupuestomodificacionActions extends sfActions
       if ($campos["id"] != '') {
 
         $this->data = json_encode(array(
-          "id"     => $campos["id"],
-          "id_tb095_tipo_modificacion"     => $campos["id_tb095_tipo_modificacion"],
-          "nu_modificacion"     => $campos["nu_modificacion"],
-          "fe_modificacion"     => $campos["fe_modificacion"],
-          "de_modificacion"     => $campos["de_modificacion"],
-          "de_justificacion"     => $campos["de_justificacion"],
-          "nu_oficio"     => $campos["nu_oficio"],
-          "fe_oficio"     => $campos["fe_oficio"],
-          "de_articulo_ley"     => $campos["de_articulo_ley"],
-          "mo_modificacion"     => $campos["mo_modificacion"],
-          "in_activo"     => $campos["in_activo"],
-          "created_at"     => $campos["created_at"],
-          "updated_at"     => $campos["updated_at"],
-          "id_tb082_ejecutor"     => $campos["id_tb082_ejecutor"],
-          "id_tb083_proyecto_ac"     => $campos["id_tb083_proyecto_ac"],
-          "co_solicitud"     => $campos["co_solicitud"],
-          "co_tipo_solicitud"     => $campos["co_tipo_solicitud"],
-          "fe_ini"   => $this->getUser()->getAttribute('fe_apertura'),
-          "fe_fin"   => $this->getUser()->getAttribute('fe_cierre')
+          "id" => $campos["id"],
+          "id_tb095_tipo_modificacion" => $campos["id_tb095_tipo_modificacion"],
+          "nu_modificacion" => $campos["nu_modificacion"],
+          "fe_modificacion" => $campos["fe_modificacion"],
+          "de_modificacion" => $campos["de_modificacion"],
+          "de_justificacion" => $campos["de_justificacion"],
+          "nu_oficio" => $campos["nu_oficio"],
+          "fe_oficio" => $campos["fe_oficio"],
+          "de_articulo_ley" => $campos["de_articulo_ley"],
+          "mo_modificacion" => $campos["mo_modificacion"],
+          "in_activo" => $campos["in_activo"],
+          "created_at" => $campos["created_at"],
+          "updated_at" => $campos["updated_at"],
+          "id_tb082_ejecutor" => $campos["id_tb082_ejecutor"],
+          "id_tb083_proyecto_ac" => $campos["id_tb083_proyecto_ac"],
+          "co_solicitud" => $campos["co_solicitud"],
+          "co_tipo_solicitud" => $campos["co_tipo_solicitud"],
+          "fe_ini" => $this->getUser()->getAttribute('fe_apertura'),
+          "fe_fin" => $this->getUser()->getAttribute('fe_cierre')
         ));
       } else {
         $this->data = json_encode(array(
-          "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
-          "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
-          "id"     => "",
-          "id_tb095_tipo_modificacion"     => "",
-          "nu_modificacion"     => "",
-          "fe_modificacion"     => "",
-          "de_modificacion"     => "",
-          "de_justificacion"     => "",
-          "nu_oficio"     => "",
-          "fe_oficio"     => "",
-          "de_articulo_ley"     => "",
-          "mo_modificacion"     => "",
-          "in_activo"     => "",
-          "created_at"     => "",
-          "updated_at"     => "",
-          "id_tb082_ejecutor"     => "",
-          "id_tb083_proyecto_ac"     => "",
-          "fe_ini"   => $this->getUser()->getAttribute('fe_apertura'),
-          "fe_fin"   => $this->getUser()->getAttribute('fe_cierre')
+          "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+          "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+          "id" => "",
+          "id_tb095_tipo_modificacion" => "",
+          "nu_modificacion" => "",
+          "fe_modificacion" => "",
+          "de_modificacion" => "",
+          "de_justificacion" => "",
+          "nu_oficio" => "",
+          "fe_oficio" => "",
+          "de_articulo_ley" => "",
+          "mo_modificacion" => "",
+          "in_activo" => "",
+          "created_at" => "",
+          "updated_at" => "",
+          "id_tb082_ejecutor" => "",
+          "id_tb083_proyecto_ac" => "",
+          "fe_ini" => $this->getUser()->getAttribute('fe_apertura'),
+          "fe_fin" => $this->getUser()->getAttribute('fe_cierre')
         ));
       }
     } else {
       $this->data = json_encode(array(
-        "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
-        "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
-        "id"     => "",
-        "id_tb095_tipo_modificacion"     => "",
-        "nu_modificacion"     => "",
-        "fe_modificacion"     => "",
-        "de_modificacion"     => "",
-        "de_justificacion"     => "",
-        "nu_oficio"     => "",
-        "fe_oficio"     => "",
-        "de_articulo_ley"     => "",
-        "mo_modificacion"     => "",
-        "in_activo"     => "",
-        "created_at"     => "",
-        "updated_at"     => "",
-        "id_tb082_ejecutor"     => "",
-        "id_tb083_proyecto_ac"     => "",
+        "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+        "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+        "id" => "",
+        "id_tb095_tipo_modificacion" => "",
+        "nu_modificacion" => "",
+        "fe_modificacion" => "",
+        "de_modificacion" => "",
+        "de_justificacion" => "",
+        "nu_oficio" => "",
+        "fe_oficio" => "",
+        "de_articulo_ley" => "",
+        "mo_modificacion" => "",
+        "in_activo" => "",
+        "created_at" => "",
+        "updated_at" => "",
+        "id_tb082_ejecutor" => "",
+        "id_tb083_proyecto_ac" => "",
       ));
     }
   }
@@ -190,68 +190,68 @@ class PresupuestomodificacionActions extends sfActions
       if ($campos["id"] != '') {
 
         $this->data = json_encode(array(
-          "id"     => $campos["id"],
-          "id_tb095_tipo_modificacion"     => $campos["id_tb095_tipo_modificacion"],
-          "nu_modificacion"     => $campos["nu_modificacion"],
-          "fe_modificacion"     => $campos["fe_modificacion"],
-          "de_modificacion"     => $campos["de_modificacion"],
-          "de_justificacion"     => $campos["de_justificacion"],
-          "nu_oficio"     => $campos["nu_oficio"],
-          "fe_oficio"     => $campos["fe_oficio"],
-          "de_articulo_ley"     => $campos["de_articulo_ley"],
-          "mo_modificacion"     => $campos["mo_modificacion"],
-          "in_activo"     => $campos["in_activo"],
-          "created_at"     => $campos["created_at"],
-          "updated_at"     => $campos["updated_at"],
-          "id_tb082_ejecutor"     => $campos["id_tb082_ejecutor"],
-          "id_tb083_proyecto_ac"     => $campos["id_tb083_proyecto_ac"],
-          "co_solicitud"     => $campos["co_solicitud"],
-          "co_tipo_solicitud"     => $campos["co_tipo_solicitud"],
-          "fe_ini"   => $this->getUser()->getAttribute('fe_apertura'),
-          "fe_fin"   => $this->getUser()->getAttribute('fe_cierre')
+          "id" => $campos["id"],
+          "id_tb095_tipo_modificacion" => $campos["id_tb095_tipo_modificacion"],
+          "nu_modificacion" => $campos["nu_modificacion"],
+          "fe_modificacion" => $campos["fe_modificacion"],
+          "de_modificacion" => $campos["de_modificacion"],
+          "de_justificacion" => $campos["de_justificacion"],
+          "nu_oficio" => $campos["nu_oficio"],
+          "fe_oficio" => $campos["fe_oficio"],
+          "de_articulo_ley" => $campos["de_articulo_ley"],
+          "mo_modificacion" => $campos["mo_modificacion"],
+          "in_activo" => $campos["in_activo"],
+          "created_at" => $campos["created_at"],
+          "updated_at" => $campos["updated_at"],
+          "id_tb082_ejecutor" => $campos["id_tb082_ejecutor"],
+          "id_tb083_proyecto_ac" => $campos["id_tb083_proyecto_ac"],
+          "co_solicitud" => $campos["co_solicitud"],
+          "co_tipo_solicitud" => $campos["co_tipo_solicitud"],
+          "fe_ini" => $this->getUser()->getAttribute('fe_apertura'),
+          "fe_fin" => $this->getUser()->getAttribute('fe_cierre')
         ));
       } else {
         $this->data = json_encode(array(
-          "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
-          "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
-          "id"     => "",
-          "id_tb095_tipo_modificacion"     => "",
-          "nu_modificacion"     => "",
-          "fe_modificacion"     => "",
-          "de_modificacion"     => "",
-          "de_justificacion"     => "",
-          "nu_oficio"     => "",
-          "fe_oficio"     => "",
-          "de_articulo_ley"     => "",
-          "mo_modificacion"     => "",
-          "in_activo"     => "",
-          "created_at"     => "",
-          "updated_at"     => "",
-          "id_tb082_ejecutor"     => "",
-          "id_tb083_proyecto_ac"     => "",
-          "fe_ini"   => $this->getUser()->getAttribute('fe_apertura'),
-          "fe_fin"   => $this->getUser()->getAttribute('fe_cierre')
+          "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+          "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+          "id" => "",
+          "id_tb095_tipo_modificacion" => "",
+          "nu_modificacion" => "",
+          "fe_modificacion" => "",
+          "de_modificacion" => "",
+          "de_justificacion" => "",
+          "nu_oficio" => "",
+          "fe_oficio" => "",
+          "de_articulo_ley" => "",
+          "mo_modificacion" => "",
+          "in_activo" => "",
+          "created_at" => "",
+          "updated_at" => "",
+          "id_tb082_ejecutor" => "",
+          "id_tb083_proyecto_ac" => "",
+          "fe_ini" => $this->getUser()->getAttribute('fe_apertura'),
+          "fe_fin" => $this->getUser()->getAttribute('fe_cierre')
         ));
       }
     } else {
       $this->data = json_encode(array(
-        "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
-        "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
-        "id"     => "",
-        "id_tb095_tipo_modificacion"     => "",
-        "nu_modificacion"     => "",
-        "fe_modificacion"     => "",
-        "de_modificacion"     => "",
-        "de_justificacion"     => "",
-        "nu_oficio"     => "",
-        "fe_oficio"     => "",
-        "de_articulo_ley"     => "",
-        "mo_modificacion"     => "",
-        "in_activo"     => "",
-        "created_at"     => "",
-        "updated_at"     => "",
-        "id_tb082_ejecutor"     => "",
-        "id_tb083_proyecto_ac"     => "",
+        "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+        "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+        "id" => "",
+        "id_tb095_tipo_modificacion" => "",
+        "nu_modificacion" => "",
+        "fe_modificacion" => "",
+        "de_modificacion" => "",
+        "de_justificacion" => "",
+        "nu_oficio" => "",
+        "fe_oficio" => "",
+        "de_articulo_ley" => "",
+        "mo_modificacion" => "",
+        "in_activo" => "",
+        "created_at" => "",
+        "updated_at" => "",
+        "id_tb082_ejecutor" => "",
+        "id_tb083_proyecto_ac" => "",
       ));
     }
   }
@@ -286,81 +286,81 @@ class PresupuestomodificacionActions extends sfActions
         $campos3 = $stmt3->fetch(PDO::FETCH_ASSOC);
 
         $this->data = json_encode(array(
-          "id"     => $campos["id"],
-          "id_tb095_tipo_modificacion"     => $campos["id_tb095_tipo_modificacion"],
-          "nu_modificacion"     => $campos["nu_modificacion"],
-          "fe_modificacion"     => $campos["fe_modificacion"],
-          "fe_fin"     => $campos["fe_modificacion"],
-          "de_modificacion"     => $campos["de_modificacion"],
-          "de_justificacion"     => $campos["de_justificacion"],
-          "nu_oficio"     => $campos["nu_oficio"],
-          "fe_oficio"     => $campos["fe_oficio"],
-          "de_articulo_ley"     => $campos["de_articulo_ley"],
-          "mo_modificacion"     => $campos["mo_modificacion"],
-          "in_activo"     => $campos["in_activo"],
-          "created_at"     => $campos["created_at"],
-          "updated_at"     => $campos["updated_at"],
-          "id_tb082_ejecutor_origen"     => $campos["id_tb082_ejecutor_origen"],
-          "id_tb082_ejecutor_destino"     => $campos["id_tb082_ejecutor_destino"],
-          "id_tb083_proyecto_ac"     => $campos["id_tb083_proyecto_ac"],
-          "co_solicitud"     => $campos["co_solicitud"],
-          "co_tipo_solicitud"     => $campos["co_tipo_solicitud"],
-          "id_tb068_numero_fuente_financiamiento"     => $campos["id_tb068_numero_fuente_financiamiento"],
-          "id_tb152_tipo_credito"     => $campos["id_tb152_tipo_credito"],
-          "id_tb073_fuente_financiamiento"     => $campos["id_tb073_fuente_financiamiento"],
-            "in_procesado"     => $campos["in_procesado"],
+          "id" => $campos["id"],
+          "id_tb095_tipo_modificacion" => $campos["id_tb095_tipo_modificacion"],
+          "nu_modificacion" => $campos["nu_modificacion"],
+          "fe_modificacion" => $campos["fe_modificacion"],
+          "fe_fin" => $campos["fe_modificacion"],
+          "de_modificacion" => $campos["de_modificacion"],
+          "de_justificacion" => $campos["de_justificacion"],
+          "nu_oficio" => $campos["nu_oficio"],
+          "fe_oficio" => $campos["fe_oficio"],
+          "de_articulo_ley" => $campos["de_articulo_ley"],
+          "mo_modificacion" => $campos["mo_modificacion"],
+          "in_activo" => $campos["in_activo"],
+          "created_at" => $campos["created_at"],
+          "updated_at" => $campos["updated_at"],
+          "id_tb082_ejecutor_origen" => $campos["id_tb082_ejecutor_origen"],
+          "id_tb082_ejecutor_destino" => $campos["id_tb082_ejecutor_destino"],
+          "id_tb083_proyecto_ac" => $campos["id_tb083_proyecto_ac"],
+          "co_solicitud" => $campos["co_solicitud"],
+          "co_tipo_solicitud" => $campos["co_tipo_solicitud"],
+          "id_tb068_numero_fuente_financiamiento" => $campos["id_tb068_numero_fuente_financiamiento"],
+          "id_tb152_tipo_credito" => $campos["id_tb152_tipo_credito"],
+          "id_tb073_fuente_financiamiento" => $campos["id_tb073_fuente_financiamiento"],
+          "in_procesado" => $campos["in_procesado"],
         ));
       } else {
         $this->data = json_encode(array(
-          "co_solicitud"       => "",
-          "co_tipo_solicitud"  => 7,
-          "id"     => "",
-          "id_tb095_tipo_modificacion"     => "",
-          "nu_modificacion"     => "",
-          "fe_modificacion"     => "",
-          "fe_fin"              => date('Y-m-d'),
-          "de_modificacion"     => "",
-          "de_justificacion"     => "",
-          "nu_oficio"     => "",
-          "fe_oficio"     => "",
-          "de_articulo_ley"     => "",
-          "mo_modificacion"     => "",
-          "in_activo"     => "",
-          "created_at"     => "",
-          "updated_at"     => "",
-          "id_tb082_ejecutor_origen"     => "",
-          "id_tb082_ejecutor_destino"     => "",
-          "id_tb083_proyecto_ac"     => "",
-          "id_tb068_numero_fuente_financiamiento"     => "",
-          "id_tb152_tipo_credito"     => "",
-          "id_tb073_fuente_financiamiento"     => "",
-           "in_procesado"     => false,
+          "co_solicitud" => "",
+          "co_tipo_solicitud" => 7,
+          "id" => "",
+          "id_tb095_tipo_modificacion" => "",
+          "nu_modificacion" => "",
+          "fe_modificacion" => "",
+          "fe_fin" => date('Y-m-d'),
+          "de_modificacion" => "",
+          "de_justificacion" => "",
+          "nu_oficio" => "",
+          "fe_oficio" => "",
+          "de_articulo_ley" => "",
+          "mo_modificacion" => "",
+          "in_activo" => "",
+          "created_at" => "",
+          "updated_at" => "",
+          "id_tb082_ejecutor_origen" => "",
+          "id_tb082_ejecutor_destino" => "",
+          "id_tb083_proyecto_ac" => "",
+          "id_tb068_numero_fuente_financiamiento" => "",
+          "id_tb152_tipo_credito" => "",
+          "id_tb073_fuente_financiamiento" => "",
+          "in_procesado" => false,
         ));
       }
     } else {
       $this->data = json_encode(array(
-        "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
-        "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
-        "id"     => "",
-        "id_tb095_tipo_modificacion"     => "",
-        "nu_modificacion"     => "",
-        "fe_modificacion"     => "",
-        "fe_fin"              => date('Y-m-d'),
-        "de_modificacion"     => "",
-        "de_justificacion"     => "",
-        "nu_oficio"     => "",
-        "fe_oficio"     => "",
-        "de_articulo_ley"     => "",
-        "mo_modificacion"     => "",
-        "in_activo"     => "",
-        "created_at"     => "",
-        "updated_at"     => "",
-        "id_tb082_ejecutor"     => "",
-        "id_tb083_proyecto_ac"     => "",
-        "id_tb068_numero_fuente_financiamiento"     => "",
-        "id_tb152_tipo_credito"     => "",
-        "id_tb073_fuente_financiamiento"     => "",
-          "in_procesado"     => false,
+        "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+        "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+        "id" => "",
+        "id_tb095_tipo_modificacion" => "",
+        "nu_modificacion" => "",
+        "fe_modificacion" => "",
+        "fe_fin" => date('Y-m-d'),
+        "de_modificacion" => "",
+        "de_justificacion" => "",
+        "nu_oficio" => "",
+        "fe_oficio" => "",
+        "de_articulo_ley" => "",
+        "mo_modificacion" => "",
+        "in_activo" => "",
+        "created_at" => "",
+        "updated_at" => "",
+        "id_tb082_ejecutor" => "",
+        "id_tb083_proyecto_ac" => "",
+        "id_tb068_numero_fuente_financiamiento" => "",
+        "id_tb152_tipo_credito" => "",
+        "id_tb073_fuente_financiamiento" => "",
+        "in_procesado" => false,
       ));
     }
   }
@@ -398,72 +398,72 @@ class PresupuestomodificacionActions extends sfActions
           $monto_disponible = $campos2["mo_inicial"];
         }
         $this->data = json_encode(array(
-          "id_tb096_presupuesto_modificacion"     => $campos["id"],
-          "id_tb095_tipo_modificacion"     => $campos["id_tb095_tipo_modificacion"],
-          "nu_modificacion"     => $campos["nu_modificacion"],
-          "fe_modificacion"     => $campos["fe_modificacion"],
-          "de_modificacion"     => $campos["de_modificacion"],
-          "de_justificacion"     => $campos["de_justificacion"],
-          "nu_oficio"     => $campos["nu_oficio"],
-          "fe_oficio"     => $campos["fe_oficio"],
-          "de_articulo_ley"     => $campos["de_articulo_ley"],
-          "mo_modificacion"     => $campos["mo_modificacion"],
-          "in_activo"     => $campos["in_activo"],
-          "created_at"     => $campos["created_at"],
-          "updated_at"     => $campos["updated_at"],
-          "id_tb097_modificacion_detalle"     => $campos2["id"],
-          "id_tb082_ejecutor_origen"     => $campos2["id_tb082_ejecutor_origen"],
-          "id_tb064_presupuesto_ingreso"     => $campos2["id_tb064_presupuesto_ingreso"],
-          "mo_distribucion"     => $campos2["mo_distribucion"],
-          "mo_disponible"     => $monto_disponible,
-          "id_tb083_proyecto_ac"     => $campos["id_tb083_proyecto_ac"],
-          "co_solicitud"     => $campos["co_solicitud"],
-          "co_tipo_solicitud"     => $campos["co_tipo_solicitud"],
+          "id_tb096_presupuesto_modificacion" => $campos["id"],
+          "id_tb095_tipo_modificacion" => $campos["id_tb095_tipo_modificacion"],
+          "nu_modificacion" => $campos["nu_modificacion"],
+          "fe_modificacion" => $campos["fe_modificacion"],
+          "de_modificacion" => $campos["de_modificacion"],
+          "de_justificacion" => $campos["de_justificacion"],
+          "nu_oficio" => $campos["nu_oficio"],
+          "fe_oficio" => $campos["fe_oficio"],
+          "de_articulo_ley" => $campos["de_articulo_ley"],
+          "mo_modificacion" => $campos["mo_modificacion"],
+          "in_activo" => $campos["in_activo"],
+          "created_at" => $campos["created_at"],
+          "updated_at" => $campos["updated_at"],
+          "id_tb097_modificacion_detalle" => $campos2["id"],
+          "id_tb082_ejecutor_origen" => $campos2["id_tb082_ejecutor_origen"],
+          "id_tb064_presupuesto_ingreso" => $campos2["id_tb064_presupuesto_ingreso"],
+          "mo_distribucion" => $campos2["mo_distribucion"],
+          "mo_disponible" => $monto_disponible,
+          "id_tb083_proyecto_ac" => $campos["id_tb083_proyecto_ac"],
+          "co_solicitud" => $campos["co_solicitud"],
+          "co_tipo_solicitud" => $campos["co_tipo_solicitud"],
         ));
       } else {
         $this->data = json_encode(array(
-          "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
-          "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
-          "id_tb096_presupuesto_modificacion"     => "",
-          "id_tb095_tipo_modificacion"     => "",
-          "nu_modificacion"     => "",
-          "fe_modificacion"     => "",
-          "de_modificacion"     => "",
-          "de_justificacion"     => "",
-          "nu_oficio"     => "",
-          "fe_oficio"     => "",
-          "de_articulo_ley"     => "",
-          "mo_modificacion"     => "",
-          "in_activo"     => "",
-          "created_at"     => "",
-          "updated_at"     => "",
-          "id_tb097_modificacion_detalle"     => $campos2["id"],
-          "id_tb082_ejecutor_origen"     => "",
-          "id_tb064_presupuesto_ingreso"     => "",
-          "mo_distribucion"     => "",
-          "mo_disponible"     => "",
-          "id_tb083_proyecto_ac"     => "",
+          "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+          "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+          "id_tb096_presupuesto_modificacion" => "",
+          "id_tb095_tipo_modificacion" => "",
+          "nu_modificacion" => "",
+          "fe_modificacion" => "",
+          "de_modificacion" => "",
+          "de_justificacion" => "",
+          "nu_oficio" => "",
+          "fe_oficio" => "",
+          "de_articulo_ley" => "",
+          "mo_modificacion" => "",
+          "in_activo" => "",
+          "created_at" => "",
+          "updated_at" => "",
+          "id_tb097_modificacion_detalle" => $campos2["id"],
+          "id_tb082_ejecutor_origen" => "",
+          "id_tb064_presupuesto_ingreso" => "",
+          "mo_distribucion" => "",
+          "mo_disponible" => "",
+          "id_tb083_proyecto_ac" => "",
         ));
       }
     } else {
       $this->data = json_encode(array(
-        "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
-        "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
-        "id"     => "",
-        "id_tb095_tipo_modificacion"     => "",
-        "nu_modificacion"     => "",
-        "fe_modificacion"     => "",
-        "de_modificacion"     => "",
-        "de_justificacion"     => "",
-        "nu_oficio"     => "",
-        "fe_oficio"     => "",
-        "de_articulo_ley"     => "",
-        "mo_modificacion"     => "",
-        "in_activo"     => "",
-        "created_at"     => "",
-        "updated_at"     => "",
-        "id_tb082_ejecutor"     => "",
-        "id_tb083_proyecto_ac"     => "",
+        "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+        "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+        "id" => "",
+        "id_tb095_tipo_modificacion" => "",
+        "nu_modificacion" => "",
+        "fe_modificacion" => "",
+        "de_modificacion" => "",
+        "de_justificacion" => "",
+        "nu_oficio" => "",
+        "fe_oficio" => "",
+        "de_articulo_ley" => "",
+        "mo_modificacion" => "",
+        "in_activo" => "",
+        "created_at" => "",
+        "updated_at" => "",
+        "id_tb082_ejecutor" => "",
+        "id_tb083_proyecto_ac" => "",
       ));
     }
   }
@@ -481,23 +481,23 @@ class PresupuestomodificacionActions extends sfActions
       $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
       $this->data = json_encode(array(
-        "id"     => $campos["id"],
-        "id_tb095_tipo_modificacion"     => $campos["id_tb095_tipo_modificacion"],
-        "nu_modificacion"     => $campos["nu_modificacion"],
-        "fe_modificacion"     => $campos["fe_modificacion"],
-        "de_modificacion"     => $campos["de_modificacion"],
-        "de_justificacion"     => $campos["de_justificacion"],
-        "nu_oficio"     => $campos["nu_oficio"],
-        "fe_oficio"     => $campos["fe_oficio"],
-        "de_articulo_ley"     => $campos["de_articulo_ley"],
-        "mo_modificacion"     => $campos["mo_modificacion"],
-        "in_activo"     => $campos["in_activo"],
-        "created_at"     => $campos["created_at"],
-        "updated_at"     => $campos["updated_at"],
-        "id_tb082_ejecutor"     => $campos["id_tb082_ejecutor"],
-        "id_tb083_proyecto_ac"     => $campos["id_tb083_proyecto_ac"],
-        "co_solicitud"     => $campos["co_solicitud"],
-        "co_tipo_solicitud"     => $campos["co_tipo_solicitud"],
+        "id" => $campos["id"],
+        "id_tb095_tipo_modificacion" => $campos["id_tb095_tipo_modificacion"],
+        "nu_modificacion" => $campos["nu_modificacion"],
+        "fe_modificacion" => $campos["fe_modificacion"],
+        "de_modificacion" => $campos["de_modificacion"],
+        "de_justificacion" => $campos["de_justificacion"],
+        "nu_oficio" => $campos["nu_oficio"],
+        "fe_oficio" => $campos["fe_oficio"],
+        "de_articulo_ley" => $campos["de_articulo_ley"],
+        "mo_modificacion" => $campos["mo_modificacion"],
+        "in_activo" => $campos["in_activo"],
+        "created_at" => $campos["created_at"],
+        "updated_at" => $campos["updated_at"],
+        "id_tb082_ejecutor" => $campos["id_tb082_ejecutor"],
+        "id_tb083_proyecto_ac" => $campos["id_tb083_proyecto_ac"],
+        "co_solicitud" => $campos["co_solicitud"],
+        "co_tipo_solicitud" => $campos["co_tipo_solicitud"],
       ));
     }
   }
@@ -686,7 +686,7 @@ class PresupuestomodificacionActions extends sfActions
         $con->rollback();
         $this->data = json_encode(array(
           "success" => false,
-          "msg" =>  $e->getMessage()
+          "msg" => $e->getMessage()
         ));
       }
     } else {
@@ -792,7 +792,7 @@ class PresupuestomodificacionActions extends sfActions
         $con->rollback();
         $this->data = json_encode(array(
           "success" => false,
-          "msg" =>  $e->getMessage()
+          "msg" => $e->getMessage()
         ));
       }
     }
@@ -913,7 +913,7 @@ class PresupuestomodificacionActions extends sfActions
         $con->rollback();
         $this->data = json_encode(array(
           "success" => false,
-          "msg" =>  $e->getMessage()
+          "msg" => $e->getMessage()
         ));
       }
     } else {
@@ -927,11 +927,11 @@ class PresupuestomodificacionActions extends sfActions
         if (empty($tb096_presupuesto_modificacionForm["co_solicitud"])) {
 
           $tb026_solicitudForm = array(
-            "co_tipo_solicitud"   => $tb096_presupuesto_modificacionForm["co_tipo_solicitud"],
-            "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-            "fe_solicitud"        => date("d/m/Y"),
-            "observacion"         => $tb096_presupuesto_modificacionForm["de_modificacion"],
-            "codigo"              => $this->getUser()->getAttribute('codigo')
+            "co_tipo_solicitud" => $tb096_presupuesto_modificacionForm["co_tipo_solicitud"],
+            "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
+            "fe_solicitud" => date("d/m/Y"),
+            "observacion" => $tb096_presupuesto_modificacionForm["de_modificacion"],
+            "codigo" => $this->getUser()->getAttribute('codigo')
           );
 
           $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
@@ -1048,7 +1048,7 @@ class PresupuestomodificacionActions extends sfActions
         $con->rollback();
         $this->data = json_encode(array(
           "success" => false,
-          "msg" =>  $e->getMessage()
+          "msg" => $e->getMessage()
         ));
       }
     }
@@ -1237,7 +1237,7 @@ class PresupuestomodificacionActions extends sfActions
         $con->rollback();
         $this->data = json_encode(array(
           "success" => false,
-          "msg" =>  $e->getMessage()
+          "msg" => $e->getMessage()
         ));
       }
     }
@@ -1375,7 +1375,7 @@ class PresupuestomodificacionActions extends sfActions
         $con->rollback();
         $this->data = json_encode(array(
           "success" => false,
-          "msg" =>  $e->getMessage()
+          "msg" => $e->getMessage()
         ));
       }
     } else {
@@ -1386,59 +1386,59 @@ class PresupuestomodificacionActions extends sfActions
 
         $tb096_presupuesto_modificacionForm = $this->getRequestParameter('tb096_presupuesto_modificacion');
 
-            $c = new Criteria();
-            $c->add(Tb096PresupuestoModificacionPeer::NU_OFICIO,$tb096_presupuesto_modificacionForm["numero_decreto"]);
-            $c->add(Tb096PresupuestoModificacionPeer::CO_TIPO_SOLICITUD, 7);
-            $cantidad = Tb096PresupuestoModificacionPeer::doCount($c);
-            
-            
-                 $cant=0;
-                 
-                $tx_fuente = substr($tb096_presupuesto_modificacionForm["numero_decreto"],0,1);
-                $ci = new Criteria();     
-                $ci->add(Tb073FuenteFinanciamientoPeer::TX_SIGLAS,$tx_fuente);
-                $ci->add(Tb073FuenteFinanciamientoPeer::IN_ACTIVO,true);
-                $cant = Tb073FuenteFinanciamientoPeer::doCount($ci);                 
-                
-                 if($cant==0){
-                    
-                $this->data = json_encode(array(
-                    "success" => false,
-                    "msg" =>  "La inicial de la fuente no es valida o no esta activa, verifique!"
-                 ));
-                 echo $this->data;
-                return sfView::NONE;                   
-                }             
+        $c = new Criteria();
+        $c->add(Tb096PresupuestoModificacionPeer::NU_OFICIO, $tb096_presupuesto_modificacionForm["numero_decreto"]);
+        $c->add(Tb096PresupuestoModificacionPeer::CO_TIPO_SOLICITUD, 7);
+        $cantidad = Tb096PresupuestoModificacionPeer::doCount($c);
 
-            if ($cantidad >0) {
-                $this->data = json_encode(array(
-                  'success' => false,
-                  'msg' => '<span style="color:red;font-size:13px,"><b>El numero de fuente ya se encuentra registrado, verifiqe!</b></span>'
-                ));
-   
-                 echo $this->data;
-                return sfView::NONE;  
-            }       
-        
-       //echo "entro"; exit();
+
+        $cant = 0;
+
+        $tx_fuente = substr($tb096_presupuesto_modificacionForm["numero_decreto"], 0, 1);
+        $ci = new Criteria();
+        $ci->add(Tb073FuenteFinanciamientoPeer::TX_SIGLAS, $tx_fuente);
+        $ci->add(Tb073FuenteFinanciamientoPeer::IN_ACTIVO, true);
+        $cant = Tb073FuenteFinanciamientoPeer::doCount($ci);
+
+        if ($cant == 0) {
+
+          $this->data = json_encode(array(
+            "success" => false,
+            "msg" => "La inicial de la fuente no es valida o no esta activa, verifique!"
+          ));
+          echo $this->data;
+          return sfView::NONE;
+        }
+
+        if ($cantidad > 0) {
+          $this->data = json_encode(array(
+            'success' => false,
+            'msg' => '<span style="color:red;font-size:13px,"><b>El numero de fuente ya se encuentra registrado, verifiqe!</b></span>'
+          ));
+
+          echo $this->data;
+          return sfView::NONE;
+        }
+
+        //echo "entro"; exit();
 
         $tb026_solicitudForm = array(
-          "co_tipo_solicitud"   => 7,
-          "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-          "fe_solicitud"        => date("d/m/Y"),
-          "observacion"         => $tb096_presupuesto_modificacionForm["de_modificacion"],
-          "codigo"              =>  $this->getUser()->getAttribute('codigo')
+          "co_tipo_solicitud" => 7,
+          "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
+          "fe_solicitud" => date("d/m/Y"),
+          "observacion" => $tb096_presupuesto_modificacionForm["de_modificacion"],
+          "codigo" => $this->getUser()->getAttribute('codigo')
         );
 
         $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
 
-      
+
         if ($resp["success"] == true) {
           $tb096_presupuesto_modificacionForm["co_solicitud"] = $resp["co_solicitud"];
         } else {
           $this->data = json_encode(array(
             "success" => false,
-            "msg" =>  $resp["msg"]
+            "msg" => $resp["msg"]
           ));
 
           return;
@@ -1549,7 +1549,7 @@ class PresupuestomodificacionActions extends sfActions
         $con->rollback();
         $this->data = json_encode(array(
           "success" => false,
-          "msg" =>  $e->getMessage()
+          "msg" => $e->getMessage()
         ));
       }
     }
@@ -1569,23 +1569,23 @@ class PresupuestomodificacionActions extends sfActions
 
 
       $tb026_solicitudForm = array(
-        "co_tipo_solicitud"   => 31,
-        "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-        "fe_solicitud"        => date("d/m/Y"),
-        "observacion"         => $tb096_presupuesto_modificacionForm["de_modificacion"],
-        "codigo"              =>  $this->getUser()->getAttribute('codigo')
+        "co_tipo_solicitud" => 31,
+        "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
+        "fe_solicitud" => date("d/m/Y"),
+        "observacion" => $tb096_presupuesto_modificacionForm["de_modificacion"],
+        "codigo" => $this->getUser()->getAttribute('codigo')
       );
 
       $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
 
-    
+
       if ($resp["success"] == true) {
-        $tb096_presupuesto_modificacionForm["co_solicitud"]       = $resp["co_solicitud"];
-        $tb096_presupuesto_modificacionForm["co_tipo_solicitud"]  = 31;
+        $tb096_presupuesto_modificacionForm["co_solicitud"] = $resp["co_solicitud"];
+        $tb096_presupuesto_modificacionForm["co_tipo_solicitud"] = 31;
       } else {
         $this->data = json_encode(array(
           "success" => false,
-          "msg" =>  $resp["msg"]
+          "msg" => $resp["msg"]
         ));
 
         return;
@@ -1686,7 +1686,7 @@ class PresupuestomodificacionActions extends sfActions
       $con->rollback();
       $this->data = json_encode(array(
         "success" => false,
-        "msg" =>  $e->getMessage()
+        "msg" => $e->getMessage()
       ));
     }
 
@@ -1901,7 +1901,7 @@ class PresupuestomodificacionActions extends sfActions
         $con->rollback();
         $this->data = json_encode(array(
           "success" => false,
-          "msg" =>  $e->getMessage()
+          "msg" => $e->getMessage()
         ));
       }
     } else {
@@ -2004,7 +2004,7 @@ class PresupuestomodificacionActions extends sfActions
         $con->rollback();
         $this->data = json_encode(array(
           "success" => false,
-          "msg" =>  $e->getMessage()
+          "msg" => $e->getMessage()
         ));
       }
     }
@@ -2081,7 +2081,7 @@ class PresupuestomodificacionActions extends sfActions
         $con->beginTransaction();
 
         $tb096_presupuesto_modificacion = Tb096PresupuestoModificacionPeer::retrieveByPk($codigo);
-        
+
         list($dia, $mes, $anio) = explode("/", $tb096_presupuesto_modificacionForm["fe_modificacion"]);
         $fecha = $anio . "-" . $mes . "-" . $dia;
         $tb096_presupuesto_modificacion->setFeModificacion($fecha);
@@ -2094,8 +2094,8 @@ class PresupuestomodificacionActions extends sfActions
 
         $tb096_presupuesto_modificacion->setCoUsuario($this->getUser()->getAttribute('codigo'));
 
-        $tb096_presupuesto_modificacion->setIdTb152TipoCredito($tb096_presupuesto_modificacionForm["id_tb152_tipo_credito"]);     
-        
+        $tb096_presupuesto_modificacion->setIdTb152TipoCredito($tb096_presupuesto_modificacionForm["id_tb152_tipo_credito"]);
+
         $tb096_presupuesto_modificacion->setInProcesado(true);
         $tb096_presupuesto_modificacion->save($con);
 
@@ -2217,7 +2217,7 @@ class PresupuestomodificacionActions extends sfActions
         $con->rollback();
         $this->data = json_encode(array(
           "success" => false,
-          "msg" =>  $e->getMessage()
+          "msg" => $e->getMessage()
         ));
       }
     }
@@ -2230,6 +2230,8 @@ class PresupuestomodificacionActions extends sfActions
 
     $codigo = $this->getRequestParameter("id_tb097_modificacion_detalle");
 
+    $tb097_modificacion_detalleForm = $this->getRequestParameter('tb096_presupuesto_modificacion');
+
     $id_tb096_presupuesto_modificacion = $this->getRequestParameter("id_tb096_presupuesto_modificacion");
 
     $con = Propel::getConnection();
@@ -2237,11 +2239,33 @@ class PresupuestomodificacionActions extends sfActions
       $tb097_modificacion_detalle = Tb097ModificacionDetallePeer::retrieveByPk($codigo);
     } else {
       $tb097_modificacion_detalle = new Tb097ModificacionDetalle();
+
+      $tb026_solicitudForm = array(
+        "co_tipo_solicitud" => 31,
+        "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
+        "fe_solicitud" => date("d/m/Y"),
+        "observacion" => $tb097_modificacion_detalleForm["de_modificacion"],
+        "codigo" => $this->getUser()->getAttribute('codigo')
+      );
+
+      $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
+
+      if ($resp["success"] == true) {
+        $tb097_modificacion_detalleForm["co_solicitud"] = $resp["co_solicitud"];
+      } else {
+        $this->data = json_encode(array(
+          "success" => false,
+          "msg" => $resp["msg"]
+        ));
+
+        return;
+      }
+
     }
     try {
       $con->beginTransaction();
 
-      $tb097_modificacion_detalleForm = $this->getRequestParameter('tb096_presupuesto_modificacion');
+     
       /*CAMPOS*/
 
       /*Campo tipo BIGINT */
@@ -2437,7 +2461,7 @@ class PresupuestomodificacionActions extends sfActions
       $con->rollback();
       $this->data = json_encode(array(
         "success" => false,
-        "msg" =>  $e->getMessage()
+        "msg" => $e->getMessage()
       ));
     }
 
@@ -2471,12 +2495,12 @@ class PresupuestomodificacionActions extends sfActions
   public function executeLista(sfWebRequest $request)
   {
     $this->data = json_encode(array(
-      "co_rol"            => $this->getUser()->getAttribute('rol'),
-      "co_usuario"        => $this->getUser()->getAttribute('codigo'),
-      "in_activo"         => $this->getUser()->getAttribute('in_activo'),
+      "co_rol" => $this->getUser()->getAttribute('rol'),
+      "co_usuario" => $this->getUser()->getAttribute('codigo'),
+      "in_activo" => $this->getUser()->getAttribute('in_activo'),
       "tx_tipo_solicitud" => $this->getRequestParameter("tx_tipo_solicitud"),
       "co_tipo_solicitud" => 7,
-      "tx_url"            => $this->getRequestParameter("tx_url"),
+      "tx_url" => $this->getRequestParameter("tx_url"),
 
     ));
 
@@ -2486,15 +2510,15 @@ class PresupuestomodificacionActions extends sfActions
   public function executeStorelistaCreditoAdicional(sfWebRequest $request)
   {
 
-    $limit         =   $this->getRequestParameter("limit", 15);
-    $start         =   $this->getRequestParameter("start", 0);
-    $in_ventanilla =   $this->getRequestParameter("in_ventanilla");
-    $co_proceso    =   $this->getRequestParameter("co_proceso");
-    $co_solicitud  =   $this->getRequestParameter("co_solicitud");
+    $limit = $this->getRequestParameter("limit", 15);
+    $start = $this->getRequestParameter("start", 0);
+    $in_ventanilla = $this->getRequestParameter("in_ventanilla");
+    $co_proceso = $this->getRequestParameter("co_proceso");
+    $co_solicitud = $this->getRequestParameter("co_solicitud");
 
-    $co_documento     =   $this->getRequestParameter("co_documento");
-    $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
-    $tx_razon_social  =   $this->getRequestParameter("tx_razon_social");
+    $co_documento = $this->getRequestParameter("co_documento");
+    $nu_cedula_rif = $this->getRequestParameter("nu_cedula_rif");
+    $tx_razon_social = $this->getRequestParameter("tx_razon_social");
 
     $c = new Criteria();
     $c->clearSelectColumns();
@@ -2521,7 +2545,7 @@ class PresupuestomodificacionActions extends sfActions
     if ($in_ventanilla == 'true') {
       $c->add(Tb030RutaPeer::NU_ORDEN, 1);
     } else {
-      $c->add(Tb030RutaPeer::NU_ORDEN, 1,  Criteria::GREATER_THAN);
+      $c->add(Tb030RutaPeer::NU_ORDEN, 1, Criteria::GREATER_THAN);
 
       if ($co_proceso != '') {
         $c->add(Tb028ProcesoPeer::CO_PROCESO, $co_proceso);
@@ -2557,11 +2581,11 @@ class PresupuestomodificacionActions extends sfActions
     // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
 
 
-    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb096PresupuestoModificacionPeer::CO_SOLICITUD,  Criteria::JOIN);
-    $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD,  Criteria::JOIN);
-    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD,  Criteria::JOIN);
-    $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO,   Criteria::JOIN);
-    $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb096PresupuestoModificacionPeer::CO_SOLICITUD, Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD, Criteria::JOIN);
+    $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO, Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO, Criteria::JOIN);
 
     $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, 7);
     $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
@@ -2592,29 +2616,29 @@ class PresupuestomodificacionActions extends sfActions
 
       list($anio, $mes, $dia) = explode('-', $res["fe_registro"]);
       $registros[] = array(
-        "tx_proceso"        => trim($res["tx_proceso"]),
-        "tx_concepto"       => strtoupper(trim($res["tx_concepto"])),
-        "co_proceso"        => trim($res["co_proceso"]),
+        "tx_proceso" => trim($res["tx_proceso"]),
+        "tx_concepto" => strtoupper(trim($res["tx_concepto"])),
+        "co_proceso" => trim($res["co_proceso"]),
         "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
         "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
-        "co_solicitud"      => trim($res["co_solicitud"]),
-        "tx_login"          => trim($res["tx_login"]),
-        "tx_serial"         => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
-        "in_reporte"        => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
-        "co_ruta"           => $encrip->encrypt($res["co_ruta"]),
-        "fe_creacion"       => $dia . '-' . $mes . '-' . $anio,
-        "cant_revision"     => $cantidad,
-        "de_modificacion"   => trim($res["de_modificacion"]),
-        "nu_modificacion"   => trim($res["nu_modificacion"]),
-        "nu_oficio"         => trim($res["de_articulo_ley"]),
-        "fe_oficio"         => $fecha
+        "co_solicitud" => trim($res["co_solicitud"]),
+        "tx_login" => trim($res["tx_login"]),
+        "tx_serial" => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
+        "in_reporte" => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
+        "co_ruta" => $encrip->encrypt($res["co_ruta"]),
+        "fe_creacion" => $dia . '-' . $mes . '-' . $anio,
+        "cant_revision" => $cantidad,
+        "de_modificacion" => trim($res["de_modificacion"]),
+        "nu_modificacion" => trim($res["nu_modificacion"]),
+        "nu_oficio" => trim($res["de_articulo_ley"]),
+        "fe_oficio" => $fecha
       );
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  $cantidadTotal,
-      "data"      =>  $registros
+      "success" => true,
+      "total" => $cantidadTotal,
+      "data" => $registros
     ));
 
     $this->setTemplate('store');
@@ -2623,15 +2647,15 @@ class PresupuestomodificacionActions extends sfActions
   public function executeStorelistaCompromisoLey(sfWebRequest $request)
   {
 
-    $limit         =   $this->getRequestParameter("limit", 15);
-    $start         =   $this->getRequestParameter("start", 0);
-    $in_ventanilla =   $this->getRequestParameter("in_ventanilla");
-    $co_proceso    =   $this->getRequestParameter("co_proceso");
-    $co_solicitud  =   $this->getRequestParameter("co_solicitud");
+    $limit = $this->getRequestParameter("limit", 15);
+    $start = $this->getRequestParameter("start", 0);
+    $in_ventanilla = $this->getRequestParameter("in_ventanilla");
+    $co_proceso = $this->getRequestParameter("co_proceso");
+    $co_solicitud = $this->getRequestParameter("co_solicitud");
 
-    $co_documento     =   $this->getRequestParameter("co_documento");
-    $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
-    $tx_razon_social  =   $this->getRequestParameter("tx_razon_social");
+    $co_documento = $this->getRequestParameter("co_documento");
+    $nu_cedula_rif = $this->getRequestParameter("nu_cedula_rif");
+    $tx_razon_social = $this->getRequestParameter("tx_razon_social");
 
     $c = new Criteria();
     $c->clearSelectColumns();
@@ -2658,7 +2682,7 @@ class PresupuestomodificacionActions extends sfActions
     if ($in_ventanilla == 'true') {
       $c->add(Tb030RutaPeer::NU_ORDEN, 1);
     } else {
-      $c->add(Tb030RutaPeer::NU_ORDEN, 1,  Criteria::GREATER_THAN);
+      $c->add(Tb030RutaPeer::NU_ORDEN, 1, Criteria::GREATER_THAN);
 
       if ($co_proceso != '') {
         $c->add(Tb028ProcesoPeer::CO_PROCESO, $co_proceso);
@@ -2694,11 +2718,11 @@ class PresupuestomodificacionActions extends sfActions
     // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
 
 
-    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb096PresupuestoModificacionPeer::CO_SOLICITUD,  Criteria::JOIN);
-    $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD,  Criteria::JOIN);
-    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD,  Criteria::JOIN);
-    $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO,   Criteria::JOIN);
-    $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb096PresupuestoModificacionPeer::CO_SOLICITUD, Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD, Criteria::JOIN);
+    $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO, Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO, Criteria::JOIN);
 
     $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, 31);
     $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
@@ -2729,29 +2753,29 @@ class PresupuestomodificacionActions extends sfActions
 
       list($anio, $mes, $dia) = explode('-', $res["fe_registro"]);
       $registros[] = array(
-        "tx_proceso"        => trim($res["tx_proceso"]),
-        "tx_concepto"       => strtoupper(trim($res["tx_concepto"])),
-        "co_proceso"        => trim($res["co_proceso"]),
+        "tx_proceso" => trim($res["tx_proceso"]),
+        "tx_concepto" => strtoupper(trim($res["tx_concepto"])),
+        "co_proceso" => trim($res["co_proceso"]),
         "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
         "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
-        "co_solicitud"      => trim($res["co_solicitud"]),
-        "tx_login"          => trim($res["tx_login"]),
-        "tx_serial"         => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
-        "in_reporte"        => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
-        "co_ruta"           => $encrip->encrypt($res["co_ruta"]),
-        "fe_creacion"       => $dia . '-' . $mes . '-' . $anio,
-        "cant_revision"     => $cantidad,
-        "de_modificacion"   => trim($res["de_modificacion"]),
-        "nu_modificacion"   => trim($res["nu_modificacion"]),
-        "nu_oficio"         => trim($res["de_articulo_ley"]),
-        "fe_oficio"         => $fecha
+        "co_solicitud" => trim($res["co_solicitud"]),
+        "tx_login" => trim($res["tx_login"]),
+        "tx_serial" => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
+        "in_reporte" => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
+        "co_ruta" => $encrip->encrypt($res["co_ruta"]),
+        "fe_creacion" => $dia . '-' . $mes . '-' . $anio,
+        "cant_revision" => $cantidad,
+        "de_modificacion" => trim($res["de_modificacion"]),
+        "nu_modificacion" => trim($res["nu_modificacion"]),
+        "nu_oficio" => trim($res["de_articulo_ley"]),
+        "fe_oficio" => $fecha
       );
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  $cantidadTotal,
-      "data"      =>  $registros
+      "success" => true,
+      "total" => $cantidadTotal,
+      "data" => $registros
     ));
 
     $this->setTemplate('store');
@@ -2762,15 +2786,15 @@ class PresupuestomodificacionActions extends sfActions
   public function executeStorelista(sfWebRequest $request)
   {
 
-    $limit         =   $this->getRequestParameter("limit", 15);
-    $start         =   $this->getRequestParameter("start", 0);
-    $in_ventanilla =   $this->getRequestParameter("in_ventanilla");
-    $co_proceso    =   $this->getRequestParameter("co_proceso");
-    $co_solicitud  =   $this->getRequestParameter("co_solicitud");
+    $limit = $this->getRequestParameter("limit", 15);
+    $start = $this->getRequestParameter("start", 0);
+    $in_ventanilla = $this->getRequestParameter("in_ventanilla");
+    $co_proceso = $this->getRequestParameter("co_proceso");
+    $co_solicitud = $this->getRequestParameter("co_solicitud");
 
-    $co_documento     =   $this->getRequestParameter("co_documento");
-    $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
-    $tx_razon_social  =   $this->getRequestParameter("tx_razon_social");
+    $co_documento = $this->getRequestParameter("co_documento");
+    $nu_cedula_rif = $this->getRequestParameter("nu_cedula_rif");
+    $tx_razon_social = $this->getRequestParameter("tx_razon_social");
 
     $c = new Criteria();
     $c->clearSelectColumns();
@@ -2797,7 +2821,7 @@ class PresupuestomodificacionActions extends sfActions
     if ($in_ventanilla == 'true') {
       $c->add(Tb030RutaPeer::NU_ORDEN, 1);
     } else {
-      $c->add(Tb030RutaPeer::NU_ORDEN, 1,  Criteria::GREATER_THAN);
+      $c->add(Tb030RutaPeer::NU_ORDEN, 1, Criteria::GREATER_THAN);
 
       if ($co_proceso != '') {
         $c->add(Tb028ProcesoPeer::CO_PROCESO, $co_proceso);
@@ -2833,11 +2857,11 @@ class PresupuestomodificacionActions extends sfActions
     // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
 
 
-    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb096PresupuestoModificacionPeer::CO_SOLICITUD,  Criteria::JOIN);
-    $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD,  Criteria::JOIN);
-    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD,  Criteria::JOIN);
-    $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO,   Criteria::JOIN);
-    $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb096PresupuestoModificacionPeer::CO_SOLICITUD, Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD, Criteria::JOIN);
+    $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO, Criteria::JOIN);
+    $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO, Criteria::JOIN);
 
     $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, 6);
     $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
@@ -2868,29 +2892,29 @@ class PresupuestomodificacionActions extends sfActions
 
       list($anio, $mes, $dia) = explode('-', $res["fe_registro"]);
       $registros[] = array(
-        "tx_proceso"        => trim($res["tx_proceso"]),
-        "tx_concepto"       => strtoupper(trim($res["tx_concepto"])),
-        "co_proceso"        => trim($res["co_proceso"]),
+        "tx_proceso" => trim($res["tx_proceso"]),
+        "tx_concepto" => strtoupper(trim($res["tx_concepto"])),
+        "co_proceso" => trim($res["co_proceso"]),
         "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
         "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
-        "co_solicitud"      => trim($res["co_solicitud"]),
-        "tx_login"          => trim($res["tx_login"]),
-        "tx_serial"         => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
-        "in_reporte"        => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
-        "co_ruta"           => $encrip->encrypt($res["co_ruta"]),
-        "fe_creacion"       => $dia . '-' . $mes . '-' . $anio,
-        "cant_revision"     => $cantidad,
-        "de_modificacion"   => trim($res["de_modificacion"]),
-        "nu_modificacion"   => trim($res["nu_modificacion"]),
-        "nu_oficio"         => trim($res["nu_oficio"]),
-        "fe_oficio"         => $fecha
+        "co_solicitud" => trim($res["co_solicitud"]),
+        "tx_login" => trim($res["tx_login"]),
+        "tx_serial" => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
+        "in_reporte" => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
+        "co_ruta" => $encrip->encrypt($res["co_ruta"]),
+        "fe_creacion" => $dia . '-' . $mes . '-' . $anio,
+        "cant_revision" => $cantidad,
+        "de_modificacion" => trim($res["de_modificacion"]),
+        "nu_modificacion" => trim($res["nu_modificacion"]),
+        "nu_oficio" => trim($res["nu_oficio"]),
+        "fe_oficio" => $fecha
       );
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  $cantidadTotal,
-      "data"      =>  $registros
+      "success" => true,
+      "total" => $cantidadTotal,
+      "data" => $registros
     ));
   }
 
@@ -2905,9 +2929,9 @@ class PresupuestomodificacionActions extends sfActions
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  count($registros),
-      "data"      =>  $registros
+      "success" => true,
+      "total" => count($registros),
+      "data" => $registros
     ));
     $this->setTemplate('store');
   }
@@ -2931,9 +2955,9 @@ class PresupuestomodificacionActions extends sfActions
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  count($registros),
-      "data"      =>  $registros
+      "success" => true,
+      "total" => count($registros),
+      "data" => $registros
     ));
     $this->setTemplate('store');
   }
@@ -2954,9 +2978,9 @@ class PresupuestomodificacionActions extends sfActions
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  count($registros),
-      "data"      =>  $registros
+      "success" => true,
+      "total" => count($registros),
+      "data" => $registros
     ));
     $this->setTemplate('store');
   }
@@ -2974,9 +2998,9 @@ class PresupuestomodificacionActions extends sfActions
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  count($registros),
-      "data"      =>  $registros
+      "success" => true,
+      "total" => count($registros),
+      "data" => $registros
     ));
     $this->setTemplate('store');
   }
@@ -3017,9 +3041,9 @@ class PresupuestomodificacionActions extends sfActions
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  count($registros),
-      "data"      =>  $registros
+      "success" => true,
+      "total" => count($registros),
+      "data" => $registros
     ));
     $this->setTemplate('store');
   }
@@ -3035,9 +3059,9 @@ class PresupuestomodificacionActions extends sfActions
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  count($registros),
-      "data"      =>  $registros
+      "success" => true,
+      "total" => count($registros),
+      "data" => $registros
     ));
     $this->setTemplate('store');
   }
@@ -3054,9 +3078,9 @@ class PresupuestomodificacionActions extends sfActions
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  count($registros),
-      "data"      =>  $registros
+      "success" => true,
+      "total" => count($registros),
+      "data" => $registros
     ));
     $this->setTemplate('store');
   }
