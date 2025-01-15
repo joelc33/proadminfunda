@@ -141,11 +141,13 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
         $this->Ln(4);       
         $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
-        $this->Ln(4);
-        if (!empty($this->empresa['nb_institucion'])) 
-        {
-            $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
-            $this->Ln(4);
+        if (!empty($this->empresa['nb_institucion'])) {
+            $this->Ln(2);
+            $this->SetX(52);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->Ln(2);
+        }else{
+        $this->Ln(4);    
         }
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(4);
