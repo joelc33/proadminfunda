@@ -390,8 +390,8 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->nro_comprobante['fe_emision'])),0,0);
             $this->Ln(5);  
             
-            $this->RoundedRect(10, 60, 95, 50, 0.5, '1001', '', $style);         
-            $this->RoundedRect(110, 60, 95, 50, 0.5, '1001', '', $style);    
+            $this->RoundedRect(10, 55, 95, 50, 0.5, '1001', '', $style);         
+            $this->RoundedRect(110, 55, 95, 50, 0.5, '1001', '', $style);    
 
             $this->Cell(95,0,utf8_decode('DATOS DEL AGENTE DE RETENCIÓN'),0,0,'C');
             $this->Cell(5,0,utf8_decode(''),0,0,'C');
