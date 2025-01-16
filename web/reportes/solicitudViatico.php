@@ -209,7 +209,7 @@ class PDF extends FPDF {
          
          $this->SetFont('Arial','',12);
          $this->SetX(20);
-         $inf = "Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-202 que seran utilizados para *** hacia la *** donde se visitará *** durante los dias **** , a **** portador(a) de la cedula de identidad N° ****, representante de ".$empresa."."; 
+         $inf = "Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-202 que seran utilizados para ".$this->datos['tx_observacion_hospedaje']." hacia ".$this->datos['tx_tipo_viatico']." donde se visitará ".$this->datos['destino']." durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_observacion_hospedaje']." portador(a) de la cedula de identidad N° ".$this->datos['tx_observacion_hospedaje']." representante de ".$empresa."."; 
          $this->MultiCell(180,5,utf8_decode($inf),0,1,'J',0);
          
          $this->Ln(10); 
