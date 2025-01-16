@@ -169,10 +169,9 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',12);
          $this->Cell(0,0,utf8_decode('MEMORANDO INTERNO'),0,0,'C');
          $this->Ln(12);
-                 $this->Ln(15);
         $this->SetX(20);
-        $this->SetFont('Arial', 'B', 10);
-        $this->Cell(0, 0, utf8_decode('Ciudadano(a): ' . $this->datos['nb_usuario']), 0, 0, 'L');
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(0, 0, utf8_decode('PARA: ' . $this->datos['nb_usuario']), 0, 0, 'L');
         $this->Ln(5);
         $this->SetX(20);
         //$this->Cell(0,0,utf8_decode($this->datos['tx_proceso']),0,0,'L');
@@ -180,7 +179,11 @@ class PDF extends FPDF {
         $this->Cell(0, 0, utf8_decode($this->op_reporte['ciudadano']), 0, 0, 'L');
         $this->Ln(5);
         $this->SetX(20);
-        $this->Cell(0, 0, utf8_decode('Su despacho.-'), 0, 0, 'L');
+        $this->Cell(0, 0, utf8_decode('DE:'), 0, 0, 'L');
+        $this->Ln(5);
+        $this->Cell(0,0,utf8_decode('ASUNTO: Asignación de viaticos'),0,0,'L');
+        $this->Ln(5);
+        $this->Cell(0,0,utf8_decode('FECHA:'.$this->datos['nb_usuario']),0,0,'L');
 
         $this->Ln(10);
         $this->SetTextColor(0, 0, 0);
