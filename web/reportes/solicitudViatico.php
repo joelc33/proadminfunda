@@ -72,6 +72,11 @@ class PDF extends FPDF {
 
          $this->datos = $this->getSolicitudViatico();      
          $this->empresa = $this->getDatosEmpresa(1);
+        if (!empty($this->empresa['nb_institucion'])) {
+            $empresa = utf8_decode($this->empresa['nb_institucion']);
+        }else{
+            $empresa = utf8_decode($this->empresa['nb_empresa']);   
+        }         
          $this->SetFont('Arial','B',14);
          $this->Cell(0,0,utf8_decode('SOLICITUD DE VIATICOS'),0,0,'C');
         
@@ -202,7 +207,7 @@ class PDF extends FPDF {
 
         $this->Ln(10);        
          
-         $this->SetFont('Arial','',8);
+         $this->SetFont('Arial','',10);
          $this->SetX(20);
          $inf = "Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-202 que seran utilizados para *** hacia la *** donde se visitará *** durante los dias **** , a **** portador(a) de la cedula de identidad N° ****, representante de ".$empresa."."; 
          $this->MultiCell(180,5,utf8_decode($inf),0,1,'J',0);
