@@ -177,7 +177,9 @@ class PDF extends FPDF {
         $this->Cell(0, 0, utf8_decode('DE:'), 0, 0, 'L');
         $this->Ln(5);
         $this->SetX(20);
-        $this->Cell(0,0,utf8_decode('ASUNTO: Asignación de viaticos'),0,0,'L');
+        $this->Cell(0,0,utf8_decode('ASUNTO: '),0,0,'L');
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(0,0,utf8_decode('Asignación de viaticos'),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
         $this->Cell(0,0,utf8_decode('FECHA:'.$this->datos['nb_usuario']),0,0,'L');
