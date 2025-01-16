@@ -68,7 +68,8 @@ class PDF extends FPDF {
 
     function ChapterBody() {
 
-         $this->datos = $this->getSolicitudViatico();         
+         $this->datos = $this->getSolicitudViatico();      
+         $this->empresa = $this->getDatosEmpresa(1);
          $this->SetFont('Arial','B',14);
          $this->Cell(0,0,utf8_decode('SOLICITUD DE VIATICOS'),0,0,'C');
         
@@ -172,20 +173,30 @@ class PDF extends FPDF {
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(0, 0, utf8_decode('PARA: '), 0, 0, 'L');
-        $this->SetX(35);
+        $this->SetX(31);
+        $this->SetFont('Arial', '', 8);
         $this->Cell(0,0,utf8_decode($this->datos['nb_responsable']),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
+        $this->SetFont('Arial', 'B', 8);
         $this->Cell(0, 0, utf8_decode('DE:'), 0, 0, 'L');
+        $this->SetX(31);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
-        $this->Cell(0,0,utf8_decode('ASUNTO: '),0,0,'L');
         $this->SetFont('Arial', 'B', 8);
-        $this->SetX(33);
+        $this->Cell(0,0,utf8_decode('ASUNTO: '),0,0,'L');
+        $this->SetFont('Arial', '', 8);
+        $this->SetX(35);
         $this->Cell(0,0,utf8_decode('Asignación de viaticos'),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
-        $this->Cell(0,0,utf8_decode('FECHA:'.$this->datos['nb_usuario']),0,0,'L');
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(0,0,utf8_decode('FECHA: '),0,0,'L');
+        $this->SetX(31);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(0,0,utf8_decode($this->datos['fecha']),0,0,'L');        
 
         $this->Ln(10);
         $this->SetTextColor(0, 0, 0);
@@ -246,7 +257,7 @@ class PDF extends FPDF {
 
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion, nb_presidente,
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,
