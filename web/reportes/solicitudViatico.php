@@ -181,7 +181,7 @@ class PDF extends FPDF {
         $this->SetX(20);
         $this->Cell(0,0,utf8_decode('ASUNTO: '),0,0,'L');
         $this->SetFont('Arial', 'B', 8);
-        $this->SetX(30);
+        $this->SetX(33);
         $this->Cell(0,0,utf8_decode('Asignación de viaticos'),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
