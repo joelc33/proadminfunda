@@ -180,7 +180,7 @@ class PDF extends FPDF {
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 0, utf8_decode('PARA: '), 0, 0, 'L');
-        $this->SetX(31);
+        $this->SetX(33);
         $this->SetFont('Arial', '', 10);
         $this->Cell(0,0,utf8_decode($this->datos['nb_responsable']),0,0,'L');
         $this->Ln(5);
@@ -195,13 +195,13 @@ class PDF extends FPDF {
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(0,0,utf8_decode('ASUNTO: '),0,0,'L');
         $this->SetFont('Arial', '', 10);
-        $this->SetX(35);
+        $this->SetX(37);
         $this->Cell(0,0,utf8_decode('Asignación de viáticos'),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(0,0,utf8_decode('FECHA: '),0,0,'L');
-        $this->SetX(33);
+        $this->SetX(35);
         $this->SetFont('Arial', '', 10);
         $this->Cell(0,0,date("d/m/Y", strtotime($this->datos['fecha'])),0,0,'L');        
 
@@ -219,6 +219,15 @@ class PDF extends FPDF {
          $this->Ln(20); 
          $this->SetX(20);
          $this->Cell(0,0,utf8_decode('Atentamente.'),0,0,'L');
+         
+         $this->ln(10);
+         
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode($this->datos['nb_responsable']),0,0,'C'); 
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode($this->datos['cargo']),0,0,'C');         
   
 
     }
@@ -251,14 +260,15 @@ class PDF extends FPDF {
                         upper(tb047.tx_ente) as tx_ente, 
                         upper(tb110.tx_origen_viatico) as destino, 
                         upper(tb107.tx_tipo_viatico ) as tx_tipo_viatico,
-                        nb_responsable
+                        tb047.nb_responsable,tb047a.cargo
                     from tb026_solicitud as tb026 
                     left join tb108_viatico as tb108 on tb108.co_solicitud = tb026.co_solicitud 
                     left join tb107_tipo_viatico as tb107 on tb107.co_tipo_viatico = tb108.co_tipo_viatico 
                     left join tb110_origen_viatico as tb110 on tb108.co_destino = tb110.co_origen_viatico 
                     left join tb008_proveedor as tb008 on tb008.co_proveedor=tb108.co_proveedor 
                     left join tb001_usuario as tb001 on tb001.co_usuario = tb108.co_usuario 
-                    left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente 
+                    left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
+                    left join tb047_ente as tb047a on tb047a.co_ente = 1
                     left join tb030_ruta as tb030 on tb030.co_solicitud = tb108.co_solicitud 
                     where tb030.co_ruta = ".$_GET['codigo']; //$conex->decrypt($_GET['codigo']);
                   
