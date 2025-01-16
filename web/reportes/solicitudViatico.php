@@ -178,36 +178,36 @@ class PDF extends FPDF {
          $this->Cell(0,0,utf8_decode('MEMORANDO INTERNO'),0,0,'C');
          $this->Ln(12);
         $this->SetX(20);
-        $this->SetFont('Arial', 'B', 8);
+        $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 0, utf8_decode('PARA: '), 0, 0, 'L');
         $this->SetX(31);
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->Cell(0,0,utf8_decode($this->datos['nb_responsable']),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
-        $this->SetFont('Arial', 'B', 8);
+        $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 0, utf8_decode('DE:'), 0, 0, 'L');
         $this->SetX(31);
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
-        $this->SetFont('Arial', 'B', 8);
+        $this->SetFont('Arial', 'B', 10);
         $this->Cell(0,0,utf8_decode('ASUNTO: '),0,0,'L');
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->SetX(35);
         $this->Cell(0,0,utf8_decode('Asignación de viáticos'),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
-        $this->SetFont('Arial', 'B', 8);
+        $this->SetFont('Arial', 'B', 10);
         $this->Cell(0,0,utf8_decode('FECHA: '),0,0,'L');
         $this->SetX(33);
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->Cell(0,0,date("d/m/Y", strtotime($this->datos['fecha'])),0,0,'L');        
 
         $this->Ln(10);        
          
-         $this->SetFont('Arial','',10);
+         $this->SetFont('Arial','',12);
          $this->SetX(20);
          $inf = "Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-202 que seran utilizados para *** hacia la *** donde se visitará *** durante los dias **** , a **** portador(a) de la cedula de identidad N° ****, representante de ".$empresa."."; 
          $this->MultiCell(180,5,utf8_decode($inf),0,1,'J',0);
@@ -216,7 +216,7 @@ class PDF extends FPDF {
          $this->SetX(20);
          $this->Cell(0,0,utf8_decode('Agradeciendo la atención prestada.'),0,0,'L');
          
-         $this->Ln(10); 
+         $this->Ln(20); 
          $this->SetX(20);
          $this->Cell(0,0,utf8_decode('Atentamente.'),0,0,'L');
   
