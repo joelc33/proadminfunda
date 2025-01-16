@@ -28,11 +28,13 @@ class PDF extends FPDF {
         $this->Ln(4);       
         $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
         if (!empty($this->empresa['nb_institucion'])) {
+            $empresa = utf8_decode($this->empresa['nb_institucion']);
             $this->Ln(2);
             $this->SetX(52);
             $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
             $this->Ln(2);
         }else{
+            $empresa = utf8_decode($this->empresa['nb_empresa']);
         $this->Ln(4);    
         }
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
@@ -189,7 +191,7 @@ class PDF extends FPDF {
         $this->Cell(0,0,utf8_decode('ASUNTO: '),0,0,'L');
         $this->SetFont('Arial', '', 8);
         $this->SetX(35);
-        $this->Cell(0,0,utf8_decode('Asignación de viaticos'),0,0,'L');
+        $this->Cell(0,0,utf8_decode('Asignación de viáticos'),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 8);
@@ -198,16 +200,11 @@ class PDF extends FPDF {
         $this->SetFont('Arial', '', 8);
         $this->Cell(0,0,date("d/m/Y", strtotime($this->datos['fecha'])),0,0,'L');        
 
-        $this->Ln(10);
-         
-//         $html='     Por medio de la presente, se informa que en el presupuesto de egreso se encuentra contemplado el código presupuestario que se describe a continuación: ';
-
-         $this->SetX(25);
-//         $this->MultiCell(170,5,utf8_decode($html),0,1,'J',1);         
+        $this->Ln(10);        
          
          $this->SetFont('Arial','',8);
-         $this->SetX(25);
-         $inf = "De conformidad a lo establecido en el Art. 104 Numeral 1 sobre Traspasos de Creditos Presupuestarios del Reglamento Nro. 1 de la Ley de Organica de la Administración Financiera del Sector Publico sobre el Sistema Presupuestario, se efectúa el siguiente traspaso:"; 
+         $this->SetX(20);
+         $inf = "Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-202 que seran utilizados para *** hacia la *** donde se visitará *** durante los dias **** , a **** portador(a) de la cedula de identidad N° ****, representante de ".$empresa."."; 
          $this->MultiCell(180,5,utf8_decode($inf),0,1,'J',0);
   
 
