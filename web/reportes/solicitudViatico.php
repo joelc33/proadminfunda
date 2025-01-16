@@ -164,9 +164,11 @@ class PDF extends FPDF {
          
           $this->AddPage(); 
           
-         $this->SetFont('Arial','B',14);
+         $this->SetFont('Arial','B',12);
          $this->Cell(0,0,utf8_decode('MEMORANDO INTERNO'),0,0,'C');
+         $this->Ln(12);
          
+         $this->SetFont('Arial','',8);
          $inf = "De conformidad a lo establecido en el Art. 104 Numeral 1 sobre Traspasos de Creditos Presupuestarios del Reglamento Nro. 1 de la Ley de Organica de la Administración Financiera del Sector Publico sobre el Sistema Presupuestario, se efectúa el siguiente traspaso:"; 
          $this->MultiCell(180,7,utf8_decode($inf),0,1,'J',0);
   
