@@ -224,10 +224,10 @@ class PDF extends FPDF {
          
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
-         $this->Cell(200,10,utf8_decode($this->datos['nb_responsable']),0,0,'C'); 
+         $this->Cell(200,10,utf8_decode($this->empresa['nb_presidente']),0,0,'C'); 
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
-         $this->Cell(200,10,utf8_decode($this->datos['cargo']),0,0,'C');         
+         $this->Cell(200,10,utf8_decode('Presidente(a)'),0,0,'C');         
   
 
     }
