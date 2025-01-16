@@ -171,7 +171,9 @@ class PDF extends FPDF {
          $this->Ln(12);
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(0, 0, utf8_decode('PARA: ' . $this->datos['nb_usuario']), 0, 0, 'L');
+        $this->Cell(0, 0, utf8_decode('PARA: '), 0, 0, 'L');
+        $this->SetX(35);
+        $this->Cell(0,0,utf8_decode($this->datos['nb_responsable']),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
         $this->Cell(0, 0, utf8_decode('DE:'), 0, 0, 'L');
@@ -179,7 +181,7 @@ class PDF extends FPDF {
         $this->SetX(20);
         $this->Cell(0,0,utf8_decode('ASUNTO: '),0,0,'L');
         $this->SetFont('Arial', 'B', 8);
-        $this->SetX(20);
+        $this->SetX(30);
         $this->Cell(0,0,utf8_decode('Asignación de viaticos'),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
@@ -223,7 +225,8 @@ class PDF extends FPDF {
                         tb108.created_at as fecha, 
                         upper(tb047.tx_ente) as tx_ente, 
                         upper(tb110.tx_origen_viatico) as destino, 
-                        upper(tb107.tx_tipo_viatico ) as tx_tipo_viatico
+                        upper(tb107.tx_tipo_viatico ) as tx_tipo_viatico,
+                        nb_responsable
                     from tb026_solicitud as tb026 
                     left join tb108_viatico as tb108 on tb108.co_solicitud = tb026.co_solicitud 
                     left join tb107_tipo_viatico as tb107 on tb107.co_tipo_viatico = tb108.co_tipo_viatico 
