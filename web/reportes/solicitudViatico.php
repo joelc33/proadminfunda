@@ -211,6 +211,14 @@ class PDF extends FPDF {
          $this->SetX(20);
          $inf = "Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-202 que seran utilizados para *** hacia la *** donde se visitará *** durante los dias **** , a **** portador(a) de la cedula de identidad N° ****, representante de ".$empresa."."; 
          $this->MultiCell(180,5,utf8_decode($inf),0,1,'J',0);
+         
+         $this->Ln(10); 
+         $this->SetX(20);
+         $this->Cell(0,0,utf8_decode('Agradeciendo la atención prestada.'),0,0,'L');
+         
+         $this->Ln(10); 
+         $this->SetX(20);
+         $this->Cell(0,0,utf8_decode('Atentamente.'),0,0,'L');
   
 
     }
