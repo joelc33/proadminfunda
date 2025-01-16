@@ -194,9 +194,9 @@ class PDF extends FPDF {
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(0,0,utf8_decode('FECHA: '),0,0,'L');
-        $this->SetX(31);
+        $this->SetX(33);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(0,0,utf8_decode($this->datos['fecha']),0,0,'L');        
+        $this->Cell(0,0,date("d/m/Y", strtotime($this->datos['fecha'])),0,0,'L');        
 
         $this->Ln(10);
         $this->SetTextColor(0, 0, 0);
