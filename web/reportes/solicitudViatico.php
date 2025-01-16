@@ -209,7 +209,7 @@ class PDF extends FPDF {
          
          $this->SetFont('Arial','',12);
          $this->SetX(20);
-         $inf = "Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-202 que seran utilizados para ".$this->datos['tx_evento']." hacia ".$this->datos['tx_tipo_viatico']." donde se visitará ".$this->datos['destino']." durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_observacion_hospedaje']." portador(a) de la cedula de identidad N° ".$this->datos['tx_observacion_hospedaje']." representante de ".$empresa."."; 
+         $inf = "Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-202 que seran utilizados para ".$this->datos['tx_evento']." hacia ".$this->datos['tx_tipo_viatico']." donde se visitará ".$this->datos['destino']." durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_razon_social']." portador(a) de la cedula de identidad N° ".$this->datos['tx_rif']." representante de ".$empresa."."; 
          $this->MultiCell(180,6,utf8_decode($inf),0,1,'J',0);
          
          $this->Ln(10); 
@@ -222,10 +222,10 @@ class PDF extends FPDF {
          
          $this->ln(10);
          
-         $this->SetFont('Arial','B',10);
+         $this->SetFont('Arial','B',12);
          $this->Ln(5);
          $this->Cell(200,10,utf8_decode($this->empresa['nb_presidente']),0,0,'C'); 
-         $this->SetFont('Arial','B',10);
+         $this->SetFont('Arial','B',12);
          $this->Ln(5);
          $this->Cell(200,10,utf8_decode('Presidente(a)'),0,0,'C');         
   
@@ -260,7 +260,7 @@ class PDF extends FPDF {
                         upper(tb047.tx_ente) as tx_ente, 
                         upper(tb110.tx_origen_viatico) as destino, 
                         upper(tb107.tx_tipo_viatico ) as tx_tipo_viatico,
-                        tb047.nb_responsable,tb047a.cargo
+                        tb047.nb_responsable,tb047a.cargo,tb008.tx_razon_social,tb008.tx_rif
                     from tb026_solicitud as tb026 
                     left join tb108_viatico as tb108 on tb108.co_solicitud = tb026.co_solicitud 
                     left join tb107_tipo_viatico as tb107 on tb107.co_tipo_viatico = tb108.co_tipo_viatico 
