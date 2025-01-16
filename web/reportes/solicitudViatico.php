@@ -174,15 +174,12 @@ class PDF extends FPDF {
         $this->Cell(0, 0, utf8_decode('PARA: ' . $this->datos['nb_usuario']), 0, 0, 'L');
         $this->Ln(5);
         $this->SetX(20);
-        //$this->Cell(0,0,utf8_decode($this->datos['tx_proceso']),0,0,'L');
-        //$this->Cell(0,0,utf8_decode('DIRECTOR DE COMPRAS Y SUMINISTRO'),0,0,'L');
-        $this->Cell(0, 0, utf8_decode($this->op_reporte['ciudadano']), 0, 0, 'L');
-        $this->Ln(5);
-        $this->SetX(20);
         $this->Cell(0, 0, utf8_decode('DE:'), 0, 0, 'L');
         $this->Ln(5);
+        $this->SetX(20);
         $this->Cell(0,0,utf8_decode('ASUNTO: Asignación de viaticos'),0,0,'L');
         $this->Ln(5);
+        $this->SetX(20);
         $this->Cell(0,0,utf8_decode('FECHA:'.$this->datos['nb_usuario']),0,0,'L');
 
         $this->Ln(10);
