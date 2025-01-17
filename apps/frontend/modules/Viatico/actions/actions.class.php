@@ -163,6 +163,9 @@ class ViaticoActions extends sfActions
 
                 $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm,$con);
 
+                var_dump($resp);
+                exit();
+                
                 if ($resp["success"] == true) {
                     $tb108_viaticoForm["co_solicitud"] = $resp["co_solicitud"];
                 }
