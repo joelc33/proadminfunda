@@ -148,11 +148,11 @@ class PgsqlSchemaParser extends BaseSchemaParser {
 		// Get the columns, types, etc.
 		// Based on code from pgAdmin3 (http://www.pgadmin.org/)
 		$stmt = $this->dbh->prepare("SELECT
-								        att.attname,
+                                        att.attname,
 								        att.atttypmod,
 								        att.atthasdef,
 								        att.attnotnull,
-								        def.adsrc,
+                                        (select column_default from information_schema.columns where column_name=att.attname and column_default !='' and ordinal_position=att.attnum and att.atthasdef = true and attnotnull = true limit 1) as adsrc,
 								        CASE WHEN att.attndims > 0 THEN 1 ELSE 0 END AS isarray,
 								        CASE
 								            WHEN ty.typname = 'bpchar'
@@ -165,8 +165,7 @@ class PgsqlSchemaParser extends BaseSchemaParser {
 								        ty.typtype
 								    FROM pg_attribute att
 								        JOIN pg_type ty ON ty.oid=att.atttypid
-								        LEFT OUTER JOIN pg_attrdef def ON adrelid=att.attrelid AND adnum=att.attnum
-								    WHERE att.attrelid = ? AND att.attnum > 0
+                                   WHERE att.attrelid = ? AND att.attnum > 0
 								        AND att.attisdropped IS FALSE
 								    ORDER BY att.attnum");
 
@@ -194,7 +193,7 @@ class PgsqlSchemaParser extends BaseSchemaParser {
 				$precision = $size;
 				$scale = $arrDomain['scale'];
 				$boolHasDefault = (strlen (trim ($row['atthasdef'])) > 0) ? $row['atthasdef'] : $arrDomain['hasdefault'];
-				$default = (strlen (trim ($row['adsrc'])) > 0) ? $row['adsrc'] : $arrDomain['default'];
+				$default = null;
 				$is_nullable = (strlen (trim ($row['attnotnull'])) > 0) ? $row['attnotnull'] : $arrDomain['notnull'];
 				$is_nullable = (($is_nullable == 't') ? false : true);
 			} else {
@@ -213,8 +212,7 @@ class PgsqlSchemaParser extends BaseSchemaParser {
 			// if column has a default
 			if (($boolHasDefault == 't') && (strlen (trim ($default)) > 0)) {
 				if (!preg_match('/^nextval\(/', $default)) {
-					$strDefault= preg_replace ('/::[\W\D]*/', '', $default);
-					$default = str_replace ("'", '', $strDefault);
+                                        $default = null;
 				} else {
 					$autoincrement = true;
 					$default = null;
