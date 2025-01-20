@@ -220,7 +220,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetX(80);
          $this->Cell(200,5,utf8_decode($this->campo['cuenta_debito']),0,0,'L');
           $this->SetX(125);
-         $this->Cell(200,5,utf8_decode('ND-00'.$this->campo['dia'].$this->campo['mes'].$this->campo['anio']),0,0,'L');
+         $this->Cell(200,5,utf8_decode('ND-'.$this->campo['nu_serial_transferencia']),0,0,'L');
          $this->SetX(183);
          $this->Cell(200,5,number_format($this->campo['mo_debito'], 2, ',','.'),0,0,'L');
          
@@ -239,7 +239,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetX(80);
          $this->Cell(200,5,utf8_decode('CUENTA NRO.'),0,0,'L');
           $this->SetX(125);
-         $this->Cell(200,5,utf8_decode('ND-'.$this->campo['nu_serial_transferencia']),0,0,'L');
+         $this->Cell(200,5,utf8_decode('REFERENCIA'),0,0,'L');
          $this->SetX(183);
          $this->Cell(200,5,utf8_decode('MONTO'),0,0,'L');
          $this->Ln(5);
