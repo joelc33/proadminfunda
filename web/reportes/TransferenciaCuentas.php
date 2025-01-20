@@ -425,10 +425,10 @@ class PDF_Flo extends PDF_FlowingBlock
 
           $conex = new ConexionComun();               
           $sql = "select tb026.co_solicitud,
-                         to_char(tb030.created_at,'dd/mm/yyyy') as created_at,
-                         to_char(tb030.created_at,'dd') as dia,
-                         to_char(tb030.created_at,'mm') as mes,
-                         to_char(tb030.created_at,'yyyy') as anio,                          
+                         to_char(tb066.created_at,'dd/mm/yyyy') as created_at,
+                         to_char(tb066.created_at,'dd') as dia,
+                         to_char(tb066.created_at,'mm') as mes,
+                         to_char(tb066.created_at,'yyyy') as anio,                          
                          tb066.mo_debito, 
                          tb011_deb.tx_cuenta_bancaria as tx_cuenta_bancaria_deb,
                          tb011_cred.tx_cuenta_bancaria as tx_cuenta_bancaria_cred,
