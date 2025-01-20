@@ -23,25 +23,27 @@ class PDF extends FPDF {
         $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
         $this->Ln(4);       
         $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
-        $this->Ln(4);
-        if (!empty($this->empresa['nb_institucion'])) 
-        {
-            $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
-            $this->Ln(4);
+        if (!empty($this->empresa['nb_institucion'])) {
+            $this->Ln(2);
+            $this->SetX(52);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->Ln(2);
+        }else{
+        $this->Ln(4);    
         }
-        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
-        $this->Ln(4);
+//        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
+//        $this->Ln(4);
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(12);
-        $this->SetFont('Arial', 'B', 14);
+        $this->SetFont('Arial', 'B', 13);
                 
-        $this->Cell(0,0,utf8_decode('TRASPASOS DE CREDITO PRESUPUESTARIO'),0,0,'C');
+        $this->Cell(0,0,utf8_decode('TRASPASO DE CREDITO PRESUPUESTARIO'),0,0,'C');
     }
 
     function Footer() {
 	$this->SetFont('Arial','',9);     
 	$this->SetY(-20);
-	$this->Cell(0,0,utf8_decode(''),0,0,'C');        
+	$this->Cell(0,10,$this->PageNo().'/{nb}',0,0,'R');         
     }
 
     function dwawCell($title,$data) {
@@ -69,24 +71,38 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',9);       
          $this->SetWidths(array(180));
          $this->SetAligns(array("L"));
-         $this->SetY(55);
+         $this->SetY(45);
          $this->SetX(25);
          $this->SetFillColor(255, 255, 255);
-         $this->Row(array(utf8_decode('NRO. '.$this->datos['nu_modificacion'])),0,0); 
-         $this->Ln(15);   
-         $this->SetFont('Arial','',10);  
+         $this->Row(array(utf8_decode('Nro. Traspaso: '.$this->datos['nu_modificacion'])),0,0); 
+         $this->Ln(2);
+         $this->SetX(25);
+         $this->SetFillColor(255, 255, 255);
+         $this->Row(array(utf8_decode('Fecha..............: '.$this->datos['fe_traspaso'])),0,0); 
+         $this->Ln(2);   
+         $this->SetFont('Arial','',9);  
          $this->SetX(25);         
-         $inf = "De conformidad con el artículo No. 8, de las Disposiciones Generales de la Ordenanza de Presupuesto para el ejercicio fiscal ".date("Y", strtotime($this->datos['fe_modificacion'])).", se efectúa traspaso de crédito presupuestario detallado a continuación:"; 
+         $inf = "De conformidad a lo establecido en el Art. 104 Numeral 1 sobre Traspasos de Creditos Presupuestarios del Reglamento Nro. 1 de la Ley de Organica de la Administración Financiera del Sector Publico sobre el Sistema Presupuestario, se efectúa el siguiente traspaso:"; 
          $this->MultiCell(180,7,utf8_decode($inf),0,1,'J',0);  
          
          $this->Ln();
 
-         $this->SetWidths(array(60, 60, 30, 30)); 
-         $this->SetAligns(array("C","C","C","C"));              
+         $this->SetWidths(array(60, 90, 30, 30)); 
+         $this->SetAligns(array("L","L","R","C"));              
          $this->SetFont('Arial','B',8);
 	     $this->SetFillColor(201, 199, 199);  
          $this->SetX(25);         
-         $this->Row(array(utf8_decode('CATEGORIA PRESUPUESTARIA'),utf8_decode('DENOMINACION'),utf8_decode('CEDENTE'),utf8_decode('RECEPTORA')),1,1);         
+         $this->Row(array(utf8_decode('CODIGO PRESUPUESTARIO'),utf8_decode('DENOMINACION'),utf8_decode('MONTO Bs')),0,0);  
+         $this->ln(1);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'),0,0,'L');
+         $this->ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('CATEGORIA CEDENTE:'),0,0,'L');
+         $this->ln(1);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'),0,0,'L');
+         $this->ln(5);
          $this->SetFillColor(255, 255, 255);         
          $this->lista_traspaso = $this->getTraspaso();
          $totalcred = 0;
@@ -97,118 +113,120 @@ class PDF extends FPDF {
             $Y = $this->GetY();
             if ($Y >= 230) {
 
-                $this->SetAligns(array("C","C", "C"));
-                $this->SetFillColor(201, 199, 199);
-                $this->SetWidths(array(90,90));
-                $this->SetFont('Arial','B',8); 
+                $this->AddPage();
+                $this->Ln(5);
+                 $this->SetWidths(array(60, 90, 30, 30)); 
+                 $this->SetAligns(array("L","L","R","C"));              
+                 $this->SetFont('Arial','B',8);
+                     $this->SetFillColor(201, 199, 199);  
+                 $this->SetX(25);         
+                 $this->Row(array(utf8_decode('CODIGO PRESUPUESTARIO'),utf8_decode('DENOMINACION'),utf8_decode('MONTO Bs')),0,0);  
+                 $this->ln(1);
+                 $this->SetX(25);
+                 $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'),0,0,'L');
+                 $this->ln(5);
+                 $this->SetX(25);
+                 $this->Cell(0,0,utf8_decode('CATEGORIA CEDENTE:'),0,0,'L');
+                 $this->ln(1);
+                 $this->SetX(25);
+                 $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'),0,0,'L');
+                 $this->ln(5); 
 
-                /*$this->SetY(230);
-                $this->SetX(25);    
-                //$this->Row(array(utf8_decode('SUBSECRETARIA DE PRESUPUESTO'),utf8_decode('SECRETARIA DE ADMINISTRACION')),1,1);         
-                $this->SetFillColor(255,255,255);
-                $Y = $this->GetY();
-                $this->SetX(25);          
-                //$this->MultiCell(90,20,'',1,1,'L',1);
-                $this->SetY($Y+10);
-                $this->SetFont('Arial','B',7); 
-                $this->SetX(25);   
-                $this->Row(array(utf8_decode('LCDA. YANIRA MENDEZ ZERPA'),utf8_decode('LCDA. RAISA BRICEÑO MAVARES')),0,0);
-                $this->SetX(25); 
-                $this->Row(array(utf8_decode('SUB-SECRETARIA DE PRESUPUESTO'),utf8_decode('SECRETARIA DE ADMINISTRACÍON Y FINANZAS')),0,0);
-                $this->SetY($Y);
-                $this->SetX(115);
-                //$this->MultiCell(90,20,'',1,1,'L',1);  
-                $this->SetY($Y);*/
-                        
-                //$this->ln(25);
-                $this->SetY(270);
-                $this->SetFont('Arial','',8); 
-                $this->SetX(25);          
-                $this->Cell(0,0,utf8_decode('Usuario del sistema: '.$this->datos['nb_usuario']),0,0,'L');
-                $this->ln(3);
-                $this->SetX(25);          
-                $this->Cell(0,0,utf8_decode('Nro. Solicitud: '.$this->datos['co_solicitud']),0,0,'L');
+            }
+            $this->SetX(25);   
+            if ($campo['debito']>0){
+            $this->Row(array($campo['co_categoria'],$campo['de_partida'],number_format($campo['debito'], 2, ',','.')),0,0);         
+            }
+            $totalcred = $campo['credito'] + $totalcred;
+            $totaldeb  = $campo['debito'] + $totaldeb;
+         }
+          $this->SetFont('Arial','B',8);
+         $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _'),0,0,'R');
+         $this->ln(3);
+         
+         $this->SetWidths(array(150,30,30)); 
+         $this->SetAligns(array("R","R","R")); 
+         $this->SetX(25);         
+         $this->Row(array('TOTAL CEDENTE:',number_format($totaldeb, 2, ',','.')),0,0);   
+                  $this->ln(1);
+         $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _'),0,0,'R');
+                  $this->ln(1);
+         $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _'),0,0,'R');
+         
+         
+         
+         $this->ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('CATEGORIA RECEPTORA:'),0,0,'L');
+         $this->ln(1);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'),0,0,'L');
+         $this->ln(5);
+         $this->SetFillColor(255, 255, 255);         
+         $this->lista_traspaso = $this->getTraspaso();
+         $totalcred = 0;
+         $totaldeb  = 0;
+          $this->SetAligns(array("L","L","R","R")); 
+         $this->SetFont('Arial','',8);          
+         foreach($this->lista_traspaso as $key => $campo){          
+            $Y = $this->GetY();
+            if ($Y >= 230) {
 
                 $this->AddPage();
                 $this->Ln(5);
-                $this->SetWidths(array(55, 55, 40, 40)); 
-                $this->SetAligns(array("C","C","C","C"));              
-                $this->SetFont('Arial','B',8);
-                $this->SetFillColor(201, 199, 199);  
-                $this->SetX(25);         
-                $this->Row(array(utf8_decode('CATEGORIA'),utf8_decode('DENOMINACION'),utf8_decode('CEDENTE'),utf8_decode('RECEPTORA')),1,1); 
-                $this->SetFillColor(255, 255, 255);   
-                $this->SetAligns(array("C","C","C","C"));
-                $this->SetFont('Arial','',7); 
+                 $this->SetWidths(array(60, 90, 30, 30)); 
+                 $this->SetAligns(array("L","L","R","C"));              
+                 $this->SetFont('Arial','B',8);
+                     $this->SetFillColor(201, 199, 199);  
+                 $this->SetX(25);         
+                 $this->Row(array(utf8_decode('CODIGO PRESUPUESTARIO'),utf8_decode('DENOMINACION'),utf8_decode('MONTO Bs')),0,0);  
+                 $this->ln(1);
+                 $this->SetX(25);
+                 $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'),0,0,'L');
+                 $this->ln(5);
+                 $this->SetX(25);
+                 $this->Cell(0,0,utf8_decode('CATEGORIA RECEPTORA:'),0,0,'L');
+                 $this->ln(1);
+                 $this->SetX(25);
+                 $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'),0,0,'L');
+                 $this->ln(5); 
 
             }
-            $this->SetX(25);             
-            $this->Row(array($campo['co_categoria'],$campo['de_partida'],number_format($campo['debito'], 2, ',','.'),number_format($campo['credito'], 2, ',','.')),1,1);         
-            $totalcred = $campo['debito'] + $totalcred;
-            $totaldeb  = $campo['credito'] + $totaldeb;
+            $this->SetX(25);   
+            if ($campo['credito']>0){
+            $this->SetWidths(array(60, 90, 30, 30)); 
+            $this->SetAligns(array("L","L","R","C"));              
+            $this->SetFont('Arial','',8);
+	    $this->SetFillColor(201, 199, 199);  
+            $this->Row(array($campo['co_categoria'],$campo['de_partida'],number_format($campo['credito'], 2, ',','.')),0,0);         
+            }
+            $totalcred = $campo['credito'] + $totalcred;
+            $totaldeb  = $campo['debito'] + $totaldeb;
          }
-
-         $this->SetFont('Arial','B',8);         
-         $this->SetWidths(array(120,30,30)); 
+          $this->SetFont('Arial','B',8);
+         $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _'),0,0,'R');
+         $this->ln(3);
+         
+         $this->SetWidths(array(150,30,30)); 
          $this->SetAligns(array("R","R","R")); 
          $this->SetX(25);         
-         $this->Row(array('TOTAL',number_format($totalcred, 2, ',','.'),number_format($totaldeb, 2, ',','.')),1,1);         
+         $this->Row(array('TOTAL RECEPTORA:',number_format($totalcred, 2, ',','.')),0,0);   
+                  $this->ln(1);
+         $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _'),0,0,'R');
+                  $this->ln(1);
+         $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _'),0,0,'R');         
          
-         $this->ln(8);
-         $this->SetAligns(array("C","C", "C"));
-	     $this->SetFillColor(201, 199, 199);
-         $this->SetWidths(array(50,60,70));
-         $this->SetFont('Arial','B',8);
+         $this->ln(18);
+         
+         $this->SetWidths(array(80,80)); 
+         $this->SetAligns(array("C","C")); 
+         $this->SetX(25);        
+         $this->Row(array(utf8_decode('_______________________________'),'_______________________________'),0,0);
          $this->SetX(25);
-         $this->Row(array(utf8_decode('ELABORADO POR'),utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN')),1,1);       
-         $this->SetFillColor(255,255,255);
-         $this->SetAligns(array("L", "L","L"));
-         $Y = $this->GetY();
-         $this->SetX(25);
-         $this->MultiCell(50,20,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(75);
-         $this->MultiCell(60,20,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(135);
-         $this->MultiCell(70,20,'',1,1,'L',1);
-         $this->SetY($Y+16);
-         $this->SetX(25);
-         $this->SetFont('Arial','',6);
-         $this->Row(array('Elaborado por:','Conformado por:','Autorizado por:'),1,1);         
+         $this->Row(array(utf8_decode('ADMINISTRACIÓN'),'PRESUPUESTO'),0,0);           
+         
 
-//         $this->SetAligns(array("C","C", "C"));
-//	     $this->SetFillColor(201, 199, 199);
-//         $this->SetWidths(array(90,90));
-//         $this->SetFont('Arial','B',8); 
-//
-//         $this->SetY(230);
-//         $this->SetX(25);    
-//         //$this->Row(array(utf8_decode('SUBSECRETARIA DE PRESUPUESTO'),utf8_decode('SECRETARIA DE ADMINISTRACION')),1,1);         
-//         $this->SetFillColor(255,255,255);
-//         $Y = $this->GetY();
-//         $this->SetX(25);          
-//         //$this->MultiCell(90,20,'',1,1,'L',1);
-//         $this->SetY($Y+10);
-//         $this->SetFont('Arial','B',7);
-//         $this->ln(18);
-//         $this->SetX(25);   
-//         $this->Row(array(utf8_decode('LCDA. ISBELIA YUGURI'),utf8_decode('LCD0. AROLDO DIAZ')),0,0);
-//         $this->SetX(25); 
-//         $this->Row(array(utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN')),0,0);
-//         $this->SetY($Y);
-//         $this->SetX(115);
-//         //$this->MultiCell(90,20,'',1,1,'L',1);  
-//         $this->SetY($Y);
-                 
-         //$this->ln(25);
-         $this->SetY(270);
-         $this->SetFont('Arial','',8); 
-         $this->SetX(25);          
-         $this->Cell(0,0,utf8_decode('Usuario del sistema: '.$this->datos['nb_usuario']),0,0,'L');
-         $this->ln(3);
-         $this->SetX(25);          
-         $this->Cell(0,0,utf8_decode('Nro. Solicitud: '.$this->datos['co_solicitud']),0,0,'L');
+
    }
 
     function ChapterTitle($num,$label) {
@@ -233,6 +251,7 @@ class PDF extends FPDF {
           $conex = new ConexionComun();     
       $sql = " SELECT  nu_modificacion, 
                        fe_modificacion, 
+                       to_char(fe_modificacion::date,'dd/mm/yyyy') as fe_traspaso,
                        de_modificacion, 
                        nu_oficio, 
                        fe_oficio, 
