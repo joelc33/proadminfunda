@@ -127,6 +127,7 @@ class PresupuestomodificacionActions extends sfActions
           "id_tb083_proyecto_ac" => $campos["id_tb083_proyecto_ac"],
           "co_solicitud" => $campos["co_solicitud"],
           "co_tipo_solicitud" => $campos["co_tipo_solicitud"],
+          "in_procesado" => $campos["in_procesado"],
           "fe_ini" => $this->getUser()->getAttribute('fe_apertura'),
           "fe_fin" => $this->getUser()->getAttribute('fe_cierre')
         ));
@@ -149,6 +150,7 @@ class PresupuestomodificacionActions extends sfActions
           "updated_at" => "",
           "id_tb082_ejecutor" => "",
           "id_tb083_proyecto_ac" => "",
+          "in_procesado" => false,
           "fe_ini" => $this->getUser()->getAttribute('fe_apertura'),
           "fe_fin" => $this->getUser()->getAttribute('fe_cierre')
         ));
@@ -527,7 +529,7 @@ class PresupuestomodificacionActions extends sfActions
       if ($cantidad_origen <= 0) {
         $this->data = json_encode(array(
           'success' => false,
-          'msg' => '<span style="color:red;font-size:13px,"><b>Se debe al menos cargar una partida de origen!</b></span>'
+          'msg' => '<span style="color:red;font-size:13px,"><b>Se debe al menos cargar una categoria cedente!</b></span>'
         ));
 
         return $this->setTemplate('store');
@@ -549,7 +551,7 @@ class PresupuestomodificacionActions extends sfActions
       if ($cantidad_destino <= 0) {
         $this->data = json_encode(array(
           'success' => false,
-          'msg' => '<span style="color:red;font-size:13px,"><b>Se debe al menos cargar una partida de destino!</b></span>'
+          'msg' => '<span style="color:red;font-size:13px,"><b>Se debe al menos cargar una categoria receptora!</b></span>'
         ));
 
         return $this->setTemplate('store');
@@ -561,7 +563,7 @@ class PresupuestomodificacionActions extends sfActions
 
         $this->data = json_encode(array(
           'success' => false,
-          'msg' => '<span style="color:red;font-size:13px,"><b>El monto total de las partidas de origen deben ser igual a las partidas de destino!<br></b></span>Diferencia: <b>' . $resta_traslado . '</b>'
+          'msg' => '<span style="color:red;font-size:13px,"><b>El monto total de las categorias cedentes deben ser igual a las categorias receptoras!<br></b></span>Diferencia: <b>' . $resta_traslado . '</b>'
         ));
 
         return $this->setTemplate('store');
@@ -575,8 +577,8 @@ class PresupuestomodificacionActions extends sfActions
         $tb096_presupuesto_modificacionForm = $this->getRequestParameter('tb096_presupuesto_modificacion');
         if ($tb096_presupuesto_modificacionForm["fe_modificacion"] != '') {
           list($dia, $mes, $anio) = explode("/", $tb096_presupuesto_modificacionForm["fe_modificacion"]);
-          $fecha = $anio . "-" . $mes . "-" . $dia;
-          $tb096_presupuesto_modificacion->setFeModificacion($fecha);
+          $fecha_modificacion = $anio . "-" . $mes . "-" . $dia;
+          $tb096_presupuesto_modificacion->setFeModificacion($fecha_modificacion);
         }
 
         $tb096_presupuesto_modificacion->setDeModificacion($tb096_presupuesto_modificacionForm["de_modificacion"]);
@@ -594,6 +596,7 @@ class PresupuestomodificacionActions extends sfActions
         $tb096_presupuesto_modificacion->setInActivo(true);
         $fecha = date("Y-m-d H:i:s");
         $tb096_presupuesto_modificacion->setUpdatedAt($fecha);
+        $tb096_presupuesto_modificacion->setInProcesado(true);
         $tb096_presupuesto_modificacion->setCoUsuario($this->getUser()->getAttribute('codigo'));
         $tb096_presupuesto_modificacion->save($con);
 
@@ -609,6 +612,7 @@ class PresupuestomodificacionActions extends sfActions
         $sum_destino->addSelectColumn(Tb097ModificacionDetallePeer::ID_TB098_TIPO_DISTRIBUCION);
         $sum_destino->addSelectColumn(Tb097ModificacionDetallePeer::MO_DISTRIBUCION);
         $sum_destino->addSelectColumn(Tb097ModificacionDetallePeer::ID_TB085_PRESUPUESTO);
+        $sum_destino->addSelectColumn(Tb097ModificacionDetallePeer::ID_TB013_ANIO_FISCAL);
         $sum_destino->addSelectColumn(Tb097ModificacionDetallePeer::ID);
         $sum_destino->addSelectColumn(Tb097ModificacionDetallePeer::IN_TRASPASO);
         $suma_destino = Tb097ModificacionDetallePeer::doSelectStmt($sum_destino);
@@ -635,6 +639,7 @@ class PresupuestomodificacionActions extends sfActions
                 ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                 ->setTxObservacion('TRASPASO ENTRE PARTIDAS')
                 ->setMoSaldoNuevo($saldo_nuevo)
+                ->setCreatedAt($fecha_modificacion)
                 ->setMoSaldoAnterior($saldo_anterior)
                 ->setInActivo(true)
                 ->save($con);
@@ -657,6 +662,7 @@ class PresupuestomodificacionActions extends sfActions
                 ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                 ->setTxObservacion('TRASPASO ENTRE PARTIDAS')
                 ->setMoSaldoNuevo($saldo_nuevo)
+                ->setCreatedAt($fecha_modificacion)
                 ->setMoSaldoAnterior($saldo_anterior)
                 ->setInActivo(true)
                 ->save($con);
@@ -672,14 +678,15 @@ class PresupuestomodificacionActions extends sfActions
           'success' => true,
           'numero' => $campos["nu_modificacion"],
           'codigo' => $tb096_presupuesto_modificacion->getId(),
-          'msg' => '<span style="color:green;font-size:13px,">Datos Editado con exito!.<br>
+          'msg' => '<span style="color:green;font-size:13px,">Traslados realizado con Exito!.<br>
       			    Numero de Movimiento <br><textarea readonly>' . $campos["nu_modificacion"] . '</textarea></span>'
         ));
 
-        //            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb096_presupuesto_modificacionForm["co_solicitud"]));
-        //            $ruta->setInCargarDato(true)->save($con);
-        //
-        //            Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
+        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb096_presupuesto_modificacion->getCoSolicitud()));
+        $con->commit();
+        
+        $ruta->setInCargarDato(true)->save($con);
+        Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
 
         $con->commit();
       } catch (PropelException $e) {
@@ -923,13 +930,22 @@ class PresupuestomodificacionActions extends sfActions
         $con->beginTransaction();
 
         $tb096_presupuesto_modificacionForm = $this->getRequestParameter('tb096_presupuesto_modificacion');
+        
+       if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
+           
+          list($anio, $mes, $dia) = explode("-", $this->getUser()->getAttribute('fe_cierre'));
+          $fecha = $dia . "/" . $mes . "/" . $anio;           
+          $fecha_solicitud = $fecha;
+        } else {
+          $fecha_solicitud = date("d/m/Y");
+        }
 
         if (empty($tb096_presupuesto_modificacionForm["co_solicitud"])) {
 
           $tb026_solicitudForm = array(
             "co_tipo_solicitud" => $tb096_presupuesto_modificacionForm["co_tipo_solicitud"],
             "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
-            "fe_solicitud" => date("d/m/Y"),
+            "fe_solicitud" => $fecha_solicitud,
             "observacion" => $tb096_presupuesto_modificacionForm["de_modificacion"],
             "codigo" => $this->getUser()->getAttribute('codigo')
           );
@@ -1079,7 +1095,7 @@ class PresupuestomodificacionActions extends sfActions
       if ($cantidad_origen <= 0) {
         $this->data = json_encode(array(
           'success' => false,
-          'msg' => '<span style="color:red;font-size:13px,"><b>Se debe al menos cargar una partida Cedente!</b></span>'
+          'msg' => '<span style="color:red;font-size:13px,"><b>Se debe al menos cargar una categoria Cedente!</b></span>'
         ));
 
         return $this->setTemplate('store');
@@ -1101,7 +1117,7 @@ class PresupuestomodificacionActions extends sfActions
       if ($cantidad_destino <= 0) {
         $this->data = json_encode(array(
           'success' => false,
-          'msg' => '<span style="color:red;font-size:13px,"><b>Se debe al menos cargar una partida de Destino!</b></span>'
+          'msg' => '<span style="color:red;font-size:13px,"><b>Se debe al menos cargar una categoria receptora!</b></span>'
         ));
 
         return $this->setTemplate('store');
@@ -1113,7 +1129,7 @@ class PresupuestomodificacionActions extends sfActions
 
         $this->data = json_encode(array(
           'success' => false,
-          'msg' => '<span style="color:red;font-size:13px,"><b>El monto total de las partidas de origen deben ser igual a las partidas de destino!<br></b></span>Diferencia: <b>' . $resta_traslado . '</b>'
+          'msg' => '<span style="color:red;font-size:13px,"><b>El monto total de las categorias cedentes deben ser igual a las categorias receptoras!<br></b></span>Diferencia: <b>' . $resta_traslado . '</b>'
         ));
 
         return $this->setTemplate('store');
