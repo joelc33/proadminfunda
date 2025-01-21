@@ -842,7 +842,7 @@ class TesoreriaActions extends sfActions
                 $tb062_liquidacion_pago->setMoPendiente(0); 
             }
             
-            $porcentaje_pago = round(($tb062PagosForm["monto"]*100)/$PagosForm["mo_pagar"],2);
+            $porcentaje_pago = round(($tb062PagosForm["monto"]*100)/$PagosForm["mo_pagar"],15);
             
             if($mo_pendiente==0){
                 $casiento = new Criteria;
@@ -1279,7 +1279,7 @@ class TesoreriaActions extends sfActions
                         if($contador==null){
 
                             $tb085_presupuesto = Tb085PresupuestoPeer::retrieveByPK($reg["co_presupuesto"]);
-                            $porcentaje = round(($reg["monto"] * $porcentaje_pago)/100,2);
+                            $porcentaje = round(($reg["monto"] * $porcentaje_pago)/100,15);
                             $mo_pagado = $tb085_presupuesto->getMoPagado()+$porcentaje;
                             $tb085_presupuesto->setMoPagado($mo_pagado);
                             $tb085_presupuesto->save($con);
@@ -1287,7 +1287,7 @@ class TesoreriaActions extends sfActions
                         }else{
 
                             $tb085_presupuesto = Tb085PresupuestoPeer::retrieveByPK($reg["co_presupuesto"]);
-                            $porcentaje = round(($reg["monto"] * $porcentaje_pago)/100,2);
+                            $porcentaje = round(($reg["monto"] * $porcentaje_pago)/100,15);
                             $mo_pagado = $tb085_presupuesto->getMoPagado()+$porcentaje;
                             $tb085_presupuesto->setMoPagado($mo_pagado);
                             $tb085_presupuesto->save($con);
