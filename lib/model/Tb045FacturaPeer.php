@@ -8,6 +8,7 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
 
         $c = new Criteria();
         $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+        $c->add(Tb045FacturaPeer::CO_ODP, NULL, Criteria::ISNULL);
         $stmt = Tb045FacturaPeer::doSelectStmt($c);
         while ($campos = $stmt->fetch(PDO::FETCH_ASSOC)){
 
