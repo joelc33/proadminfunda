@@ -191,7 +191,7 @@ left join tb026_solicitud tb026 on (tb026.co_solicitud = tb061.co_solicitud)
 left join tb027_tipo_solicitud tb027 on (tb027.co_tipo_solicitud = tb026.co_tipo_solicitud)
 left join tb133_tipo_asiento tb133 on (tb133.co_tipo_asiento = tb061.co_tipo_asiento)
 left join tb176_comprobante_contable tb176 on (tb176.co_comprobante_contable = tb061.nu_comprobante)
-where tb061.created_at::date >= '".$fe_inicio."' and tb061.created_at::date <= '".$fe_fin."' order by tb061.created_at::date asc, tb190.co_anexo_contable asc";
+where tb061.created_at::date >= '".$fe_inicio."' and tb061.created_at::date <= '".$fe_fin."' order by tb061.created_at::date asc, tb176.nu_comprobante asc";
                         
 //            var_dump($sql);
 //            exit();
