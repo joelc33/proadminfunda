@@ -1814,7 +1814,7 @@ class TesoreriaActions extends sfActions
     $cantidadTotal = Tb026SolicitudPeer::doCount($c);
     
     $c->setLimit($limit)->setOffset($start);
-    $c->addDescendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
+    $c->addDescendingOrderByColumn(Tb063PagoPeer::CO_PAGO);
 
     $stmt = Tb026SolicitudPeer::doSelectStmt($c);
     $registros = "";
