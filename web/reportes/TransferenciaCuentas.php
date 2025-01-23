@@ -218,7 +218,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetX(25);
          $this->Cell(200,5,utf8_decode($this->campo['bco_deb']),0,0,'L');
          $this->SetX(80);
-         $this->Cell(200,5,utf8_decode($this->campo['cuenta_debito']),0,0,'L');
+         $this->Cell(200,5,utf8_decode($this->campo['tx_cuenta_bancaria_deb']),0,0,'L');
           $this->SetX(125);
          $this->Cell(200,5,utf8_decode('ND-'.$this->campo['nu_serial_transferencia']),0,0,'L');
          $this->SetX(183);
@@ -246,7 +246,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetX(25);
          $this->Cell(200,5,utf8_decode($this->campo['bco_cred']),0,0,'L');
          $this->SetX(80);
-         $this->Cell(200,5,utf8_decode($this->campo['cuenta_credito']),0,0,'L');
+         $this->Cell(200,5,utf8_decode($this->campo['tx_cuenta_bancaria_cred']),0,0,'L');
           $this->SetX(125);
          $this->Cell(200,5,utf8_decode('NC-'.$this->campo['nu_serial_transferencia']),0,0,'L');
          $this->SetX(183);
