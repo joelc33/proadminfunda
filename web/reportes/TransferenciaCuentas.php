@@ -269,7 +269,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetX(20);
          $this->Cell(200,5,utf8_decode('ELABORADO POR:'),0,0,'L');
          $this->SetX(80);
-         $this->Cell(200,5,utf8_decode('COSNFORMADO POR:'),0,0,'L');          
+         $this->Cell(200,5,utf8_decode('CONFORMADO POR:'),0,0,'L');          
          $this->SetX(150);
          $this->Cell(200,5,utf8_decode('AUTORIZADO POR:'),0,0,'L');
          
