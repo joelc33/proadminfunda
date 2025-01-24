@@ -2,12 +2,161 @@
 include("ConexionComun.php");
 include('fpdf.php');
 
+function txtentities($html){
+    $trans = get_html_translation_table(HTML_ENTITIES);
+    $trans = array_flip($trans);
+    return strtr($html, $trans);
+}
 
 class PDF extends FPDF {
     public $title;
     public $conexion;
     public $array_factura;
     public $array_factura_banco;
+//variables of html parser
+protected $B;
+protected $I;
+protected $U;
+protected $HREF;
+protected $fontlist;
+protected $issetfont;
+protected $issetcolor; 
+    
+function WriteHTML($html)
+{
+    //HTML parser
+    $html=strip_tags($html,"<b><u><i><a><img><p><br><strong><em><font><tr><blockquote>"); //supprime tous les tags sauf ceux reconnus
+    $html=str_replace("\n",' ',$html); //remplace retour à la ligne par un espace
+    $a=preg_split('/<(.*)>/U',$html,-1,PREG_SPLIT_DELIM_CAPTURE); //éclate la chaîne avec les balises
+    foreach($a as $i=>$e)
+    {
+        if($i%2==0)
+        {
+            //Text
+            if($this->HREF){
+                $this->PutLink($this->HREF,$e);
+            }else{
+//                $this->Write(5,txtentities($e));
+                $this->SetX(20);
+                $this->MultiCell(180,5,txtentities($e),0,'J',0);
+            }
+
+        }
+        else
+        {
+            //Tag
+            if($e[0]=='/')
+                $this->CloseTag(strtoupper(substr($e,1)));
+            else
+            {
+                //Extract attributes
+                $a2=explode(' ',$e);
+                $tag=strtoupper(array_shift($a2));
+                $attr=array();
+                foreach($a2 as $v)
+                {
+                    if(preg_match('/([^=]*)=["\']?([^"\']*)/',$v,$a3))
+                        $attr[strtoupper($a3[1])]=$a3[2];
+                }
+                $this->OpenTag($tag,$attr);
+            }
+        }
+    }
+}
+
+function OpenTag($tag, $attr)
+{
+    //Opening tag
+    switch($tag){
+        case 'STRONG':
+            $this->SetStyle('B',true);
+            break;
+        case 'EM':
+            $this->SetStyle('I',true);
+            break;
+        case 'B':
+        case 'I':
+        case 'U':
+            $this->SetStyle($tag,true);
+            break;
+        case 'A':
+            $this->HREF=$attr['HREF'];
+            break;
+        case 'IMG':
+            if(isset($attr['SRC']) && (isset($attr['WIDTH']) || isset($attr['HEIGHT']))) {
+                if(!isset($attr['WIDTH']))
+                    $attr['WIDTH'] = 0;
+                if(!isset($attr['HEIGHT']))
+                    $attr['HEIGHT'] = 0;
+                $this->Image($attr['SRC'], $this->GetX(), $this->GetY(), px2mm($attr['WIDTH']), px2mm($attr['HEIGHT']));
+            }
+            break;
+        case 'TR':
+        case 'BLOCKQUOTE':
+        case 'BR':
+            $this->Ln(0);
+            break;
+        case 'P':
+            $this->Ln(10);
+            break;
+        case 'FONT':
+            if (isset($attr['COLOR']) && $attr['COLOR']!='') {
+                $coul=hex2dec($attr['COLOR']);
+                $this->SetTextColor($coul['R'],$coul['V'],$coul['B']);
+                $this->issetcolor=true;
+            }
+            if (isset($attr['FACE']) && in_array(strtolower($attr['FACE']), $this->fontlist)) {
+                $this->SetFont(strtolower($attr['FACE']));
+                $this->issetfont=true;
+            }
+            break;
+    }
+}
+
+function CloseTag($tag)
+{
+    //Closing tag
+    if($tag=='STRONG')
+        $tag='B';
+    if($tag=='EM')
+        $tag='I';
+    if($tag=='B' || $tag=='I' || $tag=='U')
+        $this->SetStyle($tag,false);
+    if($tag=='A')
+        $this->HREF='';
+    if($tag=='FONT'){
+        if ($this->issetcolor==true) {
+            $this->SetTextColor(0);
+        }
+        if ($this->issetfont) {
+            $this->SetFont('arial');
+            $this->issetfont=false;
+        }
+    }
+}
+
+function SetStyle($tag, $enable)
+{
+    //Modify style and select corresponding font
+    $this->$tag+=($enable ? 1 : -1);
+    $style='';
+    foreach(array('B','I','U') as $s)
+    {
+        if($this->$s>0)
+            $style.=$s;
+    }
+    $this->SetFont('',$style);
+}
+
+function PutLink($URL, $txt)
+{
+    //Put a hyperlink
+    $this->SetTextColor(0,0,255);
+    $this->SetStyle('U',true);
+    $this->Write(5,$txt,$URL);
+    $this->SetStyle('U',false);
+    $this->SetTextColor(0);
+}    
     
    
     function Header() {
@@ -208,9 +357,15 @@ class PDF extends FPDF {
         $this->Ln(10);        
          
          $this->SetFont('Arial','',12);
-         $this->SetX(20);
-         $inf = "Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022 que seran utilizados para ".$this->datos['tx_evento']." hacia ".$this->datos['tx_tipo_viatico'].", donde se visitará ".$this->datos['destino']." durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_razon_social']." portador(a) de la cedula de identidad N° ".$this->datos['tx_rif']." representante de ".$empresa."."; 
-         $this->MultiCell(180,6,utf8_decode($inf),0,1,'J',0);
+         $this->SetWidths(array(180));
+         $this->SetAligns(array("J"));
+         
+         $html = '<p>     Por medio de la presente, me dirijo a usted con finalidad de solicitarle el <b>CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022</b> que seran utilizados para '.$this->datos['tx_evento'].' <b>'.$this->datos['tx_tipo_viatico'].'</b>, durante los dias '.date("d/m/Y", strtotime($this->datos['fe_desde'])).' al '.date("d/m/Y", strtotime($this->datos['fe_hasta'])).' , a '.$this->datos['tx_razon_social'].' portador(a) de la cedula de identidad N° '.$this->datos['tx_rif'].' representante de <b>'.$empresa.'</b>.</p>';
+//         $inf = "     Por medioxx de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022 que seran utilizados para ".$this->datos['tx_evento']." hacia ".$this->datos['tx_tipo_viatico'].", donde se visitará ".$this->datos['destino']." durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_razon_social']." portador(a) de la cedula de identidad N° ".$this->datos['tx_rif']." representante de ".$empresa."."; 
+         $this->SetX(50);
+         $this->WriteHTML(utf8_decode($html));
+
+//         $this->Row(array($inf), 0, 0);
          
          $this->Ln(10); 
          $this->SetX(20);
