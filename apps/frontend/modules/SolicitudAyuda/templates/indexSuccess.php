@@ -119,7 +119,7 @@
                     //                                contribuyenteLista.main.mascara.show();
                     this.msg = Ext.get('formulariocontribuyente');
                     this.msg.load({
-                        url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/SolicitudAyuda/editarResponsabilidad",
+                        url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/SolicitudAyuda/factura",
                         scripts: true,
                         text: "Cargando.."
                     });
