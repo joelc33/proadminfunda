@@ -55,13 +55,27 @@ class SolicitudAyudaActions extends sfActions
             $c->addSelectColumn(Tb008ProveedorPeer::TX_DIRECCION);
             $c->addSelectColumn(Tb008ProveedorPeer::CO_IVA_RETENCION);
             $c->addSelectColumn(Tb026SolicitudPeer::CO_TIPO_SOLICITUD);
+
+
+            $c->addSelectColumn(Tb126SolicitudAyudaPeer::CO_SOLICITUD_AYUDA);
+            $c->addSelectColumn(Tb126SolicitudAyudaPeer::CO_PROVEEDOR_SOLICITANTE);
+            $c->addSelectColumn(Tb126SolicitudAyudaPeer::CO_TIPO_AYUDA);
+
             $c->add(Tb052ComprasPeer::CO_SOLICITUD, $codigo);
             $c->addJoin(Tb052ComprasPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR);
             $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD, Tb026SolicitudPeer::CO_SOLICITUD);
+            $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD, Tb126SolicitudAyudaPeer::CO_SOLICITUD);
+
+              
             $stmt = Tb052ComprasPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
             $this->data = json_encode(array(
+                "co_solicitud_ayuda" => $campos["co_solicitud_ayuda"],
+                "co_proveedor_solicitante" => $campos["co_proveedor_solicitante"],
+                "co_tipo_ayuda" => $campos["co_tipo_ayuda"],
+                "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+                "co_usuario" => $this->getUser()->getAttribute('codigo'),
                 "fe_emision" => $campos["fe_emision"],
                 "nu_base_imponible" => $campos["nu_base_imponible"],
                 "co_iva_factura" => $campos["co_iva_factura"],
@@ -633,19 +647,83 @@ class SolicitudAyudaActions extends sfActions
     {
 
         $codigo = $this->getRequestParameter("co_factura");
+        $codigo_solicitud = $this->getRequestParameter("co_solicitud_ayuda");
         $co_pago_servicio = $this->getRequestParameter("co_pago_servicio");
         $co_detalle_compras = $this->getRequestParameter("co_detalle_compras");
+        $tb045_facturaForm = $this->getRequestParameter('tb045_factura');
+        $tb008_proveedorForm = $this->getRequestParameter('tb008_proveedor');
+
         $json_factura = $this->getRequestParameter("json_factura");
 
         $listaFactura = json_decode($json_factura, true);
 
         $con = Propel::getConnection();
 
+        if ($codigo_solicitud != '' || $codigo_solicitud != null) {
+            $tb126_solicitud_ayuda = Tb126SolicitudAyudaPeer::retrieveByPk($codigo_solicitud);
+        } else {
+            $tb126_solicitud_ayuda = new Tb126SolicitudAyuda();
+
+            $tb026_solicitudForm = array(
+                "co_tipo_solicitud" => 51,
+                "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
+                "fe_solicitud" => date("d/m/Y"),
+                "observacion" => $tb008_proveedorForm["tx_observacion"],
+                "codigo" => $this->getUser()->getAttribute('codigo')
+            );
+
+            $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
+
+            if ($resp["success"] == true) {
+                $tb045_facturaForm["co_solicitud"] = $resp["co_solicitud"];
+            } else {
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => $resp["msg"]
+                ));
+
+                return;
+            }
+        }
+
+
         try {
             $con->beginTransaction();
 
-            $tb045_facturaForm = $this->getRequestParameter('tb045_factura');
-            $tb008_proveedorForm = $this->getRequestParameter('tb008_proveedor');
+            
+           
+            $solicitanteForm = $this->getRequestParameter('solicitante');
+            $co_proveedor_solicitante = $this->getProveedor($solicitanteForm, $con);
+
+
+           
+          // echo $tb126_solicitud_ayudaForm["co_usuario"]; exit();
+
+          
+
+            //Datos Receptor Cheque               
+            $tb126_solicitud_ayuda->setCoProveedor($tb045_facturaForm["co_proveedor"]);
+            $tb126_solicitud_ayuda->setCoProveedorSolicitante($co_proveedor_solicitante);
+         //   $tb126_solicitud_ayuda->setCoTipoAyuda($tb126_solicitud_ayudaForm["co_tipo_ayuda"]);
+            $tb126_solicitud_ayuda->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
+            $tb126_solicitud_ayuda->setCoSolicitud($tb045_facturaForm["co_solicitud"]);
+            $tb126_solicitud_ayuda->setCoUsuario($tb126_solicitud_ayudaForm["co_usuario"]);
+            $tb126_solicitud_ayuda->setIdTb013AnioFiscal($this->getUser()->getAttribute('ejercicio'));
+
+            $tb126_solicitud_ayuda->save($con);
+
+            $solicitud = Tb026SolicitudPeer::retrieveByPk($tb045_facturaForm["co_solicitud"]);
+            $solicitud->setCoProveedor($tb045_facturaForm["co_proveedor"])->save($con);
+
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb045_facturaForm["co_solicitud"]));
+            $ruta->setInCargarDato(true)->save($con);
+
+           
+
+           
+
+            //echo "llego"; exit();
+
             /*CAMPOS*/
 
             $co_compra = $tb045_facturaForm["co_compra"];
@@ -679,6 +757,7 @@ class SolicitudAyudaActions extends sfActions
             $tb052_compras->save($con);
 
             $total_pagar = 0;
+            
             foreach ($listaFactura as $v) {
 
                 if ($v["co_detalle_compras"] == '') {
@@ -791,6 +870,8 @@ class SolicitudAyudaActions extends sfActions
 
             }
 
+           
+
             foreach ($listaFactura as $v) {
                 $total_pagar = $total_pagar + $v["total_pagar"];
             }
@@ -798,7 +879,7 @@ class SolicitudAyudaActions extends sfActions
             $tb052_compras->setMontoTotal($total_pagar);
             $tb052_compras->save($con);
 
-            $solicitud = Tb026SolicitudPeer::retrieveByPk($tb045_facturaForm["co_solicitud"]);
+            $solicitud = Tb026SolicitudPeer::retrieveByPk($tb045_facturaForm["co_proveedor"]);
             $solicitud->setCoProveedor($tb045_facturaForm["co_proveedor"])->save($con);
 
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb045_facturaForm["co_solicitud"]));
@@ -812,6 +893,8 @@ class SolicitudAyudaActions extends sfActions
                 "success" => true,
                 "msg" => 'Factura cargada exitosamente!'
             ));
+
+
 
         } catch (PropelException $e) {
             $con->rollback();
