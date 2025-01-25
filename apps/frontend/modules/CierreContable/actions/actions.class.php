@@ -73,8 +73,8 @@ class CierreContableActions extends sfActions
                                   ->setInCerrado(FALSE)
                                   ->save($con);
                 
-                $nu_comprobante = $ejercicio.$mes.str_pad($Tb176ComprobanteContable->getCoComprobanteContable(), 5, "0", STR_PAD_LEFT);
-                $Tb176ComprobanteContable->setNuComprobante($nu_comprobante)->save($con);
+                //$nu_comprobante = $ejercicio.$mes.str_pad($Tb176ComprobanteContable->getCoComprobanteContable(), 5, "0", STR_PAD_LEFT);
+//                $Tb176ComprobanteContable->setNuComprobante($Tb176ComprobanteContable->getCoComprobanteContable())->save($con);
                 
            $sql_month ="SELECT (date_trunc('MONTH','$hasta'::date) + INTERVAL '0 MONTH + 0 day')::DATE as first_day";
 
@@ -107,7 +107,7 @@ class CierreContableActions extends sfActions
                     
                     
                     $update = "update tb061_asiento_contable 
-                                  set nu_comprobante = '".$nu_comprobante."'
+                                  set nu_comprobante = '".$Tb176ComprobanteContable->getCoComprobanteContable()."'
                                 where co_asiento_contable = ".$reg["co_asiento_contable"];
                         
                     $result = $con->prepare($update);
@@ -166,6 +166,18 @@ class CierreContableActions extends sfActions
 //        var_dump($row["co_comprobante_contable"]);
 //        exit();            
         
+            
+        if($row["mo_debito"]!=$row["mo_credito"]){
+            
+		$this->data = json_encode(array(
+		    "success" => false,
+		    "msg" => 'El monto debito y el monto credito debe ser igual. Verifique!'
+		));  
+                echo $this->data;
+                return sfView::NONE;            
+            
+        }else{    
+            
         $tb176_comprobante_contable = Tb176ComprobanteContablePeer::retrieveByPK($row["co_comprobante_contable"]);
         
         $tb176_comprobante_contable->setInContabilizado(true);
@@ -198,6 +210,7 @@ class CierreContableActions extends sfActions
         $tb024_cuenta_contable->setPreDeb($tb024_cuenta_contable->getPreDeb() + $reg["mo_debito"]);
         
         $tb024_cuenta_contable->save($con);
+        }
         }        
         }  
             $con->commit();
@@ -207,7 +220,7 @@ class CierreContableActions extends sfActions
                     "msg" => 'El cierre diario se proceso exitosamente'
             ));
             
-        
+         
                       
        
       }catch (PropelException $e)
@@ -574,7 +587,9 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
         $c->addSelectColumn(Tb176ComprobanteContablePeer::MO_CREDITO);
         $c->addSelectColumn(Tb176ComprobanteContablePeer::FE_COMPROBANTE);
         $c->addSelectColumn(Tb176ComprobanteContablePeer::IN_CONTABILIZADO);
+
         $c->add(Tb176ComprobanteContablePeer::IN_CERRADO,FALSE);
+        $c->add(Tb176ComprobanteContablePeer::NU_ANIO,$this->getUser()->getAttribute('ejercicio'));
         $c->addJoin(Tb133TipoAsientoPeer::CO_TIPO_ASIENTO, Tb176ComprobanteContablePeer::CO_TIPO_ASIENTO);        
         $cantidadTotal = Tb176ComprobanteContablePeer::doCount($c);        
 
@@ -584,6 +599,10 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
         $stmt = Tb176ComprobanteContablePeer::doSelectStmt($c);
         $registros = array();
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
+            
+            if($reg["mo_debito"]==null&&$reg["mo_credito"]==null){
+                
+            }else{
                       
             list($anio,$mes,$dia) = explode("-",$reg["fe_comprobante"]);
             
@@ -592,6 +611,7 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
             $reg["in_contabilizado"] = $reg["in_contabilizado"]==FALSE?'NO':'SI';
             
             $registros[] = $reg;
+            }
         }
 
 

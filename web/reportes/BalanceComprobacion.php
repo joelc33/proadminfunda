@@ -10,36 +10,45 @@ class PDF extends FPDF {
 
         $this->empresa = $this->getDatosEmpresa(1);
 
-        if(!empty($this->empresa['tx_imagen_izq'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+        if (!empty($this->empresa['tx_imagen_izq'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
+
+        /*if(!empty($this->empresa['tx_imagen_cen'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+        }*/
+
+        /*  if(!empty($this->empresa['tx_imagen_der'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+        }*/
+
+        $this->SetFont('Arial', 'B', 9);
+
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        if (!empty($this->empresa['nb_institucion'])) {
+            $this->Ln(2);
+            $this->SetX(122);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->Ln(2);
+        }else{
+        $this->Ln(4);    
+        }
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
+        $this->Ln(4);
         
-
-//        if(!empty($this->empresa['tx_imagen_der'])){
-//            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
-//        }
-
-        $this->SetFont('Arial','B',8);
-        $this->SetTextColor(0,0,0);
-        $this->SetY(10);
-        $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
-        //$this->Ln(4);
-        //$this->SetX(10);
-        //$this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'),0,0,'C');
-        $this->Ln(4);
-        $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('COORDINACIÓN DE CONTABILIDAD'),0,0,'C');
-        $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+        
+//        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
         $this->SetFont('Arial','B',10);
         $this->SetWidths(array(200));
         $this->SetAligns(array("C"));  
         $this->Ln(6);
         $this->Cell(0,0,utf8_decode('BALANCE DE COMPROBACIÓN'),0,0,'C');                
-        $this->Ln(6);
-        //$this->Cell(0,0,utf8_decode('AL PERIODO AGOSTO 2018'),0,0,'C');         
+        $this->Ln(6);       
              
 
     }
@@ -97,7 +106,7 @@ class PDF extends FPDF {
                  $this->SetFillColor(201, 199, 199);
                  $this->SetWidths(array(195,105,35)); 
                  $this->SetAligns(array("L","C","R"));
-                 $this->Row(array('','--------------DURANTE EL PERIODO AGOSTO 2018-------------------',''),0,0); 
+                 $this->Row(array('','--------------DURANTE EL PERIODO-------------------',''),0,0); 
                  $this->SetFont('Arial','B',8);     
                  $this->SetFillColor(201, 199, 199);
                  $this->SetWidths(array(60,100,35,35,35,35,35)); 
@@ -178,7 +187,7 @@ where tb024.co_cuenta_contable = $co_cuenta";
     
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, nb_institucion, co_estado, co_municipio, tx_rif, tx_nit, 
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,

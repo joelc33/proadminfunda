@@ -10,30 +10,36 @@ class PDF extends FPDF {
         
         $this->empresa = $this->getDatosEmpresa(1);
 
-        //$this->Image("imagenes/gez.png", 20, 7,20);
-
-        if(!empty($this->empresa['tx_imagen_izq'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+        if (!empty($this->empresa['tx_imagen_izq'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
-        
 
-        /*if(!empty($this->empresa['tx_imagen_der'])){
+        /*if(!empty($this->empresa['tx_imagen_cen'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+        }*/
+
+        /*  if(!empty($this->empresa['tx_imagen_der'])){
             $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
         }*/
 
-        $this->SetFont('Arial','B',8);
-        $this->SetTextColor(0,0,0);
-        $this->SetY(10);
-        $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
+        $this->SetFont('Arial', 'B', 9);
+
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
         $this->Ln(4);
-        $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        if (!empty($this->empresa['nb_institucion'])) {
+            $this->Ln(2);
+            $this->SetX(122);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->Ln(2);
+        }else{
+        $this->Ln(4);    
+        }
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(4);
-        $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('COORDINACIÓN DE CONTABILIDAD'),0,0,'C');
-        $this->Ln(4);
-//        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
         $this->SetFont('Arial','B',10);
         $this->SetWidths(array(200));
@@ -172,7 +178,7 @@ class PDF extends FPDF {
             
             $sql = "SELECT to_char(tb061.created_at::date,'dd/mm/yyyy') as fecha,
                 case when substring(tb024.nu_cuenta_contable,1,1)::integer= 4 then 300 when substring(tb024.nu_cuenta_contable,1,3)::integer= 301 then 301 when substring(tb024.nu_cuenta_contable,1,3)::integer= 302 then 303 else tb190.codigo end as anexo,tb027.tx_tipo_solicitud||' - '||tb026.tx_observacion as tx_descripcion,
-                tb133.tx_tipo_asiento,tb061.mo_debe,tb061.mo_haber,tb061.co_solicitud,tb024.tx_cuenta,tb024.tx_descripcion as desc_cuenta, tb061.nu_comprobante
+                tb133.tx_tipo_asiento,tb061.mo_debe,tb061.mo_haber,tb061.co_solicitud,tb024.tx_cuenta,tb024.tx_descripcion as desc_cuenta, tb176.nu_comprobante
                 from tb061_asiento_contable tb061 
 left join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb061.co_cuenta_contable) 
 left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = 
@@ -183,8 +189,9 @@ when substring(tb024.nu_cuenta_contable,1,1)::integer = 4 then substring(tb024.n
 else substring(tb024.nu_cuenta_contable,1,9) end) 
 left join tb026_solicitud tb026 on (tb026.co_solicitud = tb061.co_solicitud) 
 left join tb027_tipo_solicitud tb027 on (tb027.co_tipo_solicitud = tb026.co_tipo_solicitud)
-left join tb133_tipo_asiento tb133 on (tb133.co_tipo_asiento = tb061.co_tipo_asiento) 
-where tb061.created_at::date >= '".$fe_inicio."' and tb061.created_at::date <= '".$fe_fin."' order by tb061.created_at::date asc, tb190.co_anexo_contable asc";
+left join tb133_tipo_asiento tb133 on (tb133.co_tipo_asiento = tb061.co_tipo_asiento)
+left join tb176_comprobante_contable tb176 on (tb176.co_comprobante_contable = tb061.nu_comprobante)
+where tb061.created_at::date >= '".$fe_inicio."' and tb061.created_at::date <= '".$fe_fin."' order by tb061.created_at::date asc, tb176.nu_comprobante asc";
                         
 //            var_dump($sql);
 //            exit();
@@ -195,7 +202,7 @@ where tb061.created_at::date >= '".$fe_inicio."' and tb061.created_at::date <= '
     
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, nb_institucion, co_estado, co_municipio, tx_rif, tx_nit, 
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,

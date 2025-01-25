@@ -267,6 +267,14 @@
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'fecha_creacion'
+                    },
+                    {
+                        header: 'Datos',
+                        width: 150,
+                        menuDisabled: true,
+                        sortable: true,
+                        dataIndex: 'in_reporte',
+                        renderer: renderDatos
                     }
                 ],
                 stripeRows: true,

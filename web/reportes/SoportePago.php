@@ -149,10 +149,14 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
         $this->Ln(4);
         $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
-        $this->Ln(4);
+        
         if (!empty($this->empresa['nb_institucion'])) {
-            $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
-            $this->Ln(4);
+            $this->Ln(2);
+            $this->SetX(52);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->Ln(2);
+        }else{
+        $this->Ln(4);    
         }
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(4);
@@ -202,6 +206,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->Ln(5);
          $this->RoundedRect(10, 50, 200, 15, 0.5, '1001', '', $style);
               $this->Ln(5);
+              $this->SetY(52);
           $this->SetFont('Arial','',8);
          $this->SetX(25);
          $this->Cell(200,5,utf8_decode('MONTO A PAGAR POR TRANSFERENCIA   ...............................................BS. '),0,0,'L');
@@ -385,8 +390,8 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->nro_comprobante['fe_emision'])),0,0);
             $this->Ln(5);  
             
-            $this->RoundedRect(10, 50, 95, 50, 0.5, '1001', '', $style);         
-            $this->RoundedRect(110, 50, 95, 50, 0.5, '1001', '', $style);    
+            $this->RoundedRect(10, $this->getY()-3, 95, 50, 0.5, '1001', '', $style);         
+            $this->RoundedRect(110, $this->getY()-3, 95, 50, 0.5, '1001', '', $style);    
 
             $this->Cell(95,0,utf8_decode('DATOS DEL AGENTE DE RETENCIÓN'),0,0,'C');
             $this->Cell(5,0,utf8_decode(''),0,0,'C');
@@ -398,28 +403,50 @@ class PDF_Flo extends PDF_FlowingBlock
             $agente_retencion = utf8_decode($this->empresa['nb_institucion']);
             }else{
             $agente_retencion = utf8_decode($this->empresa['nb_empresa']);    
-            }            
+            }
+            $y= $this->GetY();           
+            $this->SetY($y);
             $this->SetX(12);
-            $this->Cell(90,0,utf8_decode($agente_retencion),0,0,'L');
-            $this->Cell(10,0,utf8_decode(''),0,0,'C');
+            $this->MultiCell(90,4,$agente_retencion,0,1,'J',0);
+            $z= $this->GetY();
+            $this->SetY($y);            
+            $this->SetX(112);
             $this->MultiCell(90,4,utf8_decode($this->datos1['tx_razon_social']),0,1,'J',0);
+            $p= $this->GetY();
+            $cant = $z-$y;
             $this->SetX(12);
-            $this->SetFont('Arial','',8);            
-            $this->Cell(90,0,utf8_decode('R.I.F. Agente de Retención:'),0,0,'L');
-            $this->Cell(10,0,utf8_decode(''),0,0,'C');
+            $this->SetFont('Arial','',8); 
+            if($z==$p){
+            if($cant==4){
+             $q = $y +4;      
+            }else{
+             $q = $y +8;                  
+            }
+            }else{
+            $q = $y +8;    
+            }
+            $this->SetY($q);
+            $this->SetX(12);
+            $this->MultiCell(90,4,utf8_decode('R.I.F. Agente de Retención:'),0,1,'J',0);
+            $this->SetY($q);
+            $this->SetX(112);
             $this->MultiCell(90,4,utf8_decode('R.I.F. Contribuyente:'),0,1,'J',0);
             
-                        
+            $y= $this->GetY();
+            $this->SetY($y);            
             $this->SetX(12);
             $this->SetFont('Arial','B',8);            
-            $this->Cell(90,0,utf8_decode($this->empresa['tx_rif']),0,0,'L');
-            $this->Cell(10,0,utf8_decode(''),0,0,'C');
+            $this->MultiCell(90,4,utf8_decode($this->empresa['tx_rif']),0,1,'J',0);
+            $this->SetY($y);
+            $this->SetX(112);            
             $this->MultiCell(90,4,utf8_decode($this->datos1['tx_rif']),0,1,'J',0);
-            
+            $y= $this->GetY();
+            $this->SetY($y);              
             $this->SetX(12);
             $this->SetFont('Arial','',8);            
-            $this->Cell(90,0,utf8_decode('Dirección Fiscal:'),0,0,'L');
-            $this->Cell(10,0,utf8_decode(''),0,0,'C');
+            $this->MultiCell(90,4,utf8_decode('Dirección Fiscal:'),0,1,'J',0); 
+            $this->SetY($y);
+            $this->SetX(112);    
             $this->MultiCell(90,4,utf8_decode('Dirección Fiscal:'),0,1,'J',0); 
             
             
@@ -521,10 +548,10 @@ class PDF_Flo extends PDF_FlowingBlock
 //            $this->Row(array(utf8_decode('Pagina:'),utf8_decode('1')),0,0);
             $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
             $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->nro_comprobante['fe_emision'])),0,0);
-            $this->Ln(15);  
+            $this->Ln(10);  
             
-            $this->RoundedRect(10, 60, 95, 50, 0.5, '1001', '', $style);         
-            $this->RoundedRect(110, 60, 95, 50, 0.5, '1001', '', $style);    
+            $this->RoundedRect(10, $this->getY()-3, 95, 50, 0.5, '1001', '', $style);         
+            $this->RoundedRect(110, $this->getY()-3, 95, 50, 0.5, '1001', '', $style);    
 
             $this->Cell(95,0,utf8_decode('DATOS DEL AGENTE DE RETENCIÓN'),0,0,'C');
             $this->Cell(5,0,utf8_decode(''),0,0,'C');
@@ -536,28 +563,50 @@ class PDF_Flo extends PDF_FlowingBlock
             $agente_retencion = utf8_decode($this->empresa['nb_institucion']);
             }else{
             $agente_retencion = utf8_decode($this->empresa['nb_empresa']);    
-            }            
+            }
+            $y= $this->GetY();           
+            $this->SetY($y);
             $this->SetX(12);
-            $this->Cell(90,0,utf8_decode($agente_retencion),0,0,'L');
-            $this->Cell(10,0,utf8_decode(''),0,0,'C');
+            $this->MultiCell(90,4,$agente_retencion,0,1,'J',0);
+            $z= $this->GetY();
+            $this->SetY($y);            
+            $this->SetX(112);
             $this->MultiCell(90,4,utf8_decode($this->datos1['tx_razon_social']),0,1,'J',0);
+            $p= $this->GetY();
+            $cant = $z-$y;
             $this->SetX(12);
-            $this->SetFont('Arial','',8);            
-            $this->Cell(90,0,utf8_decode('R.I.F. Agente de Retención:'),0,0,'L');
-            $this->Cell(10,0,utf8_decode(''),0,0,'C');
+            $this->SetFont('Arial','',8); 
+            if($z==$p){
+            if($cant==4){
+             $q = $y +4;      
+            }else{
+             $q = $y +8;                  
+            }
+            }else{
+            $q = $y +8;    
+            }
+            $this->SetY($q);
+            $this->SetX(12);
+            $this->MultiCell(90,4,utf8_decode('R.I.F. Agente de Retención:'),0,1,'J',0);
+            $this->SetY($q);
+            $this->SetX(112);
             $this->MultiCell(90,4,utf8_decode('R.I.F. Contribuyente:'),0,1,'J',0);
             
-                        
+            $y= $this->GetY();
+            $this->SetY($y);            
             $this->SetX(12);
             $this->SetFont('Arial','B',8);            
-            $this->Cell(90,0,utf8_decode($this->empresa['tx_rif']),0,0,'L');
-            $this->Cell(10,0,utf8_decode(''),0,0,'C');
+            $this->MultiCell(90,4,utf8_decode($this->empresa['tx_rif']),0,1,'J',0);
+            $this->SetY($y);
+            $this->SetX(112);            
             $this->MultiCell(90,4,utf8_decode($this->datos1['tx_rif']),0,1,'J',0);
-            
+            $y= $this->GetY();
+            $this->SetY($y);              
             $this->SetX(12);
             $this->SetFont('Arial','',8);            
-            $this->Cell(90,0,utf8_decode('Dirección Fiscal:'),0,0,'L');
-            $this->Cell(10,0,utf8_decode(''),0,0,'C');
+            $this->MultiCell(90,4,utf8_decode('Dirección Fiscal:'),0,1,'J',0); 
+            $this->SetY($y);
+            $this->SetX(112);    
             $this->MultiCell(90,4,utf8_decode('Dirección Fiscal:'),0,1,'J',0); 
             
             

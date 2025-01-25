@@ -305,7 +305,7 @@
 
               PresupuestomodificacionEditar.main.formPanel_.getForm().submit({
                 method: 'POST',
-                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuestomodificacion/guardarTraspasoGenerar',
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuestomodificacion/guardar',
                 waitMsg: 'Enviando datos, por favor espere..',
                 waitTitle: 'Enviando',
                 failure: function(form, action) {
@@ -518,8 +518,14 @@
         stateful: true,
         listeners: {
           cellclick: function(Grid, rowIndex, columnIndex, e) {
-            PresupuestomodificacionEditar.main.editar.enable();
+          
+      if(PresupuestomodificacionEditar.main.OBJ.in_procesado==true){
+            PresupuestomodificacionEditar.main.nuevo.disable();
+            PresupuestomodificacionEditar.main.eliminar.disable();
+            }else{
+            PresupuestomodificacionEditar.main.nuevo.enable();
             PresupuestomodificacionEditar.main.eliminar.enable();
+        }
           }
         },
         bbar: new Ext.PagingToolbar({
@@ -689,8 +695,14 @@
         stateful: true,
         listeners: {
           cellclick: function(Grid, rowIndex, columnIndex, e) {
-            PresupuestomodificacionEditar.main.editar_destino.enable();
+          
+            if(PresupuestomodificacionEditar.main.OBJ.in_procesado==true){
+            PresupuestomodificacionEditar.main.nuevo_destino.disable();
+            PresupuestomodificacionEditar.main.eliminar_destino.disable();
+            }else{
+            PresupuestomodificacionEditar.main.nuevo_destino.enable();
             PresupuestomodificacionEditar.main.eliminar_destino.enable();
+        }          
           }
         },
         bbar: new Ext.PagingToolbar({
@@ -745,6 +757,15 @@
         ]
       });
       if (this.OBJ.id) {
+          
+      
+        if(this.OBJ.in_procesado==true){
+            
+        PresupuestomodificacionEditar.main.nuevo_destino.disable();
+        PresupuestomodificacionEditar.main.nuevo.disable();
+        
+        }      
+                
         PresupuestomodificacionEditar.main.gridPanel_origen.enable();
         PresupuestomodificacionEditar.main.gridPanel_destino.enable()
         this.nu_modificacion = new Ext.form.DisplayField({
@@ -807,7 +828,7 @@
         buttons: [
           this.crear,
           this.generar,
-          this.guardar,
+//          this.guardar,
           this.salir
         ],
         buttonAlign: 'center'

@@ -27,11 +27,15 @@ class PDF extends FPDF {
         $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
         $this->Ln(4);       
         $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
-        $this->Ln(4);
-        if (!empty($this->empresa['nb_institucion'])) 
-        {
-            $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
-            $this->Ln(4);
+        if (!empty($this->empresa['nb_institucion'])) {
+            $empresa = utf8_decode($this->empresa['nb_institucion']);
+            $this->Ln(2);
+            $this->SetX(52);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->Ln(2);
+        }else{
+            $empresa = utf8_decode($this->empresa['nb_empresa']);
+        $this->Ln(4);    
         }
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(4);
@@ -66,99 +70,164 @@ class PDF extends FPDF {
 
     function ChapterBody() {
 
-         $this->datos = $this->getSolicitudViatico();         
-         $this->SetFont('Arial','B',14);
-         $this->Cell(0,0,utf8_decode('SOLICITUD DE VIATICOS'),0,0,'C');
-        
-    
-         $this->SetFont('Arial','B',8);
-         $this->SetFillColor(255, 255, 255);         
-         $this->SetAligns(array("L","L"));
-         $this->SetWidths(array(170));
-         $this->SetAligns(array("L"));
-         $this->SetY(55);
-         $this->SetFillColor(201, 199, 199);
-         $this->SetX(25);            
-         $this->Row(array(utf8_decode('DATOS DE LA SOLICITUD')),1,1);
-         $this->SetFillColor(255, 255, 255);
-         $this->SetAligns(array("L"));
-         $this->SetFont('Arial','',9);
-         $this->SetX(25);          
-         $Y = $this->GetY();
-         $this->MultiCell(170,40,'',1,1,'L',1);  
-         $this->SetY($Y);
-         $this->SetX(25);          
-         $this->Row(array('FECHA SOLICITUD: '.date("d/m/Y", strtotime($this->datos['fecha']))),0,0);  
-         $this->SetX(25);          
-         $this->MultiCell(170,30,'ORGANISMO / UNIDAD:  '.utf8_decode($this->datos['tx_ente']),0,1,'J',0);
-         $this->SetFillColor(201, 199, 199);
-         $this->SetFont('Arial','B',8);   
-         $this->SetX(25);          
-         $this->Row(array(utf8_decode('DETALLES DE UBICACIÓN')),1,1);
-         $this->SetFillColor(255, 255, 255);
-         $this->SetFont('Arial','',9);         
-         $this->SetAligns(array("L"));
-         $Y = $this->GetY();
-         $this->SetX(25);          
-         $this->MultiCell(170,20,'',1,1,'L',1);  
-         $this->SetY($Y);
-         $this->SetX(25);          
-         $this->Row(array(utf8_decode('TIPO DE VIATICO: '.utf8_decode($this->datos['tx_tipo_viatico']))),0,0);   
-         $this->SetX(25);          
-         $this->MultiCell(170,10,'DESTINO:  '.utf8_decode($this->datos['destino']),0,1,'J',0);
-         $this->SetWidths(array(170));         
-         $this->SetFillColor(201, 199, 199);
-         $this->SetFont('Arial','B',8);       
-         $this->SetX(25);          
-         $this->Row(array(utf8_decode('DETALLES DEL VIAJE')),1,1);
-         $this->SetFont('Arial','',9);          
-         $this->SetFillColor(255, 255, 255); 
-         $this->SetAligns(array("L","L","L"));      
-         $this->SetWidths(array(60,60,50));
-         $this->SetX(25);          
-         $this->Row(array('FECHA DE SALIDA: '.date("d/m/Y", strtotime($this->datos['fe_desde'])),'FECHA DE RETORNO: '.date("d/m/Y", strtotime($this->datos['fe_hasta'])),'CANTIDAD DE DIAS: '),1,1);            
-         $this->SetWidths(array(170));
-         $this->SetAligns(array("L"));
-         $Y = $this->GetY();
-         $this->SetX(25);          
-         $this->MultiCell(170,30,'',1,1,'L',1);  
-         $this->SetY($Y);   
-         $this->SetX(25);          
-         $this->MultiCell(170,30,'MOTIVO:  '.utf8_decode($this->datos['tx_evento']),0,1,'J',0);     
-         $Y = $this->GetY();
-         $this->SetX(25);          
-         $this->MultiCell(170,40,'',1,1,'L',1);  
-         $this->SetY($Y);    
-         $this->SetX(25);          
-         $this->MultiCell(170,40,'OBSERVACIONES:  '.utf8_decode($this->datos['tx_observacion_hospedaje']),0,1,'J',0);              
-         $this->SetFont('Arial','B',8);
+         $this->datos = $this->getSolicitudViatico();      
+         $this->empresa = $this->getDatosEmpresa(1);
+        if (!empty($this->empresa['nb_institucion'])) {
+            $empresa = utf8_decode($this->empresa['nb_institucion']);
+        }else{
+            $empresa = utf8_decode($this->empresa['nb_empresa']);   
+        }         
+//         $this->SetFont('Arial','B',14);
+//         $this->Cell(0,0,utf8_decode('SOLICITUD DE VIATICOS'),0,0,'C');
+//        
+//    
+//         $this->SetFont('Arial','B',8);
+//         $this->SetFillColor(255, 255, 255);         
+//         $this->SetAligns(array("L","L"));
+//         $this->SetWidths(array(170));
+//         $this->SetAligns(array("L"));
+//         $this->SetY(55);
+//         $this->SetFillColor(201, 199, 199);
+//         $this->SetX(25);            
+//         $this->Row(array(utf8_decode('DATOS DE LA SOLICITUD')),1,1);
+//         $this->SetFillColor(255, 255, 255);
+//         $this->SetAligns(array("L"));
+//         $this->SetFont('Arial','',9);
+//         $this->SetX(25);          
+//         $Y = $this->GetY();
+//         $this->MultiCell(170,40,'',1,1,'L',1);  
+//         $this->SetY($Y);
+//         $this->SetX(25);          
+//         $this->Row(array('FECHA SOLICITUD: '.date("d/m/Y", strtotime($this->datos['fecha']))),0,0);  
+//         $this->SetX(25);          
+//         $this->MultiCell(170,30,'ORGANISMO / UNIDAD:  '.utf8_decode($this->datos['tx_ente']),0,1,'J',0);
+//         $this->SetFillColor(201, 199, 199);
+//         $this->SetFont('Arial','B',8);   
+//         $this->SetX(25);          
+//         $this->Row(array(utf8_decode('DETALLES DE UBICACIÓN')),1,1);
+//         $this->SetFillColor(255, 255, 255);
+//         $this->SetFont('Arial','',9);         
+//         $this->SetAligns(array("L"));
+//         $Y = $this->GetY();
+//         $this->SetX(25);          
+//         $this->MultiCell(170,20,'',1,1,'L',1);  
+//         $this->SetY($Y);
+//         $this->SetX(25);          
+//         $this->Row(array(utf8_decode('TIPO DE VIATICO: '.utf8_decode($this->datos['tx_tipo_viatico']))),0,0);   
+//         $this->SetX(25);          
+//         $this->MultiCell(170,10,'DESTINO:  '.utf8_decode($this->datos['destino']),0,1,'J',0);
+//         $this->SetWidths(array(170));         
+//         $this->SetFillColor(201, 199, 199);
+//         $this->SetFont('Arial','B',8);       
+//         $this->SetX(25);          
+//         $this->Row(array(utf8_decode('DETALLES DEL VIAJE')),1,1);
+//         $this->SetFont('Arial','',9);          
+//         $this->SetFillColor(255, 255, 255); 
+//         $this->SetAligns(array("L","L","L"));      
+//         $this->SetWidths(array(60,60,50));
+//         $this->SetX(25);          
+//         $this->Row(array('FECHA DE SALIDA: '.date("d/m/Y", strtotime($this->datos['fe_desde'])),'FECHA DE RETORNO: '.date("d/m/Y", strtotime($this->datos['fe_hasta'])),'CANTIDAD DE DIAS: '),1,1);            
+//         $this->SetWidths(array(170));
+//         $this->SetAligns(array("L"));
+//         $Y = $this->GetY();
+//         $this->SetX(25);          
+//         $this->MultiCell(170,30,'',1,1,'L',1);  
+//         $this->SetY($Y);   
+//         $this->SetX(25);          
+//         $this->MultiCell(170,30,'MOTIVO:  '.utf8_decode($this->datos['tx_evento']),0,1,'J',0);     
+//         $Y = $this->GetY();
+//         $this->SetX(25);          
+//         $this->MultiCell(170,40,'',1,1,'L',1);  
+//         $this->SetY($Y);    
+//         $this->SetX(25);          
+//         $this->MultiCell(170,40,'OBSERVACIONES:  '.utf8_decode($this->datos['tx_observacion_hospedaje']),0,1,'J',0);              
+//         $this->SetFont('Arial','B',8);
+//         
+////          $Y = $this->GetY();
+////         $this->MultiCell(200,30,'',1,1,'L',1);
+//         
+//         $this->SetAligns(array("C","C", "C"));
+//	 $this->SetFillColor(201, 199, 199);
+//         $this->SetWidths(array(85,85)); 
+//         $this->SetX(25);          
+//         $this->Row(array(utf8_decode('DATOS DEL SOLICITANTE'),utf8_decode('DATOS DEL APROBADOR')),1,1);
+//         $this->SetFillColor(255, 255, 255); 
+//         $this->SetAligns(array("L","L")); 
+//         $Y = $this->GetY();
+//         $this->SetX(25);    
+//         $this->SetWidths(array(85));         
+//         $this->Row(array('Nombre:','Nombre:'),0,0);
+//         $this->SetX(25);         
+//         $this->Row(array('C.I.:','C.I.:'),0,0);
+//         $this->SetX(25);         
+//         $this->Row(array('Cargo:','Cargo:'),0,0);
+//         $this->SetX(25);                
+//         $this->Row(array('Firma y Sello:','Firma y Sello:'),0,0);
+//         $this->SetY($Y);
+//         $this->SetX(25);          
+//         $this->MultiCell(85,50,'',1,1,'L',1);
+//         $this->SetY($Y);
+//         $this->SetX(110);          
+//         $this->MultiCell(85,50,'',1,1,'L',1);
+//         
+//          $this->AddPage(); 
+          
+          
+         $this->Ln(10); 
+         $this->SetFont('Arial','B',12);
+         $this->Cell(0,0,utf8_decode('MEMORANDO INTERNO'),0,0,'C');
+         $this->Ln(12);
+        $this->SetX(20);
+        $this->SetFont('Arial', 'B', 10);
+        $this->Cell(0, 0, utf8_decode('PARA: '), 0, 0, 'L');
+        $this->SetX(33);
+        $this->SetFont('Arial', '', 10);
+        $this->Cell(0,0,utf8_decode($this->datos['nb_responsable']),0,0,'L');
+        $this->Ln(5);
+        $this->SetX(20);
+        $this->SetFont('Arial', 'B', 10);
+        $this->Cell(0, 0, utf8_decode('DE:'), 0, 0, 'L');
+        $this->SetX(31);
+        $this->SetFont('Arial', '', 10);
+        $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'L');
+        $this->Ln(5);
+        $this->SetX(20);
+        $this->SetFont('Arial', 'B', 10);
+        $this->Cell(0,0,utf8_decode('ASUNTO: '),0,0,'L');
+        $this->SetFont('Arial', '', 10);
+        $this->SetX(37);
+        $this->Cell(0,0,utf8_decode('Asignación de viáticos'),0,0,'L');
+        $this->Ln(5);
+        $this->SetX(20);
+        $this->SetFont('Arial', 'B', 10);
+        $this->Cell(0,0,utf8_decode('FECHA: '),0,0,'L');
+        $this->SetX(35);
+        $this->SetFont('Arial', '', 10);
+        $this->Cell(0,0,date("d/m/Y", strtotime($this->datos['fecha'])),0,0,'L');        
+
+        $this->Ln(10);        
          
-//          $Y = $this->GetY();
-//         $this->MultiCell(200,30,'',1,1,'L',1);
+         $this->SetFont('Arial','',12);
+         $this->SetX(20);
+         $inf = "Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022 que seran utilizados para ".$this->datos['tx_evento']." hacia ".$this->datos['tx_tipo_viatico'].", donde se visitará ".$this->datos['destino']." durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_razon_social']." portador(a) de la cedula de identidad N° ".$this->datos['tx_rif']." representante de ".$empresa."."; 
+         $this->MultiCell(180,6,utf8_decode($inf),0,1,'J',0);
          
-         $this->SetAligns(array("C","C", "C"));
-	 $this->SetFillColor(201, 199, 199);
-         $this->SetWidths(array(85,85)); 
-         $this->SetX(25);          
-         $this->Row(array(utf8_decode('DATOS DEL SOLICITANTE'),utf8_decode('DATOS DEL APROBADOR')),1,1);
-         $this->SetFillColor(255, 255, 255); 
-         $this->SetAligns(array("L","L")); 
-         $Y = $this->GetY();
-         $this->SetX(25);    
-         $this->SetWidths(array(85));         
-         $this->Row(array('Nombre:','Nombre:'),0,0);
-         $this->SetX(25);         
-         $this->Row(array('C.I.:','C.I.:'),0,0);
-         $this->SetX(25);         
-         $this->Row(array('Cargo:','Cargo:'),0,0);
-         $this->SetX(25);                
-         $this->Row(array('Firma y Sello:','Firma y Sello:'),0,0);
-         $this->SetY($Y);
-         $this->SetX(25);          
-         $this->MultiCell(85,50,'',1,1,'L',1);
-         $this->SetY($Y);
-         $this->SetX(110);          
-         $this->MultiCell(85,50,'',1,1,'L',1);
+         $this->Ln(10); 
+         $this->SetX(20);
+         $this->Cell(0,0,utf8_decode('Agradeciendo la atención prestada.'),0,0,'L');
+         
+         $this->Ln(20); 
+         $this->SetX(20);
+         $this->Cell(0,0,utf8_decode('Atentamente.'),0,0,'L');
+         
+         $this->ln(10);
+         
+         $this->SetFont('Arial','B',12);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode($this->empresa['nb_presidente']),0,0,'C'); 
+         $this->SetFont('Arial','B',12);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode('Presidente(a)'),0,0,'C');         
   
 
     }
@@ -190,14 +259,16 @@ class PDF extends FPDF {
                         tb108.created_at as fecha, 
                         upper(tb047.tx_ente) as tx_ente, 
                         upper(tb110.tx_origen_viatico) as destino, 
-                        upper(tb107.tx_tipo_viatico ) as tx_tipo_viatico
+                        upper(tb107.tx_tipo_viatico ) as tx_tipo_viatico,
+                        tb047.nb_responsable,tb047a.cargo,tb008.tx_razon_social,tb008.tx_rif
                     from tb026_solicitud as tb026 
                     left join tb108_viatico as tb108 on tb108.co_solicitud = tb026.co_solicitud 
                     left join tb107_tipo_viatico as tb107 on tb107.co_tipo_viatico = tb108.co_tipo_viatico 
                     left join tb110_origen_viatico as tb110 on tb108.co_destino = tb110.co_origen_viatico 
                     left join tb008_proveedor as tb008 on tb008.co_proveedor=tb108.co_proveedor 
                     left join tb001_usuario as tb001 on tb001.co_usuario = tb108.co_usuario 
-                    left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente 
+                    left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
+                    left join tb047_ente as tb047a on tb047a.co_ente = 1
                     left join tb030_ruta as tb030 on tb030.co_solicitud = tb108.co_solicitud 
                     where tb030.co_ruta = ".$_GET['codigo']; //$conex->decrypt($_GET['codigo']);
                   
@@ -210,7 +281,7 @@ class PDF extends FPDF {
 
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion, nb_presidente,
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,

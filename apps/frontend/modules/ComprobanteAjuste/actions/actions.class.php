@@ -510,22 +510,35 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
             $c = new Criteria();
             $c->clearSelectColumns();    
             $c->addSelectColumn(Tb176ComprobanteContablePeer::CO_COMPROBANTE_CONTABLE);
+            $c->addSelectColumn(Tb176ComprobanteContablePeer::IN_CONTABILIZADO);
             $c->add(Tb176ComprobanteContablePeer::CO_SOLICITUD,$co_solicitud);
             $stmt = Tb176ComprobanteContablePeer::doSelectStmt($c);
 
             $res = $stmt->fetch(PDO::FETCH_ASSOC);      
            
             if($res["co_comprobante_contable"]!='' || $res["co_comprobante_contable"]!=null){
+                
+        if($res["in_contabilizado"]==true){
+            
+		$this->data = json_encode(array(
+		    "success" => false,
+		    "msg" => 'No se pueden agregar mas registros ya que el comprobante fue contabilizado. Verifique!'
+		));  
+                echo $this->data;
+                return sfView::NONE;            
+            
+        }else{                
+                
             $Tb176ComprobanteContable = Tb176ComprobanteContablePeer::retrieveByPK($res["co_comprobante_contable"]);   
             $Tb176ComprobanteContable->setCoUsuario($this->getUser()->getAttribute('codigo'))
                               ->setMoDebito($mo_debe)
                               ->setMoCredito($mo_haber)
-                              ->setInContabilizado(TRUE)
+                              ->setInContabilizado(FALSE)
                               ->setInCerrado(FALSE)
                               ->setFeContabilizado(date("Y-m-d"))
                               ->setCoSolicitud($co_solicitud)
                               ->save($con);            
-
+            }
             }else{
             $Tb176ComprobanteContable = new Tb176ComprobanteContable();
             $Tb176ComprobanteContable->setCoUsuario($this->getUser()->getAttribute('codigo'))
@@ -535,13 +548,14 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
                               ->setCoTipoAsiento(15)
                               ->setFeComprobante($fecha)
                               ->setCreatedAt(date("Y-m-d"))
-                              ->setInContabilizado(TRUE)
+                              ->setInContabilizado(FALSE)
                               ->setInCerrado(FALSE)
                                 ->setFeContabilizado(date("Y-m-d"))
                               ->setCoSolicitud($co_solicitud)
                               ->save($con);
-            $nu_comprobante = $anio.str_pad($mes, 2, "0", STR_PAD_LEFT).str_pad($Tb176ComprobanteContable->getCoComprobanteContable(), 5, "0", STR_PAD_LEFT);
-            $Tb176ComprobanteContable->setNuComprobante($nu_comprobante)->save($con);
+            
+//            $nu_comprobante = $anio.str_pad($mes, 2, "0", STR_PAD_LEFT).str_pad($Tb176ComprobanteContable->getCoComprobanteContable(), 5, "0", STR_PAD_LEFT);
+//            $Tb176ComprobanteContable->setNuComprobante($nu_comprobante)->save($con);
             }
             
            
@@ -573,6 +587,7 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
                     $tb061_aiento_contable->setCreatedAt($v["fecha"]);
                     $tb061_aiento_contable->setCoUsuario($this->getUser()->getAttribute('codigo'));
                     $tb061_aiento_contable->setCoTipoAsiento(15);
+                    $tb061_aiento_contable->setNuComprobante($Tb176ComprobanteContable->getCoComprobanteContable());
                     $tb061_aiento_contable->setInActivo(TRUE);
                     $tb061_aiento_contable->save($con); 
 
@@ -586,13 +601,13 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
                                         ->setFeMovimiento($v["fecha"])
                                         ->save($con);     
                     
-                    $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($v["co_cuenta_contable"]);
-
-                    $tb024_cuenta_contable->setPreCre($tb024_cuenta_contable->getPreCre() + $v["mo_credito"]);
-
-                    $tb024_cuenta_contable->setPreDeb($tb024_cuenta_contable->getPreDeb() + $v["mo_debito"]);
-
-                    $tb024_cuenta_contable->save($con);                     
+//                    $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($v["co_cuenta_contable"]);
+//
+//                    $tb024_cuenta_contable->setPreCre($tb024_cuenta_contable->getPreCre() + $v["mo_credito"]);
+//
+//                    $tb024_cuenta_contable->setPreDeb($tb024_cuenta_contable->getPreDeb() + $v["mo_debito"]);
+//
+//                    $tb024_cuenta_contable->save($con);                     
 
                     
                 }
@@ -1270,7 +1285,7 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
         
 //            var_dump($Tb176ComprobanteContable->getInCerrado());
 //            exit();
-            if($Tb176ComprobanteContable->getInCerrado()==false){
+            if($Tb176ComprobanteContable->getInContabilizado()==false){
         
 	$tb194_asiento_contable->setInRechazado(true);
         $tb194_asiento_contable->save($con);
@@ -1309,13 +1324,13 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
                               ->save($con);
 
             
-            $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($tb194_asiento_contable->getCoCuentaContable());
-
-            $tb024_cuenta_contable->setPreCre($tb024_cuenta_contable->getPreCre() - $tb194_asiento_contable->getMoHaber());
-
-            $tb024_cuenta_contable->setPreDeb($tb024_cuenta_contable->getPreDeb() - $tb194_asiento_contable->getMoHaber());
-
-            $tb024_cuenta_contable->save($con);  
+//            $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($tb194_asiento_contable->getCoCuentaContable());
+//
+//            $tb024_cuenta_contable->setPreCre($tb024_cuenta_contable->getPreCre() - $tb194_asiento_contable->getMoHaber());
+//
+//            $tb024_cuenta_contable->setPreDeb($tb024_cuenta_contable->getPreDeb() - $tb194_asiento_contable->getMoHaber());
+//
+//            $tb024_cuenta_contable->save($con);  
             
             
             
@@ -1329,7 +1344,7 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
             }else{
             		$this->data = json_encode(array(
 			    "success" => false,
-			    "msg" => 'El registro no se puede eliminar ya que el comprobante esta cerrado!'
+			    "msg" => 'El registro no se puede eliminar ya que el comprobante esta contabilizado!'
 		));    
             }
 	}catch (PropelException $e)

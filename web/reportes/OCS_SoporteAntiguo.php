@@ -160,7 +160,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetTextColor(0, 0, 0);
          $this->SetY(15);
          $this->SetX(15);
-         $this->SetWidths(array(80));
+         $this->SetWidths(array(180));
          $this->SetAligns(array("L"));
          $this->Row(array(utf8_decode('REPÚBLICA BOLIVARIANA DE VENEZUELA')), 0, 0);
          $this->SetX(15);
@@ -318,12 +318,13 @@ class PDF_Flo extends PDF_FlowingBlock
                 $j = 0;
             }
 
-            if ($this->getY() > 180) {
+            if ($this->getY() > 250) {
                 $this->addPage();
                 $this->SetX(108);
                 $this->Row(array('ANEXOS' . $this->datos['numero_compra']), 0, 0);
-                $this->SetWidths(array(111, 10, 23, 26, 18, 26));
+                $this->SetWidths(array(111, 20, 24, 28, 22, 29));
                 $this->SetAligns(array("C", "C", "R", "R", "R", "R"));
+                $this->SetX(15);
                 $this->Row(array(utf8_decode('DESCRIPCIÓN'), 'CANTIDAD', 'PREC./UNIT.', 'TOTAL'), 1, 1);
                 $this->SetAligns(array("L", "C", "R", "R", "R", "R"));
             }
@@ -395,8 +396,14 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->addPage();
                 $this->SetX(108);
                 $this->Row(array('ANEXOS' . $this->datos['numero_compra']), 0, 0);
-                $this->Row(array(utf8_decode('PROGRAMÁTICA'), utf8_decode('CUENTA'), utf8_decode('DESCRIPCIÓN'), utf8_decode('MONTO'), utf8_decode('ANALISTA'), utf8_decode('FECHA')), 0, 0);
-            }
+                $this->SetX(15);
+                $this->SetWidths(array(40, 40, 70, 34));
+                $this->SetAligns(array("C", "C", "L", "R", "C"));
+                $this->SetTextColor(0, 0, 0);
+                $this->SetFont('Times', 'B', 8);
+                $this->Row(array(utf8_decode('PROGRAMÁTICA'), utf8_decode('CUENTA'), utf8_decode('DESCRIPCIÓN'), utf8_decode('MONTO')), 0, 0);
+                $this->SetFont('Times', '', 8);
+                    }
         }
 
         if ($this->getY() > 250) {
