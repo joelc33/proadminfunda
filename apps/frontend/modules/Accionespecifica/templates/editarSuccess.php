@@ -20,10 +20,12 @@ this.id_tb083_proyecto_ac = new Ext.form.Hidden({
 });
 
 this.nu_accion_especifica = new Ext.form.TextField({
-	fieldLabel:'Codigo',
+	fieldLabel:'Codigo (4digitos)',
 	name:'tb084_accion_especifica[nu_accion_especifica]',
 	value:this.OBJ.nu_accion_especifica,
 	allowBlank:false,
+        maxLength:4,
+        minLength:4,        
 	width:100
 });
 

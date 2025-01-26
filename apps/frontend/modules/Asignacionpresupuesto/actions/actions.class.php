@@ -556,7 +556,7 @@ class AsignacionpresupuestoActions extends sfActions
             $registros[] = array(
                     "id"     => trim($res["id"]),
                     "id_tb084_accion_especifica"    => trim($res["id_tb084_accion_especifica"]),
-                    "nu_partida"                    => trim($res["nu_sector"].'.'.$res["nu_proyecto_ac"].'.00.'.$res["nu_accion_especifica"].'.'.Tb085PresupuestoPeer::mascaraNomina($res["nu_partida"])),
+                    "nu_partida"                    => trim($res["nu_sector"].'.'.$res["nu_proyecto_ac"].'.'.$res["nu_accion_especifica"].'.'.Tb085PresupuestoPeer::mascaraNomina($res["nu_partida"])),
                     "de_partida"                    => trim($res["de_partida"]),
                     "mo_inicial"                    => trim($res["mo_inicial"]),
                     "mo_actualizado"                => trim($res["mo_actualizado"]),

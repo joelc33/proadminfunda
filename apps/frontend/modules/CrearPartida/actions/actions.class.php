@@ -181,7 +181,7 @@ class CrearPartidaActions extends sfActions
                 $nu_ejecutor   = $this->getEjecutor($tb067_creacion_partidaForm["co_ente_ejecutor"]);
                 $nu_accion_especifica   = $this->getAccionEspecifica($tb067_creacion_partidaForm["co_accion_especifica"]);
                               
-                $co_categoria = $nu_ejecutor.'.'.$nu_sector.'.'.$nu_proyecto.'.00.'.$nu_accion_especifica.'.'.$presupuesto["nu_pa"].'.'.$presupuesto["nu_ge"].'.'.$presupuesto["nu_es"].'.'.$presupuesto["nu_se"].'.'.$tb067_creacion_partidaForm["tx_partida"].'.'.$tb067_creacion_partidaForm["tx_fuente"];     
+                $co_categoria = $nu_ejecutor.'.'.$nu_sector.'.'.$nu_proyecto.'.'.$nu_accion_especifica.'.'.$presupuesto["nu_pa"].'.'.$presupuesto["nu_ge"].'.'.$presupuesto["nu_es"].'.'.$presupuesto["nu_se"].'.'.$tb067_creacion_partidaForm["tx_partida"].'.'.$tb067_creacion_partidaForm["tx_fuente"];     
 
                 
      $con = Propel::getConnection();
@@ -478,7 +478,7 @@ class CrearPartidaActions extends sfActions
                 $nu_ejecutor   = $this->getEjecutor($campos["co_ente_ejecutor"]);
                 $nu_accion_especifica   = $this->getAccionEspecifica($campos["co_accion_especifica"]);
                               
-                $co_categoria = $nu_ejecutor.'.'.$nu_sector.'.'.$nu_proyecto.'.00.'.$nu_accion_especifica.'.'.$presupuesto["nu_pa"].'.'.$presupuesto["nu_ge"].'.'.$presupuesto["nu_es"].'.'.$presupuesto["nu_se"].'.'.$campos["tx_partida"].'.'.$nu_fi;
+                $co_categoria = $nu_ejecutor.'.'.$nu_sector.'.'.$nu_proyecto.'.'.$nu_accion_especifica.'.'.$presupuesto["nu_pa"].'.'.$presupuesto["nu_ge"].'.'.$presupuesto["nu_es"].'.'.$presupuesto["nu_se"].'.'.$campos["tx_partida"].'.'.$nu_fi;
                 
                 
                 $c = new Criteria();     
