@@ -80,7 +80,7 @@
                 items: [
                     this.fe_inicio, 
                     this.fe_fin, 
-                    this.co_anexo_contable
+//                    this.co_anexo_contable
                 ]
         });
         
