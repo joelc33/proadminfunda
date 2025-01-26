@@ -49,14 +49,13 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
         $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue('A2', 'Solicitud ')
     ->setCellValue('B2', 'Fecha')
-    ->setCellValue('C2', 'Pub 20')
-    ->setCellValue('D2', 'Codigo Contable')
-    ->setCellValue('E2', 'Cuenta Contable')
-    ->setCellValue('F2', 'Descripcion')
-    ->setCellValue('G2', 'Comprobante')
-    ->setCellValue('H2', 'Tipo de Asiento')
-    ->setCellValue('I2', 'Debe')            
-    ->setCellValue('J2', 'Haber'); 
+    ->setCellValue('C2', 'Codigo Contable')
+    ->setCellValue('D2', 'Cuenta Contable')
+    ->setCellValue('E2', 'Descripcion')
+    ->setCellValue('F2', 'Comprobante')
+    ->setCellValue('G2', 'Tipo de Asiento')
+    ->setCellValue('H2', 'Debe')            
+    ->setCellValue('I2', 'Haber'); 
 
     // Make bold cells
     $objPHPExcel->getActiveSheet()->getStyle('A1:J1')->getFont()->setBold(true);
@@ -88,15 +87,14 @@ where tb061.created_at::date >= '".$fe_inicio."' and tb061.created_at::date <= '
         //where n is the Excel row number (ie cell A1 in the first row)
         
         $objPHPExcel->getActiveSheet()->setCellValueExplicit('A'.$rowCount, $value['co_solicitud'], PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value['fecha'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
-        $objPHPExcel->getActiveSheet()->setCellValueExplicit('C'.$rowCount, $value['anexo'], PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->setCellValueExplicit('D'.$rowCount, $value['tx_cuenta'], PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->setCellValueExplicit('E'.$rowCount, $value['desc_cuenta'], PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->setCellValueExplicit('F'.$rowCount, $value['tx_descripcion'], PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->setCellValueExplicit('G'.$rowCount, $value['nu_comprobante'], PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->setCellValueExplicit('H'.$rowCount, $value['tx_tipo_asiento'], PHPExcel_Cell_DataType::TYPE_STRING);
-        $objPHPExcel->getActiveSheet()->setCellValueExplicit('I'.$rowCount, $value['mo_debe'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
-        $objPHPExcel->getActiveSheet()->setCellValueExplicit('J'.$rowCount, $value['mo_haber'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
+        $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value['fecha'], PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->setCellValueExplicit('C'.$rowCount, $value['tx_cuenta'], PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->setCellValueExplicit('D'.$rowCount, $value['desc_cuenta'], PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->setCellValueExplicit('E'.$rowCount, $value['tx_descripcion'], PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->setCellValueExplicit('F'.$rowCount, $value['nu_comprobante'], PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->setCellValueExplicit('G'.$rowCount, $value['tx_tipo_asiento'], PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->setCellValueExplicit('H'.$rowCount, $value['mo_debe'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
+        $objPHPExcel->getActiveSheet()->setCellValueExplicit('I'.$rowCount, $value['mo_haber'], PHPExcel_Cell_DataType::TYPE_NUMERIC);
         // Increment the Excel row counter
         $rowCount++;
         $total_dia_debe =  $total_dia_debe + $value['mo_debe'];  

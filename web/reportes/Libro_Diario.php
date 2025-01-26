@@ -47,7 +47,12 @@ class PDF extends FPDF {
         $this->Ln(6);
         $this->Cell(0,0,utf8_decode('LIBRO DIARIO'),0,0,'C');                
         $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('CORRESPONDIENTE DESDE '.$_GET['fe_inicio'].' HASTA '.$_GET['fe_fin']),0,0,'C'); 
+        list($anio,$mes,$dia) = explode("-", $_GET["fe_inicio"]);
+        $fe_inicio = $dia.'/'.$mes.'/'.$anio;
+        
+        list($anio,$mes,$dia) = explode("-", $_GET["fe_fin"]);
+        $fe_fin = $dia.'/'.$mes.'/'.$anio;         
+        $this->Cell(0,0,utf8_decode('CORRESPONDIENTE DESDE '.$fe_inicio.' HASTA '.$fe_fin),0,0,'C'); 
 
     }
 
@@ -81,15 +86,21 @@ class PDF extends FPDF {
          $total_dia_haber = 0;
          $fecha = '';
          
+        list($anio,$mes,$dia) = explode("-", $_GET["fe_inicio"]);
+        $fe_inicio = $dia.'/'.$mes.'/'.$anio;
+        
+        list($anio,$mes,$dia) = explode("-", $_GET["fe_fin"]);
+        $fe_fin = $dia.'/'.$mes.'/'.$anio;        
+         
          if(count($this->lista_anexos)>0){
          //************ Anexos *****************//
-         $this->SetWidths(array(20,20,15,40,115,30,40,30,30)); 
-         $this->SetAligns(array("C","C","C","L","L","L","C","L","R","R"));     
+         $this->SetWidths(array(20,20,40,130,30,40,30,30)); 
+         $this->SetAligns(array("C","C","C","L","L","L","R","R","R","R"));     
          $this->SetFont('Arial','B',8);    
          $this->SetFillColor(201, 199, 199);
          $this->Ln(6);
          $this->SetX(10);
-         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('PUB 21'),utf8_decode('CODIGO CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1); 
+         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('CODIGO CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1); 
        
 
          foreach($this->lista_anexos as $key => $campo){
@@ -116,22 +127,22 @@ class PDF extends FPDF {
          }
          
          $this->SetX(10);   
-         $this->SetWidths(array(20,20,15,40,115,30,40,30,30));  
-         $this->SetAligns(array("C","C","C","L","L","L","C","L","R","R"));     
+         $this->SetWidths(array(20,20,40,130,30,40,30,30));  
+         $this->SetAligns(array("C","C","C","L","L","L","R","R","R","R"));     
          $this->SetFillColor(255, 255, 255);                      
          $this->SetFont('Arial','B',8);   
-         $this->Row(array($campo['co_solicitud'],$campo['fecha'],$campo['anexo'],utf8_decode($campo['tx_cuenta']),utf8_decode($campo['tx_descripcion']),utf8_decode($campo['nu_comprobante']),utf8_decode($campo['tx_tipo_asiento']),number_format($campo['mo_debe'], 2, ',','.'),number_format($campo['mo_haber'], 2, ',','.')),0,0);         
+         $this->Row(array($campo['co_solicitud'],$campo['fecha'],utf8_decode($campo['tx_cuenta']),utf8_decode($campo['tx_descripcion']),utf8_decode($campo['nu_comprobante']),utf8_decode($campo['tx_tipo_asiento']),number_format($campo['mo_debe'], 2, ',','.'),number_format($campo['mo_haber'], 2, ',','.')),0,0);         
          
          if($this->getY()>170){
              $this->AddPage();
          //************ Anexos *****************//
-         $this->SetWidths(array(20,20,15,40,115,30,40,30,30));   
-         $this->SetAligns(array("C","C","C","L","L","L","C","L","R","R"));              
+         $this->SetWidths(array(20,20,40,130,30,40,30,30));   
+         $this->SetAligns(array("C","C","C","L","L","L","R","R","R","R"));              
          $this->SetFont('Arial','B',8);    
          $this->SetFillColor(201, 199, 199);
          $this->Ln(6);
          $this->SetX(10);
-         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('PUB 21'),utf8_decode('CODIGO CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1);
+         $this->Row(array(utf8_decode('Nº SOLICITUD'),utf8_decode('FECHA'),utf8_decode('CODIGO CONTABLE'),utf8_decode('DESCRIPCIÓN'),utf8_decode('COMPROBANTE'),utf8_decode('TIPO'),utf8_decode('DEBE'),utf8_decode('HABER')),1,1);
 
 
             }
@@ -146,7 +157,7 @@ class PDF extends FPDF {
          $this->SetFillColor(201, 199, 199);
          $this->Ln(6);
          $this->SetX(10);
-         $this->Row(array(utf8_decode('TOTAL DESDE ').$_GET['fe_inicio'].' HASTA '.$_GET['fe_fin'],number_format($total_dia_debe, 2, ',','.'),number_format($total_dia_haber, 2, ',','.')),1,1);         
+         $this->Row(array(utf8_decode('TOTAL DESDE ').$fe_inicio.' HASTA '.$fe_fin,number_format($total_dia_debe, 2, ',','.'),number_format($total_dia_haber, 2, ',','.')),1,1);         
          }else{
          $this->Ln(50);
          $this->Cell(0,0,utf8_decode('NO EXISTEN REGISTROS CON LOS PARAMETROS ESPECIFICADOS'),0,0,'C');    
