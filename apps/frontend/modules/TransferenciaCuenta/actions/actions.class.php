@@ -531,7 +531,7 @@ class TransferenciaCuentaActions extends sfActions
                 $tb155_cuenta_bancaria_historico_credito->setIdTb011CuentaBancaria($tb066_transferencia_cuenta->getCoCuentaBancariaCredito());
                 $tb155_cuenta_bancaria_historico_credito->setMoTransaccion($tb066_transferencia_cuenta->getMoDebito());
                 $tb155_cuenta_bancaria_historico_credito->setFeTransaccion($fecha);
-                $tb155_cuenta_bancaria_historico_credito->setDeObservacion('Transferencia entre Cuentas: solicitud Nº:' . $tb066_transferencia_cuenta->getCoSolicitud());
+                $tb155_cuenta_bancaria_historico_credito->setDeObservacion('Transferencia entre Cuentas: solicitud Nº:' . $tb066_transferencia_cuenta->getCoSolicitud().' '.$tx_concepto);
                 $tb155_cuenta_bancaria_historico_credito->setIdTb010Banco($tb066_transferencia_cuenta->getCoBancoCredito());
                 $tb155_cuenta_bancaria_historico_credito->setIdTb154TipoCuentaMovimiento(6);
                 $tb155_cuenta_bancaria_historico_credito->setIdTb153TipoDocumentoCuenta(2);
@@ -549,7 +549,7 @@ class TransferenciaCuentaActions extends sfActions
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
             $con->commit();
 
-            $ruta->setInCargarDato(true)->save($con);
+            $ruta->setInCargarDato(true)->setCoEstatusRuta(2)->save($con);
             Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
 
             $con->commit();
@@ -756,6 +756,8 @@ class TransferenciaCuentaActions extends sfActions
         $c->addSelectColumn(Tb066TransferenciaCuentaPeer::CO_CUENTA_CONTABLE_CREDITO);
         $c->addSelectColumn(Tb066TransferenciaCuentaPeer::CO_CUENTA_CONTABLE_DEBITO);
         $c->addSelectColumn(Tb066TransferenciaCuentaPeer::CREATED_AT);
+        $c->addSelectColumn(Tb029EstatusPeer::TX_ESTATUS);
+        $c->addSelectColumn(Tb026SolicitudPeer::CO_ESTATUS);
         
         $c->addSelectColumn(Tb030RutaPeer::TX_RUTA_REPORTE);
         
@@ -764,13 +766,14 @@ class TransferenciaCuentaActions extends sfActions
         $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO,   Criteria::JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb066TransferenciaCuentaPeer::CO_SOLICITUD);
+        $c->addJoin(Tb026SolicitudPeer::CO_ESTATUS, Tb029EstatusPeer::CO_ESTATUS);
 
         $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, array(18),Criteria::IN);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
 
         $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
-        $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2), Criteria::IN);
-        $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
+        $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2,3,4), Criteria::IN);
+        $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA, array(1, 2,3,4), Criteria::IN);
         $c->addAnd(Tb030RutaPeer::IN_ACTUAL, true);
         $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
 
@@ -805,6 +808,8 @@ class TransferenciaCuentaActions extends sfActions
                 "co_cuenta_bancaria_debito"     => Tb011CuentaBancariaPeer::retrieveByPK($res["co_cuenta_bancaria_debito"])->getTxCuentaBancaria(),
                 "co_banco_debito"               => Tb010BancoPeer::retrieveByPK($res["co_banco_debito"])->getTxBanco(),
                 "mo_debito"                     => $res["mo_debito"],
+                "co_estatus"                    => $res["co_estatus"],
+                "tx_estatus"                    => $res["tx_estatus"],
                 "co_cuenta_contable_credito"    =>Tb024CuentaContablePeer::retrieveByPK($res["co_cuenta_contable_credito"])->getNuCuentaContable(),
                 "co_cuenta_bancaria_credito"    =>Tb011CuentaBancariaPeer::retrieveByPK($res["co_cuenta_bancaria_credito"])->getTxCuentaBancaria(),
                 "co_banco_credito"              =>Tb010BancoPeer::retrieveByPK($res["co_banco_credito"])->getTxBanco(),
@@ -817,4 +822,99 @@ class TransferenciaCuentaActions extends sfActions
             "data"      =>  $registros
         ));
     }
+    
+    public function executeEnviarAnular(sfWebRequest $request)
+    {
+
+        $co_solicitud = $this->getRequestParameter("co_solicitud");
+        $co_usuario = $this->getUser()->getAttribute('codigo');
+        
+        $c = new Criteria();
+        $c->add(Tb066TransferenciaCuentaPeer::CO_SOLICITUD, $co_solicitud);
+        $stmt = Tb066TransferenciaCuentaPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);  
+        
+        $tb066_transferencia_cuenta = Tb066TransferenciaCuentaPeer::retrieveByPK($campos["co_transferencia_cuenta"]);    
+        
+            $tb066_transferencia_cuenta->setCoEstado(4)
+                ->setInAnular(true)
+                ->save();
+            
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
+            
+            $tb011_cuenta_bancaria_debito = Tb011CuentaBancariaPeer::retrieveByPK($tb066_transferencia_cuenta->getCoCuentaBancariaDebito());
+            $tb011_cuenta_bancaria_credito = Tb011CuentaBancariaPeer::retrieveByPK($tb066_transferencia_cuenta->getCoCuentaBancariaCredito());
+            
+                $tb061_asiento_contable = new Tb061AsientoContable();
+                $tb061_asiento_contable->setCoCuentaContable($tb011_cuenta_bancaria_credito->getCoCuentaContable())
+                    ->setMoHaber($tb066_transferencia_cuenta->getMoDebito())
+                    ->setCoTipoAsiento(7)
+                    ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                    ->setCoRuta($ruta->getCoRuta())
+                    ->setCoSolicitud($tb066_transferencia_cuenta->getCoSolicitud())
+                    ->save();
+
+                $tb061_asiento_contable = new Tb061AsientoContable();
+                $tb061_asiento_contable->setCoCuentaContable($tb011_cuenta_bancaria_debito->getCoCuentaContable())
+                    ->setMoDebe($tb066_transferencia_cuenta->getMoDebito())
+                    ->setCoTipoAsiento(7)
+                    ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                    ->setCoRuta($ruta->getCoRuta())
+                    ->setCoSolicitud($tb066_transferencia_cuenta->getCoSolicitud())
+                    ->save();
+
+
+                $tb011_transferencia_debito = Tb011CuentaBancariaPeer::retrieveByPk($tb066_transferencia_cuenta->getCoCuentaBancariaDebito());
+
+                if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
+                    $nu_transaccion =  date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . $tb066_transferencia_cuenta->getCoTransferenciaCuenta();
+                } else {
+                    $nu_transaccion = date("Ym") . '-' . $tb066_transferencia_cuenta->getCoTransferenciaCuenta();
+                }
+
+                $tb155_cuenta_bancaria_historico = new Tb155CuentaBancariaHistorico();
+                $tb155_cuenta_bancaria_historico->setInActivo(true);
+                $tb155_cuenta_bancaria_historico->setIdTb011CuentaBancaria($tb066_transferencia_cuenta->getCoCuentaBancariaDebito());
+                $tb155_cuenta_bancaria_historico->setMoTransaccion($tb066_transferencia_cuenta->getMoDebito());
+                $tb155_cuenta_bancaria_historico->setFeTransaccion($tb066_transferencia_cuenta->getCreatedAt());
+                $tb155_cuenta_bancaria_historico->setDeObservacion('Anulacion Transferencia entre Cuentas: solicitud Nº:' . $tb066_transferencia_cuenta->getCoSolicitud());
+                $tb155_cuenta_bancaria_historico->setIdTb010Banco($tb066_transferencia_cuenta->getCoBancoDebito());
+                $tb155_cuenta_bancaria_historico->setIdTb154TipoCuentaMovimiento(6);
+                $tb155_cuenta_bancaria_historico->setIdTb153TipoDocumentoCuenta(2);
+                $tb155_cuenta_bancaria_historico->setIdTb156SubtipoDocumento(1);
+                $tb155_cuenta_bancaria_historico->setMoSaldoNuevo($tb011_transferencia_debito->getMoDisponible() + $tb066_transferencia_cuenta->getMoDebito());
+                $tb155_cuenta_bancaria_historico->setMoSaldoAnterior($tb011_transferencia_debito->getMoDisponible());
+                $tb155_cuenta_bancaria_historico->setNuTransaccion('OT-' . $nu_transaccion);
+                $tb155_cuenta_bancaria_historico->setCoSolicitud($tb066_transferencia_cuenta->getCoSolicitud());
+                $tb155_cuenta_bancaria_historico->save();
+
+
+                $tb011_transferencia_debito->setMoDisponible($tb011_transferencia_debito->getMoDisponible() + $tb066_transferencia_cuenta->getMoDebito());
+                $tb011_transferencia_debito->save();
+
+                $tb011_transferencia_credito = Tb011CuentaBancariaPeer::retrieveByPk($tb066_transferencia_cuenta->getCoCuentaBancariaCredito());
+
+                $tb155_cuenta_bancaria_historico_credito = new Tb155CuentaBancariaHistorico();
+                $tb155_cuenta_bancaria_historico_credito->setInActivo(true);
+                $tb155_cuenta_bancaria_historico_credito->setIdTb011CuentaBancaria($tb066_transferencia_cuenta->getCoCuentaBancariaCredito());
+                $tb155_cuenta_bancaria_historico_credito->setMoTransaccion($tb066_transferencia_cuenta->getMoDebito());
+                $tb155_cuenta_bancaria_historico_credito->setFeTransaccion($tb066_transferencia_cuenta->getCreatedAt());
+                $tb155_cuenta_bancaria_historico_credito->setDeObservacion(' Anulacion Transferencia entre Cuentas: solicitud Nº:' . $tb066_transferencia_cuenta->getCoSolicitud());
+                $tb155_cuenta_bancaria_historico_credito->setIdTb010Banco($tb066_transferencia_cuenta->getCoBancoCredito());
+                $tb155_cuenta_bancaria_historico_credito->setIdTb154TipoCuentaMovimiento(3);
+                $tb155_cuenta_bancaria_historico_credito->setIdTb153TipoDocumentoCuenta(3);
+                $tb155_cuenta_bancaria_historico_credito->setIdTb156SubtipoDocumento(1);
+                $tb155_cuenta_bancaria_historico_credito->setMoSaldoNuevo($tb011_transferencia_credito->getMoDisponible() - $tb066_transferencia_cuenta->getMoDebito());
+                $tb155_cuenta_bancaria_historico_credito->setMoSaldoAnterior($tb011_transferencia_credito->getMoDisponible());
+                $tb155_cuenta_bancaria_historico_credito->setNuTransaccion('OT-' . $nu_transaccion);
+                $tb155_cuenta_bancaria_historico_credito->setCoSolicitud($tb066_transferencia_cuenta->getCoSolicitud());
+                $tb155_cuenta_bancaria_historico_credito->save($con);
+
+                $tb011_transferencia_credito->setMoDisponible($tb011_transferencia_credito->getMoDisponible() - $tb066_transferencia_cuenta->getMoDebito());
+                $tb011_transferencia_credito->save();        
+
+        $tb026_solicitud = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
+        $tb026_solicitud->setCoEstatus(4);
+        $tb026_solicitud->save();
+    }    
 }

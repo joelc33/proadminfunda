@@ -122,7 +122,7 @@
                         if (boton == "yes") {
                             this.msg = Ext.get('formulariosolicitud');
                             this.msg.load({
-                                url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/enviarAnular",
+                                url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/TransferenciaCuenta/enviarAnular",
                                 params: {
                                     co_solicitud: solicitudLista.main.gridPanel_.getSelectionModel().getSelected().get('co_solicitud')
                                 },
@@ -198,16 +198,16 @@
                     <?php
                     }
                     ?>
-                    this.formulario, '-',
+//                    this.formulario, '-',
                   //  this.detalle, '-',
-                    this.estado, '-',
+//                    this.estado, '-',
                     this.anular
                 ],
                 columns: [
                     new Ext.grid.RowNumberer(),
                     {
                         header: 'N° Proceso',
-                        width: 100,
+                        width: 80,
                         menuDisabled: true,
                         dataIndex: 'co_solicitud'
                     },
@@ -256,7 +256,7 @@
                     },
                     {
                         header: 'Creado Por',
-                        width: 150,
+                        width: 80,
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'tx_login'
@@ -275,6 +275,13 @@
                         sortable: true,
                         dataIndex: 'in_reporte',
                         renderer: renderDatos
+                    },
+                    {
+                        header: 'Estatus',
+                        width: 80,
+                        menuDisabled: true,
+                        sortable: true,
+                        dataIndex: 'tx_estatus'
                     }
                 ],
                 stripeRows: true,
@@ -282,9 +289,15 @@
                 stateful: true,
                 listeners: {
                     cellclick: function(Grid, rowIndex, columnIndex, e) {
+                        
+                        if(solicitudLista.main.store_lista.getAt(rowIndex).get('co_estatus')==4){
+                        solicitudLista.main.anular.disable();                            
+                        }else{
+                        solicitudLista.main.anular.enable();                           
+                        }
+                           
 
                         solicitudLista.main.estado.enable();
-                        solicitudLista.main.anular.enable();
                         solicitudLista.main.formulario.enable();
                         solicitudLista.main.detalle.enable();
 
@@ -367,6 +380,12 @@
                     {
                         name: 'in_reporte'
                     },
+                    {
+                        name: 'co_estatus'
+                    },
+                    {
+                        name: 'tx_estatus'
+                    },                   
                     {
                         name: 'co_ruta'
                     },
