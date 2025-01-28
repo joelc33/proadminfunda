@@ -28,7 +28,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
     // We fetch each database result row into $row in turn
 
     $objPHPExcel->setActiveSheetIndex(0)
-    ->setCellValue('A1', 'RIF_GOB')
+    ->setCellValue('A1', 'RIF')
     ->setCellValue('B1', 'PER_IMP')
     ->setCellValue('C1', 'FEC_DOC')
     ->setCellValue('D1', 'COMPRA')
@@ -70,6 +70,12 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
       order by tb063.fe_pago ASC;";                 
      
     $retencion = $conex->ObtenerFilasBySqlSelect($sql);
+    
+        $sql = "SELECT replace(tx_rif,'-','') as tx_rif
+        FROM public.tb015_empresa
+        WHERE co_empresa = 1;";
+
+        $datos = $conex->ObtenerFilasBySqlSelect($sql);   
 
     //var_dump($retencion); exit();
     $rowCount = 2;
@@ -77,7 +83,8 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
     foreach ($retencion as $key => $value) {
         //Set cell An to the "name" column from the database (assuming you have a column called name)
         //where n is the Excel row number (ie cell A1 in the first row)
-        $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $value['rif_gob']);
+        if($value['mont_iva']>0){
+        $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $datos[0]['tx_rif']);
         $objPHPExcel->getActiveSheet()->setCellValueExplicit('B'.$rowCount, $value['per_imp'], PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $value['fec_doc']);
         $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $value['compra']);
@@ -96,6 +103,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
         $objPHPExcel->getActiveSheet()->SetCellValue('Q'.$rowCount, $value['nro_exp']);
         // Increment the Excel row counter
         $rowCount++;
+        }
     }
 
     // Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file

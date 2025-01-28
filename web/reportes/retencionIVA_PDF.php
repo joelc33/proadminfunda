@@ -7,32 +7,36 @@ class PDF extends FPDF {
     public $conexion;
     function Header() {
 
+        $this->empresa = $this->getDatosEmpresa(1);
+        if (!empty($this->empresa['tx_imagen_izq'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+        }
 
-        $this->Image("imagenes/escudosanfco.jpg", 100, 7,20);
+        /*if(!empty($this->empresa['tx_imagen_cen'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+        }*/
 
-        $this->SetFont('Arial','B',10);
-        
-      //  $this->datos = $this->getTipoOrdenes();
+        /*  if(!empty($this->empresa['tx_imagen_der'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+        }*/
 
-        $this->SetTextColor(0,0,0);
-        $this->SetY(32);
-        $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
-        $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
-        $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN'),0,0,'C');
-        $this->Ln(8);
-        $this->SetFont('Arial','B',10);
-        $this->Cell(0,0,utf8_decode('RETENCIONES IVA'),0,0,'C');
+        $this->SetFont('Arial', 'B', 9);
+
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
         $this->Ln(4);
-        $this->SetFont('Arial','',8);
-
-        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
-        $this->Ln(2);
-        if ($this->PageNo()>1) $this->Cell(0,10,utf8_decode('Página ').$this->PageNo(),0,0,'L');  
-       
-        $this->SetTextColor(0,0,0);
-        $this->SetX(1);       
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        if (!empty($this->empresa['nb_institucion'])) {
+            $this->Ln(2);
+            $this->SetX(52);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->Ln(2);
+        }else{
+        $this->Ln(4);    
+        }
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
+        $this->Ln(4);       
 
     }
 
@@ -60,10 +64,19 @@ class PDF extends FPDF {
 
     function ChapterBody() {
 
-        $this->SetY(65);
-        $x =  $this->getX();
-        $campo='';
-        $this->getX($x);
+         $this->Ln(6);
+         $this->SetWidths(array(150));
+         $this->SetX(30);
+         $this->SetAligns(array("C")); 
+         $this->SetFont('Arial','B',12);         
+         $this->Row(array(utf8_decode('RETENCIONES IVA')),0,0);
+         $this->Ln(2);
+         $this->SetWidths(array(200));
+         $this->SetAligns(array("L"));           
+         $this->SetFont('Arial','B',8); 
+         $this->SetFillColor(255, 255, 255); 
+         
+        $this->Row(array('RANGO DE FECHA DEL: '.date("d/m/Y", strtotime($_GET['fe_inicio'])).' AL '.date("d/m/Y", strtotime($_GET['fe_fin']))),0,0);          
 
         $this->datos_grupo = $this->getGrupo();
         $this->datos_cuenta = $this->getCuenta( 92);
@@ -75,28 +88,22 @@ class PDF extends FPDF {
 
         foreach($this->datos_grupo as $key => $campo1){
 
-            $this->Ln(10);
+            if($campo1["co_iva_retencion"]>0){
+            $this->Ln(5);
             $this->setX(10);
-            $this->SetFont('Arial','',7);     
+            $this->SetFont('Arial','B',7);     
             $this->SetWidths(array(140 ));  
             $this->SetAligns(array("L",));   
             $this->Row(array( 'PORCENTAJE DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
-//            $this->Ln(2);
-//            $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
             $this->Ln(2);
 
             $this->datos = $this->getRetenciones( $campo1["co_iva_retencion"]);
-        
-            $this->SetFont('Arial','',7);     
-            $this->SetWidths(array(140 ));  
-            $this->SetAligns(array("L",));   
-            $this->Row(array( 'RANGO DE FECHA DEL: '.$_GET["fe_inicio"].' AL: '.$_GET["fe_fin"]  ),0,0); 
-            $this->Ln(2);
+            
             $this->SetFont('Arial','B',7);     
             $this->SetWidths(array(10,25,50,15,25,25,25,25 ));  
-            $this->SetAligns(array("C","C","C","C","C","C","C","C"));   
+            $this->SetAligns(array("C","C","C","C","R","R","R","R"));   
             $this->Row(array(utf8_decode('Nº'),'Orden de Pago','Beneficiario','Fecha', 'Monto Factura.', 'Base Imp.', 'Obj. de Ret.', 'Monto de Deduc.'),1,0); 
-            $this->SetAligns(array("C","C","L","C","L","L","L"));                  
+            $this->SetAligns(array("C","C","L","C","R","R","R","R"));                   
             //$this->Ln(2);
             $nu_total=0;
             $nu_base_imponible=0;
@@ -104,6 +111,8 @@ class PDF extends FPDF {
             $nu_iva_retencion=0;
             $i = 1;
             foreach($this->datos as $key => $campo){
+                
+                if($campo['nu_iva_retencion']>0){
                 
                 $this->setX(10);
                 $this->SetFont('Arial','',6);
@@ -128,28 +137,30 @@ class PDF extends FPDF {
 
                     $this->AddPage();
                     $this->setX(10);
-                    $this->Ln(10);
+                    
+                     $this->SetWidths(array(200));
+                     $this->SetAligns(array("L"));           
+                     $this->SetFont('Arial','B',8); 
+                     $this->SetFillColor(255, 255, 255); 
+
+                    $this->Row(array('RANGO DE FECHA DEL: '.date("d/m/Y", strtotime($_GET['fe_inicio'])).' AL '.date("d/m/Y", strtotime($_GET['fe_fin']))),0,0);          
+
+                    $this->Ln(5);
                     $this->SetFont('Arial','',7);     
                     $this->SetWidths(array(140 ));  
                     $this->SetAligns(array("L",));   
                     $this->Row(array( 'PORCENTAJE DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
-//                    $this->Ln(2);
-//                    $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
                     $this->Ln(2);
-
-                    $this->SetFont('Arial','',7);     
-                    $this->SetWidths(array(140 ));  
-                    $this->SetAligns(array("L",));   
-                    $this->Row(array( 'RANGO DE FECHA DEL: '.$_GET["fe_inicio"].' AL: '.$_GET["fe_fin"]  ),0,0); 
-                    $this->Ln(2);
+                    
                     $this->SetFont('Arial','B',7);     
                     $this->SetWidths(array(10,25,50,15,25,25,25,25 ));   
-                    $this->SetAligns(array("C","C","C","C","C","C","C","C"));   
+                    $this->SetAligns(array("C","C","C","C","R","R","R","R"));   
                     $this->Row(array(utf8_decode('Nº'),'Orden de Pago','Beneficiario','Fecha', 'Monto Factura.', 'Base Imp.', 'Obj. de Ret.', 'Monto de Deduc.'),1,0); 
-                    $this->SetAligns(array("C","C","L","C","L","L","L"));
+                    $$this->SetAligns(array("C","C","L","C","R","R","R","R"));
 
                 }
                 $i++;
+            }
             }
 
             $this->anulado = $this->getAnulado( $campo1["co_iva_retencion"]);
@@ -217,7 +228,7 @@ class PDF extends FPDF {
             $this->setX(10);
             $this->SetFont( 'Arial', 'B', 7);
             $this->SetWidths(array(100,25,25,25,25 )); 
-            $this->SetAligns(array("C","L","L","L","L"));
+            $this->SetAligns(array("R","R","R","R","R"));
             $this->Row(array(utf8_decode('TOTAL PROCENTAJE: '.$campo1["co_iva_retencion"]), 
             number_format($nu_total, 2, ',','.'), 
             number_format($nu_base_imponible, 2, ',','.'), 
@@ -226,38 +237,39 @@ class PDF extends FPDF {
 
             if($this->getY()>240){
 
-                $this->AddPage();
-                $this->setX(10);
-                $this->Ln(10);
-                $this->SetFont('Arial','',7);     
-                $this->SetWidths(array(140 ));  
-                $this->SetAligns(array("L",));   
-                $this->Row(array( 'PORCENTAJE DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
-//                $this->Ln(2);
-//                $this->Row(array( utf8_decode('CUENTA N°: '.$this->datos_cuenta["tx_cuenta_bancaria"].' - '.$this->datos_cuenta["tx_descripcion"] )  ),0,0); 
-                $this->Ln(2);
+                    $this->AddPage();
+                    $this->setX(10);
+                    
+                     $this->SetWidths(array(200));
+                     $this->SetAligns(array("L"));           
+                     $this->SetFont('Arial','B',8); 
+                     $this->SetFillColor(255, 255, 255); 
 
-                $this->SetFont('Arial','',7);     
-                $this->SetWidths(array(140 ));  
-                $this->SetAligns(array("L",));   
-                $this->Row(array( 'RANGO DE FECHA DEL: '.$_GET["fe_inicio"].' AL: '.$_GET["fe_fin"]  ),0,0); 
-                $this->Ln(2);
-                $this->SetFont('Arial','B',7);     
-                $this->SetWidths(array(10,25,50,15,25,25,25,25 ));   
-                $this->SetAligns(array("C","C","C","C","C","C","C","C"));   
-                $this->Row(array(utf8_decode('Nº'),'Orden de Pago','Beneficiario','Fecha', 'Monto Factura.', 'Base Imp.', 'Obj. de Ret.', 'Monto de Deduc.'),1,0); 
-                $this->SetAligns(array("C","C","L","C","L","L","L"));
+                    $this->Row(array('RANGO DE FECHA DEL: '.date("d/m/Y", strtotime($_GET['fe_inicio'])).' AL '.date("d/m/Y", strtotime($_GET['fe_fin']))),0,0);          
+
+                    $this->Ln(5);
+                    $this->SetFont('Arial','',7);     
+                    $this->SetWidths(array(140 ));  
+                    $this->SetAligns(array("L",));   
+                    $this->Row(array( 'PORCENTAJE DE RETENCION: '.$campo1["co_iva_retencion"]  ),0,0); 
+                    $this->Ln(2);
+                    
+                    $this->SetFont('Arial','B',7);     
+                    $this->SetWidths(array(10,25,50,15,25,25,25,25 ));   
+                    $this->SetAligns(array("C","C","C","C","R","R","R","R"));   
+                    $this->Row(array(utf8_decode('Nº'),'Orden de Pago','Beneficiario','Fecha', 'Monto Factura.', 'Base Imp.', 'Obj. de Ret.', 'Monto de Deduc.'),1,0); 
+                    $$this->SetAligns(array("C","C","L","C","R","R","R","R"));
 
             }
-            
+            } 
         }
 
         $this->Ln(5);
         $this->setX(10);
         $this->SetFont( 'Arial', 'B', 8);
         $this->SetWidths(array(100,25,25,25,25 )); 
-        $this->SetAligns(array("C","L","L","L","L"));
-        $this->Row(array(utf8_decode('TOTAL GENERAL: '), 
+        $this->SetAligns(array("R","R","R","R","R"));
+        $this->Row(array(utf8_decode('TOTAL: '), 
         number_format($nu_total_general, 2, ',','.'), 
         number_format($nu_base_imponible_general, 2, ',','.'), 
         number_format($nu_iva_factura_general, 2, ',','.'), 
@@ -311,26 +323,7 @@ class PDF extends FPDF {
 
         $conex = new ConexionComun();
         
-        if(strtotime($_GET["fe_inicio"])<'01-10-2018'){
-            
-        $condicion ="";    
-        $condicion .= " tb060.fe_pago >= '". $_GET["fe_inicio"]."' and ";
-        $condicion .= " tb060.fe_pago <= '".$_GET["fe_fin"]."' ";            
 
-        $sql = "SELECT 'G200036524'::text as rif_gob, to_char(tb060.fe_pago, 'YYYYMM') as per_imp, tb045.fe_emision as fec_doc, 'C'::text as compra, '01'::text as factura, 
-        inicial||tx_rif as rif_prov, 
-        tx_razon_social as den_pro, nu_factura as nro_dcto, 
-        nu_control as nro_cont, nu_total, nu_iva_factura, nu_iva_retencion, 
-        to_char(tb060.fe_pago, 'YYYYMM')||lpad((tb045.co_solicitud)::text, 8, '0')::text as nro_com, 0 as dcto_af, 
-        0 as mont_ex, co_iva_factura as alicuota, 0 as nro_exp,
-        tb060.tx_serial, to_char(tb045.fe_emision, 'DD/MM/YYYY') as fe_emision, to_char(tb060.fe_pago, 'DD/MM/YYYY') as fe_pago, nu_base_imponible
-          FROM tb045_factura as tb045
-          inner join tb008_proveedor as tb008 on tb008.co_proveedor = tb045.co_proveedor
-          inner join tb007_documento as tb007 on tb007.co_documento = tb008.co_documento
-          inner join tb060_orden_pago as tb060 ON tb060.co_orden_pago = tb045.co_odp
-          WHERE tb045.in_anular is not true and tb045.co_iva_retencion = ".$co_iva_retencion." and tb060.in_anular is not true AND tb060.in_anulado is not true and ".$condicion."
-          order by tb060.fe_pago ASC;";  
-        }else{
             
         $condicion ="";    
         $condicion .= " tb063.fe_pago >= '". $_GET["fe_inicio"]."' and ";
@@ -352,7 +345,7 @@ class PDF extends FPDF {
           inner join tb063_pago as tb063 ON tb063.co_liquidacion_pago = tb062.co_liquidacion_pago
           WHERE tb045.in_anular is not true and tb045.co_iva_retencion = ".$co_iva_retencion." and tb060.in_anular is not true AND tb060.in_anulado is not true and ".$condicion."
           order by tb063.fe_pago ASC;";    
-        }
+        
           //echo var_dump($sql); exit();
          
           return $conex->ObtenerFilasBySqlSelect($sql);
@@ -409,6 +402,29 @@ class PDF extends FPDF {
         return  $datosSol[0];
 
     }
+    
+    function getDatosEmpresa( $codigo){
+
+        $sql = "SELECT co_empresa, nb_empresa, nb_institucion, co_estado, co_municipio, tx_rif, tx_nit, 
+        tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
+        tx_sigla,
+        op_imagen->'izquierda'->0 as izquierda_x,
+        op_imagen->'izquierda'->1 as izquierda_y,
+        op_imagen->'izquierda'->2 as izquierda_w,
+        op_imagen->'centro'->0 as centro_x,
+        op_imagen->'centro'->1 as centro_y,
+        op_imagen->'centro'->2 as centro_w,
+        op_imagen->'derecha'->0 as derecha_x,
+        op_imagen->'derecha'->1 as derecha_y,
+        op_imagen->'derecha'->2 as derecha_w
+        FROM public.tb015_empresa
+        WHERE co_empresa = ".$codigo.";";
+
+        $conex = new ConexionComun();
+        $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+        return  $datosSol[0];
+  
+    }     
     
  }
 

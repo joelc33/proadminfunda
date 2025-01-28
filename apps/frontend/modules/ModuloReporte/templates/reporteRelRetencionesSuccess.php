@@ -124,9 +124,9 @@
                 items: [
                     this.fe_inicio, 
                     this.fe_fin, 
-                    this.proveedor, 
-                    this.documento, 
-                    this.tipoOrden,
+//                    this.proveedor, 
+//                    this.documento, 
+//                    this.tipoOrden,
                     //this.co_tipo_retencion
                 ]
         });
@@ -136,7 +136,7 @@
 		autoWidth:true,
 		border:false,
 		padding	: 10,
-		html:'<FONT SIZE=2><p><b>Muestra un reporte relación detallada de OP por Proveedor.</p></b></font><FONT SIZE=2><p>1.Indique el rango de fechas</p><p>2.Indique el código del proveedor</p><p>3.Seleccione el tipo de orden</p><p>4.Indique el nro. de documento</p><p>5.Presione el Botón Consultar , valor por defecto "TODOS"</p></font>',
+		html:'<FONT SIZE=2><p><b>Muestra un reporte relación detallada de retencines de OP por Proveedor.</p></b></font><FONT SIZE=2><p>1.Indique el rango de fechas</p><p>2.Indique el código del proveedor</p><p>3.Seleccione el tipo de orden</p><p>4.Indique el nro. de documento</p><p>5.Presione el Botón Consultar , valor por defecto "TODOS"</p></font>',
         });
  	
         this.formpanel = new Ext.form.FormPanel({
@@ -219,7 +219,7 @@
                 Ext.Msg.alert("Alerta","Debe ingresar correctamente los parametros de busqueda requeridos");
                 return false;
             }
-            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/RelRetenciones.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue()+'&nu_codigo='+Ext.get('cod_prov').getValue());
+            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/RelRetenciones.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue());
 
          },
 
@@ -229,7 +229,7 @@
                 Ext.Msg.alert("Alerta","Debe ingresar correctamente los parametros de busqueda requeridos");
                 return false;
             }
-            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionIVA_PDF.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue()+'&nu_codigo='+Ext.get('cod_prov').getValue());
+            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionIVA_PDF.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue());
 
         },
 
@@ -239,7 +239,7 @@
             Ext.Msg.alert("Alerta","Debe ingresar correctamente los parametros de busqueda requeridos");
             return false;
         }
-        window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionIVA_XSL.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue()+'&nu_codigo='+Ext.get('cod_prov').getValue());
+        window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionIVA_XSL.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue());
 
         },
 
@@ -249,7 +249,7 @@
             Ext.Msg.alert("Alerta","Debe ingresar correctamente los parametros de busqueda requeridos");
             return false;
         }
-        window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionISLR_PDF.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue()+'&nu_codigo='+Ext.get('cod_prov').getValue());
+        window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionISLR_PDF.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue());
 
         },
 
@@ -259,7 +259,7 @@
                 Ext.Msg.alert("Alerta","Debe ingresar correctamente los parametros de busqueda requeridos");
                 return false;
             }
-            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionNomina.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue()+'&nu_codigo='+Ext.get('cod_prov').getValue());
+            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionNomina.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue());
 
         },
                 
@@ -269,7 +269,7 @@
             Ext.Msg.alert("Alerta","Debe ingresar correctamente los parametros de busqueda requeridos");
             return false;
         }
-        window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionISLR_XSL.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue()+'&nu_codigo='+Ext.get('cod_prov').getValue());
+        window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionISLR_XSL.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue());
 
         },
 
@@ -279,7 +279,7 @@
                 Ext.Msg.alert("Alerta","Debe ingresar correctamente los parametros de busqueda requeridos");
                 return false;
             }
-            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionTF_PDF.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue()+'&nu_codigo='+Ext.get('cod_prov').getValue());
+            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionTF_PDF.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue());
 
         },
 
@@ -289,7 +289,7 @@
                 Ext.Msg.alert("Alerta","Debe ingresar correctamente los parametros de busqueda requeridos");
                 return false;
             }
-            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionRS_PDF.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue()+'&nu_codigo='+Ext.get('cod_prov').getValue());
+            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionRS_PDF.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue());
 
         },
                 
@@ -299,7 +299,7 @@
                 Ext.Msg.alert("Alerta","Debe ingresar correctamente los parametros de busqueda requeridos");
                 return false;
             }
-            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionFC_PDF.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue()+'&nu_codigo='+Ext.get('cod_prov').getValue());
+            window.open('<?php echo $_SERVER['SCRIPT_SERVER']; ?>/proadmin/web/reportes/retencionFC_PDF.php?fe_fin='+Ext.get('fe_fin').getValue()+'&fe_inicio='+Ext.get('fe_inicio').getValue());
 
         },                
 
