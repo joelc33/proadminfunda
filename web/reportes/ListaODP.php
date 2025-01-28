@@ -7,16 +7,36 @@ class PDF extends FPDF {
     public $title;
     public $conexion;
     function Header() {
-        $this->SetFont('courier','B',12);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'L');
-        $this->SetFont('courier','',8);
-        //$this->Ln(4);
-        //$this->Cell(0,0,utf8_decode('Secretaria de Administración'),0,0,'L');
+        $this->empresa = $this->getDatosEmpresa(1);
+        if (!empty($this->empresa['tx_imagen_izq'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+        }
+
+        /*if(!empty($this->empresa['tx_imagen_cen'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+        }*/
+
+        /*  if(!empty($this->empresa['tx_imagen_der'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+        }*/
+
+        $this->SetFont('Arial', 'B', 9);
+
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('[FCPPRA43]'),0,0,'L');
-        $this->SetFont('courier','',8);
-        $this->Ln(4);
-//        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');                          
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        if (!empty($this->empresa['nb_institucion'])) {
+            $this->Ln(2);
+            $this->SetX(52);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->Ln(2);
+        }else{
+        $this->Ln(4);    
+        }
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
+        $this->Ln(4);                        
     }
 
     function Footer() {
@@ -58,9 +78,9 @@ class PDF extends FPDF {
          $this->SetFont('COURIER','',10);     
          $this->SetWidths(array(30,80,25,25,40));
          $this->SetAligns(array("C","C","C","C","R"));    
-         $this->Row(array(utf8_decode('Número OP'),'Beneficiario','Estado', 'Fecha', 'Monto OP'),0,0); 
+         $this->Row(array(utf8_decode('Número OP'),'Beneficiario','Estado', 'Fecha', 'Monto OP'),1,0); 
          $this->SetAligns(array("C","C","C","C","R"));   
-         $this->Line(10, 40, 210, 40);        
+//         $this->Line(10, 40, 210, 40);        
          $this->Ln(5);
          $total = 0;
          $total_anuladas = 0;
@@ -75,15 +95,15 @@ class PDF extends FPDF {
                 $this->SetFont('COURIER','',10);     
                 $this->SetWidths(array(30,80,25,25,40));
                 $this->SetAligns(array("C","C","C","C","R"));   
-                $this->Row(array(utf8_decode('Número OP'),'Beneficiario','Estado', 'Fecha', 'Monto OP'),0,0);                      
-                $this->Line(10, 35, 210, 35);                 
+                $this->Row(array(utf8_decode('Número OP'),'Beneficiario','Estado', 'Fecha', 'Monto OP'),1,0);                      
+//                $this->Line(10, 35, 210, 35);                 
                 $this->Ln(5);
                 } 
                 // echo var_dump($campo); exit();
                 $this->SetFont('COURIER','',10);  
                 $this->SetWidths(array(30,80,25,25,40));
                 $this->SetAligns(array("C","L","C","C","R"));  
-                $this->Row(array($campo['tx_serial'],$campo['beneficiario'], $campo['estatus'],date("d/m/Y", strtotime($campo['fecha'])),number_format($campo['monto'], 2, ',','.')),0,0);         
+                $this->Row(array($campo['tx_serial'],utf8_decode($campo['beneficiario']), $campo['estatus'],date("d/m/Y", strtotime($campo['fecha'])),number_format($campo['monto'], 2, ',','.')),0,0);         
          
                 $total = $total + $campo['monto'];
                 
@@ -156,7 +176,30 @@ class PDF extends FPDF {
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol;  
 	
-    }   
+    } 
+    
+    function getDatosEmpresa( $codigo){
+
+        $sql = "SELECT co_empresa, nb_empresa, nb_institucion, co_estado, co_municipio, tx_rif, tx_nit, 
+        tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
+        tx_sigla,
+        op_imagen->'izquierda'->0 as izquierda_x,
+        op_imagen->'izquierda'->1 as izquierda_y,
+        op_imagen->'izquierda'->2 as izquierda_w,
+        op_imagen->'centro'->0 as centro_x,
+        op_imagen->'centro'->1 as centro_y,
+        op_imagen->'centro'->2 as centro_w,
+        op_imagen->'derecha'->0 as derecha_x,
+        op_imagen->'derecha'->1 as derecha_y,
+        op_imagen->'derecha'->2 as derecha_w
+        FROM public.tb015_empresa
+        WHERE co_empresa = ".$codigo.";";
+
+        $conex = new ConexionComun();
+        $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+        return  $datosSol[0];
+  
+    }    
 
 }
 /*
