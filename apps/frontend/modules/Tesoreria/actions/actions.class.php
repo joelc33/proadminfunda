@@ -1820,7 +1820,7 @@ class TesoreriaActions extends sfActions
     $registros = "";
     while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
         
-        
+        $encrip = new myConfig();
         $cantidad = Tb026SolicitudPeer::getCantRevision($res["co_solicitud"]);
 
         $tx_rif = $res["inicial"]."-".$res["tx_rif"];
@@ -1839,8 +1839,8 @@ class TesoreriaActions extends sfActions
                 "fe_creacion"       => $dia.'-'.$mes.'-'.$anio,
                 "cant_revision"     => $cantidad,
                 "co_pago"           => trim($res["co_pago"]),
-                "co_odp"           => trim($res["co_odp"]),
-                "co_ruta_odp"   => $this->getTxRutaReporte(10, $res["co_solicitud"])
+                "co_odp"            => trim($res["co_odp"]),
+                "co_ruta_odp"       => $encrip->encrypt(Tb060OrdenPagoPeer::getODPRuta($res["co_odp"]))
             );
     }
 
