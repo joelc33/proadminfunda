@@ -155,22 +155,24 @@ class PDF extends FPDF {
                 $this->SetY($Y+5);          
                 $this->SetFont('Arial','B',12);  
                 $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
-                $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
+                $this->Cell(0,0,utf8_decode('EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
+                $this->Ln(5);          
 
-                $this->SetY($Y);  
-                $this->SetFont('Arial','',8);   
+                $this->SetFont('Arial','B',10); 
                 $this->SetWidths(array(100));
-                $this->SetAligns(array("L"));                  
-                $this->SetX(10);  
-
-                $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);    
+                $this->SetAligns(array("L")); 
+                $this->SetX(10);                    
+                $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);   
                 $this->SetX(10);            
-                $this->Ln(8);       
+
+                $this->Ln(7);       
                 $this->SetFont('Arial','B',9);
-                $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
-                $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
+                $this->SetWidths(array(35,40,36,40,40,40,20,40,15,30,10));
+                $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C"));                
                 $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
                 $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','PRESUPUESTADO','MODIFICADO','TOTAL APROBADO','DEVENGADO','%','LIQUIDADO','%','RECAUDADO','%'),0,0);
+                $this->Line(10, 50, 350, 50);                  
+                $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R"));
                 $this->Line(10, 50, 350, 50);    
                 $this->Ln(2);
             }
@@ -220,22 +222,24 @@ class PDF extends FPDF {
                     $this->SetY($Y+5);          
                     $this->SetFont('Arial','B',12);  
                     $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
-                    $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
-    
-                    $this->SetY($Y);  
-                    $this->SetFont('Arial','',8);   
+                    $this->Cell(0,0,utf8_decode('EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
+                    $this->Ln(5);          
+
+                    $this->SetFont('Arial','B',10); 
                     $this->SetWidths(array(100));
-                    $this->SetAligns(array("L"));                  
-                    $this->SetX(10);  
-    
-                    $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);      
+                    $this->SetAligns(array("L")); 
+                    $this->SetX(10);                    
+                    $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);   
                     $this->SetX(10);            
-                    $this->Ln(8);       
+
+                    $this->Ln(7);       
                     $this->SetFont('Arial','B',9);
-                    $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
-                    $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
+                    $this->SetWidths(array(35,40,36,40,40,40,20,40,15,30,10));
+                    $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C"));                
                     $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
                     $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','PRESUPUESTADO','MODIFICADO','TOTAL APROBADO','DEVENGADO','%','LIQUIDADO','%','RECAUDADO','%'),0,0);
+                    $this->Line(10, 50, 350, 50);                  
+                    $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R"));
                     $this->Line(10, 50, 350, 50);    
                     $this->Ln(2);
                 }
@@ -297,22 +301,24 @@ class PDF extends FPDF {
                         $this->SetY($Y+5);          
                         $this->SetFont('Arial','B',12);  
                         $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
-                        $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
-        
-                        $this->SetY($Y);  
-                        $this->SetFont('Arial','',8);   
+                        $this->Cell(0,0,utf8_decode('EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
+                        $this->Ln(5);          
+
+                        $this->SetFont('Arial','B',10); 
                         $this->SetWidths(array(100));
-                        $this->SetAligns(array("L"));                  
-                        $this->SetX(10);  
-        
-                        $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);       
+                        $this->SetAligns(array("L")); 
+                        $this->SetX(10);                    
+                        $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);   
                         $this->SetX(10);            
-                        $this->Ln(8);       
+
+                        $this->Ln(7);       
                         $this->SetFont('Arial','B',9);
-                        $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
-                        $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
+                        $this->SetWidths(array(35,40,36,40,40,40,20,40,15,30,10));
+                        $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C"));                
                         $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
                         $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','PRESUPUESTADO','MODIFICADO','TOTAL APROBADO','DEVENGADO','%','LIQUIDADO','%','RECAUDADO','%'),0,0);
+                        $this->Line(10, 50, 350, 50);                  
+                        $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R"));
                         $this->Line(10, 50, 350, 50);    
                         $this->Ln(2);
                     }
@@ -374,22 +380,24 @@ class PDF extends FPDF {
                             $this->SetY($Y+5);          
                             $this->SetFont('Arial','B',12);  
                             $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
-                            $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
-            
-                            $this->SetY($Y);  
-                            $this->SetFont('Arial','',8);   
+                            $this->Cell(0,0,utf8_decode('EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
+                            $this->Ln(5);          
+
+                            $this->SetFont('Arial','B',10); 
                             $this->SetWidths(array(100));
-                            $this->SetAligns(array("L"));                  
-                            $this->SetX(10);  
-            
-                            $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);      
+                            $this->SetAligns(array("L")); 
+                            $this->SetX(10);                    
+                            $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);   
                             $this->SetX(10);            
-                            $this->Ln(8);       
+
+                            $this->Ln(7);       
                             $this->SetFont('Arial','B',9);
-                            $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
-                            $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
+                            $this->SetWidths(array(35,40,36,40,40,40,20,40,15,30,10));
+                            $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C"));                
                             $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
                             $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','PRESUPUESTADO','MODIFICADO','TOTAL APROBADO','DEVENGADO','%','LIQUIDADO','%','RECAUDADO','%'),0,0);
+                            $this->Line(10, 50, 350, 50);                  
+                            $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R"));
                             $this->Line(10, 50, 350, 50);    
                             $this->Ln(2);
                         }
@@ -439,22 +447,24 @@ class PDF extends FPDF {
                                 $this->SetY($Y+5);          
                                 $this->SetFont('Arial','B',12);  
                                 $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
-                                $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
-                
-                                $this->SetY($Y);  
-                                $this->SetFont('Arial','',8);   
+                                $this->Cell(0,0,utf8_decode('EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
+                                $this->Ln(5);          
+
+                                $this->SetFont('Arial','B',10); 
                                 $this->SetWidths(array(100));
-                                $this->SetAligns(array("L"));                  
-                                $this->SetX(10);  
-                
-                                $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);      
+                                $this->SetAligns(array("L")); 
+                                $this->SetX(10);                    
+                                $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);   
                                 $this->SetX(10);            
-                                $this->Ln(8);       
+
+                                $this->Ln(7);       
                                 $this->SetFont('Arial','B',9);
-                                $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
-                                $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
+                                $this->SetWidths(array(35,40,36,40,40,40,20,40,15,30,10));
+                                $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C"));                
                                 $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
                                 $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','PRESUPUESTADO','MODIFICADO','TOTAL APROBADO','DEVENGADO','%','LIQUIDADO','%','RECAUDADO','%'),0,0);
+                                $this->Line(10, 50, 350, 50);                  
+                                $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R"));
                                 $this->Line(10, 50, 350, 50);    
                                 $this->Ln(2);
                             }
@@ -505,22 +515,24 @@ class PDF extends FPDF {
                                     $this->SetY($Y+5);          
                                     $this->SetFont('Arial','B',12);  
                                     $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
-                                    $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
-                    
-                                    $this->SetY($Y);  
-                                    $this->SetFont('Arial','',8);   
+                                    $this->Cell(0,0,utf8_decode('EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
+                                    $this->Ln(5);          
+
+                                    $this->SetFont('Arial','B',10); 
                                     $this->SetWidths(array(100));
-                                    $this->SetAligns(array("L"));                  
-                                    $this->SetX(10);  
-                    
-                                    $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);       
+                                    $this->SetAligns(array("L")); 
+                                    $this->SetX(10);                    
+                                    $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);   
                                     $this->SetX(10);            
-                                    $this->Ln(8);       
+
+                                    $this->Ln(7);       
                                     $this->SetFont('Arial','B',9);
-                                    $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
-                                    $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
+                                    $this->SetWidths(array(35,40,36,40,40,40,20,40,15,30,10));
+                                    $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C"));                
                                     $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
                                     $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','PRESUPUESTADO','MODIFICADO','TOTAL APROBADO','DEVENGADO','%','LIQUIDADO','%','RECAUDADO','%'),0,0);
+                                    $this->Line(10, 50, 350, 50);                  
+                                    $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R"));
                                     $this->Line(10, 50, 350, 50);    
                                     $this->Ln(2);
                                 }
@@ -590,22 +602,24 @@ class PDF extends FPDF {
                 $this->SetY($Y+5);          
                 $this->SetFont('Arial','B',12);  
                 $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
-                $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
+                $this->Cell(0,0,utf8_decode('EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
+                $this->Ln(5);          
 
-                $this->SetY($Y);  
-                $this->SetFont('Arial','',8);   
+                $this->SetFont('Arial','B',10); 
                 $this->SetWidths(array(100));
-                $this->SetAligns(array("L"));                  
-                $this->SetX(10);  
-
-                $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);       
+                $this->SetAligns(array("L")); 
+                $this->SetX(10);                    
+                $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);   
                 $this->SetX(10);            
-                $this->Ln(8);       
+
+                $this->Ln(7);       
                 $this->SetFont('Arial','B',9);
-                $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
-                $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
+                $this->SetWidths(array(35,40,36,40,40,40,20,40,15,30,10));
+                $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C"));                
                 $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
                 $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','PRESUPUESTADO','MODIFICADO','TOTAL APROBADO','DEVENGADO','%','LIQUIDADO','%','RECAUDADO','%'),0,0);
+                $this->Line(10, 50, 350, 50);                  
+                $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R"));
                 $this->Line(10, 50, 350, 50);    
                 $this->Ln(2);
             }
