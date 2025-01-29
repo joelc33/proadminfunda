@@ -9,38 +9,54 @@ class PDF extends FPDF {
     function Header() {
 
         $this->empresa = $this->getDatosEmpresa(1);
+        if (!empty($this->empresa['tx_imagen_izq'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+        }
 
-        $this->SetFont('courier','B',12);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'L');
-        $this->SetFont('courier','',8);
+        /*if(!empty($this->empresa['tx_imagen_cen'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+        }*/
+
+        /*  if(!empty($this->empresa['tx_imagen_der'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+        }*/
+
+        $this->SetFont('Arial', 'B', 9);
+
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
         $this->Ln(4);
-        //$this->Cell(0,0,utf8_decode('Secretaria de Administración'),0,0,'L');
-        $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'L');
-        $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('SubSecretaria de Presupuesto'),0,0,'L');        
-        $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('[FPRERA96]'),0,0,'L');
-        $this->SetFont('courier','',8);
-        $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R'); 
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        if (!empty($this->empresa['nb_institucion'])) {
+            $this->Ln(2);
+            $this->SetX(122);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->Ln(2);
+        }else{
+        $this->Ln(4);    
+        }
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
+        $this->Ln(4);                         
+    
         
    }
 
     function Footer() {
-	    $this->SetFont('courier','B',9);     
+	    $this->SetFont('Arial','B',9);     
 	    $this->SetY(195);
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'C');  
     }
 
     function dwawCell($title,$data) {
         $width = 8;
-        $this->SetFont('courier','B',12);
+        $this->SetFont('Arial','B',12);
         $y =  $this->getY() * 20;
         $x =  $this->getX();
         $this->SetFillColor(206,230,100);
         $this->MultiCell(175,8,$title,0,1,'L',0);
         $this->SetY($y);
-        $this->SetFont('courier','',12);
+        $this->SetFont('Arial','',12);
         $this->SetFillColor(206,230,172);
         $w=$this->GetStringWidth($title)+3;
         $this->SetX($x+$w);
@@ -59,12 +75,12 @@ class PDF extends FPDF {
          
         $Y = $this->GetY();  
         $this->SetY($Y+5);          
-        $this->SetFont('courier','B',12);  
+        $this->SetFont('Arial','B',12);  
         $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
         $this->Cell(0,0,utf8_decode('EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
-        $this->Ln(2);          
-        $this->SetY($Y);  
-        $this->SetFont('courier','',8); 
+        $this->Ln(5);          
+        
+        $this->SetFont('Arial','B',10); 
         $this->SetWidths(array(100));
         $this->SetAligns(array("L")); 
         $this->SetX(10);                    
@@ -72,7 +88,7 @@ class PDF extends FPDF {
         $this->SetX(10);            
 
         $this->Ln(7);       
-        $this->SetFont('courier','B',9);
+        $this->SetFont('Arial','B',9);
         $this->SetWidths(array(35,40,36,40,40,40,20,40,15,30,10));
         $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C"));                
         $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
@@ -115,7 +131,7 @@ class PDF extends FPDF {
             $total_causadox100    = (($total_liquidado)*100)/$total_devengado;  
             $total_pagadox100     = (($total_recaudado)*100)/$total_liquidado;
 
-            $this->SetFont('courier','B',8);
+            $this->SetFont('Arial','B',8);
             $this->SetWidths(array(35,40,36,40,40,38,20,35,17,32,12));
             $this->SetAligns(array("L","L","R","R","R","R","C","R","C","R","C"));   
             $this->Row(array(
@@ -137,12 +153,12 @@ class PDF extends FPDF {
                 $this->AddPage(); 
                 $Y = $this->GetY();  
                 $this->SetY($Y+5);          
-                $this->SetFont('courier','B',12);  
+                $this->SetFont('Arial','B',12);  
                 $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
                 $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
 
                 $this->SetY($Y);  
-                $this->SetFont('courier','',8);   
+                $this->SetFont('Arial','',8);   
                 $this->SetWidths(array(100));
                 $this->SetAligns(array("L"));                  
                 $this->SetX(10);  
@@ -150,7 +166,7 @@ class PDF extends FPDF {
                 $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);    
                 $this->SetX(10);            
                 $this->Ln(8);       
-                $this->SetFont('courier','B',9);
+                $this->SetFont('Arial','B',9);
                 $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
                 $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
                 $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
@@ -180,7 +196,7 @@ class PDF extends FPDF {
                 $total_devengadox100  = (($total_devengado)*100)/$total_aprobado;  
                 $total_causadox100    = (($total_liquidado)*100)/$total_devengado;  
                 $total_pagadox100     = (($total_recaudado)*100)/$total_liquidado; 
-                $this->SetFont('courier','',8);
+                $this->SetFont('Arial','',8);
                 $this->SetWidths(array(35,40,36,40,40,38,20,35,17,32,12));
                 $this->SetAligns(array("L","L","R","R","R","R","C","R","C","R","C"));  
                 $this->Row(array(
@@ -202,12 +218,12 @@ class PDF extends FPDF {
                     $this->AddPage(); 
                     $Y = $this->GetY();  
                     $this->SetY($Y+5);          
-                    $this->SetFont('courier','B',12);  
+                    $this->SetFont('Arial','B',12);  
                     $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
                     $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
     
                     $this->SetY($Y);  
-                    $this->SetFont('courier','',8);   
+                    $this->SetFont('Arial','',8);   
                     $this->SetWidths(array(100));
                     $this->SetAligns(array("L"));                  
                     $this->SetX(10);  
@@ -215,7 +231,7 @@ class PDF extends FPDF {
                     $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);      
                     $this->SetX(10);            
                     $this->Ln(8);       
-                    $this->SetFont('courier','B',9);
+                    $this->SetFont('Arial','B',9);
                     $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
                     $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
                     $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
@@ -258,7 +274,7 @@ class PDF extends FPDF {
                         $total_causadox100    = (($total_liquidado)*100)/$total_devengado;  
                         $total_pagadox100     = (($total_recaudado)*100)/$total_liquidado; 
 
-                        $this->SetFont('courier','',8);
+                        $this->SetFont('Arial','',8);
                         $this->SetWidths(array(35,40,36,40,40,38,20,35,17,32,12));
                         $this->SetAligns(array("L","L","R","R","R","R","C","R","C","R","C")); 
                         $this->Row(array(
@@ -279,12 +295,12 @@ class PDF extends FPDF {
                         $this->AddPage(); 
                         $Y = $this->GetY();  
                         $this->SetY($Y+5);          
-                        $this->SetFont('courier','B',12);  
+                        $this->SetFont('Arial','B',12);  
                         $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
                         $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
         
                         $this->SetY($Y);  
-                        $this->SetFont('courier','',8);   
+                        $this->SetFont('Arial','',8);   
                         $this->SetWidths(array(100));
                         $this->SetAligns(array("L"));                  
                         $this->SetX(10);  
@@ -292,7 +308,7 @@ class PDF extends FPDF {
                         $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);       
                         $this->SetX(10);            
                         $this->Ln(8);       
-                        $this->SetFont('courier','B',9);
+                        $this->SetFont('Arial','B',9);
                         $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
                         $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
                         $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
@@ -335,7 +351,7 @@ class PDF extends FPDF {
                         $total_causadox100    = (($total_liquidado)*100)/$total_devengado;  
                         $total_pagadox100     = (($total_recaudado)*100)/$total_liquidado;
 
-                        $this->SetFont('courier','',8);
+                        $this->SetFont('Arial','',8);
                         $this->SetWidths(array(35,40,36,40,40,38,20,35,17,32,12));
                         $this->SetAligns(array("L","L","R","R","R","R","C","R","C","R","C")); 
                         $this->Row(array(
@@ -356,12 +372,12 @@ class PDF extends FPDF {
                             $this->AddPage(); 
                             $Y = $this->GetY();  
                             $this->SetY($Y+5);          
-                            $this->SetFont('courier','B',12);  
+                            $this->SetFont('Arial','B',12);  
                             $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
                             $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
             
                             $this->SetY($Y);  
-                            $this->SetFont('courier','',8);   
+                            $this->SetFont('Arial','',8);   
                             $this->SetWidths(array(100));
                             $this->SetAligns(array("L"));                  
                             $this->SetX(10);  
@@ -369,7 +385,7 @@ class PDF extends FPDF {
                             $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);      
                             $this->SetX(10);            
                             $this->Ln(8);       
-                            $this->SetFont('courier','B',9);
+                            $this->SetFont('Arial','B',9);
                             $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
                             $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
                             $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
@@ -400,7 +416,7 @@ class PDF extends FPDF {
                             $total_causadox100    = (($total_liquidado)*100)/$total_devengado;  
                             $total_pagadox100     = (($total_recaudado)*100)/$total_liquidado;
 
-                            $this->SetFont('courier','',8);
+                            $this->SetFont('Arial','',8);
                             $this->SetWidths(array(35,40,36,40,40,38,20,35,17,32,12));
                             $this->SetAligns(array("L","L","R","R","R","R","C","R","C","R","C")); 
                             $this->Row(array(
@@ -421,12 +437,12 @@ class PDF extends FPDF {
                                 $this->AddPage(); 
                                 $Y = $this->GetY();  
                                 $this->SetY($Y+5);          
-                                $this->SetFont('courier','B',12);  
+                                $this->SetFont('Arial','B',12);  
                                 $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
                                 $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
                 
                                 $this->SetY($Y);  
-                                $this->SetFont('courier','',8);   
+                                $this->SetFont('Arial','',8);   
                                 $this->SetWidths(array(100));
                                 $this->SetAligns(array("L"));                  
                                 $this->SetX(10);  
@@ -434,7 +450,7 @@ class PDF extends FPDF {
                                 $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);      
                                 $this->SetX(10);            
                                 $this->Ln(8);       
-                                $this->SetFont('courier','B',9);
+                                $this->SetFont('Arial','B',9);
                                 $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
                                 $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
                                 $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
@@ -466,7 +482,7 @@ class PDF extends FPDF {
                                 $total_causadox100    = (($total_liquidado)*100)/$total_devengado;  
                                 $total_pagadox100     = (($total_recaudado)*100)/$total_liquidado; 
 
-                                $this->SetFont('courier','',8);
+                                $this->SetFont('Arial','',8);
                                 $this->SetWidths(array(35,40,36,40,40,38,20,35,17,32,12));
                                 $this->SetAligns(array("L","L","R","R","R","R","C","R","C","R","C"));  
                                 $this->Row(array(
@@ -487,12 +503,12 @@ class PDF extends FPDF {
                                     $this->AddPage(); 
                                     $Y = $this->GetY();  
                                     $this->SetY($Y+5);          
-                                    $this->SetFont('courier','B',12);  
+                                    $this->SetFont('Arial','B',12);  
                                     $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
                                     $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
                     
                                     $this->SetY($Y);  
-                                    $this->SetFont('courier','',8);   
+                                    $this->SetFont('Arial','',8);   
                                     $this->SetWidths(array(100));
                                     $this->SetAligns(array("L"));                  
                                     $this->SetX(10);  
@@ -500,7 +516,7 @@ class PDF extends FPDF {
                                     $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);       
                                     $this->SetX(10);            
                                     $this->Ln(8);       
-                                    $this->SetFont('courier','B',9);
+                                    $this->SetFont('Arial','B',9);
                                     $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
                                     $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
                                     $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
@@ -551,7 +567,7 @@ class PDF extends FPDF {
             $total_causadox100    = (($total_liquidado)*100)/$total_devengado;  
             $total_pagadox100     = (($total_recaudado)*100)/$total_liquidado; 
 
-            $this->SetFont('courier','',8);
+            $this->SetFont('Arial','',8);
             $this->SetWidths(array(35,40,36,40,40,38,20,35,17,32,12));
             $this->SetAligns(array("L","L","R","R","R","R","C","R","C","R","C"));  
             $this->Row(array(
@@ -572,12 +588,12 @@ class PDF extends FPDF {
                 $this->AddPage(); 
                 $Y = $this->GetY();  
                 $this->SetY($Y+5);          
-                $this->SetFont('courier','B',12);  
+                $this->SetFont('Arial','B',12);  
                 $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
                 $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA DE INGRESO - AÑO FISCAL '.$anio),0,0,'C'); 
 
                 $this->SetY($Y);  
-                $this->SetFont('courier','',8);   
+                $this->SetFont('Arial','',8);   
                 $this->SetWidths(array(100));
                 $this->SetAligns(array("L"));                  
                 $this->SetX(10);  
@@ -585,7 +601,7 @@ class PDF extends FPDF {
                 $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);       
                 $this->SetX(10);            
                 $this->Ln(8);       
-                $this->SetFont('courier','B',9);
+                $this->SetFont('Arial','B',9);
                 $this->SetWidths(array(35,40,36,40,40,36,15,36,15,33,15));
                 $this->SetAligns(array("C","C","R","R","R","R","C","R","C","R","C","R","R","R","R"));        
                 $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
@@ -610,7 +626,7 @@ class PDF extends FPDF {
         $total_pagadox100     = (($total_rec)*100)/$total_liq; 
 
         $this->Ln(2);  
-        $this->SetFont('courier','B',8);
+        $this->SetFont('Arial','B',8);
         $this->Row(array(
             '',
             'TOTAL.....',
@@ -628,7 +644,7 @@ class PDF extends FPDF {
  }
 
     function ChapterTitle($num,$label) {
-        $this->SetFont('courier','',10);
+        $this->SetFont('Arial','',10);
         $this->SetFillColor(200,220,255);
         $this->Cell(0,6,"$label",0,1,'L',1);
         $this->Ln(8);
@@ -669,6 +685,15 @@ class PDF extends FPDF {
     }
 
     function mo_uno($pa, $tipo, $anio, $fe_fin){ 
+        
+        if($tipo==12){
+            
+        $sql = "SELECT mo_inicial as mo_partida
+        FROM tb064_presupuesto_ingreso as tb064
+        WHERE tb064.nu_anio = ".$anio."
+        AND tb064.in_movimiento IS true;";            
+            
+        }else{        
 
         $sql = "SELECT sum(tb150.mo_movimiento) as mo_partida
         FROM tb150_presupuesto_ingreso_movimiento as tb150
@@ -678,7 +703,7 @@ class PDF extends FPDF {
         AND tb064.in_movimiento IS true
         AND tb150.in_anular IS null
         AND cast(tb150.created_at as date) BETWEEN '".$anio."-01-01'::date AND '".$fe_fin."';";
-
+        }
         //echo var_dump($sql); exit();
 
         $conex = new ConexionComun();
@@ -708,6 +733,16 @@ class PDF extends FPDF {
     }
 
     function mo_dos($pa, $tipo, $anio, $fe_fin){ 
+        
+        if($tipo==12){
+            
+        $sql = "SELECT mo_inicial as mo_partida
+        FROM tb064_presupuesto_ingreso as tb064
+        WHERE tb064.nu_pa = '".$pa."'
+        AND tb064.nu_anio = ".$anio."
+        AND tb064.in_movimiento IS true;";            
+            
+        }else{        
 
         $sql = "SELECT sum(mo_movimiento) as mo_partida
         FROM tb150_presupuesto_ingreso_movimiento as tb150
@@ -718,7 +753,7 @@ class PDF extends FPDF {
         AND tb064.in_movimiento IS true
         AND tb150.in_anular IS null
         AND cast(tb150.created_at as date) BETWEEN '".$anio."-01-01'::date AND '".$fe_fin."';";
-
+        }
         //echo var_dump($sql); exit();
 
         $conex = new ConexionComun();
@@ -747,7 +782,18 @@ class PDF extends FPDF {
 	
     } 
 
-    function mo_tres($pa, $ge, $tipo, $anio, $fe_fin){ 
+    function mo_tres($pa, $ge, $tipo, $anio, $fe_fin){
+        
+        if($tipo==12){
+            
+        $sql = "SELECT mo_inicial as mo_partida
+        FROM tb064_presupuesto_ingreso as tb064
+        WHERE tb064.nu_pa = '".$pa."'
+        AND tb064.nu_ge = '".$ge."'
+        AND tb064.nu_anio = ".$anio."
+        AND tb064.in_movimiento IS true;";            
+            
+        }else{        
 
         $sql = "SELECT sum(mo_movimiento) as mo_partida
         FROM tb150_presupuesto_ingreso_movimiento as tb150
@@ -759,7 +805,7 @@ class PDF extends FPDF {
         AND tb064.in_movimiento IS true
         AND tb150.in_anular IS null
         AND cast(tb150.created_at as date) BETWEEN '".$anio."-01-01'::date AND '".$fe_fin."';";
-
+        }
         //echo var_dump($sql); exit();
 
         $conex = new ConexionComun();
@@ -790,6 +836,18 @@ class PDF extends FPDF {
     }
 
     function mo_cuatro($pa, $ge, $es, $tipo, $anio, $fe_fin){ 
+        
+        if($tipo==12){
+            
+        $sql = "SELECT mo_inicial as mo_partida
+        FROM tb064_presupuesto_ingreso as tb064
+        WHERE tb064.nu_pa = '".$pa."'
+        AND tb064.nu_ge = '".$ge."'
+        AND tb064.nu_es = '".$es."'
+        AND tb064.nu_anio = ".$anio."
+        AND tb064.in_movimiento IS true;";            
+            
+        }else{        
 
         $sql = "SELECT sum(mo_movimiento) as mo_partida
         FROM tb150_presupuesto_ingreso_movimiento as tb150
@@ -802,7 +860,7 @@ class PDF extends FPDF {
         AND tb064.in_movimiento IS true
         AND tb150.in_anular IS null
         AND cast(tb150.created_at as date) BETWEEN '".$anio."-01-01'::date AND '".$fe_fin."';";
-
+        }
         //echo var_dump($sql); exit();
 
         $conex = new ConexionComun();
@@ -833,7 +891,20 @@ class PDF extends FPDF {
 	
     }
 
-    function mo_cinco($pa, $ge, $es, $se, $tipo, $anio, $fe_fin){ 
+    function mo_cinco($pa, $ge, $es, $se, $tipo, $anio, $fe_fin){
+        
+        if($tipo==12){
+            
+        $sql = "SELECT mo_inicial as mo_partida
+        FROM tb064_presupuesto_ingreso as tb064
+        WHERE tb064.nu_pa = '".$pa."'
+        AND tb064.nu_ge = '".$ge."'
+        AND tb064.nu_es = '".$es."'
+        AND tb064.nu_se = '".$se."'
+        AND tb064.nu_anio = ".$anio."
+        AND tb064.in_movimiento IS true;";            
+            
+        }else{        
 
         $sql = "SELECT sum(mo_movimiento) as mo_partida
         FROM tb150_presupuesto_ingreso_movimiento as tb150
@@ -847,7 +918,7 @@ class PDF extends FPDF {
         AND tb064.in_movimiento IS true
         AND tb150.in_anular IS null
         AND cast(tb150.created_at as date) BETWEEN '".$anio."-01-01'::date AND '".$fe_fin."';";
-
+        }
         //echo var_dump($sql); exit();
 
         $conex = new ConexionComun();
@@ -878,7 +949,21 @@ class PDF extends FPDF {
 	
     }
 
-    function mo_seis($pa, $ge, $es, $se, $sse, $tipo, $anio, $fe_fin){ 
+    function mo_seis($pa, $ge, $es, $se, $sse, $tipo, $anio, $fe_fin){
+        
+        if($tipo==12){
+            
+        $sql = "SELECT mo_inicial as mo_partida
+        FROM tb064_presupuesto_ingreso as tb064
+        WHERE tb064.nu_pa = '".$pa."'
+        AND tb064.nu_ge = '".$ge."'
+        AND tb064.nu_es = '".$es."'
+        AND tb064.nu_se = '".$se."'
+        AND tb064.nu_sse = '".$sse."'
+        AND tb064.nu_anio = ".$anio."
+        AND tb064.in_movimiento IS true;";            
+            
+        }else{
 
         $sql = "SELECT sum(mo_movimiento) as mo_partida
         FROM tb150_presupuesto_ingreso_movimiento as tb150
@@ -893,8 +978,8 @@ class PDF extends FPDF {
         AND tb064.in_movimiento IS true
         AND tb150.in_anular IS null
         AND cast(tb150.created_at as date) BETWEEN '".$anio."-01-01'::date AND '".$fe_fin."';";
-
-        //echo var_dump($sql); exit();
+        }
+//        echo var_dump($sql); exit();
 
         $conex = new ConexionComun();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
@@ -922,7 +1007,7 @@ class PDF extends FPDF {
     
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, nb_institucion, co_estado, co_municipio, tx_rif, tx_nit, 
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,
