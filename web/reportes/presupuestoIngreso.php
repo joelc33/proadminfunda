@@ -688,7 +688,7 @@ class PDF extends FPDF {
         
         if($tipo==12){
             
-        $sql = "SELECT mo_inicial as mo_partida
+        $sql = "SELECT sum(mo_inicial) as mo_partida
         FROM tb064_presupuesto_ingreso as tb064
         WHERE tb064.nu_anio = ".$anio."
         AND tb064.in_movimiento IS true;";            
