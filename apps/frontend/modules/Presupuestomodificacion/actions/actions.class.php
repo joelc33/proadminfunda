@@ -2218,12 +2218,12 @@ class PresupuestomodificacionActions extends sfActions
           }
         }
 
+        $con->commit();
+        
         $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb096_presupuesto_modificacionForm["co_solicitud"]));
         $ruta->setInCargarDato(true)->save($con);
 
         Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
-
-        $con->commit();
 
         $this->data = json_encode(array(
           'success' => true,
