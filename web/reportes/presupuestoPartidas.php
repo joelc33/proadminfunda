@@ -8,36 +8,54 @@ class PDF extends FPDF {
     public $conexion;
     function Header() {
 
-        $this->SetFont('courier','B',12);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'L');
-        $this->SetFont('courier','',8);
+        $this->empresa = $this->getDatosEmpresa(1);
+        if (!empty($this->empresa['tx_imagen_izq'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+        }
+
+        /*if(!empty($this->empresa['tx_imagen_cen'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+        }*/
+
+        /*  if(!empty($this->empresa['tx_imagen_der'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+        }*/
+
+        $this->SetFont('Arial', 'B', 9);
+
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Coordinación General de Administración'),0,0,'L');
-        $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Coordinación de Presupuesto'),0,0,'L');        
-        $this->Ln(4);
-      //  $this->Cell(0,0,utf8_decode('[FPRERB57]'),0,0,'L');
-        $this->SetFont('courier','',8);
-        $this->Ln(4);
-//        $this->Cell(0,0,utf8_decode('Fecha de Emisión '.date("d").'/'.date("m").'/'.date("Y")),0,0,'R'); 
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        if (!empty($this->empresa['nb_institucion'])) {
+            $this->Ln(2);
+            $this->SetX(122);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->Ln(2);
+        }else{
+        $this->Ln(4);    
+        }
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
+        $this->Ln(4); 
         
    }
 
     function Footer() {
-	$this->SetFont('courier','B',9);     
+	$this->SetFont('Arial','B',9);     
 	$this->SetY(195);
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'C');  
     }
 
     function dwawCell($title,$data) {
         $width = 8;
-        $this->SetFont('courier','B',12);
+        $this->SetFont('Arial','B',12);
         $y =  $this->getY() * 20;
         $x =  $this->getX();
         $this->SetFillColor(206,230,100);
         $this->MultiCell(175,8,$title,0,1,'L',0);
         $this->SetY($y);
-        $this->SetFont('courier','',12);
+        $this->SetFont('Arial','',12);
         $this->SetFillColor(206,230,172);
         $w=$this->GetStringWidth($title)+3;
         $this->SetX($x+$w);
@@ -55,25 +73,24 @@ class PDF extends FPDF {
         
          $Y = $this->GetY();  
          $this->SetY($Y+12);          
-         $this->SetFont('courier','B',12);  
+         $this->SetFont('Arial','B',12);  
          $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
          $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA POR PARTIDAS- '.$anio),0,0,'C'); 
-         $this->Ln(2);          
-         $this->SetY($Y);  
-         $this->SetFont('courier','',8); 
+        $this->Ln(5);          
+        
+        $this->SetFont('Arial','B',10); 
         $this->SetWidths(array(100));
         $this->SetAligns(array("L")); 
-        $this->SetX(10);         
-        $this->Row(array(utf8_decode('PERIODO....:  '.$_GET["fe_inicio"]." hasta ".$_GET["fe_fin"])),0,0);   
-        $this->SetX(10);          
-//        $this->Row(array(utf8_decode('TIPO.......:  ')),0,0);    
+        $this->SetX(10);                    
+        $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);   
+        $this->SetX(10);   
 
         $this->Ln(10);       
-        $this->SetFont('courier','B',9);
+        $this->SetFont('Arial','B',9);
         $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,25));
-        $this->SetAligns(array("C","C","C","C","C","C","C","C","C","C","C"));       
+        $this->SetAligns(array("C","C","R","R","R","R","R","R","R","R","R","R","R"));       
         $this->SetX(10); // configura la linea donde comenzara escribir en el eje de y       
-        $this->Row(array('','Partida','Presupuesto Inicial','Variaciones','Presupuesto Modificado','Comprometido','%Comp','Disponible','Causado','%Cau','Pagado','%Pag.','Por pagar'),0,0);
+        $this->Row(array('','Partida','Presupuesto Inicial','Modificado','Presupuesto Aprobado','Comprometido','%Comp','Disponible','Causado','%Cau','Pagado','%Pag.','Por pagar'),0,0);
         $this->Line(10, 55, 350, 55);                  
         $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R","R","R"));                 
 
@@ -81,7 +98,7 @@ class PDF extends FPDF {
         
          $total_ley = 0;
          $this->Ln(2);
-         $this->SetFont('courier','B',9);
+         $this->SetFont('Arial','B',9);
          $this->SetWidths(array(100));
          $this->SetAligns(array("L"));
          
@@ -92,27 +109,26 @@ class PDF extends FPDF {
                 $this->AddPage(); 
                  $Y = $this->GetY();  
                  $this->SetY($Y+12);          
-                 $this->SetFont('courier','B',12);  
+                 $this->SetFont('Arial','B',12);  
                  $this->SetX(0); // configura la linea donde comenzara escribir en el eje de y                  
-                 $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA POR PARTIDAS - AÑO FISCAL '.$anio),0,0,'C'); 
+                 $this->Cell(0,0,utf8_decode(' EJECUCIÓN PRESUPUESTARIA POR PARTIDAS- '.$anio),0,0,'C'); 
+                $this->Ln(5);          
 
-                 $this->SetY($Y);  
-                 $this->SetFont('courier','',8);   
-                 $this->SetWidths(array(100));
-                 $this->SetAligns(array("L"));                  
-                $this->SetX(10);         
-                $this->Row(array(utf8_decode('PERIODO....:  ')),0,0);   
-                $this->SetX(10);          
-//                $this->Row(array(utf8_decode('TIPO.......:  ')),0,0);     
+                $this->SetFont('Arial','B',10); 
+                $this->SetWidths(array(100));
+                $this->SetAligns(array("L")); 
+                $this->SetX(10);                    
+                $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);   
+                $this->SetX(10);   
+
                 $this->Ln(10);       
-                $this->SetFont('courier','B',9);
-                $this->SetWidths(array(10,50,35,35,35,35,20,35,20,35,20));
-                $this->SetAligns(array("C","C","C","C","C","C","C","C","C"));       
-                $this->SetX(5); // configura la linea donde comenzara escribir en el eje de y       
-                $this->Row(array('','Partida','Presupuestado','Modificado','Aprobado','Comprometido','%Comp','Causado','%Cau','Pagado','%Pag.'),0,0);
-                $this->Line(10, 50, 350, 50);                  
-                $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R"));    
-                $this->Ln(2);
+                $this->SetFont('Arial','B',9);
+                $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,25));
+                $this->SetAligns(array("C","C","R","R","R","R","R","R","R","R","R","R","R"));       
+                $this->SetX(10); // configura la linea donde comenzara escribir en el eje de y       
+                $this->Row(array('','Partida','Presupuesto Inicial','Modificado','Presupuesto Aprobado','Comprometido','%Comp','Disponible','Causado','%Cau','Pagado','%Pag.','Por pagar'),0,0);
+                $this->Line(10, 55, 350, 55);                  
+                $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R","R","R"));
 	 }   
          
 
@@ -136,7 +152,7 @@ class PDF extends FPDF {
          /********************************************************************************************************/         
 
             
-         $this->SetFont('courier','',8);
+         $this->SetFont('Arial','',8);
          $this->SetAligns(array("L","L","R","R","R","R","R","R","R","R","R","R","R"));
          $total_ley = $total_ley + $campo['inicial'];
          $partida   = $this->desc_partida($campo['nu_pa']);  
@@ -157,10 +173,10 @@ class PDF extends FPDF {
          $total_monto_x100pag   = (($total_pag)*100)/$total_aprob ;
          
          }
-         $this->SetFont('courier','B',8);
+         $this->SetFont('Arial','B',8);
          $this->SetWidths(array(10,50,30,30,30,30,15,30,30,15,30,15,25));
-         $this->SetAligns(array("L","R","R","R","R","R","R","R","R","R","R","R","R"));
-         $this->Row(array('','TOTAL RELACION........',number_format($total_ley, 2, ',','.'),number_format($total_mod, 2, ',','.'),number_format($total_aprob, 2, ',','.'),number_format($total_comp, 2, ',','.'),number_format($total_monto_x100comp, 2, ',','.'),number_format($total_disp, 2, ',','.'),number_format($total_cau, 2, ',','.'),number_format($total_monto_x100cau, 2, ',','.'),number_format($total_pag, 2, ',','.'),number_format($total_monto_x100pag, 2, ',','.'),number_format($total_xpagar, 2, ',','.')));   
+         $this->SetAligns(array("R","R","R","R","R","R","R","R","R","R","R","R","R"));
+         $this->Row(array('','TOTAL:',number_format($total_ley, 2, ',','.'),number_format($total_mod, 2, ',','.'),number_format($total_aprob, 2, ',','.'),number_format($total_comp, 2, ',','.'),number_format($total_monto_x100comp, 2, ',','.'),number_format($total_disp, 2, ',','.'),number_format($total_cau, 2, ',','.'),number_format($total_monto_x100cau, 2, ',','.'),number_format($total_pag, 2, ',','.'),number_format($total_monto_x100pag, 2, ',','.'),number_format($total_xpagar, 2, ',','.')));   
       
 
  }
@@ -168,7 +184,7 @@ class PDF extends FPDF {
     
 
     function ChapterTitle($num,$label) {
-        $this->SetFont('courier','',10);
+        $this->SetFont('Arial','',10);
         $this->SetFillColor(200,220,255);
         $this->Cell(0,6,"$label",0,1,'L',1);
         $this->Ln(8);
@@ -244,6 +260,29 @@ class PDF extends FPDF {
           return  $datosSol; 
 	
     }
+    
+    function getDatosEmpresa( $codigo){
+
+        $sql = "SELECT co_empresa, nb_empresa, nb_institucion, co_estado, co_municipio, tx_rif, tx_nit, 
+        tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
+        tx_sigla,
+        op_imagen->'izquierda'->0 as izquierda_x,
+        op_imagen->'izquierda'->1 as izquierda_y,
+        op_imagen->'izquierda'->2 as izquierda_w,
+        op_imagen->'centro'->0 as centro_x,
+        op_imagen->'centro'->1 as centro_y,
+        op_imagen->'centro'->2 as centro_w,
+        op_imagen->'derecha'->0 as derecha_x,
+        op_imagen->'derecha'->1 as derecha_y,
+        op_imagen->'derecha'->2 as derecha_w
+        FROM public.tb015_empresa
+        WHERE co_empresa = ".$codigo.";";
+
+        $conex = new ConexionComun();
+        $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+        return  $datosSol[0];
+  
+    }    
 
 }
 $pdf=new PDF('L','mm','legal');
