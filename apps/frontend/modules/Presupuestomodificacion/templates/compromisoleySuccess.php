@@ -46,7 +46,7 @@
 
             this.monto_ingreso_anterior = new Ext.form.Hidden({
                 name: 'tb096_presupuesto_modificacion[monto_ingreso_anterior]',
-                value: this.OBJ.mo_disponible
+                value: this.OBJ.mo_distribucion
                 //allowBlank:false
             });
 
@@ -171,7 +171,7 @@
             this.monto = new Ext.form.NumberField({
                 fieldLabel: 'Monto',
                 name: 'tb096_presupuesto_modificacion[monto]',
-                value: this.OBJ.mo_disponible,
+                value: this.OBJ.mo_distribucion,
                 //readOnly: true,
                 //style:'background:#c9c9c9;',
                 width: 200
@@ -580,7 +580,7 @@
                     {
                         name: 'partida',
                         convert: function(v, r) {
-                            return r.tx_partida + ' - ' + r.tx_descripcion;
+                            return r.nu_partida + ' - ' + r.tx_descripcion;
                         }
                     },
                     {

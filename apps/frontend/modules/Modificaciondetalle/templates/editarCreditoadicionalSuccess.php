@@ -242,7 +242,7 @@ getStoreID_PRESUPUESTO:function(){
             {name: 'mo_disponible'},
             {name: 'partida',
               convert:function(v,r){
-                return r.tx_partida+' - '+r.tx_descripcion;
+                return r.nu_partida+' - '+r.tx_descripcion;
               }
             },
             {name: 'monto',

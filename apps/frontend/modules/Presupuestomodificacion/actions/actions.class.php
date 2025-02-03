@@ -1583,11 +1583,13 @@ class PresupuestomodificacionActions extends sfActions
 
       $tb096_presupuesto_modificacionForm = $this->getRequestParameter('tb096_presupuesto_modificacion');
 
-
+//      list($dia, $mes, $anio) = explode("/", $tb096_presupuesto_modificacionForm["fe_modificacion"]);
+//      $fechaSolicitud = $anio . "-" . $mes . "-" . $dia;
+      
       $tb026_solicitudForm = array(
         "co_tipo_solicitud" => 31,
         "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
-        "fe_solicitud" => date("d/m/Y"),
+        "fe_solicitud" => $tb096_presupuesto_modificacionForm["fe_modificacion"],
         "observacion" => $tb096_presupuesto_modificacionForm["de_modificacion"],
         "codigo" => $this->getUser()->getAttribute('codigo')
       );
@@ -2256,27 +2258,6 @@ class PresupuestomodificacionActions extends sfActions
     } else {
       $tb097_modificacion_detalle = new Tb097ModificacionDetalle();
 
-      $tb026_solicitudForm = array(
-        "co_tipo_solicitud" => 31,
-        "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
-        "fe_solicitud" => date("d/m/Y"),
-        "observacion" => $tb097_modificacion_detalleForm["de_modificacion"],
-        "codigo" => $this->getUser()->getAttribute('codigo')
-      );
-
-      $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
-
-      if ($resp["success"] == true) {
-        $tb097_modificacion_detalleForm["co_solicitud"] = $resp["co_solicitud"];
-      } else {
-        $this->data = json_encode(array(
-          "success" => false,
-          "msg" => $resp["msg"]
-        ));
-
-        return;
-      }
-
     }
     try {
       $con->beginTransaction();
@@ -2285,7 +2266,7 @@ class PresupuestomodificacionActions extends sfActions
       /*CAMPOS*/
 
       /*Campo tipo BIGINT */
-      $tb097_modificacion_detalle->setIdTb096PresupuestoModificacion($this->getRequestParameter("id_tb096_presupuesto_modificacion"));
+      $tb097_modificacion_detalle->setIdTb096PresupuestoModificacion($id_tb096_presupuesto_modificacion);
 
       /*Campo tipo BIGINT */
       $tb097_modificacion_detalle->setIdTb013AnioFiscal($this->getUser()->getAttribute('ejercicio'));
@@ -2397,7 +2378,7 @@ class PresupuestomodificacionActions extends sfActions
           $c5->add(Tb150PresupuestoIngresoMovimientoPeer::ID_TB064_PRESUPUESTO_INGRESO, $tb097_modificacion_detalleForm["co_presupuesto_ingreso_anterior"]);
           $c5->add(Tb150PresupuestoIngresoMovimientoPeer::IN_ACTIVO, TRUE);
           $c5->add(Tb150PresupuestoIngresoMovimientoPeer::CO_TIPO_MOVIMIENTO, 9);
-          $c5->add(Tb150PresupuestoIngresoMovimientoPeer::CO_SOLICITUD, $tb097_modificacion_detalleForm["co_solicitud"]);
+          $c5->add(Tb150PresupuestoIngresoMovimientoPeer::CO_SOLICITUD, $tb096_presupuesto_modificacion->getCoSolicitud());
           $stmt5 = Tb150PresupuestoIngresoMovimientoPeer::doSelectStmt($c5);
           while ($res = $stmt5->fetch(PDO::FETCH_ASSOC)) {
             $tb150_presupuesto_ingreso = Tb150PresupuestoIngresoMovimientoPeer::retrieveByPk($res["id"]);
@@ -2411,6 +2392,7 @@ class PresupuestomodificacionActions extends sfActions
           $c5->add(Tb150PresupuestoIngresoMovimientoPeer::ID_TB064_PRESUPUESTO_INGRESO, $tb097_modificacion_detalleForm["id_tb064_presupuesto_ingreso"]);
           $c5->add(Tb150PresupuestoIngresoMovimientoPeer::IN_ACTIVO, TRUE);
           $c5->add(Tb150PresupuestoIngresoMovimientoPeer::CO_TIPO_MOVIMIENTO, 9);
+          $c5->add(Tb150PresupuestoIngresoMovimientoPeer::CO_SOLICITUD, $tb096_presupuesto_modificacion->getCoSolicitud());
           $stmt5 = Tb150PresupuestoIngresoMovimientoPeer::doSelectStmt($c5);
           while ($res = $stmt5->fetch(PDO::FETCH_ASSOC)) {
             $tb150_presupuesto_ingreso = Tb150PresupuestoIngresoMovimientoPeer::retrieveByPk($res["id"]);
@@ -2431,9 +2413,50 @@ class PresupuestomodificacionActions extends sfActions
           $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(9);
           $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos4["mo_comprometido"]);
           $tb150_presupuesto_ingreso_movimiento->setMoSaldoNuevo($mo_devengado);
-          $tb150_presupuesto_ingreso_movimiento->setCoSolicitud($tb097_modificacion_detalleForm["co_solicitud"]);
+          $tb150_presupuesto_ingreso_movimiento->setCoSolicitud($tb096_presupuesto_modificacion->getCoSolicitud());
           $tb150_presupuesto_ingreso_movimiento->setTxObservacion('INGRESO COMPROMISO DE LEY');
           $tb150_presupuesto_ingreso_movimiento->save($con);
+        }else{
+          
+            if ($tb097_modificacion_detalleForm["monto_ingreso_anterior"] != $tb097_modificacion_detalleForm["monto"]) {
+
+          $mo_devengado = $campos4["mo_comprometido"] + $tb097_modificacion_detalleForm["monto"] - $tb097_modificacion_detalleForm["monto_ingreso_anterior"];
+
+          $tb064_presupuesto_ingreso = Tb064PresupuestoIngresoPeer::retrieveByPk($tb097_modificacion_detalleForm["id_tb064_presupuesto_ingreso"]);
+          $tb064_presupuesto_ingreso->setMoComprometido($mo_devengado);
+          $tb064_presupuesto_ingreso->save($con);                
+
+          $c5 = new Criteria();
+          $c5->add(Tb150PresupuestoIngresoMovimientoPeer::ID_TB064_PRESUPUESTO_INGRESO, $tb097_modificacion_detalleForm["id_tb064_presupuesto_ingreso"]);
+          $c5->add(Tb150PresupuestoIngresoMovimientoPeer::IN_ACTIVO, TRUE);
+          $c5->add(Tb150PresupuestoIngresoMovimientoPeer::CO_TIPO_MOVIMIENTO, 9);
+          $c5->add(Tb150PresupuestoIngresoMovimientoPeer::CO_SOLICITUD, $tb096_presupuesto_modificacion->getCoSolicitud());
+          $stmt5 = Tb150PresupuestoIngresoMovimientoPeer::doSelectStmt($c5);
+          while ($res = $stmt5->fetch(PDO::FETCH_ASSOC)) {
+            $tb150_presupuesto_ingreso = Tb150PresupuestoIngresoMovimientoPeer::retrieveByPk($res["id"]);
+            $tb150_presupuesto_ingreso->setInActivo(FALSE);
+            $tb150_presupuesto_ingreso->save($con);
+          }
+
+          $tb150_presupuesto_ingreso_movimiento = new Tb150PresupuestoIngresoMovimiento();
+          $tb150_presupuesto_ingreso_movimiento->setIdTb064PresupuestoIngreso($tb097_modificacion_detalleForm["id_tb064_presupuesto_ingreso"]);
+          $tb150_presupuesto_ingreso_movimiento->setMoMovimiento($tb097_modificacion_detalleForm["monto"]);
+          $tb150_presupuesto_ingreso_movimiento->setNuAnio($this->getUser()->getAttribute('ejercicio'));
+          $tb150_presupuesto_ingreso_movimiento->setCoUsuario($this->getUser()->getAttribute('codigo'));
+          if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
+            $tb150_presupuesto_ingreso_movimiento->setCreatedAt($this->getUser()->getAttribute('fe_cierre'));
+          } else {
+            $tb150_presupuesto_ingreso_movimiento->setCreatedAt(date("Y-m-d"));
+          }
+          $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(9);
+          $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos4["mo_comprometido"]);
+          $tb150_presupuesto_ingreso_movimiento->setMoSaldoNuevo($mo_devengado);
+          $tb150_presupuesto_ingreso_movimiento->setCoSolicitud($tb096_presupuesto_modificacion->getCoSolicitud());
+          $tb150_presupuesto_ingreso_movimiento->setTxObservacion('INGRESO COMPROMISO DE LEY');
+          $tb150_presupuesto_ingreso_movimiento->save($con);
+                
+            }
+            
         }
       } else {
 
@@ -2456,7 +2479,7 @@ class PresupuestomodificacionActions extends sfActions
         $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(9);
         $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos4["mo_comprometido"]);
         $tb150_presupuesto_ingreso_movimiento->setMoSaldoNuevo($mo_devengado);
-        $tb150_presupuesto_ingreso_movimiento->setCoSolicitud($tb097_modificacion_detalleForm["co_solicitud"]);
+        $tb150_presupuesto_ingreso_movimiento->setCoSolicitud($tb096_presupuesto_modificacion->getCoSolicitud());
         $tb150_presupuesto_ingreso_movimiento->setTxObservacion('INGRESO COMPROMISO DE LEY');
         $tb150_presupuesto_ingreso_movimiento->save($con);
       }
@@ -2467,7 +2490,7 @@ class PresupuestomodificacionActions extends sfActions
       ));
 
 
-      $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb097_modificacion_detalleForm["co_solicitud"]));
+      $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb096_presupuesto_modificacion->getCoSolicitud()));
       $ruta->setInCargarDato(true)->save($con);
 
       Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
