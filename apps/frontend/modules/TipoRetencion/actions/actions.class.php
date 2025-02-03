@@ -388,6 +388,7 @@ class TipoRetencionActions extends sfActions
     $c->addSelectColumn(Tb072ClaseRetencionPeer::CO_CLASE_RETENCION);
     $c->addSelectColumn(Tb072ClaseRetencionPeer::TX_CLASE_RETENCION);
     $c->addSelectColumn(Tb024CuentaContablePeer::TX_CUENTA);
+    $c->add(Tb041TipoRetencionPeer::IN_ACTIVO,true);
     $c->addAscendingOrderByColumn(Tb041TipoRetencionPeer::CO_TIPO_RETENCION);
     $c->addJoin(Tb041TipoRetencionPeer::CO_CUENTA_CONTABLE, Tb024CuentaContablePeer::CO_CUENTA_CONTABLE,  Criteria::LEFT_JOIN);
     $c->addJoin(Tb041TipoRetencionPeer::CO_CLASE_RETENCION, Tb072ClaseRetencionPeer::CO_CLASE_RETENCION);
