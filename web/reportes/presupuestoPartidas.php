@@ -66,7 +66,7 @@ class PDF extends FPDF {
 
     function ChapterBody() {
        
-        $this->Ln(2);        
+//        $this->Ln(2);        
          
         if ($_GET["co_anio_fiscal"]) $anio=$_GET["co_anio_fiscal"];
         else if ($_GET["fe_inicio"]) $anio= date("Y", strtotime($_GET["fe_inicio"]));     
