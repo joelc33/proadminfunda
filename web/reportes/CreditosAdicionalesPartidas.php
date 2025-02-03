@@ -106,7 +106,7 @@ class PDF extends FPDF {
           $this->SetAligns(array("L","L","R","R","R","R")); 
          foreach($this->lista_traspaso_origen as $key => $campo){ 
          if ($campo['credito']!=0){    
-           $this->Row(array($campo['tx_partida'],utf8_decode($campo['tx_descripcion']),number_format($campo['credito'], 2, ',','.')),1,1);                  
+           $this->Row(array($campo['nu_partida'],utf8_decode($campo['tx_descripcion']),number_format($campo['credito'], 2, ',','.')),1,1);                  
          } 
          }
          $this->SetWidths(array(200));
@@ -232,7 +232,7 @@ class PDF extends FPDF {
     function getTraspaso_origen(){
 
           $conex = new ConexionComun();     
-      $sql = " SELECT  tb064.tx_partida,   
+      $sql = " SELECT  tb064.tx_partida, tb064.nu_partida,  
         tb064.tx_descripcion,                    
         tb097.mo_disponible,
 case when (id_tb098_tipo_distribucion = 1) then
