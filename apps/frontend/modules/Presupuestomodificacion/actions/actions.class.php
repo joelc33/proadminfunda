@@ -1441,7 +1441,7 @@ class PresupuestomodificacionActions extends sfActions
         $tb026_solicitudForm = array(
           "co_tipo_solicitud" => 7,
           "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
-          "fe_solicitud" => date("d/m/Y"),
+          "fe_solicitud" => $tb096_presupuesto_modificacionForm["fe_modificacion"],
           "observacion" => $tb096_presupuesto_modificacionForm["de_modificacion"],
           "codigo" => $this->getUser()->getAttribute('codigo')
         );
