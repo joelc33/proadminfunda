@@ -7,7 +7,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
     $objPHPExcel = new PHPExcel();
     // Set properties
     $objPHPExcel->getProperties()->setCreator("Yoser Perez");
-    $objPHPExcel->getProperties()->setTitle("Listado de Retenciones");
+    $objPHPExcel->getProperties()->setTitle("Listado de Ordenador");
     $objPHPExcel->getProperties()->setSubject("Reporte");
     $objPHPExcel->getProperties()->setDescription("Reporte para documento de Office 2007 XLSX.");
     // Set the active Excel worksheet to sheet 0

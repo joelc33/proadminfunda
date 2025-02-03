@@ -27,19 +27,21 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
     // Initialise the Excel row number
     
         $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
-        $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue('A1', '<NOMBRE DE LA INSTITUCION>');
+        $objPHPExcel->getActiveSheet()->getStyle('A5:G5')->getFont()->setBold(true);
+        $objPHPExcel->getActiveSheet()->getStyle('A4:L4')->getFont()->setBold(true);
+//        $objPHPExcel->setActiveSheetIndex(0)
+//                    ->setCellValue('A1', '<NOMBRE DE LA INSTITUCION>');
 
         $objPHPExcel->getActiveSheet()->getStyle('A2:G2')->getFont()->setBold(false);
         $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue('A2', 'SECRETARIA DE ADMINISTRACIÓN Y FINANZAS')
-                    ->setCellValue('A3', 'SubSecretaria de Presupuesto')
-                    ->setCellValue('A3', '[FPRERB57]')
+//                    ->setCellValue('A2', 'SECRETARIA DE ADMINISTRACIÓN Y FINANZAS')
+//                    ->setCellValue('A3', 'SubSecretaria de Presupuesto')
+//                    ->setCellValue('A3', '[FPRERB57]')
                     ->setCellValue('I4', 'Fecha de Emisión '.date("d").'/'.date("m").'/'.date("Y"))
                     ->setCellValue('A5', 'PERIODO....:  '.$_GET["fe_inicio"].' hasta '.$_GET["fe_fin"]);
 
         $objPHPExcel->getActiveSheet()->mergeCells("A6:G6");
-        $objPHPExcel->getActiveSheet()->mergeCells("I4:J4");
+        $objPHPExcel->getActiveSheet()->mergeCells("I4:L4");
         $objPHPExcel->getActiveSheet()->getStyle("A6:G6")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $objPHPExcel->getActiveSheet()->getStyle('A6:G6')->getFont()->setBold(true);
         $objPHPExcel->setActiveSheetIndex(0)
