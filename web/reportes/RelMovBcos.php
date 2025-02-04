@@ -80,7 +80,7 @@ class PDF extends FPDF {
          $this->lista_cuentas = $this->getCuenta();         
          
          $this->SetFont('Arial','',11);     
-         $this->SetWidths(array(20,12,83,65,22,35,30,30,45));  
+         $this->SetWidths(array(20,12,83,65,22,35,30,30,30));  
          $this->SetAligns(array("C","C","C","C","C","C","R","R","R"));   
          $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'Tipo','Referencia', 'Debe','Haber','Saldo'),0,0); 
          $this->SetAligns(array("L","L","L","L","C","C","R","R","R"));
@@ -108,7 +108,7 @@ class PDF extends FPDF {
                         $this->SetFillColor(255, 255, 255); 
                         $y =  $this->getY();
                         $this->SetFont('Arial','',12);     
-                        $this->SetWidths(array(20,12,83,65,22,35,30,30,45));  
+                        $this->SetWidths(array(20,12,83,65,22,35,30,30,30));  
                         $this->SetAligns(array("C","C","C","C","C","C","R","R","R"));
                         $this->SetX(10);
                         $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'Tipo','Referencia', 'Debe','Haber','Saldo'),0,0); 
@@ -129,7 +129,7 @@ class PDF extends FPDF {
                    $this->SetWidths(array(150)); 
                    $this->SetAligns(array("L")); 
                    $this->Row(array('Banco: '.$valor['bco']),0,0); 
-                   $this->SetWidths(array(170,160)); 
+                   $this->SetWidths(array(170,157)); 
                    $this->SetAligns(array("L","R")); 
                    $this->Row(array('Cuenta: '.utf8_decode($valor['cuenta']), 'SALDO AL INICIO DEL PERIODO: '.number_format($saldo, 2, ',','.')),0,0);
                 /*********** Movimiento por Libro del Bco y cta asociada *************/
@@ -153,7 +153,7 @@ class PDF extends FPDF {
                         $this->SetFillColor(255, 255, 255); 
                         $y =  $this->getY();
                         $this->SetFont('Arial','',11);     
-                        $this->SetWidths(array(20,12,83,65,22,35,30,30,45));  
+                        $this->SetWidths(array(20,12,83,65,22,35,30,30,30));  
                         $this->SetAligns(array("C","C","C","C","C","C","R","R","R"));
                         $this->SetX(10);
                         $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'Tipo','Referencia', 'Debe','Haber','Saldo'),0,0); 
@@ -162,7 +162,7 @@ class PDF extends FPDF {
                         $this->Ln(2);
                         } 
                         $this->SetFont('Arial','',8);  
-                        $this->SetWidths(array(20,12,83,65,22,35,30,30,45)); 
+                        $this->SetWidths(array(20,12,83,65,22,35,30,30,30)); 
                         $this->SetAligns(array("L","L","L","L","C","C","R","R","R")); 
                         
                         $saldo   = $saldo + $campo['monto_ingr'] - $campo['monto_egr'];
@@ -186,7 +186,7 @@ class PDF extends FPDF {
                    $this->SetWidths(array(150)); 
                    $this->SetAligns(array("L")); 
                    $this->Row(array('Banco: '.$valor['bco']),0,0); 
-                   $this->SetWidths(array(170,160)); 
+                   $this->SetWidths(array(170,157)); 
                    $this->SetAligns(array("L","R")); 
                    $this->Row(array('Cuenta: '.utf8_decode($valor['cuenta']), 'SALDO AL INICIO DEL PERIODO: '.number_format($saldo, 2, ',','.')),0,0);
                 /*********** Movimiento por Libro del Bco y cta asociada *************/
@@ -210,7 +210,7 @@ class PDF extends FPDF {
                         $this->SetFillColor(255, 255, 255); 
                         $y =  $this->getY();
                         $this->SetFont('Arial','',11);     
-                        $this->SetWidths(array(20,12,83,65,22,35,30,30,45));  
+                        $this->SetWidths(array(20,12,83,65,22,35,30,30,30));  
                         $this->SetAligns(array("C","C","C","C","C","C","R","R","R"));
                         $this->SetX(10);
                         $this->Row(array('Fecha','Sol.','Beneficiario',utf8_decode('Descripción'),'Tipo','Referencia', 'Debe','Haber','Saldo'),0,0); 
@@ -219,7 +219,7 @@ class PDF extends FPDF {
                         $this->Ln(2);
                         } 
                         $this->SetFont('Arial','',8);  
-                        $this->SetWidths(array(20,12,83,65,22,35,30,30,45)); 
+                        $this->SetWidths(array(20,12,83,65,22,35,30,30,30)); 
                         $this->SetAligns(array("L","L","L","L","C","C","R","R","R")); 
                         
                         $saldo   = $saldo + $campo['monto_ingr'] - $campo['monto_egr'];
@@ -242,7 +242,7 @@ class PDF extends FPDF {
 //         $this->Line(180, $y, 210, $y);         
          $this->SetFont('Arial','B',9);  
          $this->SetAligns(array("R","R","R","R"));
-         $this->SetWidths(array(237,30,30,45));
+         $this->SetWidths(array(237,30,30,30));
          $this->Row(array(utf8_decode('TOTAL: '),number_format($mo_ingr, 2, ',','.'),number_format($mo_egr, 2, ',','.'),number_format($saldo, 2, ',','.')),0,0);         
    }
 
