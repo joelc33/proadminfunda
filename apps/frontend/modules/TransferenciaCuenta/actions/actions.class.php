@@ -791,7 +791,7 @@ class TransferenciaCuentaActions extends sfActions
 
             list($anio, $mes, $dia) = explode('-', $res["created_at"]);
 
-            list($anio, $mes, $dia) = explode('-', $res["fe_registro"]);
+//            list($anio, $mes, $dia) = explode('-', $res["fe_registro"]);
             $registros[] = array(
                 "tx_proceso"                    => trim($res["tx_proceso"]),
                 "fecha_creacion"                => $dia.'/'.$mes.'/'.$anio,
