@@ -12,16 +12,24 @@ class PDF extends FPDF {
 
         $this->empresa = $this->getDatosEmpresa(1);
 
-        if (!empty($this->empresa['tx_imagen_cen'])) {
-            $this->Image("imagenes/" . $this->empresa['tx_imagen_cen'],  $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+        if (!empty($this->empresa['tx_imagen_izq'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
 
-        $this->SetFont('Arial', 'B', 8);
+        /*if(!empty($this->empresa['tx_imagen_cen'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+        }*/
+
+        /*  if(!empty($this->empresa['tx_imagen_der'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+        }*/
+
+        $this->SetFont('Arial', 'B', 9);
 
         $this->SetTextColor(0, 0, 0);
         $this->SetY(12);
         $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
-        $this->Ln(4);       
+        $this->Ln(4);
         $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
         if (!empty($this->empresa['nb_institucion'])) {
             $this->Ln(2);
@@ -31,10 +39,9 @@ class PDF extends FPDF {
         }else{
         $this->Ln(4);    
         }
-        $this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
-        $this->Ln(4);
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
-        $this->Ln(12);
+        $this->Ln(4);
+        $this->Ln(8);        
         $this->SetFont('Arial', 'B', 11);
         $this->Cell(0,0,utf8_decode('MODIFICACIÓN PRESUPUESTARIA POR CRÉDITO ADICIONAL'),0,0,'C');
         
@@ -74,11 +81,11 @@ class PDF extends FPDF {
          $this->Ln(1);
          $this->datos = $this->getConsulta();
            
-         $this->line(1, 60, 220, 60);
+         $this->line(10, 45, 210, 45);
          $this->SetFont('Arial','B',8);       
          $this->SetWidths(array(200));
          $this->SetAligns(array("C"));
-         $this->SetY(65);
+         $this->SetY(50);
          $this->SetFillColor(201, 199, 199);
          $this->Row(array(utf8_decode('DOCUMENTO NRO. '.$this->datos['nu_modificacion'])),1,1);
          $this->SetFillColor(255, 255, 255);         
@@ -92,18 +99,19 @@ class PDF extends FPDF {
          $this->SetFillColor(255, 255, 255);                  
          $this->SetWidths(array(200));
          $this->SetAligns(array("C"));      
-         
+         $this->SetFont('Arial','B',8);
          $this->SetFillColor(201, 199, 199);
-         $this->Row(array(utf8_decode('DATOS DE RAMO DE INGRESOS')),1,1); 
+         $this->Row(array(utf8_decode('DETALLES DE LA MODIFICACIÓN - PARTIDAS INGRESO')),1,1); 
          $this->SetFillColor(255, 255, 255);
          $this->SetWidths(array(45,105,50)); 
          $this->SetAligns(array("C","C","C","C","C"));              
          $this->SetFont('Arial','B',6);
-         $this->Row(array(utf8_decode('RAMO DE INGRESO'),utf8_decode('DENOMINACION'),utf8_decode('CREDITO ADICIONAL')),1,1);         
+         $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('MONTO')),1,1); 
+         $this->SetFont('Arial','',6);
          $this->lista_traspaso_origen = $this->getTraspaso_origen();
          $totalcred = 0;
          $totaldeb  = 0;
-          $this->SetAligns(array("L","L","R","R","R","R")); 
+          $this->SetAligns(array("C","L","R","R","R","R")); 
          foreach($this->lista_traspaso_origen as $key => $campo){ 
          if ($campo['credito']!=0){    
            $this->Row(array($campo['nu_partida'],utf8_decode($campo['tx_descripcion']),number_format($campo['credito'], 2, ',','.')),1,1);                  
@@ -112,24 +120,25 @@ class PDF extends FPDF {
          $this->SetWidths(array(200));
          $this->SetAligns(array("C"));
          $campo = "";
+         $this->SetFont('Arial','B',8);
          $this->SetFillColor(201, 199, 199);
-         $this->Row(array(utf8_decode('DETALLES DE LA MODIFICACIÓN - PARTIDAS DESTINOS')),1,1); 
+         $this->Row(array(utf8_decode('DETALLES DE LA MODIFICACIÓN - PARTIDAS GASTO')),1,1); 
          $this->SetFillColor(255, 255, 255);
          $this->SetWidths(array(45,105,50)); 
          $this->SetAligns(array("C","C","C","C","C"));              
          $this->SetFont('Arial','B',6);
-         $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('CREDITO ADICIONAL')),1,1);   
+         $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('MONTO')),1,1);   
          $this->SetFont('Arial','',6);      
          $this->lista_traspaso = $this->getTraspaso();
          $totalcred = 0;
          $totaldeb  = 0;
-        $this->SetAligns(array("L","L","R","R","R","R")); 
+        $this->SetAligns(array("C","L","R","R","R","R")); 
         foreach($this->lista_traspaso as $key => $campo){ 
             if ($campo['credito']!=0){
 
                 $this->Row(array($campo['co_categoria'],$campo['de_partida'],number_format($campo['credito'], 2, ',','.')),1,1);
 
-                if($this->getY()>245){
+                if($this->getY()>240){
 
                     $this->AddPage();
                     $this->Ln(7);
@@ -138,8 +147,8 @@ class PDF extends FPDF {
                     $this->SetWidths(array(45,55,50,50)); 
                     $this->SetAligns(array("C","C","C","C","C"));              
                     $this->SetFont('Arial','B',6);
-                    $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('CREDITO ADICIONAL')),1,1);   
-                    $this->SetAligns(array("L","L","R","R","R","R"));
+                    $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('MONTO')),1,1);   
+                    $this->SetAligns(array("C","L","R","R","R","R"));
                     $this->SetFont('Arial','',6);
 
                 }
@@ -153,7 +162,7 @@ class PDF extends FPDF {
          $this->SetWidths(array(60,60,80));
          $this->SetFont('Arial','B',8);
          $this->SetX(10);
-         $this->Row(array(utf8_decode('ELABORADO POR'),utf8_decode('COORDINACIÓN DE PRESUPUESTO'),utf8_decode('COORDINACIÓN GENERAL DE ADMINISTRACIÓN')),1,1);       
+         $this->Row(array(utf8_decode('ELABORADO POR'),utf8_decode('CONFORMADO POR'),utf8_decode('AUTORIZADO POR')),1,1);       
          $this->SetFillColor(255,255,255);
          $this->SetAligns(array("L", "L","L"));
          $Y = $this->GetY();
@@ -168,7 +177,7 @@ class PDF extends FPDF {
          $this->SetY($Y+16);
          $this->SetX(10);
          $this->SetFont('Arial','',6);
-         $this->Row(array('Elaborado por:','Conformado por:','Autorizado por:'),1,1);          
+         $this->Row(array('ANALISTA:','PRESUPUESTO','ADMINISTRADOR'),1,1);          
         
 //         $this->ln();
 //         $this->SetAligns(array("C","C", "C"));
