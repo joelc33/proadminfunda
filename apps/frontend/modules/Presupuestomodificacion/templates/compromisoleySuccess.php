@@ -150,7 +150,7 @@
                     PresupuestomodificacionEditar.main.mo_distribucion.setValue('');
                     PresupuestomodificacionEditar.main.id_tb064_presupuesto_ingreso.setValue(record.data.co_presupuesto_ingreso);
                     PresupuestomodificacionEditar.main.nu_partida.setValue(record.data.nu_partida);
-                    PresupuestomodificacionEditar.main.monto.setValue(record.data.mo_inicial);
+//                    PresupuestomodificacionEditar.main.monto.setValue(record.data.mo_inicial);
                     PresupuestomodificacionEditar.main.mo_disponible.setValue(record.data.mo_inicial);
                     this.collapse();
                 }
@@ -242,22 +242,25 @@
                 iconCls: 'icon-guardar',
                 handler: function() {
 
-                    if (PresupuestomodificacionEditar.main.id_tb064_presupuesto_ingreso.getValue() == '') {
-                        Ext.Msg.alert("Alerta", "Debe Seleccionar el ejecutor");
-                        return false;
-                    }
-                    if (PresupuestomodificacionEditar.main.id_tb064_presupuesto_ingreso.getValue() == '') {
+//                    if (PresupuestomodificacionEditar.main.id_tb064_presupuesto_ingreso.getValue() == '') {
+//                        Ext.Msg.alert("Alerta", "Debe Seleccionar el ejecutor");
+//                        return false;
+//                    }
+
+                    if (PresupuestomodificacionEditar.main.id_tb064_presupuesto_ingreso.getValue()==null) {
                         Ext.Msg.alert("Alerta", "Debe Seleccionar la partida");
                         return false;
                     }
-                    //        if(PresupuestomodificacionEditar.main.mo_distribucion.getValue()==''){
-                    //            Ext.Msg.alert("Alerta","Debe ingresar el Monto");
-                    //            return false;
-                    //        }              
-                    //        if(PresupuestomodificacionEditar.main.mo_distribucion.getValue()==0){
-                    //            Ext.Msg.alert("Alerta","El monto no Puede ser cero");
-                    //            return false;
-                    //        }       
+                    
+                            if(PresupuestomodificacionEditar.main.monto.getValue()==0){
+                                Ext.Msg.alert("Alerta","El monto no Puede ser cero");
+                                return false;
+                            }                     
+                            if(PresupuestomodificacionEditar.main.monto.getValue()==''){
+                                Ext.Msg.alert("Alerta","Debe ingresar el Monto");
+                                return false;
+                            }              
+      
 
 
                     if (!PresupuestomodificacionEditar.main.formPanel_.getForm().isValid()) {

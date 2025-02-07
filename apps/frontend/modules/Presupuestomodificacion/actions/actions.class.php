@@ -2492,10 +2492,10 @@ class PresupuestomodificacionActions extends sfActions
 
       $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb096_presupuesto_modificacion->getCoSolicitud()));
       $ruta->setInCargarDato(true)->save($con);
-
+      $con->commit();
       Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
 
-      $con->commit();
+
     } catch (PropelException $e) {
       $con->rollback();
       $this->data = json_encode(array(
