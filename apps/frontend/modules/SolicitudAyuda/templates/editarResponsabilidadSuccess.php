@@ -310,7 +310,7 @@
             });
 
             this.winformPanel_ = new Ext.Window({
-                title: 'Solicitud Ayuda',
+                title: 'Donación',
                 constrain: true,
                 width: 900,
                 frame: true,

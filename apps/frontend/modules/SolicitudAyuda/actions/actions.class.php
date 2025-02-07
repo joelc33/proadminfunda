@@ -348,7 +348,7 @@ class SolicitudAyudaActions extends sfActions
             $tb026_solicitudForm = array(
                 "co_tipo_solicitud" => 25,
                 "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
-                "fe_solicitud" => date("d/m/Y"),
+                "fe_solicitud" => $tb126_solicitud_ayudaForm["fe_solicitud"],
                 "observacion" => $tb126_solicitud_ayudaForm["tx_observacion"],
                 "codigo" => $this->getUser()->getAttribute('codigo')
             );

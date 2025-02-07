@@ -212,7 +212,7 @@
                         <?php
                     }
                     ?>
-                    this.formulario, '-',
+//                    this.formulario, '-',
                     //  this.detalle, '-',
                     this.estado, '-',
                     this.anular
