@@ -72,7 +72,7 @@ this.fe_pago = new Ext.form.DateField({
 	fieldLabel:'Fecha de Pago',
 	name:'tb145_cuenta_cobrar_detalle[fe_pago]',
 	value:this.OBJ.fe_pago,
-        maxValue:this.OBJ.fe_pago?this.OBJ.fe_pago:new Date(),
+        maxValue:this.OBJ.fe_pago?new Date():new Date(),
 	allowBlank:false,
 	width:100
 });
@@ -149,7 +149,7 @@ autoHeight:true,
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Formulario: Cuenta Por Pagar Credito Detalle',
+    title:'Formulario: Cuenta Por Cobrar Detalle',
     modal:true,
     constrain:true,
 width:614,
