@@ -212,10 +212,10 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(115);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(90, 5, utf8_decode('Referencia: '), 0, 'L');
-        $this->SetY(45);
-        $this->SetX(115);
+        $this->SetY(40);
+        $this->SetX(130);
         $this->SetFont('Times', '', 9);
-        $this->MultiCell(70, 5, utf8_decode($this->datos['tx_concepto']), 0, 'L');
+        $this->MultiCell(50, 5, utf8_decode($this->datos['tx_concepto']), 0, 'L');
 
         $Y = 40;
         $this->SetY($Y);
@@ -775,7 +775,7 @@ class PDF_Flo extends PDF_FlowingBlock
     {
         $conex = new ConexionComun();
         $sql = "   select distinct
-                         substr(tb085.co_categoria,1,16) as co_categoria,
+                         substr(tb085.co_categoria,1,100) as co_categoria,
                          tb085.de_partida,
                          tb085.nu_partida,
                          upper(tb052.tx_observacion) as tx_observacion,
