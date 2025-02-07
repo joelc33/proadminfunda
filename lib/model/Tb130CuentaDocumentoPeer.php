@@ -23,6 +23,7 @@ class Tb130CuentaDocumentoPeer extends BaseTb130CuentaDocumentoPeer
         $c->addSelectColumn(Tb130CuentaDocumentoPeer::TX_CUENTA_GASTO);
         $c->addSelectColumn(Tb130CuentaDocumentoPeer::TX_CUENTA_ODP);
         $c->addSelectColumn(Tb130CuentaDocumentoPeer::TX_DOCUMENTO);
+        $c->addSelectColumn(Tb130CuentaDocumentoPeer::IN_CUENTA_DOCUMENTO_PROVEEDOR);
         $c->add(Tb130CuentaDocumentoPeer::CO_TIPO_SOLICITUD,$co_tipo_solicitud);        
         $stmt = Tb130CuentaDocumentoPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -35,12 +36,25 @@ class Tb130CuentaDocumentoPeer extends BaseTb130CuentaDocumentoPeer
             $tx_cuenta_gasto = $campos["tx_cuenta_gasto"].$datos_proveedor->getNuCodigo();
             
 //            $tx_cuenta_gasto = $campos["tx_cuenta_gasto"];
-                      
+            if($campos["in_cuenta_documento_proveedor"]==true){          
             $campos["co_cuenta_gasto_pago"]=self::getCuentaContable($tx_cuenta_gasto,$tx_descripcion);
             
             $tx_cuenta_odp = $campos["tx_cuenta_odp"].$datos_proveedor->getNuCodigo();  
 //            $tx_cuenta_odp = $campos["tx_cuenta_odp"];
             $campos["co_cuenta_orden_pago"]=self::getCuentaContable($tx_cuenta_odp,$tx_descripcion);
+            
+            }else{
+                
+            $tx_descripcion = $campos["tx_documento"];    
+            $tx_cuenta_gasto = $campos["tx_cuenta_gasto"].'00001';
+
+            $campos["co_cuenta_gasto_pago"]=self::getCuentaContable($tx_cuenta_gasto,$tx_descripcion);
+            
+            $tx_cuenta_odp = $campos["tx_cuenta_odp"].'00001'; 
+//            $tx_cuenta_odp = $campos["tx_cuenta_odp"];
+            $campos["co_cuenta_orden_pago"]=self::getCuentaContable($tx_cuenta_odp,$tx_descripcion);                
+                
+            }
             
         }else{
             
