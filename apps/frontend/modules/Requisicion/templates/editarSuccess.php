@@ -9,6 +9,7 @@
             //<Stores de fk>
             this.storeCO_TIPO_SOLICITUD = this.getStoreCO_TIPO_SOLICITUD();
             this.storeCO_ENTE = this.getStoreCO_ENTE();
+            this.storeCO_PROGRAMA = this.getStoreCO_PROGRAMA();            
 
 
             this.cant_total = '';
@@ -64,6 +65,45 @@
                 value: this.OBJ.co_ente,
                 objStore: this.storeCO_ENTE
             });
+
+            this.co_programa = new Ext.form.ComboBox({
+                fieldLabel: 'Programa',
+                store: this.storeCO_PROGRAMA,
+                typeAhead: true,
+                valueField: 'co_programa',
+                displayField: 'tx_denominacion',
+                hiddenName: 'tb039_requisiciones[co_programa]',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                emptyText: '...',
+                selectOnFocus: true,
+                mode: 'local',
+                width: 250
+            });
+            this.storeCO_PROGRAMA.load();
+            paqueteComunJS.funcion.seleccionarComboByCo({
+                objCMB: this.co_programa,
+                value: this.OBJ.co_programa,
+                objStore: this.storeCO_PROGRAMA
+            });
+            
+            this.PanelSOLICITANTE = new Ext.Panel({
+                items: [{
+                    layout: 'column',
+                    defaults: {
+                        layout: 'form',
+                        columnWidth: .5
+                    },
+                    items: [{
+                            items: [this.co_departamento]
+                        },
+                        {
+                            items: [this.co_programa]
+                        }
+                    ]
+                }]
+            });            
 
             this.store_lista = this.getLista();
 
@@ -220,12 +260,17 @@
                 });
 
             }
+            
+            if (this.OBJ.co_programa == '' || this.OBJ.co_programa ==null) {
+            RequisicionEditar.main.co_programa.hide();
+
+            }            
 
 
            
             this.fieldDatos = new Ext.form.FieldSet({
                 title: 'Datos del Solicitante',
-                items: [this.co_departamento]
+                items: [this.PanelSOLICITANTE]
             });
 
             this.tx_concepto = new Ext.form.TextField({
@@ -448,7 +493,23 @@
                 ]
             });
             return this.store;
+        },
+        getStoreCO_PROGRAMA: function() {
+            this.store = new Ext.data.JsonStore({
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Requisicion/storefkcoprograma',
+                root: 'data',
+                fields: [{
+                        name: 'co_programa'
+                    },
+                    {
+                        name: 'tx_denominacion'
+                    }
+                ]
+            });
+            return this.store;
         }
+        
+        
     };
     Ext.onReady(RequisicionEditar.main.init, RequisicionEditar.main);
 </script>
