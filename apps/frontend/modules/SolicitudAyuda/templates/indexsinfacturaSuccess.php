@@ -113,7 +113,7 @@
             });
 
             this.nueva_solicitud = new Ext.Button({
-                text: 'Nueva Solicitud',
+                text: 'Nueva',
                 iconCls: 'icon-nuevo',
                 handler: function () {
                     //                                contribuyenteLista.main.mascara.show();
@@ -198,7 +198,7 @@
             }
 
             this.gridPanel_ = new Ext.grid.GridPanel({
-                title: 'Lista de Ayuda Económica con IVA',
+                title: 'Lista de Donación',
                 iconCls: 'icon-libro',
                 store: this.store_lista,
                 loadMask: true,
