@@ -11,7 +11,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->datos = $this->getAyuda();
 
-        $this->Image("imagenes/escudo_zulia.jpg", 100, 7, 20);
+        $this->Image("imagenes/logosedezul.jpg", 85, 5, 46);
 
       
         $this->SetFont('Arial', 'B', 8);
@@ -22,9 +22,13 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->Ln(4);
         $this->Cell(0, 0, utf8_decode('GOBERNACIÓN DEL ESTADO ZULIA'), 0, 0, 'C');
         $this->Ln(4);
-        $this->Cell(0, 0, utf8_decode('SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'C');
+        $this->Cell(0, 0, utf8_decode('SERVICIO DESCONCENTRADO PARA LOS CENTROS ASISTENCIALES'), 0, 0, 'C');
         $this->Ln(4);
-        $this->line(20, 45, 190, 45);
+        $this->Cell(0, 0, utf8_decode('DE SALUD DEL ESTADO ZULIA'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode('RIF. G-20007909-6'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->line(20, 50, 190, 50);
         $this->Ln(10);
 
         $this->Ln();
@@ -235,6 +239,7 @@ $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->AddPage();
 $pdf->AliasNbPages();
 $pdf->ChapterBody();
+//$pdf->Output();
 
 
 $comm = new ConexionComun();
