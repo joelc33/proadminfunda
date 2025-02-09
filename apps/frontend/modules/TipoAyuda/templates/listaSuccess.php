@@ -97,7 +97,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
 //    frame:true,
     height:550,
     tbar:[
-        this.nuevo,'-',this.editar //,'-',this.eliminar,'-',this.filtro
+        this.nuevo,'-',this.editar ,'-',this.eliminar//,'-',this.filtro
     ],
     columns: [
     new Ext.grid.RowNumberer(),

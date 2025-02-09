@@ -41,15 +41,11 @@ class PDF extends FPDF {
         }
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(4);
-        $this->Ln(8);        
+        $this->Ln(8);
         $this->SetFont('Arial', 'B', 11);
-        $this->Cell(0,0,utf8_decode('MODIFICACIÓN PRESUPUESTARIA POR CRÉDITO ADICIONAL'),0,0,'C');
+        $this->Cell(0,0,utf8_decode('COMPROMISO DE INGRESO DE LEY'),0,0,'C');
         
         $this->SetFont('Arial','',8);
-        $this->Ln(8);
-
-        //$this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
-//        $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
 
     }
 
@@ -101,13 +97,12 @@ class PDF extends FPDF {
          $this->SetAligns(array("C"));      
          $this->SetFont('Arial','B',8);
          $this->SetFillColor(201, 199, 199);
-         $this->Row(array(utf8_decode('DETALLES DE LA MODIFICACIÓN - PARTIDAS INGRESO')),1,1); 
+         $this->Row(array(utf8_decode('DATOS DEL COMPROMISO')),1,1); 
          $this->SetFillColor(255, 255, 255);
          $this->SetWidths(array(45,105,50)); 
          $this->SetAligns(array("C","C","C","C","C"));              
          $this->SetFont('Arial','B',6);
-         $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('MONTO')),1,1); 
-         $this->SetFont('Arial','',6);
+         $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('MONTO')),1,1);         
          $this->lista_traspaso_origen = $this->getTraspaso_origen();
          $totalcred = 0;
          $totaldeb  = 0;
@@ -117,44 +112,7 @@ class PDF extends FPDF {
            $this->Row(array($campo['nu_partida'],utf8_decode($campo['tx_descripcion']),number_format($campo['credito'], 2, ',','.')),1,1);                  
          } 
          }
-         $this->SetWidths(array(200));
-         $this->SetAligns(array("C"));
-         $campo = "";
-         $this->SetFont('Arial','B',8);
-         $this->SetFillColor(201, 199, 199);
-         $this->Row(array(utf8_decode('DETALLES DE LA MODIFICACIÓN - PARTIDAS GASTO')),1,1); 
-         $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(45,105,50)); 
-         $this->SetAligns(array("C","C","C","C","C"));              
-         $this->SetFont('Arial','B',6);
-         $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('MONTO')),1,1);   
-         $this->SetFont('Arial','',6);      
-         $this->lista_traspaso = $this->getTraspaso();
-         $totalcred = 0;
-         $totaldeb  = 0;
-        $this->SetAligns(array("C","L","R","R","R","R")); 
-        foreach($this->lista_traspaso as $key => $campo){ 
-            if ($campo['credito']!=0){
 
-                $this->Row(array($campo['co_categoria'],$campo['de_partida'],number_format($campo['credito'], 2, ',','.')),1,1);
-
-                if($this->getY()>240){
-
-                    $this->AddPage();
-                    $this->Ln(7);
-                    $this->setX(10);
-                    $this->SetFillColor(255, 255, 255);
-                    $this->SetWidths(array(45,55,50,50)); 
-                    $this->SetAligns(array("C","C","C","C","C"));              
-                    $this->SetFont('Arial','B',6);
-                    $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('MONTO')),1,1);   
-                    $this->SetAligns(array("C","L","R","R","R","R"));
-                    $this->SetFont('Arial','',6);
-
-                }
-
-            } 
-        }
          
          $this->ln(8);
          $this->SetAligns(array("C","C", "C"));

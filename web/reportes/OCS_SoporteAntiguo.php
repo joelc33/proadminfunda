@@ -212,8 +212,8 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(115);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(90, 5, utf8_decode('Referencia: '), 0, 'L');
-        $this->SetY(45);
-        $this->SetX(115);
+        $this->SetY(40);
+        $this->SetX(130);
         $this->SetFont('Times', '', 9);
         $this->MultiCell(70, 5, utf8_decode($this->datos['tx_concepto']), 0, 'L');
 
@@ -364,7 +364,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetFont('Times', 'B', 8);
         $this->Row(array(utf8_decode('PARTIDAS PRESUPUESTARIAS')), 1, 1);
         $this->SetFillColor(255, 255, 255);
-        $this->SetWidths(array(40, 40, 70, 34));
+        $this->SetWidths(array(50, 30, 70, 34));
         $this->SetAligns(array("C", "C", "L", "R", "C"));
         $this->SetX(15);
         $this->SetTextColor(0, 0, 0);
@@ -397,7 +397,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetX(108);
                 $this->Row(array('ANEXOS' . $this->datos['numero_compra']), 0, 0);
                 $this->SetX(15);
-                $this->SetWidths(array(40, 40, 70, 34));
+                $this->SetWidths(array(50, 30, 70, 34));
                 $this->SetAligns(array("C", "C", "L", "R", "C"));
                 $this->SetTextColor(0, 0, 0);
                 $this->SetFont('Times', 'B', 8);
@@ -775,7 +775,7 @@ class PDF_Flo extends PDF_FlowingBlock
     {
         $conex = new ConexionComun();
         $sql = "   select distinct
-                         substr(tb085.co_categoria,1,16) as co_categoria,
+                         substr(tb085.co_categoria,1,100) as co_categoria,
                          tb085.de_partida,
                          tb085.nu_partida,
                          upper(tb052.tx_observacion) as tx_observacion,

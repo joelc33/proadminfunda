@@ -469,7 +469,7 @@ this.formPanel_ = new Ext.form.FormPanel({
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Formulario: Cuenta Por Pagar Credito',
+    title:'Formulario: Cuenta Por Cobrar',
     modal:true,
     constrain:true,
 	width:794,

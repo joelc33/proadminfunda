@@ -230,12 +230,12 @@ class CuentaPorCobrarCreditoActions extends sfActions
 //                                  ->setInActivo(true)
 //                                  ->save($con);                       
                     
-        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb142_cuenta_cobrarForm["co_solicitud"]));
-        $ruta->setInCargarDato(true)->save($con);
+//        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb142_cuenta_cobrarForm["co_solicitud"]));
+//        $ruta->setInCargarDato(true)->save($con);
 
         $con->commit();
 
-        Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta()); 
+//        Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta()); 
 
         $this->data = json_encode(array(
             "success" => true,

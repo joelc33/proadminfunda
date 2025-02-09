@@ -101,7 +101,7 @@
             });
 
             this.fieldDatosSolicitante = new Ext.form.FieldSet({
-                title: 'Datos del Solicitante',
+                title: 'Beneficiario',
                 width: 850,
                 items: [this.compositefieldCI,
                 this.nb_persona,
@@ -175,7 +175,7 @@
             });
 
             this.fieldDatosSolicitanteProveedor = new Ext.form.FieldSet({
-                title: 'Datos del Receptor del Cheque',
+                title: 'Datos del Pago',
                 width: 850,
                 items: [this.compositefieldCIProveedor,
                 this.nb_proveedor,
@@ -183,7 +183,7 @@
             });
 
             this.co_tipo_ayuda = new Ext.form.ComboBox({
-                fieldLabel: 'Tipo de Ayuda',
+                fieldLabel: 'Tipo',
                 store: this.storeCO_TIPO_AYUDA,
                 typeAhead: true,
                 valueField: 'co_tipo_ayuda',
@@ -207,7 +207,7 @@
             });
 
             this.tx_observacion = new Ext.form.TextArea({
-                fieldLabel: 'Observacion',
+                fieldLabel: 'Descripción Orden de pago',
                 name: 'tb126_solicitud_ayuda[tx_observacion]',
                 value: this.OBJ.tx_observacion,
                 allowBlank: false,
@@ -231,7 +231,7 @@
             });
 
             this.fieldDatosAyuda = new Ext.form.FieldSet({
-                title: 'Datos de la Ayuda',
+                title: 'Datos de la Donacion',
                 width: 850,
                 items: [this.fe_solicitud,
                 this.co_tipo_ayuda,
@@ -310,7 +310,7 @@
             });
 
             this.winformPanel_ = new Ext.Window({
-                title: 'Solicitud Ayuda',
+                title: 'Donación',
                 constrain: true,
                 width: 900,
                 frame: true,

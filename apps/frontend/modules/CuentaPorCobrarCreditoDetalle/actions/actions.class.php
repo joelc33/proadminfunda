@@ -171,12 +171,16 @@ class CuentaPorCobrarCreditoDetalleActions extends sfActions
 
         }        
         
-        
+        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb142_cuenta_cobrar->getCoSolicitud()));
+        $ruta->setInCargarDato(true)->save($con);
+
+        $con->commit();
+
+        Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());         
         $this->data = json_encode(array(
                     "success" => true,
                     "msg" => 'Modificación realizada exitosamente'
                 ));
-        $con->commit();
       }catch (PropelException $e)
       {
         $con->rollback();

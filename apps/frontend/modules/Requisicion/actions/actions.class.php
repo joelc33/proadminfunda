@@ -176,10 +176,14 @@ class RequisicionActions extends sfActions
                 "tx_observacion"     => $campos["tx_observacion"],
                 "nu_requisicion"     => $campos["nu_requisicion"],
                 "nu_iva"             => $campos["nu_iva"],
+                "co_programa"        => $campos["co_programa"],
             ));
         } else {
 
-
+            $c = new Criteria();
+            $stmt = Tb019ProgramaPeer::doSelectStmt($c);
+            $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+            
             $datos = $this->getDatosSolicitante($this->getUser()->getAttribute('codigo'));
 
             list($anio, $mes, $dia) = explode("-", $co_solicitud["fe_registro"]);
@@ -196,6 +200,7 @@ class RequisicionActions extends sfActions
                 "tx_concepto"        => $co_solicitud["tx_observacion"],
                 "tx_observacion"     => "",
                 "co_ente"            =>  $datos["co_ente"],
+                "co_programa"        =>  $campos["co_programa"],
                 "nu_requisicion"     => ""
             ));
         }
@@ -265,6 +270,7 @@ class RequisicionActions extends sfActions
             $tb039_requisiciones->setTxObservacion($tb039_requisicionesForm["tx_observacion"]);
             $tb039_requisiciones->setCoServicio($tb039_requisicionesForm["co_servicio"]);
             $tb039_requisiciones->setCoEnte($tb039_requisicionesForm["co_ente"]);
+            $tb039_requisiciones->setCoPrograma($tb039_requisicionesForm["co_programa"]?$tb039_requisicionesForm["co_programa"]:null);
             $tb039_requisiciones->save($con);
 
             $listaProducto  = json_decode($json_producto, true);
@@ -505,6 +511,23 @@ class RequisicionActions extends sfActions
         ));
         $this->setTemplate('store');
     }
+    
+    public function executeStorefkcoprograma(sfWebRequest $request)
+    {
+        $c = new Criteria();
+        $stmt = Tb019ProgramaPeer::doSelectStmt($c);
+        $registros = array();
+        while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $registros[] = $reg;
+        }
+
+        $this->data = json_encode(array(
+            "success"   =>  true,
+            "total"     =>  count($registros),
+            "data"      =>  $registros
+        ));
+        $this->setTemplate('store');
+    }    
 
     public function executeEliminarMaterial(sfWebRequest $request)
     {
