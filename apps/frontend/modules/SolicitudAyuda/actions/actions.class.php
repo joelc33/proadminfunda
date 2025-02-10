@@ -413,7 +413,7 @@ class SolicitudAyudaActions extends sfActions
             $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
             $tb053_detalle_compras->setNuCantidad(1);
             $tb053_detalle_compras->setCoProducto(18554);
-            $tb053_detalle_compras->setDetalle($tb126_solicitud_ayudaForm["tx_descripcion"]);
+            $tb053_detalle_compras->setDetalle($tb126_solicitud_ayudaForm["tx_observacion"]);
             $tb053_detalle_compras->setPrecioUnitario($mo_total);
             $tb053_detalle_compras->setMonto($mo_total);
             $tb053_detalle_compras->save($con);

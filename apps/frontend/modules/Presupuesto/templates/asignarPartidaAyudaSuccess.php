@@ -185,7 +185,7 @@ this.datos += '<p class="registro_detalle"><b>Nombre y Apellido: </b>'+this.OBJ.
 this.datos +='<p class="registro_detalle"><b>Teléfono: </b>'+this.OBJ.nu_celular+'</p>';
 
 this.fieldDatos= new Ext.form.FieldSet({
-        title: 'Datos del Solicitante',
+        title: 'Datos de la Asignación',
         html: this.datos
 });
 
