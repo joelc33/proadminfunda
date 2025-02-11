@@ -719,7 +719,7 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb008.tx_email,
                          tb047.tx_ente,
                          tb052.nu_orden_compra,
-                         tb052.created_at as fecha_comp,
+                         tb052.fecha_compra as fecha_comp,
                          tb008.nu_codigo,
                          de_tipo_movimiento,
                          tb001.nb_usuario,
