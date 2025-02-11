@@ -58,6 +58,14 @@
                 value: this.OBJ.ejercicio
             });
 
+            this.mo_debitar = new Ext.form.NumberField({
+                fieldLabel: 'Monto a Debitar',
+                name: 'mo_debitar',
+                allowBlank: false,
+                value: ContabilidadEditar.main.monto,
+                width: 200
+            });
+
             this.co_ente_ejecutor = new Ext.form.ComboBox({
                 fieldLabel: 'Ente Ejecutor',
                 store: this.storeCO_EJECUTOR,
@@ -324,7 +332,7 @@
                 store: this.store_lista,
                 loadMask: true,
                 //    frame:true,
-                height: 350,
+                height: 250,
                 border: false,
                 tbar: [
 
@@ -441,7 +449,7 @@
 
             this.formPanel_ = new Ext.form.FormPanel({
                 frame: true,
-                width: 900,
+                width: 1300,
                 autoHeight: true,
                 autoScroll: true,
                 bodyStyle: 'padding:10px;',
@@ -451,7 +459,8 @@
                     this.co_solicitud,
                     this.co_cotizacion,
                     this.monto,
-                    this.co_presupuesto
+                    this.co_presupuesto,
+                    this.mo_debitar
                 ]
             });
 

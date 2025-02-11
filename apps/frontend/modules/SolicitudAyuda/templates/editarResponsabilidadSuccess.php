@@ -38,6 +38,8 @@
                 fieldLabel: 'Nombre y Apellido',
                 name: 'solicitante[nb_persona]',
                 value: this.OBJ.nb_persona,
+                readOnly: true,
+                style: 'background:#c9c9c9;',
                 allowBlank: false,
                 width: 400
             });
@@ -55,6 +57,8 @@
                 name: 'solicitante[nu_celular]',
                 value: this.OBJ.nu_celular,
                 allowBlank: false,
+                readOnly: true,
+                style: 'background:#c9c9c9;',
                 width: 200,
                 maskRe: /[0-9]/,
             });
@@ -113,6 +117,8 @@
                 name: 'receptor[nb_persona]',
                 value: this.OBJ.nb_persona,
                 allowBlank: false,
+                readOnly: true,
+                style: 'background:#c9c9c9;',
                 width: 400
             });
 
@@ -128,6 +134,8 @@
                 fieldLabel: 'Nro Celular',
                 name: 'receptor[nu_celular]',
                 value: this.OBJ.nu_celular_proveedor,
+                readOnly: true,
+                style: 'background:#c9c9c9;',
                 allowBlank: false,
                 width: 200,
                 maskRe: /[0-9]/

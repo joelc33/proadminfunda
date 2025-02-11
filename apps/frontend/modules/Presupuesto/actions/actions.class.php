@@ -1682,6 +1682,7 @@ class PresupuestoActions extends sfActions
         $mo_disponible             = $this->getRequestParameter("monto");
         $co_fuente_financiamiento  = $this->getRequestParameter("co_fuente_financiamiento");
         $monto                     = $this->getRequestParameter("monto");
+        $mo_debitar                = $this->getRequestParameter("mo_debitar");
 
 
         $con = Propel::getConnection();
@@ -1691,13 +1692,21 @@ class PresupuestoActions extends sfActions
 
             $Tb207DetalleCotizacion = Tb207DetalleCotizacionPeer::retrieveByPK($co_detalle_cotizacion);
 
-            if ($monto < $Tb207DetalleCotizacion->getMonto()) {
+            
+            //$Tb207DetalleCotizacion->getMonto()
+            if ($monto < $mo_debitar) {
 
                 $this->data = json_encode(array(
                     "success" => false,
                     "msg" =>  "El Monto Disponible de la partida es menor al monto total"
                 ));
-            } else {
+            } else if($mo_debitar>$Tb207DetalleCotizacion->getMonto()){
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" =>  "El Monto a Debitar es mayor al monto del Item (".$Tb207DetalleCotizacion->getMonto().")"
+                ));
+            }
+            else {
 
                 $programatica = $this->getProgramatica($co_presupuesto);
 
@@ -1712,14 +1721,49 @@ class PresupuestoActions extends sfActions
                         $this->getUser()->getAttribute('codigo'),
                         $Tb207DetalleCotizacion->getCoPresupuesto(),
                         16,
-                        $Tb207DetalleCotizacion->getMonto(),
+                        $mo_debitar,
                         $co_detalle_cotizacion,
                         ''
                     );
                 }
 
 
+                if($mo_debitar<$Tb207DetalleCotizacion->getMonto()){
+
+                        $Tb207DetalleCotizacionNew = new Tb207DetalleCotizacion();
+                        $Tb207DetalleCotizacionNew->setCoCotizacion($Tb207DetalleCotizacion->getCoCotizacion());
+                        $Tb207DetalleCotizacionNew->setCoProducto($Tb207DetalleCotizacion->getCoProducto());
+                        $Tb207DetalleCotizacionNew->setNuCantidad($Tb207DetalleCotizacion->getNuCantidad());
+                        $Tb207DetalleCotizacionNew->setPrecioUnitario($Tb207DetalleCotizacion->getPrecioUnitario());
+                        $Tb207DetalleCotizacionNew->setMonto($Tb207DetalleCotizacion->getMonto()-$mo_debitar);
+                        $Tb207DetalleCotizacionNew->setDetalle($Tb207DetalleCotizacion->getDetalle());
+                        $Tb207DetalleCotizacionNew->setCoUnidadProducto($Tb207DetalleCotizacion->getCoUnidadProducto());
+                        $Tb207DetalleCotizacionNew->setInCalcularIva($Tb207DetalleCotizacion->getInCalcularIva());
+                        $Tb207DetalleCotizacionNew->setCoAsientoContable($Tb207DetalleCotizacion->getCoAsientoContable());
+                        $Tb207DetalleCotizacionNew->setInExento($Tb207DetalleCotizacion->getInExento());
+                        $Tb207DetalleCotizacionNew->setCoDetalleRequisicion($Tb207DetalleCotizacion->getCoDetalleRequisicion());
+                        $Tb207DetalleCotizacionNew->setCoFactura($Tb207DetalleCotizacion->getCoFactura());
+                        $Tb207DetalleCotizacionNew->setCoSolicitudAnular($Tb207DetalleCotizacion->getCoSolicitudAnular());
+                        $Tb207DetalleCotizacionNew->setInAnular($Tb207DetalleCotizacion->getInAnular());
+                        $Tb207DetalleCotizacionNew->setInPresupuesto($Tb207DetalleCotizacion->getInPresupuesto());
+                        $Tb207DetalleCotizacionNew->setInBien($Tb207DetalleCotizacion->getInBien());
+                        $Tb207DetalleCotizacionNew->setCoPresupuesto($Tb207DetalleCotizacion->getCoPresupuesto());
+                        $Tb207DetalleCotizacionNew->setCoPartida($Tb207DetalleCotizacion->getCoPartida());
+                        $Tb207DetalleCotizacionNew->setCoProyectoAc($Tb207DetalleCotizacion->getCoProyectoAc());
+                        $Tb207DetalleCotizacionNew->setCoAccionEspecifica($Tb207DetalleCotizacion->getCoAccionEspecifica());
+                        $Tb207DetalleCotizacionNew->setCoIvaProducto($Tb207DetalleCotizacion->getCoIvaProducto());
+                        $Tb207DetalleCotizacionNew->setMoIvaProducto($Tb207DetalleCotizacion->getMoIvaProducto());
+                        $Tb207DetalleCotizacionNew->setCoDetalleCotizacionEnlace($Tb207DetalleCotizacion->getCoDetalleCotizacionEnlace());
+                        $Tb207DetalleCotizacionNew->setCoDetalleCompra($Tb207DetalleCotizacion->getCoDetalleCompra());
+                        $Tb207DetalleCotizacionNew->setInActivo($Tb207DetalleCotizacion->getInActivo());
+                        $Tb207DetalleCotizacionNew->save($con);                    
+                }
+
+
+
+
                 $Tb207DetalleCotizacion->setCoPresupuesto($co_presupuesto)
+                    ->setMonto($mo_debitar)
                     ->save($con);
 
 
@@ -1729,7 +1773,7 @@ class PresupuestoActions extends sfActions
                     $this->getUser()->getAttribute('codigo'),
                     $co_presupuesto,
                     15,
-                    $Tb207DetalleCotizacion->getMonto(),
+                    $mo_debitar,
                     $co_detalle_cotizacion,
                     ''
                 );
@@ -1800,6 +1844,13 @@ class PresupuestoActions extends sfActions
                   $con->commit();   
                 }
 
+
+                /*
+
+                
+
+                */
+
                
 
 
@@ -1831,7 +1882,8 @@ class PresupuestoActions extends sfActions
         $co_compras        = $this->getRequestParameter("co_compras");
         $co_ejecutor       = $this->getRequestParameter("co_ejecutor");
         $co_solicitud      = $this->getRequestParameter("co_solicitud");
-        $mo_disponible      = $this->getRequestParameter("monto");
+        $mo_disponible     = $this->getRequestParameter("monto");
+        $mo_debitar        = $this->getRequestParameter("mo_debitar");
         $co_fuente_financiamiento  = $this->getRequestParameter("co_fuente_financiamiento");
 
 
@@ -1840,21 +1892,59 @@ class PresupuestoActions extends sfActions
         try {
             $con->beginTransaction();
 
-            $Tb053DetalleCompra = Tb053DetalleComprasPeer::retrieveByPK($co_detalle_compra);
-            $co_partida_ant     = $Tb053DetalleCompra->getCoPartida();
+            $Tb053DetalleCompra     = Tb053DetalleComprasPeer::retrieveByPK($co_detalle_compra);
+            $co_partida_ant         = $Tb053DetalleCompra->getCoPartida();
             $co_presupuesto_ant     = $Tb053DetalleCompra->getCoPresupuesto();
 
-            if ($mo_disponible < $Tb053DetalleCompra->getMonto()) {
-
+            //$Tb053DetalleCompra->getMonto()
+            if ($mo_disponible < $mo_debitar) {
                 $this->data = json_encode(array(
                     "success" => false,
                     "msg" =>  "El Monto Disponible de la partida es menor al monto total"
                 ));
-            } else {
+            } 
+            else if ($Tb053DetalleCompra->getMonto() < $mo_debitar) {
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" =>  "El Monto del Items es menor al monto ingresado para debitar"
+                ));
+            }
+            else {
+
+                if($mo_debitar<$Tb053DetalleCompra->getMonto()){
+
+                    $Tb053DetalleCompraNew = new Tb053DetalleCompras();
+                    $Tb053DetalleCompraNew->setCoCompras($Tb053DetalleCompra->getCoCompras());
+                    $Tb053DetalleCompraNew->setCoProducto($Tb053DetalleCompra->getCoProducto());
+                    $Tb053DetalleCompraNew->setNuCantidad($Tb053DetalleCompra->getNuCantidad());
+                    $Tb053DetalleCompraNew->setPrecioUnitario($Tb053DetalleCompra->getPrecioUnitario());
+                    $Tb053DetalleCompraNew->setMonto($Tb053DetalleCompra->getMonto()-$mo_debitar);
+                    $Tb053DetalleCompraNew->setCoPartida($Tb053DetalleCompra->getCoPartida());
+                    $Tb053DetalleCompraNew->setCoUnidadProducto($Tb053DetalleCompra->getCoUnidadProducto());
+                    $Tb053DetalleCompraNew->setCoProyectoAc($Tb053DetalleCompra->getCoProyectoAc());
+                    $Tb053DetalleCompraNew->setCoAccionEspecifica($Tb053DetalleCompra->getCoAccionEspecifica());
+                    $Tb053DetalleCompraNew->setCoPresupuesto($Tb053DetalleCompra->getCoPresupuesto());
+                    $Tb053DetalleCompraNew->setInCalcularIva($Tb053DetalleCompra->getInCalcularIva());
+                    $Tb053DetalleCompraNew->setCoAsientoContable($Tb053DetalleCompra->getCoAsientoContable());
+                    $Tb053DetalleCompraNew->setInExento($Tb053DetalleCompra->getInExento());
+                    $Tb053DetalleCompraNew->setCoDetalleRequisicion($Tb053DetalleCompra->getCoDetalleRequisicion());
+                    $Tb053DetalleCompraNew->setCoFactura($Tb053DetalleCompra->getCoFactura());
+                    $Tb053DetalleCompraNew->setCoSolicitudAnular($Tb053DetalleCompra->getCoSolicitudAnular());
+                    $Tb053DetalleCompraNew->setInAnular($Tb053DetalleCompra->getInAnular());
+                    $Tb053DetalleCompraNew->setInPresupuesto($Tb053DetalleCompra->getInPresupuesto());
+                    $Tb053DetalleCompraNew->setInBien($Tb053DetalleCompra->getInBien());
+                    $Tb053DetalleCompraNew->setCoIvaProducto($Tb053DetalleCompra->getCoIvaProducto());
+                    $Tb053DetalleCompraNew->setMoIvaProducto($Tb053DetalleCompra->getMoIvaProducto());
+                    $Tb053DetalleCompraNew->setCoDetalleCompraEnlace($Tb053DetalleCompra->getCoDetalleCompraEnlace());
+                    $Tb053DetalleCompraNew->save($con);
+
+                    
+                }
 
                 $Tb053DetalleCompra->setCoPresupuesto($co_presupuesto)
                     ->setCoProyectoAc($co_proyecto)
                     ->setCoAccionEspecifica($co_accion)
+                    ->setMonto($mo_debitar)
                     ->save($con);
 
                 Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $Tb053DetalleCompra->getCoPresupuesto(), 1, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
