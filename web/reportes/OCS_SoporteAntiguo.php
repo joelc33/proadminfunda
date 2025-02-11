@@ -775,7 +775,7 @@ class PDF_Flo extends PDF_FlowingBlock
     {
         $conex = new ConexionComun();
         $sql = "   select distinct
-                         substr(tb085.co_categoria,1,100) as co_categoria,
+                         substr(tb085.co_categoria,1,16) as co_categoria,
                          tb085.de_partida,
                          tb085.nu_partida,
                          upper(tb052.tx_observacion) as tx_observacion,
