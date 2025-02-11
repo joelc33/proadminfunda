@@ -198,6 +198,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     columns: [
     new Ext.grid.RowNumberer(),
     {header: 'co_ruta_odp',hidden:true, menuDisabled:true,dataIndex: 'co_ruta_odp'},
+    {header: 'co_tipo_solicitud',hidden:true, menuDisabled:true,dataIndex: 'co_tipo_solicitud'},
     {header: 'N° Solicitud', width:100,menuDisabled:true,dataIndex: 'co_solicitud',renderer: renderRectificacion}, 
     {header: 'RIF', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'tx_rif'},
     {header: 'Razon Social', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'tx_razon_social',renderer: textoLargo},
@@ -384,7 +385,12 @@ getDatosOdp: function() {
 window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_odp'));
 },
 getDatosComprobante: function() {
+    
+    if(pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_tipo_solicitud')==14){
+    window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/../reportes/SoportePagoFondoTercero.php?codigo="+pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_pago'));    
+    }else{
     window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/../reportes/SoportePago.php?codigo="+pendientePagosLista.main.gridPanel_.getSelectionModel().getSelected().get('co_pago'));
+}
 }
 };
 Ext.onReady(pendientePagosLista.main.init, pendientePagosLista.main);
