@@ -109,7 +109,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->SetX(20);
         $this->SetFont('Arial', '', 9);
-        $data = ", que concede el Gobierno Regional a";
+        $data = ", que concede el Gobierno Regional a ";
         $this->WriteFlowingBlock(utf8_decode($data));
 
         $this->SetX(20);
