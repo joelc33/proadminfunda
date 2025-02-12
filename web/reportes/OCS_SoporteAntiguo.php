@@ -211,24 +211,44 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetY(40);
         $this->SetX(115);
         $this->SetFont('Times', 'B', 8);
-        $this->MultiCell(90, 5, utf8_decode('Referencia: '), 0, 'L');
+        $this->MultiCell(90, 5, utf8_decode('N° DE PROCESO: '), 0, 'L');
         $this->SetY(40);
-        $this->SetX(130);
+        $this->SetX(140);
         $this->SetFont('Times', '', 9);
-        $this->MultiCell(70, 5, utf8_decode($this->datos['tx_concepto']), 0, 'L');
+        $this->MultiCell(70, 5, utf8_decode($this->datos['numero_cotizacion']), 0, 'L');
+        $Y = $this->GetY();
+        $this->SetY($Y);
+        $this->SetX(115);
+        $this->SetFont('Times', 'B', 8);
+        $this->MultiCell(90, 5, utf8_decode('DESCRIPCIÓN DEL PROCESO: '), 0, 'L');
+        $Y = $this->GetY();
+        $this->SetY($Y);
+        $this->SetX(115);
+        $this->SetFont('Times', '', 7);
+        $this->MultiCell(80, 5, utf8_decode($this->datos['tx_concepto']), 0, 'J');        
 
         $Y = 40;
         $this->SetY($Y);
         $this->SetX(16);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(90, 5, utf8_decode('SEÑOR(ES): '), 0, 'L');
-        $this->SetY($Y);
+        $this->SetY($Y);        
         $this->SetX(36);
         $this->SetFont('Times', '', 8);
         $this->MultiCell(70, 5, utf8_decode($this->datos['nu_codigo'] . '-' . utf8_decode($this->datos['tx_razon_social'])), 0, 'L');
 
        
         $Y = $this->GetY();
+        $this->SetY($Y);
+        $this->SetX(16);
+        $this->SetFont('Times', 'B', 8);
+        $this->MultiCell(90, 5, utf8_decode('RIF: '), 0, 'L');
+        $this->SetY($Y);
+        $this->SetX(36);
+        $this->SetFont('Times', '', 8);
+        $this->MultiCell(70, 5, utf8_decode($this->datos['tx_rif']), 0, 'L');
+        
+        $Y = $this->GetY();        
         $this->SetY($Y);
         $this->SetX(16);
         $this->SetFont('Times', 'B', 8);
@@ -395,7 +415,7 @@ class PDF_Flo extends PDF_FlowingBlock
             if ($this->getY() > 250) {
                 $this->addPage();
                 $this->SetX(108);
-                $this->Row(array('ANEXOS' . $this->datos['numero_compra']), 0, 0);
+                $this->Row(array('ANEXOS ' . $this->datos['numero_compra']), 0, 0);
                 $this->SetX(15);
                 $this->SetWidths(array(50, 30, 70, 34));
                 $this->SetAligns(array("C", "C", "L", "R", "C"));
@@ -408,7 +428,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         if ($this->getY() > 250) {
             $this->SetX(108);
-            $this->Row(array('ANEXOS' . $this->datos['numero_compra']), 0, 0);
+            $this->Row(array('ANEXOS ' . $this->datos['numero_compra']), 0, 0);
             $this->addPage();
         }
         $this->punto = $this->getExpendiente();
@@ -426,21 +446,27 @@ class PDF_Flo extends PDF_FlowingBlock
 //        $this->WriteFlowingBlock($inf);
 //        $this->SetX(15);
 //        $this->finishFlowingBlock();
-        $this->SetY($Y);
-        $this->newFlowingBlock(30, 5, '', 'J');
+//        $this->SetY($Y);
+//        $this->newFlowingBlock(30, 5, '', 'J');
+//        $this->SetFont('Times', 'B', 8);
+//        $this->SetX(15);
+//        $this->WriteFlowingBlock(utf8_decode('GARANTIAS: '));
+//        $this->finishFlowingBlock();
+//        $this->SetY($Y);
+        $this->SetY($Y+5);
         $this->SetFont('Times', 'B', 8);
         $this->SetX(15);
-        $this->WriteFlowingBlock(utf8_decode('GARANTIAS: '));
-        $this->finishFlowingBlock();
-        $this->SetY($Y); 
-
-
-        $this->newFlowingBlock(80, 5, '', 'J');
+        $this->Cell(20, 0, utf8_decode('GARANTIAS: '), 0, 1, 'L', 1);
         $this->SetFont('Times', '', 8);
-        $this->SetX(32);
-        $this->WriteFlowingBlock('  ' . utf8_decode($this->punto['tiempo_garantia']));
-        $this->SetX(33);
-        $this->finishFlowingBlock();
+        $this->SetX(35);
+        $this->Cell(100, 0, utf8_decode($this->punto['tiempo_garantia']), 0, 1, 'L', 1);         
+
+//        $this->newFlowingBlock(80, 5, '', 'J');
+//        $this->SetFont('Times', '', 8);
+//        $this->SetX(32);
+//        $this->WriteFlowingBlock('  ' . utf8_decode($this->punto['tiempo_garantia']));
+//        $this->SetX(33);
+//        $this->finishFlowingBlock();
        
         
 //        $this->newFlowingBlock(50, 5, '', 'J');
@@ -450,34 +476,40 @@ class PDF_Flo extends PDF_FlowingBlock
 //        $this->SetX(35);
 //        $this->finishFlowingBlock();
         $this->SetY($Y);
-        $this->SetX(92);
+        $this->SetX(15);
         $this->newFlowingBlock(90, 5, '', 'J');
         $this->SetFont('Times', 'B', 8);
         if ($this->punto['in_responsabilidad_social'] == t) {
-            $inf1 = ' SI APLICA (EN  ESPECIES)';
+            $inf1 = ' SI APLICA (EN  ESPECIES)   (CLÁUSULA PENAL 0,02% DIARIO)';
         } else {
-            $inf1 = ' NO APLICA';
+            $inf1 = ' NO APLICA  (CLÁUSULA PENAL 0,02% DIARIO)';
         }
-        $this->WriteFlowingBlock(utf8_decode('COMPROMISO RESP. SOCIAL: '.$inf1));
-        $this->SetY($Y);
-        $this->SetX(120);
-        $this->finishFlowingBlock();
+        $Y = $this->GetY();
+//        $this->WriteFlowingBlock(utf8_decode('COMPROMISO RESP. SOCIAL: '.$inf1));
+        $this->SetY($Y+10);
+//        $this->finishFlowingBlock();
+        $this->SetFont('Times', 'B', 8);
+        $this->SetX(15);
+        $this->Cell(50, 0, utf8_decode('COMPROMISO RESP. SOCIAL 3%: '), 0, 1, 'L', 1);
+        $this->SetFont('Times', '', 8);
+        $this->SetX(65);
+        $this->Cell(100, 0, utf8_decode($inf1), 0, 1, 'L', 1);     
 
         //$style2 = array('width' => 0.5, 'cap' => 'round', 'join' => 'miter', 'dash' => '2,10', 'color' => array(0,0,0));
-        $this->Line(15, $Y+8, 200, $Y+8);
+        $this->Line(15, $Y+13, 200, $Y+13);
 
-        $this->SetY($Y + 10);
+        $this->SetY($Y + 15);
         $this->SetX(15);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(50, 5, utf8_decode('FORMA DE PAGO: '), 0, 'L');
-        $this->SetY($Y + 10);
+        $this->SetY($Y + 15);
         $this->SetX(65);
         $this->SetFont('Times', '', 9);
         $this->MultiCell(100, 5, utf8_decode('CREDITO'), 0, 'L');
         $this->SetX(15);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(70, 5, utf8_decode('PLAZO DE ENTREGA:'), 0, 'L');
-        $this->SetY($Y + 15);
+        $this->SetY($Y + 20);
         $this->SetX(65);
         $this->SetFont('Times', '', 9);
         $this->MultiCell(100, 5, utf8_decode($this->punto['tx_entrega']), 0, 'L');
@@ -491,7 +523,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(15);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(70, 5, utf8_decode('ANEXOS: '), 0, 'L');
-        $this->SetY($Y + 20);
+        $this->SetY($Y + 25);
         $this->SetX(65);
         $this->SetFont('Times', '', 9);
         $this->MultiCell(135, 5, utf8_decode($campo['tx_observacion']), 0, 'J');
@@ -724,7 +756,8 @@ class PDF_Flo extends PDF_FlowingBlock
                          de_tipo_movimiento,
                          tb001.nb_usuario,
                          tb027.co_tipo_solicitud,
-                         tb082.de_ejecutor
+                         tb082.de_ejecutor,
+                         tb206.numero_cotizacion
                   from   tb026_solicitud as tb026
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud
                   left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras
@@ -739,6 +772,7 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb007_documento as tb007 on tb007.co_documento = tb008.co_documento
                   left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud
+                  left join tb206_cotizacion as tb206 on tb206.co_solicitud = tb052.co_solicitud_cotizacion
                   where tb030.co_ruta = " . $_GET['codigo']; //$conex->decrypt($_GET['codigo']);
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
