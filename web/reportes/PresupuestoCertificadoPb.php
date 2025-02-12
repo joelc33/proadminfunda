@@ -121,7 +121,7 @@ class PDF extends FPDF {
         $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Ln(15);
         $this->SetFont('Arial','B',12);
-         $this->Cell(0, 0, utf8_decode('DISPONIBILIDAD PRESUPUESTARIA INICIAL'), 0, 0, 'C');
+         $this->Cell(0, 0, utf8_decode('CERTIFICACIÓN'), 0, 0, 'C');
          $this->Ln(15);
          
          $this->SetFont('Arial','',10);
@@ -257,7 +257,7 @@ class PDF extends FPDF {
                     
           $conex = new ConexionComun(); 
                     
-          $sql = "select substring(tb085.co_categoria,18,50) as co_categoria,
+          $sql = "select substring(tb085.co_categoria,1,100) as co_categoria,
                          tb085.de_partida,
                          sum(tb207.monto) as monto,
                          tb140.tx_descripcion
