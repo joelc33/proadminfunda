@@ -439,7 +439,7 @@ afectar_partida: function(){
                 if(obj.success==true){
                     ContabilidadEditar.main.agregar_partida.disable();
                     ContabilidadEditar.main.quitar_partida.disable();
-		    ContabilidadEditar.main.store_lista.load();
+		            ContabilidadEditar.main.store_lista.load();
                     Ext.Msg.alert("Notificación",obj.msg);
                 }else{
                     Ext.Msg.alert("Notificación",obj.msg);

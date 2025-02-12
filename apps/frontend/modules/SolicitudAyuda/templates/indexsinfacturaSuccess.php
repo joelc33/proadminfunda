@@ -174,7 +174,7 @@
                 handler: function () {
                     this.msg = Ext.get('formulariosolicitud');
                     this.msg.load({
-                        url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/historial",
+                        url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/SolicitudAyuda/editarResponsabilidad",
                         scripts: true,
                         text: "Cargando..",
                         params: {
@@ -212,7 +212,7 @@
                         <?php
                     }
                     ?>
-//                    this.formulario, '-',
+                   this.formulario, '-',
                     //  this.detalle, '-',
                     this.estado, '-',
                     this.anular

@@ -117,7 +117,7 @@ this.monto_total_compra = new Ext.form.DisplayField({
 });
 
 function renderMonto(val, attr, record) { 
-  //  return paqueteComunJS.funcion.getNumeroFormateado(val);     
+    return paqueteComunJS.funcion.getNumeroFormateado(val);     
 } 
 
 this.nu_orden_pago = new Ext.form.TextField({
