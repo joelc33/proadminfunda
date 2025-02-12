@@ -526,7 +526,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetY($Y + 25);
         $this->SetX(65);
         $this->SetFont('Times', '', 9);
-        $this->MultiCell(135, 5, utf8_decode($campo['tx_observacion']), 0, 'J');
+        $this->MultiCell(135, 5, utf8_decode($this->punto['nu_expediente']), 0, 'J');
 
 
        
