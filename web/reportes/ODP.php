@@ -503,7 +503,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->SetAligns(array("C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "R"));
                     $this->SetWidths(array(8, 8, 9, 8, 8, 5, 5, 6, 7, 10, 32));
                     $this->SetFont('Times', '', 8);
-                    $this->Row(array($campo['anio'], $campo['ue'], $campo['pac'], '00' . $campo['ae'], $campo['p'], $campo['g'], $campo['e'], $campo['se'], $campo['sse'], $campo['f'], number_format($campo['monto'], 2, ',', '.')), 0, 0);
+                    $this->Row(array($campo['anio'], $campo['ue'], $campo['pac'], $campo['ae'], $campo['p'], $campo['g'], $campo['e'], $campo['se'], $campo['sse'], $campo['f'], number_format($campo['monto'], 2, ',', '.')), 0, 0);
                     $monto_total_partidas = $monto_total_partidas + $campo['monto'];
                 }
                 $this->SetFont('Times', 'B', 8);
@@ -886,7 +886,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     //$this->Row(array($campo['anio'],$campo['ue'],$campo['pac'],'00'.$campo['ae'],$campo['p'],$campo['g'],$campo['e'],$campo['se'],$campo['sse'],$campo['f'],number_format($campo['monto'], 2, ',','.')),0,0);
 
                 }
-                $this->Row(array($campo['anio'], $campo['ue'], $campo['pac'], '00' . $campo['ae'], $campo['p'], $campo['g'], $campo['e'], $campo['se'], $campo['sse'], $campo['f'], number_format($campo['monto'], 2, ',', '.')), 0, 0);
+                $this->Row(array($campo['anio'], $campo['ue'], $campo['pac'], $campo['ae'], $campo['p'], $campo['g'], $campo['e'], $campo['se'], $campo['sse'], $campo['f'], number_format($campo['monto'], 2, ',', '.')), 0, 0);
             }
             $monto_total = $monto_total_partidas + $monto_total_otras_partidas;
             $this->SetX(115);
