@@ -331,7 +331,7 @@ verificarPartidas: function(){
             
             if(flag == true){
                  Ext.get('co_ejecutor').setStyle('background-color','#c9c9c9');
-                 ContabilidadEditar.main.co_ejecutor.setReadOnly(true);
+                 ContabilidadEditar.main.co_ejecutor.setReadOnly(false);
             }else{
                  Ext.get('co_ejecutor').setStyle('background-color','#FFFFFF');
                  ContabilidadEditar.main.co_ejecutor.setReadOnly(false);
