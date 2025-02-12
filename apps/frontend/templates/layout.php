@@ -23,7 +23,7 @@
 
 <?php echo javascript_include_tag('app.js'); ?>
 
-<?php echo javascript_include_tag('http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'); ?>
+<?php // echo javascript_include_tag('http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'); ?>
 <?php echo javascript_include_tag('highcharts.js'); ?>
 <?php echo javascript_include_tag('highcharts-3d.js'); ?>
 <?php echo javascript_include_tag('exporting.js'); ?>
