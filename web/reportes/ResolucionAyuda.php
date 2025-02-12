@@ -11,7 +11,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->datos = $this->getAyuda();
 
-        $this->Image("imagenes/logosedezul.jpg", 85, 5, 46);
+        $this->Image("imagenes/logosedezul.jpg", 88, 5, 35);
 
       
         $this->SetFont('Arial', 'B', 8);
@@ -26,7 +26,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->Ln(4);
         $this->Cell(0, 0, utf8_decode('DE SALUD DEL ESTADO ZULIA'), 0, 0, 'C');
         $this->Ln(4);
-        $this->Cell(0, 0, utf8_decode('RIF. G-20007909-6'), 0, 0, 'C');
+        $this->Cell(0, 0, utf8_decode('RIF. G-200121661'), 0, 0, 'C');
         $this->Ln(4);
         $this->line(20, 50, 190, 50);
         $this->Ln(10);
@@ -52,6 +52,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetAligns(array("C"));
         $this->SetY(75);
 
+        $this->SetX(7);
         $this->Row(array(utf8_decode('RESUELTO')), 0, 0);
         $this->SetFillColor(255, 255, 255);
         $this->SetFont('Arial', '', 10);
@@ -68,7 +69,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 9);
-        $this->WriteFlowingBlock('CIUDADANO GOBERNADOR DEL ESTADO ZULIA');
+        $this->WriteFlowingBlock('CIUDADANO DR. OSWALDO OROZCO');
 
         $this->SetX(20);
         $this->SetFont('Arial', '', 9);
@@ -109,7 +110,17 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->SetX(20);
         $this->SetFont('Arial', '', 9);
-        $data = ", que concede el Gobierno Regional a ";
+        $data = ", que concede el Gobierno Regional a través del ";
+        $this->WriteFlowingBlock(utf8_decode($data));
+
+        $this->SetX(20);
+        $this->SetFont('Arial', 'B', 9);
+        $beneficiado = $this->datos['nomb_sol'];
+        $this->WriteFlowingBlock(utf8_decode("DIR. GRAL de SEDEZUL"));
+
+        $this->SetX(20);
+        $this->SetFont('Arial', '', 9);
+        $data = utf8_decode(" a ");
         $this->WriteFlowingBlock(utf8_decode($data));
 
         $this->SetX(20);
