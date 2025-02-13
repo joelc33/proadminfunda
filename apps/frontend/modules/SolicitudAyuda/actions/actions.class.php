@@ -341,8 +341,7 @@ class SolicitudAyudaActions extends sfActions
             $datosDetalleCompra = $stmt->fetch(PDO::FETCH_ASSOC);
 
             $tb053_detalle_compras =  Tb053DetalleComprasPeer::retrieveByPK($datosDetalleCompra["co_detalle_compras"]);
-            var_dump($tb053_detalle_compras);
-            exit();
+
         } else {
             $tb126_solicitud_ayuda = new Tb126SolicitudAyuda();
 
@@ -379,7 +378,8 @@ class SolicitudAyudaActions extends sfActions
             $co_proveedor_solicitante = $this->getProveedor($solicitanteForm, $con);
 
             $mo_total = $tb126_solicitud_ayudaForm["monto"];
-
+            var_dump($tb053_detalle_compras);
+            exit();
             //Datos Receptor Cheque               
             $tb126_solicitud_ayuda->setCoProveedor($co_proveedor);
             $tb126_solicitud_ayuda->setCoProveedorSolicitante($co_proveedor_solicitante);
