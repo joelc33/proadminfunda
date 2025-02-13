@@ -379,6 +379,8 @@ class SolicitudAyudaActions extends sfActions
 
             $mo_total = $tb126_solicitud_ayudaForm["monto"];
 
+            list($dia, $mes, $anio) = explode("/", $tb126_solicitud_ayudaForm["fe_solicitud"]);
+            $fecha = $anio . '-' . $mes . '-' . $dia;
             //Datos Receptor Cheque               
             $tb126_solicitud_ayuda->setCoProveedor($co_proveedor);
             $tb126_solicitud_ayuda->setCoProveedorSolicitante($co_proveedor_solicitante);
@@ -388,13 +390,10 @@ class SolicitudAyudaActions extends sfActions
             $tb126_solicitud_ayuda->setCoUsuario($tb126_solicitud_ayudaForm["co_usuario"]);
             $tb126_solicitud_ayuda->setIdTb013AnioFiscal($this->getUser()->getAttribute('ejercicio'));
             $tb126_solicitud_ayuda->setMoTotalAyuda($mo_total);
-            $tb126_solicitud_ayuda->setFeResolucion($tb126_solicitud_ayudaForm["fe_solicitud"]);
+            $tb126_solicitud_ayuda->setFeResolucion($fecha);
             $tb126_solicitud_ayuda->save($con);
 
-            list($dia, $mes, $anio) = explode("/", $tb126_solicitud_ayudaForm["fe_solicitud"]);
-            $fecha = $anio . '-' . $mes . '-' . $dia;
-                        var_dump($fecha);
-            exit();
+            
             $tb052_compras->setCoUsuario($this->getUser()->getAttribute('codigo'));
             $tb052_compras->setFechaCompra($fecha);
             $tb052_compras->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
@@ -408,10 +407,6 @@ class SolicitudAyudaActions extends sfActions
             $tb052_compras->setCoTipoMovimiento(0);
             $tb052_compras->save($con);
 
-
-            list($dia, $mes, $anio) = explode("/", $tb126_solicitud_ayudaForm["fe_solicitud"]);
-            $tb126_solicitud_ayuda->setFeResolucion($anio . '-' . $mes . '-' . $dia);
-            $tb126_solicitud_ayuda->save($con);
 
             $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
             $tb053_detalle_compras->setNuCantidad(1);
