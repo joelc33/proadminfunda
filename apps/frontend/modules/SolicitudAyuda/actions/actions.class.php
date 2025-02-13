@@ -378,8 +378,7 @@ class SolicitudAyudaActions extends sfActions
             $co_proveedor_solicitante = $this->getProveedor($solicitanteForm, $con);
 
             $mo_total = $tb126_solicitud_ayudaForm["monto"];
-            var_dump($tb053_detalle_compras);
-            exit();
+
             //Datos Receptor Cheque               
             $tb126_solicitud_ayuda->setCoProveedor($co_proveedor);
             $tb126_solicitud_ayuda->setCoProveedorSolicitante($co_proveedor_solicitante);
@@ -405,7 +404,8 @@ class SolicitudAyudaActions extends sfActions
             $tb052_compras->setMontoTotal($tb126_solicitud_ayudaForm["monto"]);
             $tb052_compras->setCoTipoMovimiento(0);
             $tb052_compras->save($con);
-
+            var_dump($tb053_detalle_compras);
+            exit();
 
             list($dia, $mes, $anio) = explode("/", $tb126_solicitud_ayudaForm["fe_solicitud"]);
             $tb126_solicitud_ayuda->setFeResolucion($anio . '-' . $mes . '-' . $dia);
