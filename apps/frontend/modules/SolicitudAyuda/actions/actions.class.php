@@ -341,7 +341,8 @@ class SolicitudAyudaActions extends sfActions
             $datosDetalleCompra = $stmt->fetch(PDO::FETCH_ASSOC);
 
             $tb053_detalle_compras =  Tb053DetalleComprasPeer::retrieveByPK($datosDetalleCompra["co_detalle_compras"]);
-
+            var_dump($tb053_detalle_compras);
+            exit();
         } else {
             $tb126_solicitud_ayuda = new Tb126SolicitudAyuda();
 
