@@ -393,6 +393,8 @@ class SolicitudAyudaActions extends sfActions
 
             list($dia, $mes, $anio) = explode("/", $tb126_solicitud_ayudaForm["fe_solicitud"]);
             $fecha = $anio . '-' . $mes . '-' . $dia;
+                        var_dump($fecha);
+            exit();
             $tb052_compras->setCoUsuario($this->getUser()->getAttribute('codigo'));
             $tb052_compras->setFechaCompra($fecha);
             $tb052_compras->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
@@ -406,8 +408,7 @@ class SolicitudAyudaActions extends sfActions
             $tb052_compras->setCoTipoMovimiento(0);
             $tb052_compras->save($con);
 
-            var_dump($tb053_detalle_compras);
-            exit();
+
             list($dia, $mes, $anio) = explode("/", $tb126_solicitud_ayudaForm["fe_solicitud"]);
             $tb126_solicitud_ayuda->setFeResolucion($anio . '-' . $mes . '-' . $dia);
             $tb126_solicitud_ayuda->save($con);
