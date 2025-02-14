@@ -154,9 +154,9 @@ class PDF extends FPDF {
 //         $this->Row(array('DETALLES DE MATERIALES'),1,1);
          $this->SetFillColor(255, 255, 255);         
          $this->SetAligns(array("C","C","C","C"));
-         $this->SetWidths(array(30,110,30,30)); 
+         $this->SetWidths(array(15,95,35,30)); 
          $this->SetX(25);
-         $this->Row(array(utf8_decode('PARTIDA NRO.'),utf8_decode('DESCRIPCIÓN'),'CANTIDAD'),1,1);         
+         $this->Row(array(utf8_decode('ITEM'),utf8_decode('DESCRIPCIÓN'),utf8_decode('PRESENTACIÓN'),'CANTIDAD'),1,1);         
          $i = 1;
          $this->lista_materiales = $this->getMateriales();
          foreach($this->lista_materiales as $key => $campo){ 
@@ -168,16 +168,16 @@ class PDF extends FPDF {
                      $this->Ln(20);
                      $this->SetFillColor(255, 255, 255);         
                      $this->SetAligns(array("C","C","C","C"));
-                     $this->SetWidths(array(30,110,30,30)); 
+                     $this->SetWidths(array(15,95,35,30));
                      $this->SetX(25);
-                     $this->Row(array(utf8_decode('PARTIDA NRO.'),utf8_decode('DESCRIPCIÓN'),'CANTIDAD'),1,1); 
+                     $this->Row(array(utf8_decode('ITEM'),utf8_decode('DESCRIPCIÓN'),utf8_decode('PRESENTACIÓN'),'CANTIDAD'),1,1); 
                             }               
              
          $this->SetFont('Arial','',9);
          $this->SetAligns(array("C","L","C","C"));
-         $this->SetWidths(array(30,110,30,30));
+         $this->SetWidths(array(15,95,35,30));
          $this->SetX(25);
-         $this->Row(array(utf8_decode($i),utf8_decode($campo['tx_producto']).' - '.utf8_decode($campo['tx_observacion']),utf8_decode($campo['nu_cantidad'])),1,1);
+         $this->Row(array(utf8_decode($i),utf8_decode($campo['tx_producto']).' - '.utf8_decode($campo['tx_observacion']),utf8_decode($campo['tx_unidad_producto']),utf8_decode($campo['nu_cantidad'])),1,1);
          $i++;
         }
 //        while ($i<11) 
