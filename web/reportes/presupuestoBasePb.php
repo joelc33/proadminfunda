@@ -91,6 +91,9 @@ class PDF extends FPDF
         $this->SetFont('Arial', 'B', 9);
         $this->Cell(0, 0, utf8_decode('PRESUPUESTO BASE '), 0, 0, 'C');
         $this->Ln(5);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(0, 0, utf8_decode($this->datos['numero_cotizacion']), 0, 0, 'C');
+        $this->Ln(5);        
 
         //$this->line(1, 60, 220, 60);
 //        $this->SetFont('Arial', 'B', 10);
@@ -268,6 +271,7 @@ class PDF extends FPDF
                          tb027.tx_tipo_solicitud,
                          tb206.tx_serial_cotizacion,
                          tb206.created_at as fecha_compra,
+                         tb206.numero_cotizacion,
                          tb039.co_solicitud,
                          tb206.tx_observacion,
                          upper(tb047.tx_ente) as tx_ente, 
