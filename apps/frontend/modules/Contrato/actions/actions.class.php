@@ -467,7 +467,7 @@ class ContratoActions extends sfActions
             $tb026_solicitudForm = array(
                 "co_tipo_solicitud"   => $tb052_comprasForm["co_tipo_solicitud"],
                 "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-                "fe_solicitud"        => date("d/m/Y"),
+                "fe_solicitud"        => $tb052_comprasForm["fecha_compra"],
                 "observacion"         => $tb052_comprasForm["tx_observacion"],
                 "codigo"              =>  $this->getUser()->getAttribute('codigo')
             );
@@ -485,20 +485,18 @@ class ContratoActions extends sfActions
                 return;
             }
 
-            /*if($tb052_comprasForm["co_tipo_solicitud"]==1){
-                $co_serial = 2;
-                $prefix = 'OC';
+            if($tb052_comprasForm["co_tipo_solicitud"]==1){
+                $tipo = 'ADQ';
             }else{
-                $co_serial = 3;
-                $prefix = 'OS';
-            }*/
-
-            $prefix = '';
+                $tipo = 'SER';
+            }
+            $tb015_empresa = Tb015EmpresaPeer::retrieveByPk(1);
+            $prefix = $tb015_empresa->getTxSiglaSerial();
 
             if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
-                $serial = $prefix.'-'.date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
+                $serial =  $prefix.'-'.$tipo.'-'.date("Y", strtotime($this->getUser()->getAttribute('fe_cierre'))).'-'.Tb137ControlSerialPeer::getSerial(11, $con, $this->getUser()->getAttribute('ejercicio'));
             } else {
-                $serial =  $prefix.'-'.date("Ym") . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
+                $serial =  $prefix.'-'.$tipo.'-'.date("Y").'-'.Tb137ControlSerialPeer::getSerial(11, $con, $this->getUser()->getAttribute('ejercicio'));
             }
 
             $tb052_compras->setNumeroCompra($serial);
@@ -529,7 +527,7 @@ class ContratoActions extends sfActions
                 $fecha_compra = $anio . "-" . $mes . "-" . $dia;
                 $tb052_compras->setFechaCompra($fecha_compra);
             } else {
-                $tb052_compras->setFechaCompra(date("Y-m-d"));
+                $tb052_compras->setFechaCompra($fecha_compra);
             }
 
             /*Campo tipo VARCHAR */

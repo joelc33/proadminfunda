@@ -1226,7 +1226,7 @@ class ComprasActions extends sfActions
             $tb026_solicitudForm = array(
                 "co_tipo_solicitud"   => $tb052_comprasForm["co_tipo_solicitud"],
                 "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-                "fe_solicitud"        => date("d/m/Y"),
+                "fe_solicitud"        => $tb052_comprasForm["fecha_compra"],
                 "observacion"         => $tb052_comprasForm["tx_observacion"],
                 "codigo"              =>  $this->getUser()->getAttribute('codigo')
             );
@@ -1287,7 +1287,7 @@ class ComprasActions extends sfActions
                 $fecha_compra = $anio . "-" . $mes . "-" . $dia;
                 $tb052_compras->setFechaCompra($fecha_compra);
             } else {
-                $tb052_compras->setFechaCompra(date("Y-m-d"));
+                $tb052_compras->setFechaCompra($fecha_compra);
             }
 
             /*Campo tipo VARCHAR */
