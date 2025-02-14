@@ -614,7 +614,7 @@ class CotizacionActions extends sfActions
     {
       $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(2,3,4, 5, 6), Criteria::IN);
     } else {
-      $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(1,2, 5, 6), Criteria::NOT_IN);
+      $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(1), Criteria::IN);
     }
 
     $c->setIgnoreCase(true);
