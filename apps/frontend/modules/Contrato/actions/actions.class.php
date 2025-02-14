@@ -571,6 +571,7 @@ class ContratoActions extends sfActions
 
             $tb052_compras->setFormaEntrega($tb052_comprasForm["forma_entrega"]);
 
+            $tb052_compras->setInContrato(true);
             /*CAMPOS*/
             $tb052_compras->save($con);
 
