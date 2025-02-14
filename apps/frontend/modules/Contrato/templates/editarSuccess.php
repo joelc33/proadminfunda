@@ -223,7 +223,7 @@
                 name: 'tb008_proveedor[tx_razon_social]',
                 value: this.OBJ.tx_razon_social,
                 readOnly:  true,
-                style: (this.OBJ.co_factura != '') ? 'background:#c9c9c9;' : '',
+                style: 'background:#c9c9c9;',
                 allowBlank: false,
                 width: 770
             });
