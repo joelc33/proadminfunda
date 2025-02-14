@@ -75,8 +75,8 @@
 
             //Estado registro
             this.estado = new Ext.Button({
-                text: 'Enviar Tramite',
-                iconCls: 'icon-volver',
+                text: 'Procesar',
+                iconCls: 'icon-fin',
                 handler: function () {
 
                     /* */

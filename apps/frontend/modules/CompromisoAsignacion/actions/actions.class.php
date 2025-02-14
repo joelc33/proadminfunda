@@ -345,6 +345,9 @@ class CompromisoAsignacionActions extends sfActions
                 } else {
                     $tb052_compras->setFechaCompra($fecha);
                 }
+             $datos_solicitud->setFeRegistro($fecha);
+            $datos_solicitud->save($con);               
+                
             }
 
             $listaAsignacion  = json_decode($json_asignacion, true);
@@ -368,7 +371,10 @@ class CompromisoAsignacionActions extends sfActions
                     $tb053_detalle_compras->save($con);
                 }
             }
+            
 
+            
+            
             $c = new Criteria();
             $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
             $c->add(Tb052ComprasPeer::CO_COMPRAS, $tb052_compras->getCoCompras());
