@@ -122,7 +122,10 @@ class PDF extends FPDF {
         $this->Ln(15);
         $this->SetFont('Arial','B',12);
          $this->Cell(0, 0, utf8_decode('CERTIFICACIÓN'), 0, 0, 'C');
-         $this->Ln(15);
+         $this->Ln(5);
+         $this->SetFont('Arial','B',10);
+         $this->Cell(0, 0, utf8_decode($this->datos['numero_cotizacion']), 0, 0, 'C');
+         $this->Ln(10);         
          
          $this->SetFont('Arial','',10);
          $this->Ln(5);
@@ -233,7 +236,7 @@ class PDF extends FPDF {
 	  $conex = new ConexionComun(); 
                     
           $sql = "select sum(tb207.monto) as monto, tb206.tx_observacion, upper(tb039.tx_concepto) as tx_concepto,                         
-                         upper(tb047.nb_responsable) as nb_responsable, 
+                         upper(tb047.nb_responsable) as nb_responsable, numero_cotizacion,
                          upper(tb047.cargo) as cargo 
                   from   tb206_cotizacion as tb206 
                   left join tb039_requisiciones as tb039 on tb039.co_solicitud = tb206.co_solicitud
