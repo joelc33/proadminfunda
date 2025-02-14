@@ -822,6 +822,18 @@ class TesoreriaActions extends sfActions
       { 
         $con->beginTransaction();
         
+        $tb026_solicitud = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
+        $tb008_proveedor = Tb008ProveedorPeer::retrieveByPK($tb026_solicitud->getCoProveedor());
+        if($tb008_proveedor->getNuCuentaBancaria()==null || $tb008_proveedor->getNuCuentaBancaria()=='' || $tb008_proveedor->getCoBanco()==null) {
+
+            $this->data = json_encode(array(
+              'success' => false,
+              'msg' => '<span style="color:red;font-size:13px,"><b>El Proveedor no tiene Banco o cuenta bancaria registrada verifique.!</b></span>'
+            ));
+
+            return $this->setTemplate('store');
+        }        
+        
         $listaPagos  = json_decode($json_pagos,true);
         $cant_pagos = count($listaPagos);
         foreach($listaPagos  as $PagosForm){
