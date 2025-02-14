@@ -259,23 +259,23 @@
                         sortable: true,
                         renderer: formatoNumero,
                         dataIndex: 'mo_transaccion'
-                    },
-                    {
-                        header: 'Saldo Nuevo',
-                        width: 150,
-                        menuDisabled: true,
-                        sortable: true,
-                        renderer: formatoNumero,
-                        dataIndex: 'mo_saldo_nuevo'
-                    },
-                    {
-                        header: 'Saldo Anterior',
-                        width: 150,
-                        menuDisabled: true,
-                        sortable: true,
-                        renderer: formatoNumero,
-                        dataIndex: 'mo_saldo_anterior'
                     }
+//                    {
+//                        header: 'Saldo Nuevo',
+//                        width: 150,
+//                        menuDisabled: true,
+//                        sortable: true,
+//                        renderer: formatoNumero,
+//                        dataIndex: 'mo_saldo_nuevo'
+//                    },
+//                    {
+//                        header: 'Saldo Anterior',
+//                        width: 150,
+//                        menuDisabled: true,
+//                        sortable: true,
+//                        renderer: formatoNumero,
+//                        dataIndex: 'mo_saldo_anterior'
+//                    }
                 ],
                 stripeRows: true,
                 autoScroll: true,
