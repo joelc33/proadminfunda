@@ -56,7 +56,7 @@
                 fieldLabel: 'Nro Celular',
                 name: 'solicitante[nu_celular]',
                 value: this.OBJ.nu_celular,
-                allowBlank: false,
+//                allowBlank: false,
                 readOnly: true,
                 style: 'background:#c9c9c9;',
                 width: 200,
@@ -136,7 +136,7 @@
                 value: this.OBJ.nu_celular_proveedor,
                 readOnly: true,
                 style: 'background:#c9c9c9;',
-                allowBlank: false,
+//                allowBlank: false,
                 width: 200,
                 maskRe: /[0-9]/
             });
