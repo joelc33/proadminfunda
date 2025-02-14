@@ -184,16 +184,16 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetFont('Times', 'B', 12);
 
         $this->SetY(15);
-        $this->SetX(132);
+        $this->SetX(107);
       
         $this->SetFont('Times', '', 10);
         $this->SetWidths(array(55, 35));
         $this->SetAligns(array("L", "L"));
 
         //-------------
-        $this->newFlowingBlock(60, 5, '', 'R');
+        $this->newFlowingBlock(90, 5, '', 'R');
         $this->SetFont('Times', 'B', 8);
-        $this->WriteFlowingBlock(utf8_decode('ORDEN '.$this->datos['tx_tipo_solicitud']).': '.$this->datos['numero_compra']);
+        $this->WriteFlowingBlock(utf8_decode('N° COMPRA/SERVICIO/CONTRATO ').': '.$this->datos['numero_compra']);
         $this->finishFlowingBlock();
 
 
