@@ -1619,6 +1619,7 @@ class TesoreriaActions extends sfActions
     $c->addSelectColumn(Tb060OrdenPagoPeer::FE_EMISION); 
     $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);  
     $c->addSelectColumn(Tb060OrdenPagoPeer::TX_CONCEPTO); 
+    $c->addSelectColumn(Tb026SolicitudPeer::TX_OBSERVACION);
     $c->addSelectColumn(Tb062LiquidacionPagoPeer::CO_LIQUIDACION_PAGO);
     $c->addSelectColumn(Tb062LiquidacionPagoPeer::MO_PENDIENTE);
     $c->addSelectColumn(Tb060OrdenPagoPeer::CO_TIPO_ODP);
@@ -1709,7 +1710,7 @@ class TesoreriaActions extends sfActions
                 "tx_login"          => trim($res["tx_login"]),
                 "tx_rif"            => $tx_rif,
                 "tx_razon_social"   => $tx_razon_social,
-                "tx_concepto"       => trim($res["tx_concepto"]),
+                "tx_concepto"       => trim($res["tx_observacion"]),
                 "co_tipo_odp"       => trim($res["co_tipo_odp"]),
                 "mo_pendiente"       => trim($res["mo_pendiente"]),
                 "fe_emision"       => $dia.'-'.$mes.'-'.$anio,
