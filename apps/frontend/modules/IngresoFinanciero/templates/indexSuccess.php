@@ -219,7 +219,7 @@
                     },
                     {
                         header: 'Banco',
-                        width: 100,
+                        width: 200,
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'id_tb010_banco'
@@ -233,7 +233,7 @@
                     },
                     {
                         header: 'Cuenta Bancaria',
-                        width: 200,
+                        width: 300,
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'cuenta'
