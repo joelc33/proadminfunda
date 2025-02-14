@@ -296,7 +296,7 @@ class SolicitudAyudaActions extends sfActions
             $tb126_solicitud_ayuda->save($con);
 
             $solicitud = Tb026SolicitudPeer::retrieveByPk($tb126_solicitud_ayudaForm["co_solicitud"]);
-            $solicitud->setCoProveedor($co_proveedor)->save($con);
+            $solicitud->setCoProveedor($co_proveedor)->setCoProveedor($co_proveedor)->save($con);
 
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb126_solicitud_ayudaForm["co_solicitud"]));
             $ruta->setInCargarDato(true)->save($con);
@@ -419,7 +419,7 @@ class SolicitudAyudaActions extends sfActions
 
             $solicitud = Tb026SolicitudPeer::retrieveByPk($tb126_solicitud_ayudaForm["co_solicitud"]);
             $solicitud->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
-            $solicitud->setCoProveedor($co_proveedor)->save($con);
+            $solicitud->setCoProveedor($co_proveedor)->setFeRegistro($fecha)->save($con);
 
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb126_solicitud_ayudaForm["co_solicitud"]));
             $ruta->setObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
