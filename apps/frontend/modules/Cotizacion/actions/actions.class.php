@@ -252,10 +252,10 @@ class CotizacionActions extends sfActions
       $tb206_cotizacion = new Tb206Cotizacion();
       $serial = $datos_tipo_modalidad['tx_sigla'].'-'.$datos_empresa['tx_sigla_serial'].'-'.$datos_documento['tx_sigla'].'-'.'SC'.'-'.date("Y") . '-' . Tb137ControlSerialPeer::getSerial($datos_solicitud['id_136_tipo_documento'], $con, $this->getUser()->getAttribute('ejercicio'),$tb206_cotizacionForm["co_tipo_modalidad"]);
     
-    
+    $tb206_cotizacion->setNumeroCotizacion($serial);
      
     }
-    $tb206_cotizacion->setNumeroCotizacion($serial);
+    
 
 
     try {
@@ -274,8 +274,6 @@ class CotizacionActions extends sfActions
       $tb206_cotizacion->setMontoIva($tb206_cotizacionForm["monto_iva"]);
       $tb206_cotizacion->setMontoSubTotal($tb206_cotizacionForm["monto_compra"]);
       $tb206_cotizacion->setMontoTotal($tb206_cotizacionForm["monto_total"]);
-      $tb206_cotizacion->setTxSerialCotizacion($serial);
-      $tb206_cotizacion->setNumeroCotizacion($serial);
       $tb206_cotizacion->setCoTipoCotizacion($tb206_cotizacionForm["co_tipo_cotizacion"]);
       $tb206_cotizacion->setCoModalidad($tb206_cotizacionForm["co_tipo_modalidad"]);
       $tb206_cotizacion->setInActivo(true);
