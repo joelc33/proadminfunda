@@ -88,8 +88,17 @@ class CuentaBancariaActions extends sfActions
     $codigo = $this->getRequestParameter("codigo");
     if($codigo!=''||$codigo!=null){
         $c = new Criteria();
-                $c->add(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA,$codigo);
-        
+        $c->addSelectColumn(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA);
+        $c->addSelectColumn(Tb011CuentaBancariaPeer::TX_CUENTA_BANCARIA);
+        $c->addSelectColumn(Tb011CuentaBancariaPeer::CO_BANCO);
+        $c->addSelectColumn(Tb011CuentaBancariaPeer::CO_TIPO_CUENTA);
+        $c->addSelectColumn(Tb011CuentaBancariaPeer::CO_DESCRIPCION_CUENTA);
+        $c->addSelectColumn(Tb011CuentaBancariaPeer::NU_CONTRATO);
+        $c->addSelectColumn(Tb011CuentaBancariaPeer::MO_DISPONIBLE);
+        $c->addSelectColumn(Tb011CuentaBancariaPeer::TX_DESCRIPCION);
+        $c->addSelectColumn(Tb024CuentaContablePeer::NU_CUENTA_CONTABLE);
+        $c->add(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA,$codigo);
+        $c->addJoin(Tb011CuentaBancariaPeer::CO_CUENTA_CONTABLE, Tb024CuentaContablePeer::CO_CUENTA_CONTABLE);
         $stmt = Tb011CuentaBancariaPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->data = json_encode(array(
@@ -101,6 +110,7 @@ class CuentaBancariaActions extends sfActions
                             "nu_contrato"     => $campos["nu_contrato"],
                             "mo_disponible"     => $campos["mo_disponible"],
                             "tx_descripcion"     => $campos["tx_descripcion"],
+                            "nu_cuenta_contable"     => $campos["nu_cuenta_contable"],
                     ));
     }else{
         $this->data = json_encode(array(
@@ -112,6 +122,7 @@ class CuentaBancariaActions extends sfActions
                             "nu_contrato"     => "",
                             "mo_disponible"     => "",
                             "tx_descripcion"     => "",
+                            "nu_cuenta_contable"     => "",
                     ));
     }
 
@@ -400,8 +411,21 @@ class CuentaBancariaActions extends sfActions
                 return sfView::NONE;             
         }
         
-
-        
+     if($codigo!=''||$codigo!=null){
+        $c2 = new Criteria();
+        $c2->add(Tb011CuentaBancariaPeer::CO_CUENTA_CONTABLE,$co_cuenta_contable);
+        $c2->add(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA,$codigo, Criteria::NOT_IN);
+        $stmt2 = Tb011CuentaBancariaPeer::doSelectStmt($c2);
+        $campos2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+        if($campos2["co_cuenta_bancaria"]!=''||$campos2["co_cuenta_bancaria"]!=null){
+            $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'La cuenta contable ya fue asignada a otra cuenta bancaria, verifique!'
+                ));
+                echo $this->data;
+                return sfView::NONE;                 
+        }
+     }else{
         $c2 = new Criteria();
         $c2->add(Tb011CuentaBancariaPeer::CO_CUENTA_CONTABLE,$co_cuenta_contable);
         $stmt2 = Tb011CuentaBancariaPeer::doSelectStmt($c2);
@@ -413,7 +437,10 @@ class CuentaBancariaActions extends sfActions
                 ));
                 echo $this->data;
                 return sfView::NONE;                 
-        }        
+        }
+     }
+        
+        
                                         
         /*Campo tipo VARCHAR */
         $tb011_cuenta_bancaria->setTxCuentaBancaria($tb011_cuenta_bancariaForm["tx_cuenta_bancaria"]);

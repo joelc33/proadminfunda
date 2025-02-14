@@ -135,6 +135,7 @@ this.tx_codigo_cuenta = new Ext.form.TextField({
 	fieldLabel:'Cuenta Contable',
 	name:'tx_codigo_cuenta',
 	allowBlank:false,
+        value:this.OBJ.nu_cuenta_contable,
 	width:200,
         maskRe: /[0-9]/
 });
