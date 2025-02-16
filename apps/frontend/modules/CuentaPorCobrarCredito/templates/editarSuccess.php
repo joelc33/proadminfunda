@@ -333,7 +333,7 @@ this.bbar_monto = new Ext.ux.StatusBar({
   },
   items:[
     this.mo_diferencia,'-',
-    this.mo_iva,'-',
+   // this.mo_iva,'-',
     this.mo_pago
   ]
 });
@@ -354,10 +354,10 @@ this.gridPanel = new Ext.grid.GridPanel({
         columns: [
         new Ext.grid.RowNumberer(),
             {header: 'id', hidden: true,width:80, menuDisabled:true,dataIndex: 'id'},
-            {header: 'Cuota',width:200, menuDisabled:true,dataIndex: 'de_cuota'},
-			{header: 'Monto',width:150, menuDisabled:true, renderer: formatoNumero, dataIndex: 'mo_subtotal'},
-			{header: 'IVA',width:50, menuDisabled:true, renderer: formatoNumero, dataIndex: 'iva'},
-			{header: 'Monto IVA',width:100, menuDisabled:true, renderer: formatoNumero, dataIndex: 'mo_iva'},
+            {header: 'Cuota',width:400, menuDisabled:true,dataIndex: 'de_cuota'},
+			//{header: 'Monto',width:150, menuDisabled:true, renderer: formatoNumero, dataIndex: 'mo_subtotal'},
+			//{header: 'IVA',width:50, menuDisabled:true, renderer: formatoNumero, dataIndex: 'iva'},
+		//	{header: 'Monto IVA',width:100, menuDisabled:true, renderer: formatoNumero, dataIndex: 'mo_iva'},
 			{header: 'Monto Total',width:150, menuDisabled:true, renderer: formatoNumero, dataIndex: 'mo_cuota'},
             {header: 'Fecha de Pago',width:150, menuDisabled:true,dataIndex: 'fe_pago'}
         ],

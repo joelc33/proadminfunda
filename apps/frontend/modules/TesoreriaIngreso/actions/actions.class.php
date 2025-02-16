@@ -34,6 +34,15 @@ class TesoreriaIngresoActions extends sfActions
         $this->co_tipo_solicitud = $this->getRequestParameter('co_tipo_solicitud');
 
         $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::ID);
+        $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::ID_TB142_CUENTA_COBRAR);
+        $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::DE_CUOTA);
+        $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::MO_CUOTA);
+        $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::MO_PAGADO);
+        $c->addSelectColumn(Tb145CuentaCobrarDetallePeer::MO_PENDIENTE);
+        $c->addSelectColumn(Tb142CuentaCobrarPeer::ID_TB143_CUENTA_CONCEPTO);
+        $c->addJoin(Tb142CuentaCobrarPeer::ID,Tb145CuentaCobrarDetallePeer::ID_TB142_CUENTA_COBRAR);
         $c->add(Tb145CuentaCobrarDetallePeer::ID, $this->co_liquidacion_pago);
         $stmt = Tb145CuentaCobrarDetallePeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -41,15 +50,21 @@ class TesoreriaIngresoActions extends sfActions
         $disponible = $campos["mo_cuota"] - $campos["mo_pagado"];
 
         $this->data = json_encode(array(
-            "id"     => $campos["id"],
-            "id_tb142_cuenta_cobrar"     => $campos["id_tb142_cuenta_cobrar"],
-            "de_cuota"     => $campos["de_cuota"],
-            "mo_cuota"     => $campos["mo_cuota"],
-            "mo_pagado"     => $campos["mo_pagado"],
-            "mo_pendiente"     => $campos["mo_pendiente"],
-            "mo_disponible"     => $disponible,
+            "id"                            => $campos["id"],
+            "id_tb142_cuenta_cobrar"        => $campos["id_tb142_cuenta_cobrar"],
+            "de_cuota"                      => $campos["de_cuota"],
+            "mo_cuota"                      => $campos["mo_cuota"],
+            "mo_pagado"                     => $campos["mo_pagado"],
+            "mo_pendiente"                  => $campos["mo_pendiente"],
+            "id_cuenta_concepto"            => $campos["id_tb143_cuenta_concepto"],
+            "mo_disponible"                 => $disponible,
         ));
-  
+
+
+        if($campos["id_tb143_cuenta_concepto"]==25)
+            $this->setTemplate('ingresosPropios');
+        else
+            $this->setTemplate('ingresar');
   }
 
   public function executeDetalle(sfWebRequest $request)
