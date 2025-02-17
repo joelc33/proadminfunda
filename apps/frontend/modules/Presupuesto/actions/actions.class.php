@@ -245,16 +245,17 @@ class PresupuestoActions extends sfActions
     {
 
         $co_solicitud = $this->getRequestParameter("co_solicitud");
-        $tx_concepto = $this->getRequestParameter("tx_concepto");
-
-
+        $tx_concepto = $this->getRequestParameter("tx_concepto");        
+        list($dia, $mes, $anio ) = explode("/", $this->getRequestParameter("fecha"));
+        $fecha_odp = $anio.'-'.$mes.'-'.$dia;
+        
         $con = Propel::getConnection();
         try {
             $con->beginTransaction();
 
 
 
-            $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'));
+            $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'),null,$fecha_odp);
 
             //          echo "odp=".$co_odp; exit();
 
@@ -298,7 +299,7 @@ class PresupuestoActions extends sfActions
             $con->rollback();
             $this->data = json_encode(array(
                 "success" => false,
-                "msg" =>  "Ocurri un error al Generar la Orden de Pago"
+                "msg" =>  "Ocurrio un error al Generar la Orden de Pago"
             ));
         }
     }
