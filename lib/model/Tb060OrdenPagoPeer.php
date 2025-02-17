@@ -1318,10 +1318,10 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 if (date("Y") > $ejercicio) {
                     //$FeEmision = $ejercicio.'-12-31';
 //                    $FeEmision = $fe_pago;
-                    $FeEmision = $datosFecha["fecha_compra"];
+                    $FeEmision = $fe_pago;
                 } else {
 //                    $FeEmision = date("Y-m-d");
-                    $FeEmision = $datosFecha["fecha_compra"];
+                    $FeEmision = $fe_pago;
                 }
 
                 $cs = new Criteria();
