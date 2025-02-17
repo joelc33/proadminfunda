@@ -361,9 +361,9 @@ function PutLink($URL, $txt)
          $this->SetAligns(array("J"));
          
          $html = '<p>     Por medio de la presente, me dirijo a usted con finalidad de solicitarle el <b>CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022</b> que seran utilizados para '.$this->datos['tx_evento'].' <b>'.$this->datos['tx_tipo_viatico'].'</b>, durante los dias '.date("d/m/Y", strtotime($this->datos['fe_desde'])).' al '.date("d/m/Y", strtotime($this->datos['fe_hasta'])).' , a '.$this->datos['tx_razon_social'].' portador(a) de la cedula de identidad N° '.$this->datos['tx_rif'].' representante de <b>'.$empresa.'</b>.</p>';
-//         $inf = "     Por medioxx de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022 que seran utilizados para ".$this->datos['tx_evento']." hacia ".$this->datos['tx_tipo_viatico'].", donde se visitará ".$this->datos['destino']." durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_razon_social']." portador(a) de la cedula de identidad N° ".$this->datos['tx_rif']." representante de ".$empresa."."; 
+         $inf = "     Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022 que seran utilizados para ".$this->datos['tx_evento']." hacia ".$this->datos['tx_tipo_viatico'].", donde se visitará ".$this->datos['destino']." durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_razon_social']." portador(a) de la cedula de identidad N° ".$this->datos['tx_rif']." representante de ".$empresa."."; 
          $this->SetX(50);
-         $this->WriteHTML(utf8_decode($html));
+         $this->WriteHTML(utf8_decode($inf));
 
 //         $this->Row(array($inf), 0, 0);
          
