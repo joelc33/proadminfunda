@@ -193,7 +193,15 @@ class PDF_Flo extends PDF_FlowingBlock
         //-------------
         $this->newFlowingBlock(90, 5, '', 'R');
         $this->SetFont('Times', 'B', 8);
-        $this->WriteFlowingBlock(utf8_decode('N° COMPRA/SERVICIO/CONTRATO ').': '.$this->datos['numero_compra']);
+        if($this->datos['in_contrato']=='t'){
+        $this->WriteFlowingBlock(utf8_decode('N° CONTRATO ').': '.$this->datos['numero_compra'].$this->datos['in_contrato']);
+        }else{
+        if($this->datos['co_tipo_solicitud']==1){
+        $this->WriteFlowingBlock(utf8_decode('N° COMPRA ').': '.$this->datos['numero_compra']);    
+        }else{    
+        $this->WriteFlowingBlock(utf8_decode('N° SERVICIO ').': '.$this->datos['numero_compra']);  
+        }
+        }
         $this->finishFlowingBlock();
 
 
@@ -363,13 +371,13 @@ class PDF_Flo extends PDF_FlowingBlock
         $montoLetra = numtoletras($TotalGenerado, 1);
         $this->SetX(15);
         $this->SetFont('Times', '', 8);
-        $this->WriteFlowingBlock(utf8_decode(' ' . $montoLetra));
+//        $this->WriteFlowingBlock(utf8_decode(' ' . $montoLetra));
         $this->SetX(15);
         $this->finishFlowingBlock();
         $this->SetY($Y);
         $this->SetFont('Times', 'B', 8);
         $this->SetAligns(array("R", "R"));
-        $this->SetWidths(array(150, 40));
+        $this->SetWidths(array(161, 29));
         $this->SetFont('Times', 'B', 8);
         $this->Row(array(utf8_decode('Sub-Total:'), number_format($SubTotal, 2, ',', '.')), 0, 0);
         $this->Row(array(utf8_decode('Total I.V.A. : '), number_format($TotalIVA, 2, ',', '.')), 0, 0);
@@ -384,11 +392,11 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetFont('Times', 'B', 8);
         $this->Row(array(utf8_decode('PARTIDAS PRESUPUESTARIAS')), 1, 1);
         $this->SetFillColor(255, 255, 255);
-        $this->SetWidths(array(50, 30, 70, 34));
-        $this->SetAligns(array("C", "C", "L", "R", "C"));
+        $this->SetWidths(array(70, 80, 34));
+        $this->SetAligns(array("C", "L", "R", "R", "C"));
         $this->SetX(15);
         $this->SetTextColor(0, 0, 0);
-        $this->Row(array(utf8_decode('PROGRAMÁTICA'), utf8_decode('CUENTA'), utf8_decode('DESCRIPCIÓN'), utf8_decode('MONTO')), 0, 0);
+        $this->Row(array(utf8_decode('CATEGORÍA'), utf8_decode('DESCRIPCIÓN'), utf8_decode('MONTO')), 0, 0);
         $this->SetFont('Times', '', 8);
         $this->SetTextColor(0, 0, 0);
 
@@ -403,12 +411,12 @@ class PDF_Flo extends PDF_FlowingBlock
         foreach ($this->lista_partidas as $key => $campo) {
             if ($j == 0) {
                 $this->SetX(16);
-                $this->Row(array(utf8_decode($campo['co_categoria']), utf8_decode($campo['nu_partida']), utf8_decode($campo['de_partida']), number_format($campo['monto'], 2, ',', '.')), 0, 0);
+                $this->Row(array(utf8_decode($campo['co_categoria']), utf8_decode($campo['de_partida']), number_format($campo['monto'], 2, ',', '.')), 0, 0);
                 $j = 1;
             } else {
                 $this->SetFillColor(240, 240, 240);
                 $this->SetX(16);
-                $this->Row(array(utf8_decode($campo['co_categoria']), utf8_decode($campo['nu_partida']), utf8_decode($campo['de_partida']), number_format($campo['monto'], 2, ',', '.')), 0, 1);
+                $this->Row(array(utf8_decode($campo['co_categoria']), utf8_decode($campo['de_partida']), number_format($campo['monto'], 2, ',', '.')), 0, 1);
                 $j = 0;
             }
 
@@ -417,11 +425,11 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->SetX(108);
                 $this->Row(array('ANEXOS ' . $this->datos['numero_compra']), 0, 0);
                 $this->SetX(15);
-                $this->SetWidths(array(50, 30, 70, 34));
-                $this->SetAligns(array("C", "C", "L", "R", "C"));
+                $this->SetWidths(array(70, 80, 34));
+                $this->SetAligns(array("C", "L", "R", "R", "C"));
                 $this->SetTextColor(0, 0, 0);
                 $this->SetFont('Times', 'B', 8);
-                $this->Row(array(utf8_decode('PROGRAMÁTICA'), utf8_decode('CUENTA'), utf8_decode('DESCRIPCIÓN'), utf8_decode('MONTO')), 0, 0);
+                $this->Row(array(utf8_decode('CATEGORÍA'), utf8_decode('DESCRIPCIÓN'), utf8_decode('MONTO')), 0, 0);
                 $this->SetFont('Times', '', 8);
                     }
         }
@@ -480,9 +488,9 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->newFlowingBlock(90, 5, '', 'J');
         $this->SetFont('Times', 'B', 8);
         if ($this->punto['in_responsabilidad_social'] == t) {
-            $inf1 = ' SI APLICA (EN  ESPECIES)   (CLÁUSULA PENAL 0,02% DIARIO)';
+            $inf1 = ' SI APLICA (EN  ESPECIES)';
         } else {
-            $inf1 = ' NO APLICA  (CLÁUSULA PENAL 0,02% DIARIO)';
+            $inf1 = ' NO APLICA';
         }
         $Y = $this->GetY();
 //        $this->WriteFlowingBlock(utf8_decode('COMPROMISO RESP. SOCIAL: '.$inf1));
@@ -493,23 +501,32 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->Cell(50, 0, utf8_decode('COMPROMISO RESP. SOCIAL 3%: '), 0, 1, 'L', 1);
         $this->SetFont('Times', '', 8);
         $this->SetX(65);
-        $this->Cell(100, 0, utf8_decode($inf1), 0, 1, 'L', 1);     
+        $this->Cell(100, 0, utf8_decode($inf1), 0, 1, 'L', 1);   
+        
+        $Y = $this->GetY();
+        $this->SetY($Y+5);
+        $this->SetFont('Times', 'B', 8);
+        $this->SetX(15);
+        $this->Cell(15, 0, utf8_decode('PENALIDAD: '), 0, 1, 'L', 1);
+        $this->SetFont('Times', '', 8);
+        $this->SetX(35);
+        $this->Cell(100, 0, utf8_decode('CLÁUSULA PENAL 0,02% DIARIO'), 0, 1, 'L', 1);          
 
         //$style2 = array('width' => 0.5, 'cap' => 'round', 'join' => 'miter', 'dash' => '2,10', 'color' => array(0,0,0));
-        $this->Line(15, $Y+13, 200, $Y+13);
+        $this->Line(15, $Y+8, 200, $Y+8);
 
-        $this->SetY($Y + 15);
+        $this->SetY($Y + 10);
         $this->SetX(15);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(50, 5, utf8_decode('FORMA DE PAGO: '), 0, 'L');
-        $this->SetY($Y + 15);
+        $this->SetY($Y + 10);
         $this->SetX(65);
         $this->SetFont('Times', '', 9);
         $this->MultiCell(100, 5, utf8_decode('CREDITO'), 0, 'L');
         $this->SetX(15);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(70, 5, utf8_decode('PLAZO DE ENTREGA:'), 0, 'L');
-        $this->SetY($Y + 20);
+        $this->SetY($Y + 15);
         $this->SetX(65);
         $this->SetFont('Times', '', 9);
         $this->MultiCell(100, 5, utf8_decode($this->punto['tx_entrega']), 0, 'L');
@@ -523,7 +540,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(15);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(70, 5, utf8_decode('ANEXOS: '), 0, 'L');
-        $this->SetY($Y + 25);
+        $this->SetY($Y + 20);
         $this->SetX(65);
         $this->SetFont('Times', '', 9);
         $this->MultiCell(135, 5, utf8_decode($this->punto['nu_expediente']), 0, 'J');
@@ -757,7 +774,8 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb001.nb_usuario,
                          tb027.co_tipo_solicitud,
                          tb082.de_ejecutor,
-                         tb206.numero_cotizacion
+                         tb206.numero_cotizacion,
+                         in_contrato
                   from   tb026_solicitud as tb026
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud
                   left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras
@@ -809,7 +827,7 @@ class PDF_Flo extends PDF_FlowingBlock
     {
         $conex = new ConexionComun();
         $sql = "   select distinct
-                         substr(tb085.co_categoria,1,16) as co_categoria,
+                         substr(tb085.co_categoria,1,100) as co_categoria,
                          tb085.de_partida,
                          tb085.nu_partida,
                          upper(tb052.tx_observacion) as tx_observacion,
