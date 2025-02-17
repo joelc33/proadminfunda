@@ -125,7 +125,7 @@ class TesoreriaIngresoPagoActions extends sfActions
       $tb148_cuenta_cobrar_pago->save($con);
 
 
-     
+
 
 
       $c1 = new Criteria();
@@ -193,14 +193,10 @@ class TesoreriaIngresoPagoActions extends sfActions
       }
 
       $tb145_cuenta_cobrar_detalle = Tb145CuentaCobrarDetallePeer::retrieveByPk($tb148_cuenta_cobrar_pagoForm["id_tb145_cuenta_cobrar_detalle"]);
-      $tb145_cuenta_cobrar_detalle->setMoPagado($campos1["total_pago"]);
-      $tb145_cuenta_cobrar_detalle->setMoPendiente($pendiente);
-      if ($pendiente == 0) {
-        $tb145_cuenta_cobrar_detalle->setInPago(true);
-      }
 
 
-      if(isset($tb148_cuenta_cobrar_pagoForm["mo_iva"])){
+
+      if (isset($tb148_cuenta_cobrar_pagoForm["mo_iva"])) {
         $tb145_cuenta_cobrar_detalle->setMoCuota($tb148_cuenta_cobrar_pagoForm["mo_pago"]);
         $tb145_cuenta_cobrar_detalle->setMoPendiente(0);
         $tb145_cuenta_cobrar_detalle->setMoPagado($tb148_cuenta_cobrar_pagoForm["mo_pago"]);
@@ -208,7 +204,14 @@ class TesoreriaIngresoPagoActions extends sfActions
         $tb145_cuenta_cobrar_detalle->setCoIva($tb148_cuenta_cobrar_pagoForm["co_iva"]);
         $tb145_cuenta_cobrar_detalle->setMoSubtotal($tb148_cuenta_cobrar_pagoForm["mo_subtotal"]);
         $tb145_cuenta_cobrar_detalle->setNuFactura($tb148_cuenta_cobrar_pagoForm["nu_factura"]);
+        $tb145_cuenta_cobrar_detalle->setInPago(true);
         $tb145_cuenta_cobrar_detalle->save($con);
+      } else {
+        $tb145_cuenta_cobrar_detalle->setMoPagado($campos1["total_pago"]);
+        $tb145_cuenta_cobrar_detalle->setMoPendiente($pendiente);
+        if ($pendiente == 0) {
+          $tb145_cuenta_cobrar_detalle->setInPago(true);
+        }
       }
 
 
