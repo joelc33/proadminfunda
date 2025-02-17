@@ -346,17 +346,17 @@ class CuentaPorCobrarCreditoActions extends sfActions
                 $tb085_presupuesto->setMoDisponible($mo_disponible);
                 $tb085_presupuesto->save($con);*/
 
-                $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
-                $tb087_presupuesto_movimiento->setCoPartida($res["id_tb085_presupuesto"]);
-                $tb087_presupuesto_movimiento->setNuMonto($res["mo_distribucion"]);
-                $tb087_presupuesto_movimiento->setNuAnio( $this->getUser()->getAttribute('ejercicio'));
-                //$tb087_presupuesto_movimiento->setCreatedAt(date("Y-m-d"));
-                //$tb087_presupuesto_movimiento->setUpdatedAt(date("Y-m-d"));
-                $tb087_presupuesto_movimiento->setCoUsuario($this->getUser()->getAttribute('codigo'));
-                $tb087_presupuesto_movimiento->setCoTipoMovimiento(7);
-                $tb087_presupuesto_movimiento->setTxObservacion('CREDITO ADICIONAL');
-                $tb087_presupuesto_movimiento->setinActivo(true);
-                $tb087_presupuesto_movimiento->save($con);
+//                $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
+//                $tb087_presupuesto_movimiento->setCoPartida($res["id_tb085_presupuesto"]);
+//                $tb087_presupuesto_movimiento->setNuMonto($res["mo_distribucion"]);
+//                $tb087_presupuesto_movimiento->setNuAnio( $this->getUser()->getAttribute('ejercicio'));
+//                //$tb087_presupuesto_movimiento->setCreatedAt(date("Y-m-d"));
+//                //$tb087_presupuesto_movimiento->setUpdatedAt(date("Y-m-d"));
+//                $tb087_presupuesto_movimiento->setCoUsuario($this->getUser()->getAttribute('codigo'));
+//                $tb087_presupuesto_movimiento->setCoTipoMovimiento(7);
+//                $tb087_presupuesto_movimiento->setTxObservacion('CREDITO ADICIONAL');
+//                $tb087_presupuesto_movimiento->setinActivo(true);
+//                $tb087_presupuesto_movimiento->save($con);
 
             }
 
