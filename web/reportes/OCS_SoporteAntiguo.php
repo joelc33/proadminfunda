@@ -199,7 +199,7 @@ class PDF_Flo extends PDF_FlowingBlock
         if($this->datos['co_tipo_solicitud']==1){
         $this->WriteFlowingBlock(utf8_decode('ORDEN DE COMPRA ').': '.$this->datos['numero_compra']);    
         }else{    
-        $this->WriteFlowingBlock(utf8_decode('ORDEN DE SERVICIO ').': '.$this->datos['numero_compra']);  
+        $this->WriteFlowingBlock(utf8_decode('CONTRATO N ').': '.$this->datos['numero_compra']);  
         }
         }
         $this->finishFlowingBlock();
