@@ -1136,7 +1136,7 @@ class ServicioBasicoFacturaActions extends sfActions
 
         if ($co_tipo_solicitud == 26) {
             //Servicios Varios (Servicios Basicos)
-            $c->add(Tb048ProductoPeer::CO_PRODUCTO, array(19500, 19499, 19498,20024,20025), Criteria::IN);
+            $c->add(Tb048ProductoPeer::CO_CLASE, 12);
         }
 
         if ($co_tipo_solicitud == 39) {
