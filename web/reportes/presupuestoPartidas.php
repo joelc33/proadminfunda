@@ -82,7 +82,7 @@ class PDF extends FPDF {
         $this->SetWidths(array(100));
         $this->SetAligns(array("L")); 
         $this->SetX(10);                    
-        $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);   
+        $this->Row(array('PERIODO....:  '.$_GET['fe_inicio'].' A '.$_GET['fe_fin']),0,0);   
         $this->SetX(10);   
 
         $this->Ln(10);       
@@ -118,7 +118,7 @@ class PDF extends FPDF {
                 $this->SetWidths(array(100));
                 $this->SetAligns(array("L")); 
                 $this->SetX(10);                    
-                $this->Row(array('PERIODO....:  01-01-'.$_GET['co_anio_fiscal'].' A '.$_GET['fe_fin']),0,0);   
+                $this->Row(array('PERIODO....:  '.$_GET['fe_inicio'].' A '.$_GET['fe_fin']),0,0);   
                 $this->SetX(10);   
 
                 $this->Ln(10);       
