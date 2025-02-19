@@ -210,7 +210,7 @@ class MovimientoActions extends sfActions
             $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(1,4,17),Criteria::IN);
         }else{
           if($co_tipo_movimiento == 2){
-          $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(1,17),Criteria::IN);   
+          $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(2,17),Criteria::IN);   
           }else{
           $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,$co_tipo_movimiento);   
           }  
