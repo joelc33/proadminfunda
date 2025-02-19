@@ -225,6 +225,7 @@ class MovimientoActions extends sfActions
         $c->add(Tb013AnioFiscalPeer::CO_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
         
         $c->addAscendingOrderByColumn(Tb052ComprasPeer::CO_SOLICITUD);
+        $c->addAscendingOrderByColumn(Tb087PresupuestoMovimientoPeer::CREATED_AT);
         
         $cantidadTotal = Tb087PresupuestoMovimientoPeer::doCount($c);
         $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
