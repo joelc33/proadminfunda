@@ -1007,6 +1007,7 @@ class PresupuestoActions extends sfActions
         $c = new Criteria();
         $c->clearSelectColumns();
         $c->addSelectColumn(Tb045FacturaPeer::CO_SOLICITUD);
+        $c->addSelectColumn(Tb045FacturaPeer::CO_FACTURA);
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
@@ -1031,7 +1032,7 @@ class PresupuestoActions extends sfActions
         $datos_compra          = $this->getCoCompras($campos["co_solicitud"]);
         $campos["co_compras"]  = $datos_compra["co_compras"];
         $campos["co_ejecutor"] = $datos_compra["co_ejecutor"];
-        $campos["co_factura"]  = $codigo;
+        $campos["co_factura"]  = $campos["co_factura"];
 
         $datos_detalle = $this->getDetallesCompra($campos["co_compras"]);
         $campos["co_partida"] = $datos_detalle["co_partida"];
