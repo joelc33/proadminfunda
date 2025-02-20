@@ -2060,7 +2060,7 @@ class PresupuestoActions extends sfActions
         $co_compras        = $this->getRequestParameter("co_compras");
         $co_ejecutor       = $this->getRequestParameter("co_ejecutor");
         $co_solicitud      = $this->getRequestParameter("co_solicitud");
-        $mo_disponible      = $this->getRequestParameter("mo_disponible");
+        $mo_disponible      = $this->getRequestParameter("mo_disponible2");
         $co_fuente_financiamiento  = $this->getRequestParameter("co_fuente_financiamiento");
 
 
