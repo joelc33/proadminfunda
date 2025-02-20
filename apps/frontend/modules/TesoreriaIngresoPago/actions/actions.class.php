@@ -270,9 +270,9 @@ class TesoreriaIngresoPagoActions extends sfActions
         $tb150_presupuesto_ingreso_movimiento->setMoMovimiento($mo_movimiento);
         $tb150_presupuesto_ingreso_movimiento->setNuAnio($this->getUser()->getAttribute('ejercicio'));
         if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
-          $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fe_registro);
+          $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fe_ingreso);
         } else {
-          $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fe_registro);
+          $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fe_ingreso);
         }
         $tb150_presupuesto_ingreso_movimiento->setCoUsuario($this->getUser()->getAttribute('codigo'));
         $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(11);
