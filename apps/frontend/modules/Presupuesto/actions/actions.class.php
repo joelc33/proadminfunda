@@ -1002,7 +1002,7 @@ class PresupuestoActions extends sfActions
 
     public function executeAsignarPartidaServicio(sfWebRequest $request)
     {
-        $codigo =  $this->getRequestParameter("co_factura");
+        $codigo =  $this->getRequestParameter("co_solicitud");
 
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -1015,7 +1015,7 @@ class PresupuestoActions extends sfActions
         $c->addJoin(Tb007DocumentoPeer::CO_DOCUMENTO, Tb008ProveedorPeer::CO_DOCUMENTO);
         $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR,  Tb045FacturaPeer::CO_PROVEEDOR);
         //$c->addJoin(Tb048ProductoPeer::CO_PRODUCTO, Tb045FacturaPeer::ID_TB048_PRODUCTO);
-        $c->add(Tb045FacturaPeer::CO_FACTURA, $codigo);
+        $c->add(Tb045FacturaPeer::CO_SOLICITUD, $codigo);
 
         $stmt = Tb045FacturaPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
