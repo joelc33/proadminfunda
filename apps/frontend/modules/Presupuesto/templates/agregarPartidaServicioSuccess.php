@@ -174,7 +174,7 @@
                         return false;
                     }
                     
-                    if (parseFloat(cambiarPartida.main.mo_disponible2.getValue())<parseFloat(cambiarPartida.main.mo_pagar.getValue()) {
+                    if (parseFloat(cambiarPartida.main.mo_disponible2.getValue())<parseFloat(cambiarPartida.main.mo_pagar.getValue())) {
                         Ext.Msg.alert("Alerta", "El Monto Disponible de la partida es menor al monto total");
                         return false;
                     }                    
