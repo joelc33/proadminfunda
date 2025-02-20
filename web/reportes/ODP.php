@@ -685,9 +685,9 @@ class PDF_Flo extends PDF_FlowingBlock
                             $this->Row(array('Fact-' . $valor['nu_factura'], $valor["tx_concepto_factura"], date("d/m/Y", strtotime($valor['fecha_odp'])), $valor['tx_concepto'], number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($valor['nu_total'] - ($valor['nu_total_retencion']), 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
-                            $this->SetX(135);
+                            $this->SetX(145);
                             $this->SetWidths(array(25, 20));
-                            $this->SetAligns(array("R", "R"));
+                            $this->SetAligns(array("L", "R"));
                             $this->Row(array(utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.')), 0, 0);
                         }
                         $monto = $monto + $campo1['mo_retencion'];
