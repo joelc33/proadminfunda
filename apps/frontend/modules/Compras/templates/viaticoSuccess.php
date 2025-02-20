@@ -694,7 +694,7 @@
         },
         getListaPartida: function() {
             this.store = new Ext.data.JsonStore({
-                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/storefkasignacion',
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/storefkcompromiso',
                 root: 'data',
                 fields: [{
                         name: 'co_detalle_compras'
