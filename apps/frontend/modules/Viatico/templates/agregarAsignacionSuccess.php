@@ -30,6 +30,8 @@
                 allowBlank: false,
                 listeners: {
                     select: function() {
+                        listaAsignacion.main.co_partida.clearValue();
+                        listaAsignacion.main.mo_disponible.setValue('');                        
                         listaAsignacion.main.storeCO_PROYECTO.load({
                             params: {
                                 co_ejecutor: this.getValue()
@@ -61,6 +63,8 @@
 
             this.co_proyecto.on('select', function(cmb, record, index) {
                 listaAsignacion.main.co_accion.clearValue();
+                        listaAsignacion.main.co_partida.clearValue();
+                        listaAsignacion.main.mo_disponible.setValue('');                
                 listaAsignacion.main.storeCO_ACCION.load({
                     params: {
                         co_proyecto: record.get('id')
@@ -86,6 +90,8 @@
                 listeners: {
                     select: function() {
                         listaAsignacion.main.storeCO_PARTIDA.baseParams.co_accion = this.getValue();
+                        listaAsignacion.main.co_partida.clearValue();
+                        listaAsignacion.main.mo_disponible.setValue('');
                         //listaAsignacion.main.storeCO_PARTIDA.baseParams.co_clase_producto = listaAsignacion.main.OBJ.co_clase_producto;                
                         listaAsignacion.main.storeCO_PARTIDA.load();
                     }
@@ -120,30 +126,6 @@
                     listaAsignacion.main.storeCO_PROYECTO.load({
                         params: {
                             co_ejecutor: 1
-                        },
-                        callback: function() {
-                            listaAsignacion.main.co_proyecto.setValue(35);
-
-                            listaAsignacion.main.storeCO_ACCION.load({
-                                params: {
-                                    co_proyecto: 35
-                                },
-                                callback: function() {
-                                    listaAsignacion.main.co_accion.setValue(51);
-
-                                    listaAsignacion.main.storeCO_PARTIDA.load({
-                                        params:{
-                                            co_accion: 51
-                                        },
-                                        callback: function(){
-                                            listaAsignacion.main.co_partida.setValue(1017);
-                                            listaAsignacion.main.cargarDisponible();
-                                        }
-                                    });
-
-
-                                }
-                            });
                         }
                     });
 
@@ -178,6 +160,11 @@
                         Ext.Msg.alert("Alerta", "El Monto de la Asignacion no puede ser mayor al disponible");
                         return false;
                     }
+                    console.log(ViaticoEditar.main.mo_total.getValue())
+                    if (parseFloat(listaAsignacion.main.mo_pagar.getValue()) > parseFloat(ViaticoEditar.main.total_pagar)) {
+                        Ext.Msg.alert("Alerta", "El Monto de la Asignacion no puede ser mayor al Monto Total");
+                        return false;
+                    }                    
 
                     var e = new ViaticoEditar.main.Registro({
                         co_detalle_compras: '',
@@ -260,7 +247,7 @@
         },
         getStoreCO_PARTIDA: function() {
             this.store = new Ext.data.JsonStore({
-                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/storefkcopartida',
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcopartidaViatico',
                 root: 'data',
                 fields: [{
                         name: 'id'

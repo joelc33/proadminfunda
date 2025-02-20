@@ -2318,17 +2318,30 @@ class ComprasActions extends sfActions
     public function executeStorefkcopartidaViatico(sfWebRequest $request)
     {
 
-        $c = new Criteria();
-        $c->addSelectColumn(Tb091PartidaPeer::ID);
-        $c->addSelectColumn(Tb091PartidaPeer::NU_PARTIDA);
-        $c->addSelectColumn(Tb091PartidaPeer::DE_PARTIDA);
-        $c->addJoin(Tb094PartidaProductoPeer::NU_PARTIDA,  Tb091PartidaPeer::NU_PARTIDA);
-        $c->addJoin(Tb094PartidaProductoPeer::ID_TB092_CLASE_PRODUCTO,  Tb092ClaseProductoPeer::ID);
-        $c->add(Tb092ClaseProductoPeer::DE_CLASE_PRODUCTO, '%VIATICO%',  Criteria::LIKE);
-        $stmt = Tb091PartidaPeer::doSelectStmt($c);
+        $co_accion = $this->getRequestParameter('co_accion');
 
+        $c = new Criteria();
+        $c->addSelectColumn(Tb085PresupuestoPeer::ID);
+        $c->addSelectColumn(Tb085PresupuestoPeer::NU_PARTIDA);
+        $c->addSelectColumn(Tb085PresupuestoPeer::DE_PARTIDA);
+        $c->addSelectColumn(Tb085PresupuestoPeer::MO_DISPONIBLE);
+
+        $c->addJoin(Tb085PresupuestoPeer::NU_ANIO, Tb013AnioFiscalPeer::CO_ANIO_FISCAL);
+
+        $c->add(Tb013AnioFiscalPeer::CO_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
+        $c->add(Tb085PresupuestoPeer::DE_PARTIDA, '%VIATICO%',  Criteria::LIKE);
+
+        if ($co_accion != '') {
+            $c->add(Tb085PresupuestoPeer::ID_TB084_ACCION_ESPECIFICA, $co_accion);
+        }
+
+
+        $stmt = Tb085PresupuestoPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+            //$reg["nu_partida"] = Tb085PresupuestoPeer::mascaraNomina($reg["nu_partida"]);
+
             $registros[] = $reg;
         }
 
@@ -2337,7 +2350,27 @@ class ComprasActions extends sfActions
             "total"     =>  count($registros),
             "data"      =>  $registros
         ));
-        $this->setTemplate('store');
+        $this->setTemplate('store');        
+//        $c = new Criteria();
+//        $c->addSelectColumn(Tb091PartidaPeer::ID);
+//        $c->addSelectColumn(Tb091PartidaPeer::NU_PARTIDA);
+//        $c->addSelectColumn(Tb091PartidaPeer::DE_PARTIDA);
+//        $c->addJoin(Tb094PartidaProductoPeer::NU_PARTIDA,  Tb091PartidaPeer::NU_PARTIDA);
+//        $c->addJoin(Tb094PartidaProductoPeer::ID_TB092_CLASE_PRODUCTO,  Tb092ClaseProductoPeer::ID);
+//        $c->add(Tb092ClaseProductoPeer::DE_CLASE_PRODUCTO, '%VIATICO%',  Criteria::LIKE);
+//        $stmt = Tb091PartidaPeer::doSelectStmt($c);
+//
+//        $registros = array();
+//        while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//            $registros[] = $reg;
+//        }
+//
+//        $this->data = json_encode(array(
+//            "success"   =>  true,
+//            "total"     =>  count($registros),
+//            "data"      =>  $registros
+//        ));
+//        $this->setTemplate('store');
     }
 
     public function executeStorefkcopartidaAyuda(sfWebRequest $request)

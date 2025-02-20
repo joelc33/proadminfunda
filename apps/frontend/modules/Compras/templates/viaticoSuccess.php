@@ -637,11 +637,8 @@
                     success: function(result, request) {
                         //ViaticoEditar.main.store_lista.load();
                         Ext.utiles.msg('Mensaje', "La Asignacion se eliminó exitosamente");
-                    }
-                });
-
-            }
-
+                        
+                        
             ViaticoEditar.main.store_lista_partida.baseParams.co_compras = ViaticoEditar.main.OBJ.co_compra;
             ViaticoEditar.main.store_lista_partida.load({
                 callback: function() {
@@ -653,7 +650,14 @@
                     ViaticoEditar.main.monto_total_partida.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ViaticoEditar.main.total_pagar_partida) + "</b></span>");
                     ViaticoEditar.main.mo_total_partida.setValue(ViaticoEditar.main.total_pagar_partida);
                 }
-            });
+            });                        
+                        
+                    }
+                });
+
+            }
+
+
 
             for (var i = 0, r; r = s[i]; i++) {
                 ViaticoEditar.main.store_lista_partida.remove(r);
