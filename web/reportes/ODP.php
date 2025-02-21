@@ -355,7 +355,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 $this->Row(array(utf8_decode('DOCUMENTOS Y RETENCIONES')), 0, 0);
                 $this->SetFillColor(255, 255, 255);
                 $this->SetAligns(array("C", "C", "C", "C", "C", "C", "C", "C"));
-                $this->SetWidths(array(22, 36, 15, 40, 22, 25, 20, 20));
+                $this->SetWidths(array(25, 36, 15, 37, 22, 25, 20, 20));
                 $this->SetFont('Times', '', 8);
                 $Y = $this->GetY();
                 $this->RoundedRect(10, 83, 200, 59.5, 1.5, '1111', '', $style);
@@ -657,7 +657,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->SetFont('Times', 'B', 6);
                     $this->SetFillColor(255, 255, 255);
                     $this->SetAligns(array("C", "C", "C", "C", "C", "C", "C", "C"));
-                    $this->SetWidths(array(22, 36, 15, 40, 22, 25, 20, 20));
+                    $this->SetWidths(array(25, 36, 15, 37, 22, 25, 20, 20));
                     $this->SetFont('Times', '', 8);
                     $Y = $this->GetY();
                     $this->SetY($Y);
@@ -680,7 +680,7 @@ class PDF_Flo extends PDF_FlowingBlock
                             $Y = $this->GetY();
                             //$this->MultiCell(200,50,'',0,0,'L',0);
                             $this->SetAligns(array("C", "C", "C", "L", "R", "L", "R", "R"));
-                            $this->SetWidths(array(22, 36, 15, 40, 22, 25, 20, 20));
+                            $this->SetWidths(array(25, 36, 15, 37, 22, 25, 20, 20));
                             $this->SetX(10);
                             $this->Row(array('Fact-' . $valor['nu_factura'], $valor["tx_concepto_factura"], date("d/m/Y", strtotime($valor['fecha_odp'])), $valor['tx_concepto'], number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($valor['nu_total'] - ($valor['nu_total_retencion']), 2, ',', '.')), 0, 0);
                             $j++;
