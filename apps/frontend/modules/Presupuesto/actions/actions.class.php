@@ -3460,7 +3460,7 @@ class PresupuestoActions extends sfActions
 
             $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
             $tb087_presupuesto_movimiento->setCoPartida($tb207_detalle_cotizacion->getCoPresupuesto())
-                ->setCoTipoMovimiento(4)
+                ->setCoTipoMovimiento(16)
                 ->setNuMonto($monto)
                 //->setNuAnio(date('Y'))
                 ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
