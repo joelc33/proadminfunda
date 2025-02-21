@@ -108,6 +108,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
         WHERE tb087_presupuesto_movimiento.CO_PARTIDA=".$_GET['partida']."
         AND tb087_presupuesto_movimiento.CO_TIPO_MOVIMIENTO=".$_GET['tipo']."
         AND tb085_presupuesto.ID=tb087_presupuesto_movimiento.CO_PARTIDA and tb087_presupuesto_movimiento.in_anular is null
+        ORDER BY tb052_compras.CO_SOLICITUD 
         ASC;";
     
         
