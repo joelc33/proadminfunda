@@ -963,6 +963,11 @@ class CompromisoAsignacionActions extends sfActions
                 "msg" => 'Este registro no se puede borrar'
             ));
         }
+
+        $this->setTemplate('eliminar');
+
+
+        
     }
     public function executeEliminarAsignacion(sfWebRequest $request)
     {
