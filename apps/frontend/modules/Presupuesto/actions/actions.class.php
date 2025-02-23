@@ -944,9 +944,7 @@ class PresupuestoActions extends sfActions
 
         $c = new Criteria();
         $c->clearSelectColumns();
-        $c->addSelectColumn(Tb126SolicitudAyudaPeer::CO_SOLICITUD);
-        $c->addSelectColumn(Tb126SolicitudAyudaPeer::CO_SOLICITUD_AYUDA);
-        $c->addSelectColumn(Tb127TipoAyudaPeer::TX_TIPO_AYUDA);
+        $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD);
         $c->addSelectColumn(Tb109PersonaPeer::CO_DOCUMENTO);
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
@@ -954,12 +952,11 @@ class PresupuestoActions extends sfActions
         $c->addSelectColumn(Tb109PersonaPeer::NU_CELULAR);
 
         $c->addJoin(Tb007DocumentoPeer::CO_DOCUMENTO, Tb008ProveedorPeer::CO_DOCUMENTO);
-        $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb126SolicitudAyudaPeer::CO_PROVEEDOR);
-        $c->addJoin(Tb127TipoAyudaPeer::CO_TIPO_AYUDA, Tb126SolicitudAyudaPeer::CO_TIPO_AYUDA);
-        $c->add(Tb126SolicitudAyudaPeer::CO_SOLICITUD, $codigo);
+        $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb026SolicitudPeer::CO_PROVEEDOR);
+        $c->add(Tb026SolicitudPeer::CO_SOLICITUD, $codigo);
 
 
-        $stmt = Tb108ViaticoPeer::doSelectStmt($c);
+        $stmt = Tb026SolicitudPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
