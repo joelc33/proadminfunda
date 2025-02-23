@@ -172,10 +172,10 @@
                         return false;
                     }
                     
-                    if(ViaticoEditar.main.gridPanelPartida.getStore().getCount()<=0){
+                   /* if(ViaticoEditar.main.gridPanelPartida.getStore().getCount()<=0){
                         Ext.Msg.alert("Alerta","Debe agregar la partida");
                         return false;
-                    }                    
+                    }  */                  
 
                     var list = paqueteComunJS.funcion.getJsonByObjStore({
                         store: ViaticoEditar.main.gridPanel.getStore()
@@ -307,14 +307,14 @@
 
             function renderMonto(val, attr, record) {
                 return paqueteComunJS.funcion.getNumeroFormateado(val);
-            }
+            } 
 
             this.gridPanel = new Ext.grid.GridPanel({
                 title: 'Detalle del Viatico',
                 iconCls: 'icon-libro',
                 store: this.store_lista,
                 loadMask: true,
-                height: 200,
+                height: 300,
                 width: 950,
                 tbar: [this.editar, '-', this.botonEliminar],
                 columns: [
@@ -554,8 +554,8 @@
                     this.hiddenJsonDetalle,
                     this.fieldDatosSolicitante,
                     this.fieldDatosSolicitud,
-                    this.fieldDatosViaticos,
-                    this.fieldDatosPartida
+                    this.fieldDatosViaticos
+                    //this.fieldDatosPartida
                 ]
             });
 
