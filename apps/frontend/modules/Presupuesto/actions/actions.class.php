@@ -1709,6 +1709,7 @@ class PresupuestoActions extends sfActions
 
                 $datos_partida = Tb209PresupuestoDetalleCompraPeer::getDatosPresupuestoDetalleCompra($co_detalle_cotizacion, $in_cotizacion = true);
 
+            
                 // var_dump($co_detalle_cotizacion); exit();
 
                 Tb209PresupuestoDetalleCompraPeer::setUpdatePresupuestoDetalleCompra($co_detalle_cotizacion, $mo_debitar, $this->getUser()->getAttribute('codigo'), $co_proyecto, $co_accion, $co_presupuesto, $co_partida, $con, true);
@@ -1723,7 +1724,7 @@ class PresupuestoActions extends sfActions
                     $mo_debitar,
                     $co_detalle_cotizacion,
                     '',
-                    $datos_partida["co_presupuesto_detalle_compra"]
+                    $datos_partida["id"]
 
                 );
 
