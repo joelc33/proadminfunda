@@ -2187,7 +2187,7 @@ class PresupuestomodificacionActions extends sfActions
               if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
                 $tb150_presupuesto_ingreso_movimiento->setCreatedAt($this->getUser()->getAttribute('fe_cierre'));
               } else {
-                $tb150_presupuesto_ingreso_movimiento->setCreatedAt(date("Y-m-d"));
+                $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fecha);
               }
               $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(9);
               $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos4["mo_comprometido"]);
@@ -2204,7 +2204,7 @@ class PresupuestomodificacionActions extends sfActions
               if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
                 $tb150_presupuesto_ingreso_movimiento->setCreatedAt($this->getUser()->getAttribute('fe_cierre'));
               } else {
-                $tb150_presupuesto_ingreso_movimiento->setCreatedAt(date("Y-m-d"));
+                $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fecha);
               }
               $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(7);
               $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos4["mo_actualizado"]);
@@ -2327,8 +2327,8 @@ class PresupuestomodificacionActions extends sfActions
       /*Campo tipo DATE */
       if ($tb097_modificacion_detalleForm["fe_oficio"] != '') {
         list($dia, $mes, $anio) = explode("/", $tb097_modificacion_detalleForm["fe_oficio"]);
-        $fecha = $anio . "-" . $mes . "-" . $dia;
-        $tb096_presupuesto_modificacion->setFeOficio($fecha);
+        $fechaO = $anio . "-" . $mes . "-" . $dia;
+        $tb096_presupuesto_modificacion->setFeOficio($fechaO);
       }
 
       /*Campo tipo VARCHAR */
@@ -2336,10 +2336,10 @@ class PresupuestomodificacionActions extends sfActions
 
 
       /*Campo tipo TIMESTAMP */
-      $fecha = date("Y-m-d H:i:s");
+      $fechaUp = date("Y-m-d H:i:s");
 
       /*Campo tipo TIMESTAMP */
-      $tb096_presupuesto_modificacion->setUpdatedAt($fecha);
+      $tb096_presupuesto_modificacion->setUpdatedAt($fechaUp);
 
       /*Campo tipo BIGINT */
       $tb096_presupuesto_modificacion->setCoUsuario($this->getUser()->getAttribute('codigo'));
@@ -2408,7 +2408,7 @@ class PresupuestomodificacionActions extends sfActions
           if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
             $tb150_presupuesto_ingreso_movimiento->setCreatedAt($this->getUser()->getAttribute('fe_cierre'));
           } else {
-            $tb150_presupuesto_ingreso_movimiento->setCreatedAt(date("Y-m-d"));
+            $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fecha);
           }
           $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(9);
           $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos4["mo_comprometido"]);
@@ -2446,7 +2446,7 @@ class PresupuestomodificacionActions extends sfActions
           if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
             $tb150_presupuesto_ingreso_movimiento->setCreatedAt($this->getUser()->getAttribute('fe_cierre'));
           } else {
-            $tb150_presupuesto_ingreso_movimiento->setCreatedAt(date("Y-m-d"));
+            $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fecha);
           }
           $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(9);
           $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos4["mo_comprometido"]);
@@ -2474,7 +2474,7 @@ class PresupuestomodificacionActions extends sfActions
         if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
           $tb150_presupuesto_ingreso_movimiento->setCreatedAt($this->getUser()->getAttribute('fe_cierre'));
         } else {
-          $tb150_presupuesto_ingreso_movimiento->setCreatedAt(date("Y-m-d"));
+          $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fecha);
         }
         $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(9);
         $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos4["mo_comprometido"]);

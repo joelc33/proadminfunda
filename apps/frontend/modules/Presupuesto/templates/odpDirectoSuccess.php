@@ -335,6 +335,14 @@
                 items: [this.co_tipo_odp, this.tx_concepto]
             });
 
+            this.fecha = new Ext.form.DateField({
+                    fieldLabel:'Fecha ODP',
+                    name:'fecha',
+                    maxValue: new Date(),
+                    allowBlank:false,
+                    width:100
+            });
+
 
             this.guardar = new Ext.Button({
                 text: 'Generar ODP',
@@ -372,6 +380,7 @@
                     this.hiddenJsonFactura,
                     this.fieldDatos,
                     this.fieldDatosContrato,
+                    this.fecha
                     //this.field_tipo_odp,
                     //                    this.fieldDatosPreImpresa,
                     //                    this.gridPanel

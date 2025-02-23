@@ -102,7 +102,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
         LEFT JOIN tb053_detalle_compras ON (tb087_presupuesto_movimiento.CO_DETALLE_COMPRA=tb053_detalle_compras.CO_DETALLE_COMPRAS) 
         LEFT JOIN tb052_compras ON (tb053_detalle_compras.CO_COMPRAS=tb052_compras.CO_COMPRAS) 
         LEFT JOIN tb060_orden_pago ON (tb052_compras.CO_SOLICITUD=tb060_orden_pago.CO_SOLICITUD) 
-        LEFT JOIN tb026_solicitud ON (tb060_orden_pago.CO_SOLICITUD=tb026_solicitud.CO_SOLICITUD) 
+        LEFT JOIN tb026_solicitud ON (tb052_compras.CO_SOLICITUD=tb026_solicitud.CO_SOLICITUD) 
         LEFT JOIN tb008_proveedor ON (tb026_solicitud.CO_PROVEEDOR=tb008_proveedor.CO_PROVEEDOR) 
         LEFT JOIN tb007_documento ON (tb008_proveedor.CO_DOCUMENTO=tb007_documento.CO_DOCUMENTO) 
         WHERE tb087_presupuesto_movimiento.CO_PARTIDA=".$_GET['partida']."

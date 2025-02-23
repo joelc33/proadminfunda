@@ -210,7 +210,7 @@ class MovimientoActions extends sfActions
             $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(1,4,17),Criteria::IN);
         }else{
           if($co_tipo_movimiento == 2){
-          $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(1,17),Criteria::IN);   
+          $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(2,17),Criteria::IN);   
           }else{
           $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,$co_tipo_movimiento);   
           }  
@@ -225,6 +225,7 @@ class MovimientoActions extends sfActions
         $c->add(Tb013AnioFiscalPeer::CO_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
         
         $c->addAscendingOrderByColumn(Tb052ComprasPeer::CO_SOLICITUD);
+        $c->addAscendingOrderByColumn(Tb087PresupuestoMovimientoPeer::CREATED_AT);
         
         $cantidadTotal = Tb087PresupuestoMovimientoPeer::doCount($c);
         $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);

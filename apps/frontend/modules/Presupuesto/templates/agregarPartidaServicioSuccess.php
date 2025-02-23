@@ -159,7 +159,9 @@
             this.mo_pagar = new Ext.form.TextField({
                 fieldLabel: 'Monto Asigancion',
                 name: 'mo_pagar',
-                width: 500
+                width: 500,
+                value: this.OBJ.monto,
+                readOnly: true
             });
 
             this.guardar = new Ext.Button({
@@ -171,6 +173,12 @@
                         Ext.Msg.alert("Alerta", "Debe ingresar los campos en rojo");
                         return false;
                     }
+                    
+                    if (parseFloat(cambiarPartida.main.mo_disponible2.getValue())<parseFloat(cambiarPartida.main.mo_pagar.getValue())) {
+                        Ext.Msg.alert("Alerta", "El Monto Disponible de la partida es menor al monto total");
+                        return false;
+                    }                    
+                    
                     cambiarPartida.main.formPanel_.getForm().submit({
                         method: 'POST',
                         url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/guardarCambioServicio',
@@ -242,7 +250,7 @@
                     this.co_detalle_compra,
                     this.co_fuente_financiamiento,
                     this.co_solicitud,
-                    this.monto
+                    this.mo_disponible2
                 ]
             });
 

@@ -245,16 +245,17 @@ class PresupuestoActions extends sfActions
     {
 
         $co_solicitud = $this->getRequestParameter("co_solicitud");
-        $tx_concepto = $this->getRequestParameter("tx_concepto");
-
-
+        $tx_concepto = $this->getRequestParameter("tx_concepto");        
+        list($dia, $mes, $anio ) = explode("/", $this->getRequestParameter("fecha"));
+        $fecha_odp = $anio.'-'.$mes.'-'.$dia;
+        
         $con = Propel::getConnection();
         try {
             $con->beginTransaction();
 
 
 
-            $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'));
+            $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'),null,$fecha_odp);
 
             //          echo "odp=".$co_odp; exit();
 
@@ -298,7 +299,7 @@ class PresupuestoActions extends sfActions
             $con->rollback();
             $this->data = json_encode(array(
                 "success" => false,
-                "msg" =>  "Ocurri un error al Generar la Orden de Pago"
+                "msg" =>  "Ocurrio un error al Generar la Orden de Pago"
             ));
         }
     }
@@ -1001,11 +1002,12 @@ class PresupuestoActions extends sfActions
 
     public function executeAsignarPartidaServicio(sfWebRequest $request)
     {
-        $codigo =  $this->getRequestParameter("co_factura");
+        $codigo =  $this->getRequestParameter("co_solicitud");
 
         $c = new Criteria();
         $c->clearSelectColumns();
         $c->addSelectColumn(Tb045FacturaPeer::CO_SOLICITUD);
+        $c->addSelectColumn(Tb045FacturaPeer::CO_FACTURA);
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
@@ -1014,7 +1016,7 @@ class PresupuestoActions extends sfActions
         $c->addJoin(Tb007DocumentoPeer::CO_DOCUMENTO, Tb008ProveedorPeer::CO_DOCUMENTO);
         $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR,  Tb045FacturaPeer::CO_PROVEEDOR);
         //$c->addJoin(Tb048ProductoPeer::CO_PRODUCTO, Tb045FacturaPeer::ID_TB048_PRODUCTO);
-        $c->add(Tb045FacturaPeer::CO_FACTURA, $codigo);
+        $c->add(Tb045FacturaPeer::CO_SOLICITUD, $codigo);
 
         $stmt = Tb045FacturaPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -1030,7 +1032,7 @@ class PresupuestoActions extends sfActions
         $datos_compra          = $this->getCoCompras($campos["co_solicitud"]);
         $campos["co_compras"]  = $datos_compra["co_compras"];
         $campos["co_ejecutor"] = $datos_compra["co_ejecutor"];
-        $campos["co_factura"]  = $codigo;
+        $campos["co_factura"]  = $campos["co_factura"];
 
         $datos_detalle = $this->getDetallesCompra($campos["co_compras"]);
         $campos["co_partida"] = $datos_detalle["co_partida"];
@@ -2058,7 +2060,7 @@ class PresupuestoActions extends sfActions
         $co_compras        = $this->getRequestParameter("co_compras");
         $co_ejecutor       = $this->getRequestParameter("co_ejecutor");
         $co_solicitud      = $this->getRequestParameter("co_solicitud");
-        $mo_disponible      = $this->getRequestParameter("mo_disponible");
+        $mo_disponible      = $this->getRequestParameter("mo_disponible2");
         $co_fuente_financiamiento  = $this->getRequestParameter("co_fuente_financiamiento");
 
 
@@ -3458,7 +3460,7 @@ class PresupuestoActions extends sfActions
 
             $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
             $tb087_presupuesto_movimiento->setCoPartida($tb207_detalle_cotizacion->getCoPresupuesto())
-                ->setCoTipoMovimiento(4)
+                ->setCoTipoMovimiento(16)
                 ->setNuMonto($monto)
                 //->setNuAnio(date('Y'))
                 ->setNuAnio($this->getUser()->getAttribute('ejercicio'))

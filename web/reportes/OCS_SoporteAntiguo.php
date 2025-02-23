@@ -194,12 +194,12 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->newFlowingBlock(90, 5, '', 'R');
         $this->SetFont('Times', 'B', 8);
         if($this->datos['in_contrato']=='t'){
-        $this->WriteFlowingBlock(utf8_decode('N° CONTRATO ').': '.$this->datos['numero_compra'].$this->datos['in_contrato']);
+        $this->WriteFlowingBlock(utf8_decode('CONTRATO N° ').': '.$this->datos['numero_compra']);
         }else{
         if($this->datos['co_tipo_solicitud']==1){
-        $this->WriteFlowingBlock(utf8_decode('N° COMPRA ').': '.$this->datos['numero_compra']);    
+        $this->WriteFlowingBlock(utf8_decode('ORDEN DE COMPRA ').': '.$this->datos['numero_compra']);    
         }else{    
-        $this->WriteFlowingBlock(utf8_decode('N° SERVICIO ').': '.$this->datos['numero_compra']);  
+        $this->WriteFlowingBlock(utf8_decode('CONTRATO N ').': '.$this->datos['numero_compra']);  
         }
         }
         $this->finishFlowingBlock();
