@@ -706,7 +706,7 @@
 
                 Ext.Ajax.request({
                     method: 'POST',
-                    url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/eliminarAsignacion',
+                    url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/eliminarAsignacionPrincipal',
                     params: {
                         co_compras: co_compras
                     },

@@ -29,8 +29,8 @@ class CompromisoAsignacionActions extends sfActions
     public function executeAgregarAsignacion(sfWebRequest $request)
     {
         $this->data = json_encode(array(
-            "co_compras"        => $this->getRequestParameter("co_compras"),
-            "tx_descripcion"    => $this->getRequestParameter("tx_descripcion")
+            "co_compras" => $this->getRequestParameter("co_compras"),
+            "tx_descripcion" => $this->getRequestParameter("tx_descripcion")
         ));
     }
 
@@ -63,31 +63,31 @@ class CompromisoAsignacionActions extends sfActions
             $stmt = Tb146CompromisoAsignacionPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->data = json_encode(array(
-                "co_compromiso_asignacion"     => $campos["co_compromiso_asignacion"],
-                "co_proveedor"                 => $campos["co_proveedor"],
-                "tx_descripcion"               => $campos["tx_descripcion"],
-                "nu_cancelacion"               => $campos["numero_compra"],
-                "fe_compromiso"                => $campos["fe_compromiso"],
-                "nu_monto"                     => $campos["nu_monto"],
-                "co_solicitud"                 => $codigo,
-                "co_ejecutor"                  => $campos["co_ejecutor"],
-                "co_compras"                   => $campos["co_compras"],
-                "tx_razon_social"              => $campos["tx_razon_social"],
-                "tx_rif"                       => $campos["tx_rif"],
-                "tx_direccion"                 => $campos["tx_direccion"],
-                "co_documento"                 => $campos["co_documento"],
-                "co_tipo_solicitud"            => $campos["co_tipo_solicitud"]
+                "co_compromiso_asignacion" => $campos["co_compromiso_asignacion"],
+                "co_proveedor" => $campos["co_proveedor"],
+                "tx_descripcion" => $campos["tx_descripcion"],
+                "nu_cancelacion" => $campos["numero_compra"],
+                "fe_compromiso" => $campos["fe_compromiso"],
+                "nu_monto" => $campos["nu_monto"],
+                "co_solicitud" => $codigo,
+                "co_ejecutor" => $campos["co_ejecutor"],
+                "co_compras" => $campos["co_compras"],
+                "tx_razon_social" => $campos["tx_razon_social"],
+                "tx_rif" => $campos["tx_rif"],
+                "tx_direccion" => $campos["tx_direccion"],
+                "co_documento" => $campos["co_documento"],
+                "co_tipo_solicitud" => $campos["co_tipo_solicitud"]
             ));
         } else {
             $this->data = json_encode(array(
-                "co_compromiso_asignacion"     => "",
-                "co_proveedor"                 => "",
-                "tx_descripcion"               => "",
-                "nu_cancelacion"               => "Por Asignar",
-                "fe_compromiso"                => "",
-                "nu_monto"                     => "",
-                "co_compras"                   => "",
-                "co_solicitud"                 => $this->getRequestParameter("co_solicitud")
+                "co_compromiso_asignacion" => "",
+                "co_proveedor" => "",
+                "tx_descripcion" => "",
+                "nu_cancelacion" => "Por Asignar",
+                "fe_compromiso" => "",
+                "nu_monto" => "",
+                "co_compras" => "",
+                "co_solicitud" => $this->getRequestParameter("co_solicitud")
             ));
         }
     }
@@ -113,30 +113,30 @@ class CompromisoAsignacionActions extends sfActions
             $stmt = Tb146CompromisoAsignacionPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->data = json_encode(array(
-                "co_compromiso_asignacion"     => $campos["co_compromiso_asignacion"],
-                "co_proveedor"                 => $campos["co_proveedor"],
-                "tx_descripcion"               => $campos["tx_observacion"],
-                "nu_cancelacion"               => $campos["numero_compra"],
-                "fe_compromiso"                => $campos["fe_compromiso"],
-                "nu_monto"                     => $campos["nu_monto"],
-                "co_solicitud"                 => $codigo,
-                "co_ejecutor"                  => $campos["co_ejecutor"],
-                "co_compras"                   => $campos["co_compras"],
-                "tx_razon_social"              => $campos["tx_razon_social"],
-                "tx_rif"                       => $campos["tx_rif"],
-                "tx_direccion"                 => $campos["tx_direccion"],
-                "co_documento"                 => $campos["co_documento"],
-                "co_tipo_solicitud"            => $campos["co_tipo_solicitud"]
+                "co_compromiso_asignacion" => $campos["co_compromiso_asignacion"],
+                "co_proveedor" => $campos["co_proveedor"],
+                "tx_descripcion" => $campos["tx_observacion"],
+                "nu_cancelacion" => $campos["numero_compra"],
+                "fe_compromiso" => $campos["fe_compromiso"],
+                "nu_monto" => $campos["nu_monto"],
+                "co_solicitud" => $codigo,
+                "co_ejecutor" => $campos["co_ejecutor"],
+                "co_compras" => $campos["co_compras"],
+                "tx_razon_social" => $campos["tx_razon_social"],
+                "tx_rif" => $campos["tx_rif"],
+                "tx_direccion" => $campos["tx_direccion"],
+                "co_documento" => $campos["co_documento"],
+                "co_tipo_solicitud" => $campos["co_tipo_solicitud"]
             ));
         } else {
             $this->data = json_encode(array(
-                "co_compromiso_asignacion"     => "",
-                "co_proveedor"                 => "",
-                "tx_descripcion"               => "",
-                "nu_cancelacion"               => "Por Asignar",
-                "fe_compromiso"                => "",
-                "nu_monto"                     => "",
-                "co_solicitud"                 => ""
+                "co_compromiso_asignacion" => "",
+                "co_proveedor" => "",
+                "tx_descripcion" => "",
+                "nu_cancelacion" => "Por Asignar",
+                "fe_compromiso" => "",
+                "nu_monto" => "",
+                "co_solicitud" => ""
             ));
         }
     }
@@ -228,7 +228,7 @@ class CompromisoAsignacionActions extends sfActions
             $c->addSelectColumn(Tb060OrdenPagoPeer::CO_ORDEN_PAGO);
 
 
-            $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD, Tb060OrdenPagoPeer::CO_SOLICITUD,  Criteria::LEFT_JOIN);
+            $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD, Tb060OrdenPagoPeer::CO_SOLICITUD, Criteria::LEFT_JOIN);
             $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
             $c->addJoin(Tb146CompromisoAsignacionPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD);
             $c->addJoin(Tb146CompromisoAsignacionPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR);
@@ -237,34 +237,34 @@ class CompromisoAsignacionActions extends sfActions
             $stmt = Tb146CompromisoAsignacionPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->data = json_encode(array(
-                "co_compromiso_asignacion"     => $campos["co_compromiso_asignacion"],
-                "co_proveedor"                 => $campos["co_proveedor"],
-                "tx_descripcion"               => $campos["tx_descripcion"],
-                "nu_cancelacion"               => $campos["nu_cancelacion"],
-                "fe_compromiso"                => $campos["fe_compromiso"],
-                "nu_monto"                     => $campos["nu_monto"],
-                "co_solicitud"                 => $codigo,
-                "co_ejecutor"                  => $campos["co_ejecutor"],
-                "co_detalle_compras"           => $campos["co_detalle_compras"],
-                "co_compras"                   => $campos["co_compras"],
-                "co_presupuesto"               => $campos["co_presupuesto"],
-                "co_proyecto_ac"               => $campos["co_proyecto_ac"],
-                "co_accion_especifica"         => $campos["co_accion_especifica"],
-                "tx_razon_social"              => $campos["tx_razon_social"],
-                "tx_rif"                       => $campos["tx_rif"],
-                "tx_direccion"                 => $campos["tx_direccion"],
-                "co_documento"                 => $campos["co_documento"],
-                "co_orden_pago"                => $campos["co_orden_pago"]
+                "co_compromiso_asignacion" => $campos["co_compromiso_asignacion"],
+                "co_proveedor" => $campos["co_proveedor"],
+                "tx_descripcion" => $campos["tx_descripcion"],
+                "nu_cancelacion" => $campos["nu_cancelacion"],
+                "fe_compromiso" => $campos["fe_compromiso"],
+                "nu_monto" => $campos["nu_monto"],
+                "co_solicitud" => $codigo,
+                "co_ejecutor" => $campos["co_ejecutor"],
+                "co_detalle_compras" => $campos["co_detalle_compras"],
+                "co_compras" => $campos["co_compras"],
+                "co_presupuesto" => $campos["co_presupuesto"],
+                "co_proyecto_ac" => $campos["co_proyecto_ac"],
+                "co_accion_especifica" => $campos["co_accion_especifica"],
+                "tx_razon_social" => $campos["tx_razon_social"],
+                "tx_rif" => $campos["tx_rif"],
+                "tx_direccion" => $campos["tx_direccion"],
+                "co_documento" => $campos["co_documento"],
+                "co_orden_pago" => $campos["co_orden_pago"]
             ));
         } else {
             $this->data = json_encode(array(
-                "co_compromiso_asignacion"     => "",
-                "co_proveedor"                 => "",
-                "tx_descripcion"               => "",
-                "nu_cancelacion"               => "",
-                "fe_compromiso"                => "",
-                "nu_monto"                     => "",
-                "co_solicitud"                 => $codigo,
+                "co_compromiso_asignacion" => "",
+                "co_proveedor" => "",
+                "tx_descripcion" => "",
+                "nu_cancelacion" => "",
+                "fe_compromiso" => "",
+                "nu_monto" => "",
+                "co_solicitud" => $codigo,
             ));
         }
     }
@@ -275,14 +275,14 @@ class CompromisoAsignacionActions extends sfActions
 
         $codigo = $this->getRequestParameter("co_compromiso_asignacion");
         $tb146_compromiso_asignacionForm = $this->getRequestParameter('tb146_compromiso_asignacion');
-        $json_asignacion  = $this->getRequestParameter("json_asignacion");
+        $json_asignacion = $this->getRequestParameter("json_asignacion");
         $con = Propel::getConnection();
         $con->beginTransaction();
 
         try {
             if ($codigo != '' || $codigo != null) {
-                $tb146_compromiso_asignacion    = Tb146CompromisoAsignacionPeer::retrieveByPk($codigo);
-                $tb052_compras                  = Tb052ComprasPeer::retrieveByPk($tb146_compromiso_asignacionForm["co_compras"]);
+                $tb146_compromiso_asignacion = Tb146CompromisoAsignacionPeer::retrieveByPk($codigo);
+                $tb052_compras = Tb052ComprasPeer::retrieveByPk($tb146_compromiso_asignacionForm["co_compras"]);
             } else {
 
                 $datos_solicitud = Tb026SolicitudPeer::retrieveByPK($tb146_compromiso_asignacionForm["co_solicitud"]);
@@ -302,7 +302,7 @@ class CompromisoAsignacionActions extends sfActions
                 if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
                     $serial = $sigla . '-' . date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial($resp["co_tipo_documento"], $con, $this->getUser()->getAttribute('ejercicio'));
                 } else {
-                    $serial =  $sigla . '-' . $anio . $mes  . '-' .  Tb137ControlSerialPeer::getSerial($resp["co_tipo_documento"], $con, $this->getUser()->getAttribute('ejercicio'));
+                    $serial = $sigla . '-' . $anio . $mes . '-' . Tb137ControlSerialPeer::getSerial($resp["co_tipo_documento"], $con, $this->getUser()->getAttribute('ejercicio'));
                 }
 
                 $datos_solicitud = Tb026SolicitudPeer::retrieveByPK($tb146_compromiso_asignacionForm["co_solicitud"]);
@@ -345,16 +345,16 @@ class CompromisoAsignacionActions extends sfActions
                 } else {
                     $tb052_compras->setFechaCompra($fecha);
                 }
-             $datos_solicitud->setFeRegistro($fecha);
-            $datos_solicitud->save($con);               
-                
+                $datos_solicitud->setFeRegistro($fecha);
+                $datos_solicitud->save($con);
+
             }
 
-            $listaAsignacion  = json_decode($json_asignacion, true);
+            $listaAsignacion = json_decode($json_asignacion, true);
 
 
 
-            foreach ($listaAsignacion  as $asignacionForm) {
+            foreach ($listaAsignacion as $asignacionForm) {
 
                 if (empty($asignacionForm["co_detalle_compras"])) {
 
@@ -371,10 +371,10 @@ class CompromisoAsignacionActions extends sfActions
                     $tb053_detalle_compras->save($con);
                 }
             }
-            
 
-            
-            
+
+
+
             $c = new Criteria();
             $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
             $c->add(Tb052ComprasPeer::CO_COMPRAS, $tb052_compras->getCoCompras());
@@ -405,7 +405,7 @@ class CompromisoAsignacionActions extends sfActions
             $con->rollback();
             $this->data = json_encode(array(
                 "success" => false,
-                "msg" =>  $e->getMessage()
+                "msg" => $e->getMessage()
             ));
         }
 
@@ -433,7 +433,7 @@ class CompromisoAsignacionActions extends sfActions
             $tb053_detalle_compras->setCoAccionEspecifica($asignacionForm["co_accion"]);
             $tb053_detalle_compras->save($con);
 
-            $tb209_presupuesto_detalle_compra  = new Tb209PresupuestoDetalleCompra();
+            $tb209_presupuesto_detalle_compra = new Tb209PresupuestoDetalleCompra();
             $tb209_presupuesto_detalle_compra->setMonto($asignacionForm["mo_pagar"]);
             $tb209_presupuesto_detalle_compra->setCoUsuario($this->getUser()->getAttribute("codigo"));
             $tb209_presupuesto_detalle_compra->setCoPresupuesto($asignacionForm["co_presupuesto"]);
@@ -445,7 +445,7 @@ class CompromisoAsignacionActions extends sfActions
 
             $cs = new Criteria();
             $cs->clearSelectColumns();
-            $cs->addSelectColumn("SUM(".Tb053DetalleComprasPeer::MONTO.") as monto");
+            $cs->addSelectColumn("SUM(" . Tb053DetalleComprasPeer::MONTO . ") as monto");
             $cs->add(Tb053DetalleComprasPeer::CO_COMPRAS, $asignacionForm["co_compras"]);
             $stmts = Tb053DetalleComprasPeer::doSelectStmt($cs);
             $resp = $stmts->fetch(PDO::FETCH_ASSOC);
@@ -456,8 +456,8 @@ class CompromisoAsignacionActions extends sfActions
             $tb052_compra->setMontoTotal($monto)->save($con);
 
 
-            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 1, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras(),$tb209_presupuesto_detalle_compra->getId());
-            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 2, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras(),$tb209_presupuesto_detalle_compra->getId());
+            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 1, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras(), $tb209_presupuesto_detalle_compra->getId());
+            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 2, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras(), $tb209_presupuesto_detalle_compra->getId());
 
 
             $this->data = json_encode(array(
@@ -470,7 +470,7 @@ class CompromisoAsignacionActions extends sfActions
             $con->rollback();
             $this->data = json_encode(array(
                 "success" => false,
-                "msg" =>  $e->getMessage()
+                "msg" => $e->getMessage()
             ));
         }
 
@@ -504,11 +504,11 @@ class CompromisoAsignacionActions extends sfActions
                 $sigla = $resp["tx_sigla"];
 
                 $datos_solicitud = array(
-                    "co_tipo_solicitud"   => $tb026_solicitudForm["co_tipo_solicitud"],
-                    "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-                    "fe_solicitud"        => date("d/m/Y"),
-                    "observacion"         => $tb026_solicitudForm["tx_descripcion"],
-                    "codigo"              => $this->getUser()->getAttribute('codigo')
+                    "co_tipo_solicitud" => $tb026_solicitudForm["co_tipo_solicitud"],
+                    "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
+                    "fe_solicitud" => date("d/m/Y"),
+                    "observacion" => $tb026_solicitudForm["tx_descripcion"],
+                    "codigo" => $this->getUser()->getAttribute('codigo')
                 );
 
                 $resp = Tb026SolicitudPeer::setSolicitud($datos_solicitud, $con);
@@ -523,9 +523,9 @@ class CompromisoAsignacionActions extends sfActions
                     $ruta->setInCargarDato(true)->save($con);
                 } else {
                     $this->data = json_encode(array(
-                        "success"       => false,
-                        "co_solicitud"  => $resp["co_solicitud"],
-                        "msg"           =>  $resp["msg"]
+                        "success" => false,
+                        "co_solicitud" => $resp["co_solicitud"],
+                        "msg" => $resp["msg"]
                     ));
 
                     return;
@@ -544,7 +544,7 @@ class CompromisoAsignacionActions extends sfActions
             $con->rollback();
             $this->data = json_encode(array(
                 "success" => false,
-                "msg" =>  $e->getMessage()
+                "msg" => $e->getMessage()
             ));
         }
     }
@@ -578,12 +578,12 @@ class CompromisoAsignacionActions extends sfActions
     {
 
         $this->data = json_encode(array(
-            "co_rol"            => $this->getUser()->getAttribute('rol'),
-            "co_usuario"        => $this->getUser()->getAttribute('codigo'),
-            "in_activo"         => $this->getUser()->getAttribute('in_activo'),
+            "co_rol" => $this->getUser()->getAttribute('rol'),
+            "co_usuario" => $this->getUser()->getAttribute('codigo'),
+            "in_activo" => $this->getUser()->getAttribute('in_activo'),
             "tx_tipo_solicitud" => $this->getRequestParameter("tx_tipo_solicitud"),
             "co_tipo_solicitud" => 1,
-            "tx_url"            => $this->getRequestParameter("tx_url"),
+            "tx_url" => $this->getRequestParameter("tx_url"),
 
         ));
 
@@ -605,9 +605,9 @@ class CompromisoAsignacionActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -615,15 +615,15 @@ class CompromisoAsignacionActions extends sfActions
     public function executeStorelista(sfWebRequest $request)
     {
 
-        $limit         =   $this->getRequestParameter("limit", 15);
-        $start         =   $this->getRequestParameter("start", 0);
-        $in_ventanilla =   $this->getRequestParameter("in_ventanilla");
-        $co_proceso    =   $this->getRequestParameter("co_proceso");
-        $co_solicitud  =   $this->getRequestParameter("co_solicitud");
+        $limit = $this->getRequestParameter("limit", 15);
+        $start = $this->getRequestParameter("start", 0);
+        $in_ventanilla = $this->getRequestParameter("in_ventanilla");
+        $co_proceso = $this->getRequestParameter("co_proceso");
+        $co_solicitud = $this->getRequestParameter("co_solicitud");
 
-        $co_documento     =   $this->getRequestParameter("co_documento");
-        $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
-        $tx_razon_social  =   $this->getRequestParameter("tx_razon_social");
+        $co_documento = $this->getRequestParameter("co_documento");
+        $nu_cedula_rif = $this->getRequestParameter("nu_cedula_rif");
+        $tx_razon_social = $this->getRequestParameter("tx_razon_social");
 
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -650,7 +650,7 @@ class CompromisoAsignacionActions extends sfActions
         if ($in_ventanilla == 'true') {
             $c->add(Tb030RutaPeer::NU_ORDEN, 1);
         } else {
-            $c->add(Tb030RutaPeer::NU_ORDEN, 1,  Criteria::GREATER_THAN);
+            $c->add(Tb030RutaPeer::NU_ORDEN, 1, Criteria::GREATER_THAN);
 
             if ($co_proceso != '') {
                 $c->add(Tb028ProcesoPeer::CO_PROCESO, $co_proceso);
@@ -687,13 +687,13 @@ class CompromisoAsignacionActions extends sfActions
         $c->addSelectColumn(Tb030RutaPeer::TX_RUTA_REPORTE);
 
         // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR,   Criteria::LEFT_JOIN);
-        $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO,  Tb007DocumentoPeer::CO_DOCUMENTO,   Criteria::LEFT_JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR, Criteria::LEFT_JOIN);
+        $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO, Criteria::LEFT_JOIN);
         // $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb060OrdenPagoPeer::CO_SOLICITUD,   Criteria::LEFT_JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD,  Criteria::JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD,  Criteria::JOIN);
-        $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO,   Criteria::JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD, Criteria::JOIN);
+        $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO, Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO, Criteria::JOIN);
         //  $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD,  Criteria::JOIN);
 
         $c->addAnd(Tb027TipoSolicitudPeer::CO_PROCESO, 68);
@@ -723,28 +723,28 @@ class CompromisoAsignacionActions extends sfActions
 
             list($anio, $mes, $dia) = explode('-', $res["fe_registro"]);
             $registros[] = array(
-                "tx_proceso"        => trim($res["tx_proceso"]),
-                "tx_observacion"       => strtoupper(trim($res["tx_observacion"])),
-                "co_proceso"        => trim($res["co_proceso"]),
-                "numero_compra"        => trim($res["numero_compra"]),
+                "tx_proceso" => trim($res["tx_proceso"]),
+                "tx_observacion" => strtoupper(trim($res["tx_observacion"])),
+                "co_proceso" => trim($res["co_proceso"]),
+                "numero_compra" => trim($res["numero_compra"]),
                 "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
                 "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
-                "co_solicitud"      => trim($res["co_solicitud"]),
-                "tx_login"          => trim($res["tx_login"]),
-                "tx_serial"         => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
-                "in_reporte"        => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
-                "co_ruta"           => $encrip->encrypt($res["co_ruta"]),
-                "tx_rif"            => $tx_rif,
-                "tx_razon_social"   => $tx_razon_social,
-                "fe_creacion"       => $dia . '-' . $mes . '-' . $anio,
-                "cant_revision"     => $cantidad
+                "co_solicitud" => trim($res["co_solicitud"]),
+                "tx_login" => trim($res["tx_login"]),
+                "tx_serial" => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
+                "in_reporte" => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
+                "co_ruta" => $encrip->encrypt($res["co_ruta"]),
+                "tx_rif" => $tx_rif,
+                "tx_razon_social" => $tx_razon_social,
+                "fe_creacion" => $dia . '-' . $mes . '-' . $anio,
+                "cant_revision" => $cantidad
             );
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  $cantidadTotal,
-            "data"      =>  $registros
+            "success" => true,
+            "total" => $cantidadTotal,
+            "data" => $registros
         ));
     }
 
@@ -760,9 +760,9 @@ class CompromisoAsignacionActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -777,9 +777,9 @@ class CompromisoAsignacionActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -810,17 +810,17 @@ class CompromisoAsignacionActions extends sfActions
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $registros[] = array(
-                "co_detalle_compras"     => trim($reg["co_detalle_compras"]),
-                "tx_ejecutor"     => trim($reg["nu_ejecutor"]) . ' - ' . trim($reg["de_ejecutor"]),
-                "tx_proyecto"     => trim($reg["nu_proyecto_ac"]) . ' - ' . trim($reg["de_proyecto_ac"]),
-                "tx_partida"     => trim($reg["nu_partida"]) . ' - ' . trim($reg["de_partida"]),
-                "monto"     => trim($reg["monto"]),
+                "co_detalle_compras" => trim($reg["co_detalle_compras"]),
+                "tx_ejecutor" => trim($reg["nu_ejecutor"]) . ' - ' . trim($reg["de_ejecutor"]),
+                "tx_proyecto" => trim($reg["nu_proyecto_ac"]) . ' - ' . trim($reg["de_proyecto_ac"]),
+                "tx_partida" => trim($reg["nu_partida"]) . ' - ' . trim($reg["de_partida"]),
+                "monto" => trim($reg["monto"]),
             );
         }
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
 
         $this->setTemplate('store');
@@ -843,17 +843,17 @@ class CompromisoAsignacionActions extends sfActions
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $registros[] = array(
-                "co_compras"     => trim($reg["co_compras"]),
+                "co_compras" => trim($reg["co_compras"]),
                 "tx_observacion" => trim($reg["tx_observacion"]),
-                "fecha_compra"   => trim($reg["fecha_compra"]),
-                "numero_compra"  => trim($reg["numero_compra"]),
-                "monto_total"    => trim($reg["monto_total"]),
+                "fecha_compra" => trim($reg["fecha_compra"]),
+                "numero_compra" => trim($reg["numero_compra"]),
+                "monto_total" => trim($reg["monto_total"]),
             );
         }
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
 
         $this->setTemplate('store');
@@ -914,6 +914,56 @@ class CompromisoAsignacionActions extends sfActions
         $this->setTemplate('eliminar');
     }*/
 
+    public function executeEliminarAsignacionPrincipal(sfWebRequest $request)
+    {
+
+        $codigo = $this->getRequestParameter("co_compras");
+
+        $con = Propel::getConnection();
+        try {
+            $con->beginTransaction();
+
+            $datos_compra = Tb052ComprasPeer::retrieveByPK($codigo);
+            $co_solicitud = $datos_compra->getCoSolicitud();
+
+            $wheredpc = new Criteria();
+            $wheredpc->addJoin(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+            $wheredpc->add(Tb053DetalleComprasPeer::CO_COMPRAS, $codigo, Criteria::EQUAL);
+            Tb209PresupuestoDetalleCompraPeer::doDelete($wheredpc, $con);
+
+            $wheredc = new Criteria();
+            $wheredc->add(Tb053DetalleComprasPeer::CO_COMPRAS, $codigo, Criteria::EQUAL);
+            BasePeer::doDelete($wheredc, $con);
+
+            $wherecc = new Criteria();
+            $wherecc->add(Tb146CompromisoAsignacionPeer::CO_COMPRAS, $codigo, Criteria::EQUAL);
+            BasePeer::doDelete($wherecc, $con);
+
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
+
+            if ($cant > 0) {
+                $ruta->setInCargarDato(true)->save($con);
+            } else {
+                $ruta->setInCargarDato(false)->save($con);
+            }
+
+
+            $this->data = json_encode(array(
+                "success" => true,
+                "msg" => 'Registro Borrado con exito!'
+            ));
+
+
+            $con->commit();
+        } catch (PropelException $e) {
+            $con->rollback();
+            $this->data = json_encode(array(
+                "success" => false,
+                //		    "msg" =>  $e->getMessage()
+                "msg" => 'Este registro no se puede borrar'
+            ));
+        }
+    }
     public function executeEliminarAsignacion(sfWebRequest $request)
     {
 
