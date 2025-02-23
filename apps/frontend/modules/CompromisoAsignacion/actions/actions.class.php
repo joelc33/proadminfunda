@@ -433,8 +433,31 @@ class CompromisoAsignacionActions extends sfActions
             $tb053_detalle_compras->setCoAccionEspecifica($asignacionForm["co_accion"]);
             $tb053_detalle_compras->save($con);
 
-            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 1, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras());
-            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 2, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras());
+            $tb209_presupuesto_detalle_compra  = new Tb209PresupuestoDetalleCompra();
+            $tb209_presupuesto_detalle_compra->setMonto($asignacionForm["mo_pagar"]);
+            $tb209_presupuesto_detalle_compra->setCoUsuario($this->getUser()->getAttribute("codigo"));
+            $tb209_presupuesto_detalle_compra->setCoPresupuesto($asignacionForm["co_presupuesto"]);
+            $tb209_presupuesto_detalle_compra->setCoProyectoAc($asignacionForm["co_proyecto"]);
+            $tb209_presupuesto_detalle_compra->setCoAccionEspecifica($asignacionForm["co_accion"]);
+            $tb209_presupuesto_detalle_compra->setCoDetalleCompra($tb053_detalle_compras->getCoDetalleCompras());
+            $tb209_presupuesto_detalle_compra->save($con);
+
+
+            $cs = new Criteria();
+            $cs->clearSelectColumns();
+            $cs->addSelectColumn("SUM(".Tb053DetalleComprasPeer::MONTO.") as monto");
+            $cs->add(Tb053DetalleComprasPeer::CO_COMPRAS, $asignacionForm["co_compras"]);
+            $stmts = Tb053DetalleComprasPeer::doSelectStmt($cs);
+            $resp = $stmts->fetch(PDO::FETCH_ASSOC);
+
+            $monto = $resp["monto"];
+
+            $tb052_compra = Tb052ComprasPeer::retrieveByPK($asignacionForm["co_compras"]);
+            $tb052_compra->setMontoTotal($monto)->save($con);
+
+
+            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 1, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras(),$tb209_presupuesto_detalle_compra->getId());
+            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 2, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras(),$tb209_presupuesto_detalle_compra->getId());
 
 
             $this->data = json_encode(array(
@@ -894,11 +917,14 @@ class CompromisoAsignacionActions extends sfActions
     public function executeEliminarAsignacion(sfWebRequest $request)
     {
 
-        $codigo = $this->getRequestParameter("co_compras");
+        $co_detalle_compra = $this->getRequestParameter("co_detalle_compras");
 
         $con = Propel::getConnection();
         try {
             $con->beginTransaction();
+
+            $datos_detalle_compra = Tb053DetalleComprasPeer::retrieveByPK($co_detalle_compra);
+            $codigo = $datos_detalle_compra->getCoCompras();
 
             $datos_compra = Tb052ComprasPeer::retrieveByPK($codigo);
             $co_solicitud = $datos_compra->getCoSolicitud();
@@ -907,17 +933,22 @@ class CompromisoAsignacionActions extends sfActions
             $wheredc->add(Tb053DetalleComprasPeer::CO_COMPRAS, $codigo, Criteria::EQUAL);
             BasePeer::doDelete($wheredc, $con);
 
+            $wheredpc = new Criteria();
+            $wheredpc->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, $co_detalle_compra, Criteria::EQUAL);
+            BasePeer::doDelete($wheredpc, $con);
+
             $wherecc = new Criteria();
             $wherecc->add(Tb146CompromisoAsignacionPeer::CO_COMPRAS, $codigo, Criteria::EQUAL);
             BasePeer::doDelete($wherecc, $con);
 
+            /*
             $wherec = new Criteria();
             $wherec->add(Tb052ComprasPeer::CO_COMPRAS, $codigo, Criteria::EQUAL);
             BasePeer::doDelete($wherec, $con);
 
-            $c = new Criteria();
+            /*$c = new Criteria();
             $c->add(Tb052ComprasPeer::CO_SOLICITUD,  $co_solicitud);
-            $cant = Tb052ComprasPeer::doCount($c);
+            $cant = Tb052ComprasPeer::doCount($c);*/
 
             // $Tb052Compra = Tb052ComprasPeer::retrieveByPk($co_compras);
 

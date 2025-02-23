@@ -1,7 +1,7 @@
 <script type="text/javascript">
     Ext.ns("listaAsignacion");
     listaAsignacion.main = {
-        init: function() {
+        init: function () {
 
             this.OBJ = paqueteComunJS.funcion.doJSON({
                 stringData: '<?php echo $data ?>'
@@ -45,7 +45,7 @@
                 width: 600,
                 allowBlank: false,
                 listeners: {
-                    select: function() {
+                    select: function () {
                         listaAsignacion.main.storeCO_PROYECTO.load({
                             params: {
                                 co_ejecutor: this.getValue()
@@ -75,7 +75,7 @@
             });
 
 
-            this.co_proyecto.on('select', function(cmb, record, index) {
+            this.co_proyecto.on('select', function (cmb, record, index) {
                 listaAsignacion.main.co_accion.clearValue();
                 listaAsignacion.main.storeCO_ACCION.load({
                     params: {
@@ -100,7 +100,7 @@
                 width: 600,
                 allowBlank: false,
                 listeners: {
-                    select: function() {
+                    select: function () {
                         listaAsignacion.main.storeCO_PARTIDA.baseParams.co_accion = this.getValue();
                         //listaAsignacion.main.storeCO_PARTIDA.baseParams.co_clase_producto = listaAsignacion.main.OBJ.co_clase_producto;                
                         listaAsignacion.main.storeCO_PARTIDA.load();
@@ -123,7 +123,7 @@
                 width: 600,
                 allowBlank: false,
                 listeners: {
-                    select: function() {
+                    select: function () {
                         listaAsignacion.main.cargarDisponible();
                     }
                 }
@@ -146,7 +146,7 @@
             this.guardar = new Ext.Button({
                 text: 'Agregar',
                 iconCls: 'icon-guardar',
-                handler: function() {
+                handler: function () {
 
                     if (!listaAsignacion.main.formPanel_.getForm().isValid()) {
                         Ext.Msg.alert("Alerta", "Debe ingresar los campos en rojo");
@@ -194,10 +194,10 @@
                         url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/guardarPartidaAsignacion',
                         waitMsg: 'Enviando datos, por favor espere..',
                         waitTitle: 'Enviando',
-                        failure: function(form, action) {
+                        failure: function (form, action) {
                             Ext.MessageBox.alert('Error en transacción', action.result.msg);
                         },
-                        success: function(form, action) {
+                        success: function (form, action) {
                             if (action.result.success) {
                                 Ext.MessageBox.show({
                                     title: 'Mensaje',
@@ -211,7 +211,7 @@
                             }
                             agregarCompromiso.main.store_lista.baseParams.co_compras = listaAsignacion.main.OBJ.co_compras;
                             agregarCompromiso.main.store_lista.load({
-                                callback: function() {
+                                callback: function () {
                                     agregarCompromiso.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
                                         store: agregarCompromiso.main.store_lista,
                                         campo: 'monto'
@@ -221,6 +221,19 @@
                                     agregarCompromiso.main.mo_total.setValue(agregarCompromiso.main.total);
 
 
+                                }
+                            });
+
+                            CompromisoAsignacionEditar.main.store_lista.baseParams.co_solicitud = CompromisoAsignacionEditar.main.OBJ.co_solicitud;
+                            CompromisoAsignacionEditar.main.store_lista.load({
+                                callback: function () {
+                                    CompromisoAsignacionEditar.main.total = paqueteComunJS.funcion.getSumaColumnaGrid({
+                                        store: CompromisoAsignacionEditar.main.store_lista,
+                                        campo: 'monto_total'
+                                    });
+
+                                    CompromisoAsignacionEditar.main.monto_total.setValue("<span style='font-size:12px;'><b>Monto Total: </b>" + parseFloat(CompromisoAsignacionEditar.main.total) + "</b></span>");
+                                    CompromisoAsignacionEditar.main.mo_total.setValue(CompromisoAsignacionEditar.main.total);
                                 }
                             });
                             listaAsignacion.main.winformPanel_.close();
@@ -234,7 +247,7 @@
             this.salir = new Ext.Button({
                 text: 'Salir',
                 //    iconCls: 'icon-cancelar',
-                handler: function() {
+                handler: function () {
                     listaAsignacion.main.winformPanel_.close();
                 }
             });
@@ -276,88 +289,88 @@
             });
             this.winformPanel_.show();
         },
-        getStoreCO_PARTIDA: function() {
+        getStoreCO_PARTIDA: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/storefkcopartida',
                 root: 'data',
                 fields: [{
-                        name: 'id'
-                    },
-                    {
-                        name: 'mo_disponible'
-                    },
-                    {
-                        name: 'de_partida',
-                        convert: function(v, r) {
-                            return r.nu_partida + ' - ' + r.de_partida;
-                        }
+                    name: 'id'
+                },
+                {
+                    name: 'mo_disponible'
+                },
+                {
+                    name: 'de_partida',
+                    convert: function (v, r) {
+                        return r.nu_partida + ' - ' + r.de_partida;
                     }
+                }
                 ]
             });
             return this.store;
         },
-        getStoreCO_PROYECTO: function() {
+        getStoreCO_PROYECTO: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcoproyecto',
                 root: 'data',
                 fields: [{
-                        name: 'id'
-                    },
-                    {
-                        name: 'de_proyecto_ac',
-                        convert: function(v, r) {
-                            return r.nu_proyecto_ac + ' - ' + r.de_proyecto_ac;
-                        }
+                    name: 'id'
+                },
+                {
+                    name: 'de_proyecto_ac',
+                    convert: function (v, r) {
+                        return r.nu_proyecto_ac + ' - ' + r.de_proyecto_ac;
                     }
+                }
                 ]
             });
             return this.store;
         },
-        getStoreCO_EJECUTOR: function() {
+        getStoreCO_EJECUTOR: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/storefkcoejecutororgano',
                 root: 'data',
                 fields: [{
-                        name: 'id'
-                    },
-                    {
-                        name: 'de_ejecutor'
-                    },
-                    {
-                        name: 'ejecutor',
-                        convert: function(v, r) {
-                            return r.nu_ejecutor + ' - ' + r.de_ejecutor;
-                        }
+                    name: 'id'
+                },
+                {
+                    name: 'de_ejecutor'
+                },
+                {
+                    name: 'ejecutor',
+                    convert: function (v, r) {
+                        return r.nu_ejecutor + ' - ' + r.de_ejecutor;
                     }
+                }
                 ]
             });
             return this.store;
         },
-        getStoreCO_ACCION: function() {
+        getStoreCO_ACCION: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcoaccion',
                 root: 'data',
                 fields: [{
-                        name: 'id'
-                    },
-                    {
-                        name: 'accion_especifica',
-                        convert: function(v, r) {
-                            return r.nu_accion_especifica + ' - ' + r.de_accion_especifica;
-                        }
+                    name: 'id'
+                },
+                {
+                    name: 'accion_especifica',
+                    convert: function (v, r) {
+                        return r.nu_accion_especifica + ' - ' + r.de_accion_especifica;
                     }
+                }
                 ]
             });
             return this.store;
         },
-        cargarDisponible: function() {
+        cargarDisponible: function () {
             Ext.Ajax.request({
                 method: 'GET',
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/cargarDisponible',
                 params: {
                     co_partida: listaAsignacion.main.co_partida.getValue()
                 },
-                success: function(result, request) {
+                success: function (result, request) {
                     obj = Ext.util.JSON.decode(result.responseText);
                     listaAsignacion.main.mo_disponible.setValue(paqueteComunJS.funcion.getNumeroFormateado(obj.data.mo_disponible));
                     listaAsignacion.main.mo_disponible2.setValue(obj.data.mo_disponible);
