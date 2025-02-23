@@ -748,7 +748,7 @@ class SolicitudActions extends sfActions
 
                 if($Tb030Ruta->getCoTipoSolicitud() == 22 && $Tb030Ruta->getCoProceso() == 28){
 
-                    Tb087PresupuestoMovimientoPeer::afectarPartidas($con,$ejercicio,$co_usuario,$co_ruta);
+                 //   Tb087PresupuestoMovimientoPeer::afectarPartidas($con,$ejercicio,$co_usuario,$co_ruta);
                    
                 }
 
