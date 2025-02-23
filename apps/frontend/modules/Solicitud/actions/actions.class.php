@@ -398,7 +398,8 @@ class SolicitudActions extends sfActions
                             16,
                             $cotizacion["monto"],
                             $cotizacion["co_detalle_cotizacion"],
-                            ''
+                            '',
+                            $cotizacion["id"]
                         );
                     }
 
@@ -417,7 +418,8 @@ class SolicitudActions extends sfActions
                             1,
                             $detalle_compra["monto"],
                             '',
-                            $detalle_compra["co_detalle_compra"]
+                            $detalle_compra["co_detalle_compra"],
+                            $detalle_compra["id"]
                         );
                     }
                 }
