@@ -939,6 +939,9 @@ class CompromisoAsignacionActions extends sfActions
             $wherecc->add(Tb146CompromisoAsignacionPeer::CO_COMPRAS, $codigo, Criteria::EQUAL);
             BasePeer::doDelete($wherecc, $con);
 
+            $compra = Tb052ComprasPeer::retrieveByPK($codigo);
+            $compra->delete($con);
+
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
 
             if ($cant > 0) {
