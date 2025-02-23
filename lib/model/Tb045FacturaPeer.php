@@ -110,7 +110,7 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                         ->setCoFactura($campos["co_factura"])
                         ->setCoUsuario($co_usuario)
                         ->setCoDetalleCompra($res["co_detalle_compra"])
-                        ->setCoPresupuestoDetalleCompra($res["co_presupuesto_detalle_compra"])
+                        ->setCoPresupuestoDetalleCompra($resdc["id"])
                         ->setInActivo(true)
                         ->save($con);
                     //    }
