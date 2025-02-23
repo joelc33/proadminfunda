@@ -19,12 +19,12 @@ class SolicitudActions extends sfActions
     {
 
         $this->data = json_encode(array(
-            "co_rol"            => $this->getUser()->getAttribute('rol'),
-            "co_usuario"        => $this->getUser()->getAttribute('codigo'),
-            "in_activo"         => $this->getUser()->getAttribute('in_activo'),
+            "co_rol" => $this->getUser()->getAttribute('rol'),
+            "co_usuario" => $this->getUser()->getAttribute('codigo'),
+            "in_activo" => $this->getUser()->getAttribute('in_activo'),
             "tx_tipo_solicitud" => $this->getRequestParameter("tx_tipo_solicitud"),
             "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
-            "tx_url"            => $this->getRequestParameter("tx_url"),
+            "tx_url" => $this->getRequestParameter("tx_url"),
 
         ));
 
@@ -55,10 +55,10 @@ class SolicitudActions extends sfActions
         $co_ruta = $this->getRequestParameter("co_ruta");
 
         $this->data = json_encode(array(
-            "co_solicitud"      => $co_solicitud,
-            "estado"            => $estado,
+            "co_solicitud" => $co_solicitud,
+            "estado" => $estado,
             "co_tipo_solicitud" => $tipo,
-            "co_ruta"           => $co_ruta
+            "co_ruta" => $co_ruta
         ));
     }
 
@@ -89,7 +89,7 @@ class SolicitudActions extends sfActions
                 } else {
                     $this->data = json_encode(array(
                         "success" => false,
-                        "co_solicitud_enlace" =>  $co_solicitud_enlace,
+                        "co_solicitud_enlace" => $co_solicitud_enlace,
                         "tipo_imagen" => $_FILES['form-file']['type'],
                         "tipo_pdf" => $_FILES['form-pdf']['type'],
                         "msg" => 'La imagen debe ser un archivo  *.jpg'
@@ -116,7 +116,7 @@ class SolicitudActions extends sfActions
             $con->rollback();
             $this->data = json_encode(array(
                 "success" => false,
-                "msg" =>  $e->getMessage()
+                "msg" => $e->getMessage()
             ));
         }
 
@@ -182,14 +182,14 @@ class SolicitudActions extends sfActions
             $this->data = json_encode(array(
                 "success" => true,
                 "co_solicitud" => $co_solicitud,
-                "co_solicitud_enlace" =>  $co_solicitud_enlace,
+                "co_solicitud_enlace" => $co_solicitud_enlace,
                 "msg" => 'El documento se guardo exitosamente!'
             ));
         } catch (Exception $e) {
             $con->rollback();
             $this->data = json_encode(array(
                 "success" => false,
-                "msg" =>  $e->getMessage()
+                "msg" => $e->getMessage()
             ));
         }
 
@@ -207,10 +207,10 @@ class SolicitudActions extends sfActions
         $co_ruta = $this->getRequestParameter("co_ruta");
 
         $this->data = json_encode(array(
-            "co_solicitud"      => $co_solicitud,
-            "estado"            => $estado,
+            "co_solicitud" => $co_solicitud,
+            "estado" => $estado,
             "co_tipo_solicitud" => $tipo,
-            "co_ruta"           => $co_ruta
+            "co_ruta" => $co_ruta
         ));
     }
 
@@ -242,22 +242,22 @@ class SolicitudActions extends sfActions
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
             $this->data = json_encode(array(
-                "co_solicitud"      => $campos["co_solicitud"],
-                "co_usuario"        => $campos["co_usuario"],
-                "nb_usuario"        => $campos["nb_usuario"],
-                "nu_cedula"         => $campos["nu_cedula"],
-                "tipo"              => $campos["tipo"],
-                "co_ruta"           => $campos["co_ruta"],
+                "co_solicitud" => $campos["co_solicitud"],
+                "co_usuario" => $campos["co_usuario"],
+                "nb_usuario" => $campos["nb_usuario"],
+                "nu_cedula" => $campos["nu_cedula"],
+                "tipo" => $campos["tipo"],
+                "co_ruta" => $campos["co_ruta"],
                 "tx_tipo_solicitud" => $campos["tx_tipo_solicitud"]
             ));
         } else {
             $this->data = json_encode(array(
-                "co_solicitud"      => "",
-                "co_usuario"        => "",
-                "nb_usuario"        => "",
-                "nu_cedula"         => "",
-                "tipo"              => "",
-                "co_ruta"           => "",
+                "co_solicitud" => "",
+                "co_usuario" => "",
+                "nb_usuario" => "",
+                "nu_cedula" => "",
+                "tipo" => "",
+                "co_ruta" => "",
                 "tx_tipo_solicitud" => ""
             ));
         }
@@ -274,9 +274,9 @@ class SolicitudActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -284,17 +284,17 @@ class SolicitudActions extends sfActions
     public function executePendienteEntidades(sfWebRequest $request)
     {
         $this->data = json_encode(array(
-            "co_rol"         => $this->getUser()->getAttribute('rol'),
-            "co_usuario"     => $this->getUser()->getAttribute('codigo'),
+            "co_rol" => $this->getUser()->getAttribute('rol'),
+            "co_usuario" => $this->getUser()->getAttribute('codigo'),
         ));
     }
 
     public function executeProcesadoEntidades(sfWebRequest $request)
     {
         $this->data = json_encode(array(
-            "co_rol"         => $this->getUser()->getAttribute('rol'),
-            "co_usuario"     => $this->getUser()->getAttribute('codigo'),
-            "co_proceso"     => $this->getUser()->getAttribute('co_proceso'),
+            "co_rol" => $this->getUser()->getAttribute('rol'),
+            "co_usuario" => $this->getUser()->getAttribute('codigo'),
+            "co_proceso" => $this->getUser()->getAttribute('co_proceso'),
         ));
     }
 
@@ -302,11 +302,11 @@ class SolicitudActions extends sfActions
     {
 
         $this->data = json_encode(array(
-            "co_usuario"  => $this->getUser()->getAttribute('codigo'),
-            "usuario"     => $this->getUser()->getAttribute('nombre'),
-            "ejercicio"   => $this->getUser()->getAttribute('ejercicio'),
-            "fe_ini"   => $this->getUser()->getAttribute('fe_apertura'),
-            "fe_fin"   => $this->getUser()->getAttribute('fe_cierre')
+            "co_usuario" => $this->getUser()->getAttribute('codigo'),
+            "usuario" => $this->getUser()->getAttribute('nombre'),
+            "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
+            "fe_ini" => $this->getUser()->getAttribute('fe_apertura'),
+            "fe_fin" => $this->getUser()->getAttribute('fe_cierre')
         ));
 
         $this->ejercicio = $this->getUser()->getAttribute('ejercicio');
@@ -383,31 +383,43 @@ class SolicitudActions extends sfActions
                 while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
                     $cc = new Criteria();
+                    $cc->addJoin(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION, Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION);
                     $cc->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
-                    $stmtc = Tb207DetalleCotizacionPeer::doSelectStmt($cc);
-                    $cotizacion = $stmtc->fetch(PDO::FETCH_ASSOC);
+                    $stmtc = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($cc);
 
-                    Tb087PresupuestoMovimientoPeer::movimientoPartida(
-                        $con,
-                        $this->getUser()->getAttribute('ejercicio'),
-                        $this->getUser()->getAttribute('codigo'),
-                        $cotizacion["co_presupuesto"],
-                        16,
-                        $cotizacion["monto"],
-                        $cotizacion["co_detalle_cotizacion"],
-                        ''
-                    );
 
-                    Tb087PresupuestoMovimientoPeer::movimientoPartida(
-                        $con,
-                        $this->getUser()->getAttribute('ejercicio'),
-                        $this->getUser()->getAttribute('codigo'),
-                        $reg["co_presupuesto"],
-                        1,
-                        $reg["monto"],
-                        '',
-                        $reg["co_detalle_compras"]
-                    );
+                    while ($cotizacion = $stmtc->fetch(PDO::FETCH_ASSOC)) {
+
+                        Tb087PresupuestoMovimientoPeer::movimientoPartida(
+                            $con,
+                            $this->getUser()->getAttribute('ejercicio'),
+                            $this->getUser()->getAttribute('codigo'),
+                            $cotizacion["co_presupuesto"],
+                            16,
+                            $cotizacion["monto"],
+                            $cotizacion["co_detalle_cotizacion"],
+                            ''
+                        );
+                    }
+
+                    $dc = new Criteria();
+                    $dc->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
+                    $stmtdc = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($dc);
+
+
+                    while ($detalle_compra = $stmtdc->fetch(PDO::FETCH_ASSOC)) {
+
+                        Tb087PresupuestoMovimientoPeer::movimientoPartida(
+                            $con,
+                            $this->getUser()->getAttribute('ejercicio'),
+                            $this->getUser()->getAttribute('codigo'),
+                            $detalle_compra["co_presupuesto"],
+                            1,
+                            $detalle_compra["monto"],
+                            '',
+                            $detalle_compra["co_detalle_compra"]
+                        );
+                    }
                 }
 
                 $Tb030Ruta = Tb030RutaPeer::retrieveByPK($this->getCoRuta($co_solicitud));
@@ -420,7 +432,7 @@ class SolicitudActions extends sfActions
                 $con->rollback();
                 $data = json_encode(array(
                     "success" => false,
-                    "msg" =>  $e->getMessage()
+                    "msg" => $e->getMessage()
                 ));
             }
         }
@@ -428,7 +440,7 @@ class SolicitudActions extends sfActions
 
 
         $this->data = json_encode(array(
-            "in_estatus"     => $estatus,
+            "in_estatus" => $estatus,
             "in_carga_datos" => $in_carga_datos
         ));
 
@@ -481,13 +493,13 @@ class SolicitudActions extends sfActions
             $con->rollback();
             $data = json_encode(array(
                 "success" => false,
-                "msg" =>  $e->getMessage()
+                "msg" => $e->getMessage()
             ));
         }
 
 
         $this->data = json_encode(array(
-            "in_estatus"     => $estatus,
+            "in_estatus" => $estatus,
             "in_carga_datos" => $in_carga_datos
         ));
     }
@@ -505,9 +517,9 @@ class SolicitudActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -526,14 +538,14 @@ class SolicitudActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
 
-    
+
 
     public function executeStorefkcotiposolicitudProcesado(sfWebRequest $request)
     {
@@ -564,9 +576,9 @@ class SolicitudActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -587,8 +599,8 @@ class SolicitudActions extends sfActions
         $c->add(Tb027TipoSolicitudPeer::IN_VER, true);
         $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, $registro_tramite, Criteria::IN);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
-        $c->addAnd(Tb030RutaPeer::IN_ANULAR,NULL, Criteria::ISNULL);
-        $c->addAnd(Tb030RutaPeer::IN_ACTUAL,true);
+        $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+        $c->addAnd(Tb030RutaPeer::IN_ACTUAL, true);
         $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
 
 
@@ -601,9 +613,9 @@ class SolicitudActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -626,8 +638,8 @@ class SolicitudActions extends sfActions
         $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, $registro_tramite, Criteria::IN);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
         $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
-        $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2,3), Criteria::IN);
-//        $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
+        $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2, 3), Criteria::IN);
+        //        $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
         $c->addAnd(Tb030RutaPeer::IN_ACTUAL, true);
         $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
 
@@ -641,9 +653,9 @@ class SolicitudActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -675,7 +687,7 @@ class SolicitudActions extends sfActions
         $Tb030Ruta->save($con);
     }
 
-    protected function  getVerificaRuta($codigo)
+    protected function getVerificaRuta($codigo)
     {
         $c = new Criteria();
         $c->add(Tb032ConfiguracionRutaPeer::CO_TIPO_SOLICITUD, $codigo);
@@ -686,7 +698,7 @@ class SolicitudActions extends sfActions
         return $campos["co_proceso"];
     }
 
-    protected function  getCoProceso($codigo)
+    protected function getCoProceso($codigo)
     {
         $c = new Criteria();
         $c->add(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, $codigo);
@@ -700,10 +712,11 @@ class SolicitudActions extends sfActions
     public function executeGuardarestado(sfWebRequest $request)
     {
 
-        $co_ruta        = $this->getRequestParameter('co_ruta');
+        $co_ruta = $this->getRequestParameter('co_ruta');
         $tx_observacion = $this->getRequestParameter('observacion');
-        $co_estatus     = $this->getRequestParameter('co_estatus');
+        $co_estatus = $this->getRequestParameter('co_estatus');
         $co_usuario = $this->getUser()->getAttribute('codigo');
+        $ejercicio = $this->getUser()->getAttribute('ejercicio');
 
         $con = Propel::getConnection();
 
@@ -731,19 +744,25 @@ class SolicitudActions extends sfActions
                     Tb045FacturaPeer::setRetenciones($con, $Tb030Ruta->getCoSolicitud(), $co_usuario, $co_ruta, $this->getUser()->getAttribute('ejercicio'));
                 }
 
+                if($Tb030Ruta->getCoTipoSolicitud() == 22 && $Tb030Ruta->getCoProceso() == 28){
+
+                    Tb087PresupuestoMovimientoPeer::afectarPartidas($con,$ejercicio,$co_usuario,$co_ruta);
+                   
+                }
+
                 $Tb030Ruta->setCoEstatusRuta($co_estatus)
                     ->setCoUsuarioActualizo($co_usuario)
                     ->save($con);
 
                 $data = json_encode(array(
                     "success" => true,
-                    "msg"     => 'Solicitud Procesada Exitosamente'
+                    "msg" => 'Solicitud Procesada Exitosamente'
                 ));
             } else {
 
                 $data = json_encode(array(
                     "success" => false,
-                    "msg"     => 'No es posible enviar la solicitud, ya que se debe cargar los datos'
+                    "msg" => 'No es posible enviar la solicitud, ya que se debe cargar los datos'
                 ));
             }
 
@@ -752,12 +771,12 @@ class SolicitudActions extends sfActions
             $con->rollback();
             $data = json_encode(array(
                 "success" => false,
-                "msg" =>  $e->getMessage()
+                "msg" => $e->getMessage()
             ));
         }
 
 
-        echo  $data;
+        echo $data;
         return sfView::NONE;
     }
 
@@ -771,11 +790,11 @@ class SolicitudActions extends sfActions
         if ($conf_ruta == '') {
             $data = json_encode(array(
                 "success" => false,
-                "msg"    => 'No se genero la solicitud debido a que el tramite no tiene ruta asignada.'
+                "msg" => 'No se genero la solicitud debido a que el tramite no tiene ruta asignada.'
 
             ));
 
-            echo  $data;
+            echo $data;
             return sfView::NONE;
         }
 
@@ -826,7 +845,7 @@ class SolicitudActions extends sfActions
 
             $data = json_encode(array(
                 "success" => true,
-                "msg"     => '<span style="color:green;font-size:13px,">Proceso realizado exitosamente.<br>
+                "msg" => '<span style="color:green;font-size:13px,">Proceso realizado exitosamente.<br>
                             Numero de Solicitud <br><textarea readonly>' . $cod_solicitud . '</textarea></span>'
             ));
             $con->commit();
@@ -834,18 +853,18 @@ class SolicitudActions extends sfActions
             $con->rollback();
             $data = json_encode(array(
                 "success" => false,
-                "msg" =>  $e->getMessage()
+                "msg" => $e->getMessage()
             ));
         }
 
 
-        echo  $data;
+        echo $data;
         return sfView::NONE;
     }
 
     public function executeStorelistaRuta(sfWebRequest $request)
     {
-        $paginar    =   $this->getRequestParameter("paginar");
+        $paginar = $this->getRequestParameter("paginar");
         //        $limit      =   $this->getRequestParameter("limit",10);
         //        $start      =   $this->getRequestParameter("start",0);
 
@@ -886,23 +905,23 @@ class SolicitudActions extends sfActions
 
 
             $registros[] = array(
-                "tx_proceso"          => trim($res["tx_proceso"]),
-                "tx_estatus"          => trim($res["tx_descripcion"]),
-                "in_cargar_dato"      => trim($res["in_cargar_dato"]),
+                "tx_proceso" => trim($res["tx_proceso"]),
+                "tx_estatus" => trim($res["tx_descripcion"]),
+                "in_cargar_dato" => trim($res["in_cargar_dato"]),
                 "in_cargar_documento" => ($res["tx_documento"] == null) ? '' : trim($res["tx_documento"]),
-                "in_cargar_imagen"    => ($res["tx_imagen"] == null) ? '' : trim($res["tx_imagen"]),
-                "co_ruta"             => $encrip->encrypt($res["co_ruta"]),
-                "co_ruta_org"         => $res["co_ruta"],
-                "fe_recepcion"        => $fecha,
-                "in_reporte"          => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
-                "tx_observacion"      => ($res["observacion"] == null) ? '' : $res["observacion"]
+                "in_cargar_imagen" => ($res["tx_imagen"] == null) ? '' : trim($res["tx_imagen"]),
+                "co_ruta" => $encrip->encrypt($res["co_ruta"]),
+                "co_ruta_org" => $res["co_ruta"],
+                "fe_recepcion" => $fecha,
+                "in_reporte" => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
+                "tx_observacion" => ($res["observacion"] == null) ? '' : $res["observacion"]
             );
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  $cantidadTotal,
-            "data"      =>  $registros
+            "success" => true,
+            "total" => $cantidadTotal,
+            "data" => $registros
         ));
 
         $this->setTemplate('storelista');
@@ -910,7 +929,7 @@ class SolicitudActions extends sfActions
 
     public function executeStorelistaRutaAnular(sfWebRequest $request)
     {
-        $paginar    =   $this->getRequestParameter("paginar");
+        $paginar = $this->getRequestParameter("paginar");
         //        $limit      =   $this->getRequestParameter("limit",10);
         //        $start      =   $this->getRequestParameter("start",0);
 
@@ -950,23 +969,23 @@ class SolicitudActions extends sfActions
             $fecha = $dia . '-' . $mes . '-' . $anio;
 
             $registros[] = array(
-                "tx_proceso"          => trim($res["tx_proceso"]),
-                "tx_estatus"          => trim($res["tx_descripcion"]),
-                "in_cargar_dato"      => trim($res["in_cargar_dato"]),
+                "tx_proceso" => trim($res["tx_proceso"]),
+                "tx_estatus" => trim($res["tx_descripcion"]),
+                "in_cargar_dato" => trim($res["in_cargar_dato"]),
                 "in_cargar_documento" => ($res["tx_documento"] == null) ? '' : trim($res["tx_documento"]),
-                "in_cargar_imagen"    => ($res["tx_imagen"] == null) ? '' : trim($res["tx_imagen"]),
-                "co_ruta"             => $encrip->encrypt($res["co_ruta"]),
-                "co_ruta_org"         => $res["co_ruta"],
-                "fe_recepcion"        => $fecha,
-                "in_reporte"          => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
-                "tx_observacion"      => ($res["observacion"] == null) ? '' : $res["observacion"]
+                "in_cargar_imagen" => ($res["tx_imagen"] == null) ? '' : trim($res["tx_imagen"]),
+                "co_ruta" => $encrip->encrypt($res["co_ruta"]),
+                "co_ruta_org" => $res["co_ruta"],
+                "fe_recepcion" => $fecha,
+                "in_reporte" => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
+                "tx_observacion" => ($res["observacion"] == null) ? '' : $res["observacion"]
             );
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  $cantidadTotal,
-            "data"      =>  $registros
+            "success" => true,
+            "total" => $cantidadTotal,
+            "data" => $registros
         ));
 
         $this->setTemplate('storelista');
@@ -995,7 +1014,7 @@ class SolicitudActions extends sfActions
     }
 
 
-    protected function  getDatosProveedor($codigo)
+    protected function getDatosProveedor($codigo)
     {
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -1010,7 +1029,7 @@ class SolicitudActions extends sfActions
         return $campos;
     }
 
-    protected function  getDatosPersona($codigo)
+    protected function getDatosPersona($codigo)
     {
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -1030,22 +1049,22 @@ class SolicitudActions extends sfActions
 
 
 
-    
+
 
 
     public function executeStorelista(sfWebRequest $request)
     {
 
-        $limit                =   $this->getRequestParameter("limit", 15);
-        $start                =   $this->getRequestParameter("start", 0);
-        $in_ventanilla        =   $this->getRequestParameter("in_ventanilla");
-        $co_proceso           =   $this->getRequestParameter("co_proceso");
-        $co_tipo_solicitud    =   $this->getRequestParameter("co_tipo_solicitud");
-        $co_solicitud         =   $this->getRequestParameter("co_solicitud");
+        $limit = $this->getRequestParameter("limit", 15);
+        $start = $this->getRequestParameter("start", 0);
+        $in_ventanilla = $this->getRequestParameter("in_ventanilla");
+        $co_proceso = $this->getRequestParameter("co_proceso");
+        $co_tipo_solicitud = $this->getRequestParameter("co_tipo_solicitud");
+        $co_solicitud = $this->getRequestParameter("co_solicitud");
 
-        $co_documento     =   $this->getRequestParameter("co_documento");
-        $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
-        $tx_razon_social  =   $this->getRequestParameter("tx_razon_social");
+        $co_documento = $this->getRequestParameter("co_documento");
+        $nu_cedula_rif = $this->getRequestParameter("nu_cedula_rif");
+        $tx_razon_social = $this->getRequestParameter("tx_razon_social");
 
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -1075,7 +1094,7 @@ class SolicitudActions extends sfActions
         if ($in_ventanilla == 'true') {
             $c->add(Tb030RutaPeer::NU_ORDEN, 1);
         } else {
-            $c->add(Tb030RutaPeer::NU_ORDEN, 1,  Criteria::GREATER_THAN);
+            $c->add(Tb030RutaPeer::NU_ORDEN, 1, Criteria::GREATER_THAN);
 
             if ($co_proceso != '') {
                 $c->add(Tb028ProcesoPeer::CO_PROCESO, $co_proceso);
@@ -1110,13 +1129,13 @@ class SolicitudActions extends sfActions
         $c->addSelectColumn(Tb030RutaPeer::TX_RUTA_REPORTE);
 
         // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR,   Criteria::LEFT_JOIN);
-        $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO,  Tb007DocumentoPeer::CO_DOCUMENTO,   Criteria::LEFT_JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR, Criteria::LEFT_JOIN);
+        $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO, Criteria::LEFT_JOIN);
         // $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb060OrdenPagoPeer::CO_SOLICITUD,   Criteria::LEFT_JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD,  Criteria::JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD,  Criteria::JOIN);
-        $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO,   Criteria::JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD, Criteria::JOIN);
+        $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO, Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO, Criteria::JOIN);
 
         $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, $registro_tramite, Criteria::IN);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
@@ -1146,27 +1165,27 @@ class SolicitudActions extends sfActions
 
             list($anio, $mes, $dia) = explode('-', $res["fe_registro"]);
             $registros[] = array(
-                "tx_proceso"        => trim($res["tx_proceso"]),
-                "co_ruta"           => $encrip->encrypt($res["co_ruta"]),
-                "co_proceso"        => trim($res["co_proceso"]),
+                "tx_proceso" => trim($res["tx_proceso"]),
+                "co_ruta" => $encrip->encrypt($res["co_ruta"]),
+                "co_proceso" => trim($res["co_proceso"]),
                 "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
                 "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
-                "co_solicitud"      => trim($res["co_solicitud"]),
-                "tx_login"          => trim($res["tx_login"]),
-                "tx_serial"         => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
-                "tx_rif"            => $tx_rif,
-                "tx_razon_social"   => $tx_razon_social,
-                "fe_creacion"       => $dia . '-' . $mes . '-' . $anio,
-                "in_reporte"        => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
-                "cant_revision"     => $cantidad,
-                "id_ruta"           => $res["co_ruta"]
+                "co_solicitud" => trim($res["co_solicitud"]),
+                "tx_login" => trim($res["tx_login"]),
+                "tx_serial" => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
+                "tx_rif" => $tx_rif,
+                "tx_razon_social" => $tx_razon_social,
+                "fe_creacion" => $dia . '-' . $mes . '-' . $anio,
+                "in_reporte" => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
+                "cant_revision" => $cantidad,
+                "id_ruta" => $res["co_ruta"]
             );
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  $cantidadTotal,
-            "data"      =>  $registros
+            "success" => true,
+            "total" => $cantidadTotal,
+            "data" => $registros
         ));
     }
 
@@ -1175,16 +1194,16 @@ class SolicitudActions extends sfActions
     public function executeStorelistaprocesado(sfWebRequest $request)
     {
 
-        $limit         =   $this->getRequestParameter("limit", 15);
-        $start         =   $this->getRequestParameter("start", 0);
-        $in_ventanilla =   $this->getRequestParameter("in_ventanilla");
-        $co_proceso    =   $this->getRequestParameter("co_proceso");
-        $co_solicitud  =   $this->getRequestParameter("co_solicitud");
+        $limit = $this->getRequestParameter("limit", 15);
+        $start = $this->getRequestParameter("start", 0);
+        $in_ventanilla = $this->getRequestParameter("in_ventanilla");
+        $co_proceso = $this->getRequestParameter("co_proceso");
+        $co_solicitud = $this->getRequestParameter("co_solicitud");
 
-        $co_documento     =   $this->getRequestParameter("co_documento");
-        $nu_cedula_rif    =   $this->getRequestParameter("nu_cedula_rif");
-        $tx_razon_social  =   $this->getRequestParameter("tx_razon_social");
-        $co_tipo_solicitud	  =   $this->getRequestParameter("co_tipo_solicitud");
+        $co_documento = $this->getRequestParameter("co_documento");
+        $nu_cedula_rif = $this->getRequestParameter("nu_cedula_rif");
+        $tx_razon_social = $this->getRequestParameter("tx_razon_social");
+        $co_tipo_solicitud = $this->getRequestParameter("co_tipo_solicitud");
 
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -1253,13 +1272,13 @@ class SolicitudActions extends sfActions
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
 
         // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR,   Criteria::LEFT_JOIN);
-        $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO,  Tb007DocumentoPeer::CO_DOCUMENTO,   Criteria::LEFT_JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR, Criteria::LEFT_JOIN);
+        $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO, Criteria::LEFT_JOIN);
         //$c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb060OrdenPagoPeer::CO_SOLICITUD,   Criteria::LEFT_JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD,  Criteria::JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD,  Criteria::JOIN);
-        $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO,   Criteria::JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO,  Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD, Criteria::JOIN);
+        $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO, Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO, Criteria::JOIN);
 
         $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, $registro_tramite, Criteria::IN);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
@@ -1300,24 +1319,24 @@ class SolicitudActions extends sfActions
 
             list($anio, $mes, $dia) = explode('-', $res["created_at"]);
             $registros[] = array(
-                "tx_proceso"        => trim($res["tx_proceso"]),
-                "co_proceso"        => trim($res["co_proceso"]),
+                "tx_proceso" => trim($res["tx_proceso"]),
+                "co_proceso" => trim($res["co_proceso"]),
                 "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
                 "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
-                "co_solicitud"      => trim($res["co_solicitud"]),
-                "tx_login"          => trim($res["tx_login"]),
-                "tx_serial"         => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
-                "tx_rif"            => $tx_rif,
-                "tx_razon_social"   => $tx_razon_social,
-                "fe_creacion"       => $dia . '-' . $mes . '-' . $anio,
-                "cant_revision"     => $cantidad
+                "co_solicitud" => trim($res["co_solicitud"]),
+                "tx_login" => trim($res["tx_login"]),
+                "tx_serial" => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
+                "tx_rif" => $tx_rif,
+                "tx_razon_social" => $tx_razon_social,
+                "fe_creacion" => $dia . '-' . $mes . '-' . $anio,
+                "cant_revision" => $cantidad
             );
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  $cantidadTotal,
-            "data"      =>  $registros
+            "success" => true,
+            "total" => $cantidadTotal,
+            "data" => $registros
         ));
     }
 
@@ -1329,9 +1348,9 @@ class SolicitudActions extends sfActions
         $co_proceso = $this->getRequestParameter("co_proceso");
 
         $this->data = json_encode(array(
-            "co_solicitud"       => $co_solicitud,
-            "co_tipo_solicitud"  => $co_tipo_solicitud,
-            "co_proceso"         => $co_proceso
+            "co_solicitud" => $co_solicitud,
+            "co_tipo_solicitud" => $co_tipo_solicitud,
+            "co_proceso" => $co_proceso
         ));
     }
 
@@ -1360,13 +1379,13 @@ class SolicitudActions extends sfActions
         $encrip = new myConfig();
 
         $this->data = json_encode(array(
-            "co_solicitud"       => $co_solicitud,
-            "co_tipo_solicitud"  => $co_tipo_solicitud,
-            "co_proceso"         => $co_proceso,
-            "tx_tipo_solicitud"  => $campos["tx_tipo_solicitud"],
-            "tx_estatus"         => $campos["tx_estatus"],
-            "co_ruta"            => $campos["co_ruta"],
-            "co_ruta_encrip"     => $encrip->encrypt($campos["co_ruta"])
+            "co_solicitud" => $co_solicitud,
+            "co_tipo_solicitud" => $co_tipo_solicitud,
+            "co_proceso" => $co_proceso,
+            "tx_tipo_solicitud" => $campos["tx_tipo_solicitud"],
+            "tx_estatus" => $campos["tx_estatus"],
+            "co_ruta" => $campos["co_ruta"],
+            "co_ruta_encrip" => $encrip->encrypt($campos["co_ruta"])
         ));
     }
 
@@ -1395,13 +1414,13 @@ class SolicitudActions extends sfActions
         $encrip = new myConfig();
 
         $this->data = json_encode(array(
-            "co_solicitud"       => $co_solicitud,
-            "co_tipo_solicitud"  => $co_tipo_solicitud,
-            "co_proceso"         => $co_proceso,
-            "tx_tipo_solicitud"  => $campos["tx_tipo_solicitud"],
-            "tx_estatus"         => $campos["tx_estatus"],
-            "co_ruta"            => $campos["co_ruta"],
-            "co_ruta_encrip"     => $encrip->encrypt($campos["co_ruta"])
+            "co_solicitud" => $co_solicitud,
+            "co_tipo_solicitud" => $co_tipo_solicitud,
+            "co_proceso" => $co_proceso,
+            "tx_tipo_solicitud" => $campos["tx_tipo_solicitud"],
+            "tx_estatus" => $campos["tx_estatus"],
+            "co_ruta" => $campos["co_ruta"],
+            "co_ruta_encrip" => $encrip->encrypt($campos["co_ruta"])
         ));
     }
 
@@ -1430,13 +1449,13 @@ class SolicitudActions extends sfActions
         $encrip = new myConfig();
 
         $this->data = json_encode(array(
-            "co_solicitud"       => $co_solicitud,
-            "co_tipo_solicitud"  => $co_tipo_solicitud,
-            "co_proceso"         => $co_proceso,
-            "tx_tipo_solicitud"  => $campos["tx_tipo_solicitud"],
-            "tx_estatus"         => $campos["tx_estatus"],
-            "co_ruta"            => $campos["co_ruta"],
-            "co_ruta_encrip"     => $encrip->encrypt($campos["co_ruta"])
+            "co_solicitud" => $co_solicitud,
+            "co_tipo_solicitud" => $co_tipo_solicitud,
+            "co_proceso" => $co_proceso,
+            "tx_tipo_solicitud" => $campos["tx_tipo_solicitud"],
+            "tx_estatus" => $campos["tx_estatus"],
+            "co_ruta" => $campos["co_ruta"],
+            "co_ruta_encrip" => $encrip->encrypt($campos["co_ruta"])
         ));
     }
 
@@ -1541,27 +1560,27 @@ class SolicitudActions extends sfActions
 
 
             $this->data = json_encode(array(
-                "co_solicitud"       => $campos["co_solicitud"],
-                "tx_tipo_solicitud"  => $campos["tx_tipo_solicitud"],
-                "tx_estatus"         => $campos["tx_estatus"],
-                "fe_creacion"        => trim(date_format(date_create($campos["created_at"]), 'd/m/Y')),
-                "tx_observacion"     => $campos["tx_observacion"],
-                "tx_login"           => $campos["tx_login"],
-                "nb_usuario"         => $campos["nb_usuario"],
-                "co_tipo_solicitud"  => $co_tipo_solicitud,
-                "co_proceso"         => $co_proceso
+                "co_solicitud" => $campos["co_solicitud"],
+                "tx_tipo_solicitud" => $campos["tx_tipo_solicitud"],
+                "tx_estatus" => $campos["tx_estatus"],
+                "fe_creacion" => trim(date_format(date_create($campos["created_at"]), 'd/m/Y')),
+                "tx_observacion" => $campos["tx_observacion"],
+                "tx_login" => $campos["tx_login"],
+                "nb_usuario" => $campos["nb_usuario"],
+                "co_tipo_solicitud" => $co_tipo_solicitud,
+                "co_proceso" => $co_proceso
             ));
         } else {
             $this->data = json_encode(array(
-                "co_solicitud"          => "",
-                "tx_tipo_solicitud"     => "",
-                "tx_estatus"            => "",
-                "fe_creacion"           => "",
-                "tx_observacion"        => "",
-                "tx_login"              => "",
-                "nb_usuario"            => "",
-                "co_tipo_solicitud"  => $co_tipo_solicitud,
-                "co_proceso"         => $co_proceso
+                "co_solicitud" => "",
+                "tx_tipo_solicitud" => "",
+                "tx_estatus" => "",
+                "fe_creacion" => "",
+                "tx_observacion" => "",
+                "tx_login" => "",
+                "nb_usuario" => "",
+                "co_tipo_solicitud" => $co_tipo_solicitud,
+                "co_proceso" => $co_proceso
 
             ));
         }

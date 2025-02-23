@@ -490,6 +490,7 @@
             PartidapresupuestoListaDesagregada.main.store_lista.baseParams.nu_partida = PartidapresupuestoListaDesagregada.main.OBJ.nu_partida;
             PartidapresupuestoListaDesagregada.main.store_lista.baseParams.co_accion_especifica = PartidapresupuestoListaDesagregada.main.OBJ.co_accion_especifica;
             PartidapresupuestoListaDesagregada.main.store_lista.baseParams.co_ejecutor = PartidapresupuestoListaDesagregada.main.OBJ.co_ejecutor;
+            PartidapresupuestoListaDesagregada.main.store_lista.baseParams.co_detalle_cotizacion = PartidapresupuestoListaDesagregada.main.OBJ.co_detalle_cotizacion;
             this.store_lista.load();
 
         },

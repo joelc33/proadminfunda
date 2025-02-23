@@ -146,13 +146,14 @@
 
                         cambiarPartida.main.storeCO_PARTIDA.baseParams.co_accion = this.getValue();
                         cambiarPartida.main.storeCO_PARTIDA.baseParams.co_partida = cambiarPartida.main.co_partida.getValue();
+                        cambiarPartida.main.storeCO_PARTIDA.baseParams.co_detalle_compra =  cambiarPartida.main.OBJ.co_detalle_compra
                         cambiarPartida.main.storeCO_PARTIDA.load();
                     }
                 }
             });
 
             this.fieldDatosContrato = new Ext.form.FieldSet({
-                title: 'Datos de la Compra',
+                title: 'Datos de la Unidad Ejecutora',
                 items: [this.de_ejecutor,
                 //this.co_partida,
                 this.co_proyecto,

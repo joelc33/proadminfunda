@@ -392,15 +392,14 @@ class ServicioBasicoFacturaActions extends sfActions
             $tb053_detalle_compras->save($con);
 
 
-            //                $tb129_detalle_factura  = new Tb129DetalleFactura();
-            //                $tb129_detalle_factura->setCoProducto($v["co_producto"])
-            //                                      ->setCantProducto(1)
-            //                                      ->setMoUnitario($v["total_pagar"])
-            //                                      ->setMoTotal($v["total_pagar"])
-            //                                      ->setCoFactura($tb045_factura->getCoFactura())
-            //                                      ->save($con);
+            $tb209_presupuesto_detalle_compra = new Tb209PresupuestoDetalleCompra();
+            $tb209_presupuesto_detalle_compra->setMonto($tb053_detalle_compras->getMonto());
+            $tb209_presupuesto_detalle_compra->setCoDetalleCompra($tb053_detalle_compras->getCoDetalleCompras());
+            $tb209_presupuesto_detalle_compra->setCoUsuario($this->getUser()->getAttribute("codigo"));
+            $tb209_presupuesto_detalle_compra->save($con);
 
-            $total_pagar = $total_pagar + $v["total_pagar"];
+
+          //  $total_pagar = $total_pagar + $v["total_pagar"];
 
             if ($v["nu_iva_retencion"] > 0) {
                 $tb046_factura_retencion = new Tb046FacturaRetencion();
@@ -456,6 +455,12 @@ class ServicioBasicoFacturaActions extends sfActions
                 $tb053_detalle_compras->setInCalcularIva(false);
                 $tb053_detalle_compras->setCoFactura($tb045_factura->getCoFactura());
                 $tb053_detalle_compras->save($con);
+
+                $tb209_presupuesto_detalle_compra = new Tb209PresupuestoDetalleCompra();
+                $tb209_presupuesto_detalle_compra->setMonto($tb053_detalle_compras->getMonto());
+                $tb209_presupuesto_detalle_compra->setCoDetalleCompra($tb053_detalle_compras->getCoDetalleCompras());
+                $tb209_presupuesto_detalle_compra->setCoUsuario($this->getUser()->getAttribute("codigo"));
+                $tb209_presupuesto_detalle_compra->save($con);
             }
 
 
@@ -507,10 +512,10 @@ class ServicioBasicoFacturaActions extends sfActions
         if ($cantidadFactura == 0) {
             $this->data = json_encode(array(
                 "success" => false,
-                "msg" =>  'Para enviar el pago de servicio debe tener por lo menos una factura cargada'
+                "msg" => 'Para enviar el pago de servicio debe tener por lo menos una factura cargada'
             ));
         } else {
-            $cc = new Criteria();
+           /* $cc = new Criteria();
             $cc->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
             $cc->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
             $cc->add(Tb052ComprasPeer::CO_SOLICITUD, $this->getRequestParameter('co_solicitud'));
@@ -519,14 +524,14 @@ class ServicioBasicoFacturaActions extends sfActions
             if ($cantidadPartida == 0) {
                 $this->data = json_encode(array(
                     "success" => false,
-                    "msg" =>  'Para enviar el pago de servicio debe asignar las partidas'
+                    "msg" => 'Para enviar el pago de servicio debe asignar las partidas'
                 ));
-            } else {
+            } else {*/
                 $this->data = json_encode(array(
                     "success" => true,
                     "msg" => 'Ok'
                 ));
-            }
+            //}
         }
 
         $this->setTemplate('guardar');
@@ -721,26 +726,21 @@ class ServicioBasicoFacturaActions extends sfActions
     public function executeEliminarFactura(sfWebRequest $request)
     {
 
-        $codigo              = $this->getRequestParameter("co_factura");
-        $co_detalle_compras  = $this->getRequestParameter("co_detalle_compras");
+        $codigo = $this->getRequestParameter("co_factura");
+        $co_detalle_compras = $this->getRequestParameter("co_detalle_compras");
 
         $con = Propel::getConnection();
         try {
             $con->beginTransaction();
 
-            $Tb053DetalleCompras = Tb053DetalleComprasPeer::retrieveByPk($co_detalle_compras);
-            $Tb053DetalleCompras->delete($con);
+            $Tb045Factura = Tb045FacturaPeer::retrieveByPk($codigo);
+            $co_solicitud = $Tb045Factura->getCoSolicitud();
+            $co_factura = $Tb045Factura->getCoFactura();
+            $Tb045Factura->delete($con);
 
-            $c = new Criteria();
-            $c->add(Tb053DetalleComprasPeer::CO_COMPRAS, $Tb053DetalleCompras->getCoCompras());
-            $cantidadTotal = Tb053DetalleComprasPeer::doCount($c);
-            if ($cantidadTotal <= 0) {
-                $Tb045Factura = Tb045FacturaPeer::retrieveByPk($codigo);
-                $co_solicitud = $Tb045Factura->getCoSolicitud();
-                $Tb045Factura->delete($con);
-            }
-
-
+            $wherec = new Criteria();
+            $wherec->add(Tb053DetalleComprasPeer::CO_FACTURA, $co_factura);
+            BasePeer::doDelete($wherec, $con);
 
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
 
@@ -762,7 +762,7 @@ class ServicioBasicoFacturaActions extends sfActions
             $con->rollback();
             $this->data = json_encode(array(
                 "success" => false,
-                "msg" =>  $e->getMessage()
+                "msg" => $e->getMessage()
                 //  "msg" => 'Este registro no se puede borrar'
             ));
         }

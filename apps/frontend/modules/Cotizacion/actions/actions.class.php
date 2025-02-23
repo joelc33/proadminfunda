@@ -42,28 +42,28 @@ class CotizacionActions extends sfActions
     $requisicion = $this->getRequisicion($this->getRequestParameter("co_solicitud"));
     $this->co_requisicion = $requisicion["co_requisicion"];
 
-  
+
 
     if (!empty($campos["co_cotizacion"])) {
 
       $this->data = json_encode(array(
-        "co_cotizacion"        => $campos["co_cotizacion"],
-        "numero_cotizacion"    => $campos["numero_cotizacion"],
+        "co_cotizacion" => $campos["co_cotizacion"],
+        "numero_cotizacion" => $campos["numero_cotizacion"],
         "tx_serial_cotizacion" => $campos["tx_serial_cotizacion"],
-        "tx_observacion"       => $campos["tx_observacion"],
-        "co_requisicion"       => $campos["co_requisicion"],
-        "monto_compra"         => $campos["monto_sub_total"],
-        "monto_iva"            => $campos["monto_iva"],
-        "monto_total"          => $campos["monto_total"],
-        "co_ente"              => $campos["co_ente"],
-        "co_solicitud"         => $this->getRequestParameter("co_solicitud"),
-        "co_tipo_solicitud"    => $this->getRequestParameter("co_tipo_solicitud"),
-        "co_modalidad"         => $campos["co_modalidad"],
-        "co_tipo_cotizacion"   => $campos["co_tipo_cotizacion"],
-        "co_iva_factura"       => round($campos["nu_iva"], 0),
+        "tx_observacion" => $campos["tx_observacion"],
+        "co_requisicion" => $campos["co_requisicion"],
+        "monto_compra" => $campos["monto_sub_total"],
+        "monto_iva" => $campos["monto_iva"],
+        "monto_total" => $campos["monto_total"],
+        "co_ente" => $campos["co_ente"],
+        "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+        "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+        "co_modalidad" => $campos["co_modalidad"],
+        "co_tipo_cotizacion" => $campos["co_tipo_cotizacion"],
+        "co_iva_factura" => round($campos["nu_iva"], 0),
       ));
 
-      
+
     } else {
 
       $c = new Criteria();
@@ -72,18 +72,18 @@ class CotizacionActions extends sfActions
       $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
       $this->data = json_encode(array(
-        "co_cotizacion"        => "",
-        "co_requisicion"       => $campos["co_requisicion"],
-        "monto_compra"         => 0,
-        "monto_iva"            => 0,
-        "monto_total"          => 0,
-        "co_solicitud"         => $this->getRequestParameter("co_solicitud"),
-        "co_tipo_solicitud"    => $this->getRequestParameter("co_tipo_solicitud"),
-        "co_iva_factura"       => "",
-        "co_ente"              => "",
-        "co_iva_factura"       => "",
-        "numero_cotizacion"    => "",
-        "tx_observacion"       => $campos["tx_concepto"],
+        "co_cotizacion" => "",
+        "co_requisicion" => $campos["co_requisicion"],
+        "monto_compra" => 0,
+        "monto_iva" => 0,
+        "monto_total" => 0,
+        "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+        "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+        "co_iva_factura" => "",
+        "co_ente" => "",
+        "co_iva_factura" => "",
+        "numero_cotizacion" => "",
+        "tx_observacion" => $campos["tx_concepto"],
         "tx_serial_cotizacion" => ""
       ));
     }
@@ -99,33 +99,33 @@ class CotizacionActions extends sfActions
       $stmt = Tb039RequisicionesPeer::doSelectStmt($c);
       $campos = $stmt->fetch(PDO::FETCH_ASSOC);
       $this->data = json_encode(array(
-        "co_requisicion"     => $campos["co_requisicion"],
-        "co_tipo_solicitud"  => $campos["co_tipo_solicitud"],
-        "co_usuario"         => $campos["co_usuario"],
-        "co_ente"            => $campos["co_ente"],
-        "created_at"         => $campos["created_at"],
-        "tx_concepto"        => $campos["tx_concepto"],
-        "tx_observacion"     => $campos["tx_observacion"],
+        "co_requisicion" => $campos["co_requisicion"],
+        "co_tipo_solicitud" => $campos["co_tipo_solicitud"],
+        "co_usuario" => $campos["co_usuario"],
+        "co_ente" => $campos["co_ente"],
+        "created_at" => $campos["created_at"],
+        "tx_concepto" => $campos["tx_concepto"],
+        "tx_observacion" => $campos["tx_observacion"],
       ));
     } else {
       $this->data = json_encode(array(
-        "co_requisicion"     => "",
-        "co_tipo_solicitud"  => "",
-        "co_usuario"         => "",
-        "co_ente"            => "",
-        "fe_registro"        => date("d-m-Y"),
-        "tx_concepto"        => "",
-        "tx_observacion"     => "",
+        "co_requisicion" => "",
+        "co_tipo_solicitud" => "",
+        "co_usuario" => "",
+        "co_ente" => "",
+        "fe_registro" => date("d-m-Y"),
+        "tx_concepto" => "",
+        "tx_observacion" => "",
       ));
     }
-  } 
+  }
 
   public function executeStorelistamateriales(sfWebRequest $request)
   {
 
-    $codigo   =   $this->getRequestParameter("co_cotizacion");
-    $limit      =   $this->getRequestParameter("limit", 8);
-    $start      =   $this->getRequestParameter("start", 0);
+    $codigo = $this->getRequestParameter("co_cotizacion");
+    $limit = $this->getRequestParameter("limit", 8);
+    $start = $this->getRequestParameter("start", 0);
 
     $c = new Criteria();
     $c->clearSelectColumns();
@@ -144,7 +144,7 @@ class CotizacionActions extends sfActions
 
     $c->addJoin(Tb207DetalleCotizacionPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO);
     $c->add(Tb207DetalleCotizacionPeer::CO_COTIZACION, $codigo);
-    $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336,  Criteria::NOT_EQUAL); //Excluye el IVA
+    $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336, Criteria::NOT_EQUAL); //Excluye el IVA
 
     $cantidadTotal = Tb207DetalleCotizacionPeer::doCount($c);
     //$c->setLimit($limit)->setOffset($start);
@@ -153,15 +153,15 @@ class CotizacionActions extends sfActions
     $stmt = Tb207DetalleCotizacionPeer::doSelectStmt($c);
     $registros = array();
     while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $reg["monto_total"] = $reg["monto"]+$reg["mo_iva_producto"];
+      $reg["monto_total"] = $reg["monto"] + $reg["mo_iva_producto"];
       $reg["nu_iva_producto"] = $reg["co_iva_producto"];
       $registros[] = $reg;
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  $cantidadTotal,
-      "data"      =>  $registros
+      "success" => true,
+      "total" => $cantidadTotal,
+      "data" => $registros
     ));
 
     $this->setTemplate('store');
@@ -171,36 +171,48 @@ class CotizacionActions extends sfActions
   public function executeEliminarMaterial(sfWebRequest $request)
   {
 
-      $codigo = $this->getRequestParameter("co_detalle_cotizacion");
+    $codigo = $this->getRequestParameter("co_detalle_cotizacion");
 
-      $con = Propel::getConnection();
-      try {
-          $con->beginTransaction();
-          /*CAMPOS*/
-          $Tb207DetalleCotizacion = Tb207DetalleCotizacionPeer::retrieveByPk($codigo);
-          $Tb207DetalleCotizacion->delete($con);
+    $con = Propel::getConnection();
+    try {
+      $con->beginTransaction();
+      /*CAMPOS*/
+      $Tb207DetalleCotizacion = Tb207DetalleCotizacionPeer::retrieveByPk($codigo);
+      $Tb207DetalleCotizacion->delete($con);
 
-          $wherec = new Criteria();
-          $wherec->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION_ENLACE, $codigo, Criteria::EQUAL);
-          BasePeer::doDelete($wherec, $con);
-
-          $this->data = json_encode(array(
-              "success" => true,
-              "msg" => 'Registro Borrado con exito!'
-          ));
+      $wherec = new Criteria();
+      $wherec->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION_ENLACE, $codigo, Criteria::EQUAL);
+      $stmte = Tb207DetalleCotizacionPeer::doSelectStmt($wherec);
+      $datos = $stmte->fetch(PDO::FETCH_ASSOC);
+      BasePeer::doDelete($wherec, $con);
 
 
-          $con->commit();
-      } catch (PropelException $e) {
-          $con->rollback();
-          $this->data = json_encode(array(
-              "success" => false,
-              //		    "msg" =>  $e->getMessage()
-              "msg" => 'Este registro no se puede borrar'
-          ));
-      }
+      $wherec = new Criteria();
+      $wherec->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION, $datos["co_detalle_cotizacion"], Criteria::EQUAL);
+      BasePeer::doDelete($wherec, $con);
 
-      $this->setTemplate('eliminar');
+      $where = new Criteria();
+      $where->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION, $codigo, Criteria::EQUAL);
+      BasePeer::doDelete($where, $con);
+
+
+      $this->data = json_encode(array(
+        "success" => true,
+        "msg" => 'Registro Borrado con exito!'
+      ));
+
+
+      $con->commit();
+    } catch (PropelException $e) {
+      $con->rollback();
+      $this->data = json_encode(array(
+        "success" => false,
+        //		    "msg" =>  $e->getMessage()
+        "msg" => 'Este registro no se puede borrar'
+      ));
+    }
+
+    $this->setTemplate('eliminar');
   }
 
 
@@ -209,7 +221,7 @@ class CotizacionActions extends sfActions
   {
 
     $codigo = $this->getRequestParameter("co_cotizacion");
-    $json_producto  = $this->getRequestParameter("json_producto");
+    $json_producto = $this->getRequestParameter("json_producto");
     $tb206_cotizacionForm = $this->getRequestParameter('tb206_cotizacion');
 
     $c = new Criteria();
@@ -220,7 +232,7 @@ class CotizacionActions extends sfActions
 
     $con = Propel::getConnection();
     if ($codigo != '' || $codigo != null) {
-      $tb206_cotizacion    = Tb206CotizacionPeer::retrieveByPk($codigo);
+      $tb206_cotizacion = Tb206CotizacionPeer::retrieveByPk($codigo);
     } else {
 
       $ce = new Criteria();
@@ -250,18 +262,18 @@ class CotizacionActions extends sfActions
       $datos_documento = $stmtc->fetch(PDO::FETCH_ASSOC);
 
       $tb206_cotizacion = new Tb206Cotizacion();
-      $serial = $datos_tipo_modalidad['tx_sigla'].'-'.$datos_empresa['tx_sigla_serial'].'-'.$datos_documento['tx_sigla'].'-'.'SC'.'-'.date("Y") . '-' . Tb137ControlSerialPeer::getSerial($datos_solicitud['id_136_tipo_documento'], $con, $this->getUser()->getAttribute('ejercicio'),$tb206_cotizacionForm["co_tipo_modalidad"]);
-    
-    $tb206_cotizacion->setNumeroCotizacion($serial);
-    $tb206_cotizacion->setTxSerialCotizacion($serial);
-     
+      $serial = $datos_tipo_modalidad['tx_sigla'] . '-' . $datos_empresa['tx_sigla_serial'] . '-' . $datos_documento['tx_sigla'] . '-' . 'SC' . '-' . date("Y") . '-' . Tb137ControlSerialPeer::getSerial($datos_solicitud['id_136_tipo_documento'], $con, $this->getUser()->getAttribute('ejercicio'), $tb206_cotizacionForm["co_tipo_modalidad"]);
+
+      $tb206_cotizacion->setNumeroCotizacion($serial);
+      $tb206_cotizacion->setTxSerialCotizacion($serial);
+
     }
-    
+
 
 
     try {
       $con->beginTransaction();
- 
+
 
       /*Campo tipo BIGINT */
       $tb206_cotizacion->setCoRequisicion($tb206_cotizacionForm["co_requisicion"]);
@@ -280,11 +292,11 @@ class CotizacionActions extends sfActions
       $tb206_cotizacion->setInActivo(true);
       $tb206_cotizacion->save($con);
 
-      $listaProducto  = json_decode($json_producto, true);
+      $listaProducto = json_decode($json_producto, true);
       $array_producto = array();
       $i = 0;
 
-      foreach ($listaProducto  as $productoForm) {
+      foreach ($listaProducto as $productoForm) {
 
         if (empty($productoForm["co_detalle_cotizacion"])) {
           $tb207_detalle_cotizacion = new Tb207DetalleCotizacion();
@@ -307,6 +319,8 @@ class CotizacionActions extends sfActions
 
           $co_detalle_cotizacion = $tb207_detalle_cotizacion->getCoDetalleCotizacion();
 
+          Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra($co_detalle_cotizacion,$productoForm["monto"],$this->getUser()->getAttribute('codigo'),$con,true);
+
 
           if ($productoForm["mo_iva_producto"] > 0) {
             $tb207_detalle_cotizacion = new Tb207DetalleCotizacion();
@@ -323,32 +337,14 @@ class CotizacionActions extends sfActions
             $tb207_detalle_cotizacion->setCoUnidadProducto(638);
             $tb207_detalle_cotizacion->setCoDetalleCotizacionEnlace($co_detalle_cotizacion);
             $tb207_detalle_cotizacion->save($con);
+
+            Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra($tb207_detalle_cotizacion->getCoDetalleCotizacion(),$productoForm["mo_iva_producto"],$this->getUser()->getAttribute('codigo'),$con,true);
+
           }
         }
       }
 
-      /*  $monto_iva = $tb206_cotizacionForm["monto_iva"];
-        
-        $wherec = new Criteria();
-        $wherec->add(Tb207DetalleCotizacionPeer::CO_COTIZACION, $tb206_cotizacion->getCoCotizacion());
-        $wherec->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336);
-        BasePeer::doDelete($wherec, $con);
-        
-        if($monto_iva > 0){        
-            $tb207_detalle_cotizacion = new Tb207DetalleCotizacion();
-            $tb207_detalle_cotizacion->setCoCotizacion($tb206_cotizacion->getCoCotizacion());                                        
-            $tb207_detalle_cotizacion->setCoProducto(19336); //IMPUESTO AL VALOR AGREGADO (IVA)
-            $tb207_detalle_cotizacion->setNuCantidad(1);
-            $tb207_detalle_cotizacion->setPrecioUnitario($productoForm["precio_unitario"]);
-            $tb207_detalle_cotizacion->setMonto(round($monto_iva,2));
-            $tb207_detalle_cotizacion->setDetalle('IMPUESTO AL VALOR AGREGADO (IVA)');
-            $tb207_detalle_cotizacion->setCoPartida($tb206_cotizacionForm["co_partida_iva"]);
-            $tb207_detalle_cotizacion->setCoUnidadProducto(638);
-            $tb207_detalle_cotizacion->save($con);        
-        }*/
-
-
-
+      
       $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb206_cotizacionForm["co_solicitud"]));
       $ruta->setCoUsuario($this->getUser()->getAttribute('codigo'));
       $ruta->setInCargarDato(true)->save($con);
@@ -367,7 +363,7 @@ class CotizacionActions extends sfActions
       $con->rollback();
       $this->data = json_encode(array(
         "success" => false,
-        "msg" =>  $e->getMessage()
+        "msg" => $e->getMessage()
       ));
     }
   }
@@ -498,44 +494,44 @@ class CotizacionActions extends sfActions
     $monto = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
-      $nu_compra =  date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . $correlativo;
+      $nu_compra = date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . $correlativo;
     } else {
       $nu_compra = date("Ym") . '-' . $correlativo;
     }
 
     $this->data = json_encode(array(
-      "co_compras"         => "",
-      "co_proveedor"       => $campos_proveedor["co_proveedor"],
-      "co_requisicion"     => $requisicion["co_requisicion"],
-      "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
-      "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
-      "fe_registro"        => "",
-      "co_documento"       => $campos_proveedor["co_documento"],
-      "nu_compra"          => $nu_compra,
-      "co_usuario"         => "",
-      "co_proyecto"        => "",
-      "co_accion"          => "",
-      "co_partida_iva"     => "",
-      "co_ejecutor"        => "",
-      "tx_concepto"        => "",
-      "tx_observacion"     => "",
-      "co_ente"            => "",
-      "fecha_entrega"      => "",
-      "co_factura"         => "",
-      "tiempo_garantia"    => "",
-      "co_tp_contrato"     => "",
+      "co_compras" => "",
+      "co_proveedor" => $campos_proveedor["co_proveedor"],
+      "co_requisicion" => $requisicion["co_requisicion"],
+      "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+      "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
+      "fe_registro" => "",
+      "co_documento" => $campos_proveedor["co_documento"],
+      "nu_compra" => $nu_compra,
+      "co_usuario" => "",
+      "co_proyecto" => "",
+      "co_accion" => "",
+      "co_partida_iva" => "",
+      "co_ejecutor" => "",
+      "tx_concepto" => "",
+      "tx_observacion" => "",
+      "co_ente" => "",
+      "fecha_entrega" => "",
+      "co_factura" => "",
+      "tiempo_garantia" => "",
+      "co_tp_contrato" => "",
       "co_fuente_financiamiento" => "",
-      "monto_compra"       => 0,
-      "monto_iva"          => 0,
-      "monto_total"        => 0,
-      "nu_orden_compra"    => "",
-      "monto"              => ($monto["total"] != '') ? $monto["total"] : 0,
-      "co_iva_factura"     => ($campos_proveedor["co_iva_factura"] == null) ? "" : $campos_proveedor["co_iva_factura"],
-      "tx_rif"             => ($campos_proveedor["tx_rif"] == null) ? "" : $campos_proveedor["tx_rif"],
-      "tx_razon_social"    => ($campos_proveedor["tx_razon_social"] == null) ? "" : $campos_proveedor["tx_razon_social"],
-      "tx_direccion"       => ($campos_proveedor["tx_direccion"] == null) ? "" : $campos_proveedor["tx_direccion"],
-      "co_ramo"            => ($campos_proveedor["co_ramo"] == null) ? "" : $campos_proveedor["co_ramo"],
-      "co_factura"         => ($campos_proveedor["co_factura"] == null) ? "" : $campos_proveedor["co_factura"]
+      "monto_compra" => 0,
+      "monto_iva" => 0,
+      "monto_total" => 0,
+      "nu_orden_compra" => "",
+      "monto" => ($monto["total"] != '') ? $monto["total"] : 0,
+      "co_iva_factura" => ($campos_proveedor["co_iva_factura"] == null) ? "" : $campos_proveedor["co_iva_factura"],
+      "tx_rif" => ($campos_proveedor["tx_rif"] == null) ? "" : $campos_proveedor["tx_rif"],
+      "tx_razon_social" => ($campos_proveedor["tx_razon_social"] == null) ? "" : $campos_proveedor["tx_razon_social"],
+      "tx_direccion" => ($campos_proveedor["tx_direccion"] == null) ? "" : $campos_proveedor["tx_direccion"],
+      "co_ramo" => ($campos_proveedor["co_ramo"] == null) ? "" : $campos_proveedor["co_ramo"],
+      "co_factura" => ($campos_proveedor["co_factura"] == null) ? "" : $campos_proveedor["co_factura"]
     ));
     //}
 
@@ -547,7 +543,7 @@ class CotizacionActions extends sfActions
 
     $this->data = json_encode(array(
       "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
-      "co_tipo_tramite"   => $this->getRequestParameter("co_tipo_tramite")
+      "co_tipo_tramite" => $this->getRequestParameter("co_tipo_tramite")
     ));
   }
 
@@ -584,9 +580,9 @@ class CotizacionActions extends sfActions
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  count($registros),
-      "data"      =>  $registros
+      "success" => true,
+      "total" => count($registros),
+      "data" => $registros
     ));
     $this->setTemplate('store');
   }
@@ -607,13 +603,13 @@ class CotizacionActions extends sfActions
     $c->addJoin(Tb039RequisicionesPeer::CO_ENTE, Tb047EntePeer::CO_ENTE);
     $c->addJoin(Tb206CotizacionPeer::CO_TIPO_COTIZACION, Tb208TipoCotizacionPeer::CO_TIPO_COTIZACION);
     $c->addJoin(Tb206CotizacionPeer::CO_SOLICITUD, Tb026SolicitudPeer::CO_SOLICITUD);
-    $c->add(Tb026SolicitudPeer::CO_ESTATUS,3);
-    $c->add(Tb206CotizacionPeer::IN_ACTIVO,true);
+    $c->add(Tb026SolicitudPeer::CO_ESTATUS, 3);
+    $c->add(Tb206CotizacionPeer::IN_ACTIVO, true);
     $c->add(Tb208TipoCotizacionPeer::CO_TIPO_SOLICITUD, $this->getRequestParameter("co_tipo_solicitud"));
 
     if ($this->getRequestParameter("co_tipo_tramite") == 64) //contrato
     {
-      $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(2,3,4, 5, 6), Criteria::IN);
+      $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(2, 3, 4, 5, 6), Criteria::IN);
     } else {
       $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(1), Criteria::IN);
     }
@@ -624,29 +620,29 @@ class CotizacionActions extends sfActions
     $c->addDescendingOrderByColumn(Tb206CotizacionPeer::CO_SOLICITUD);
 
 
-   // echo $c->toString(); exit();
+    // echo $c->toString(); exit();
 
     $stmt = Tb206CotizacionPeer::doSelectStmt($c);
     $registros = "";
     while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
       $registros[] = array(
-        "co_solicitud"          => trim($res["co_solicitud"]),
-        "co_cotizacion"         => trim($res["co_cotizacion"]),
-        "nu_requisicion"        => trim($res["nu_requisicion"]),
-        "tx_serial_cotizacion"  => trim($res["tx_serial_cotizacion"]),
-        "tx_observacion"        => trim($res["tx_observacion"]),
-        "tx_ente"               => trim($res["tx_ente"]),
-        "nu_iva"                => round($res["nu_iva"], 0),
-        "co_ruta_requisicion"   => $this->getTxRutaReporte(65, $res["co_solicitud"]),
-        "co_ruta_presupuesto"   => $this->getTxRutaReporte(64, $res["co_solicitud"])
+        "co_solicitud" => trim($res["co_solicitud"]),
+        "co_cotizacion" => trim($res["co_cotizacion"]),
+        "nu_requisicion" => trim($res["nu_requisicion"]),
+        "tx_serial_cotizacion" => trim($res["tx_serial_cotizacion"]),
+        "tx_observacion" => trim($res["tx_observacion"]),
+        "tx_ente" => trim($res["tx_ente"]),
+        "nu_iva" => round($res["nu_iva"], 0),
+        "co_ruta_requisicion" => $this->getTxRutaReporte(65, $res["co_solicitud"]),
+        "co_ruta_presupuesto" => $this->getTxRutaReporte(64, $res["co_solicitud"])
       );
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  $cantidadTotal,
-      "data"      =>  $registros
+      "success" => true,
+      "total" => $cantidadTotal,
+      "data" => $registros
     ));
 
     $this->setTemplate('store');
@@ -699,33 +695,33 @@ class CotizacionActions extends sfActions
     while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
       $registros[] = array(
-        "co_solicitud"          => trim($res["co_solicitud"]),
-        "co_proveedor"          => trim($res["co_proveedor"]),
-        "co_cotizacion"         => trim($res["co_cotizacion"]),
-        "nu_requisicion"        => trim($res["nu_requisicion"]),
-        "tx_serial_cotizacion"  => trim($res["tx_serial_cotizacion"]),
-        "tx_observacion"        => trim($res["tx_concepto"]),
-        "numero_compra"         => trim($res["numero_compra"]),
-        "co_compras"            => trim($res["co_compras"]),
-        "nu_iva"                => round($res["nu_iva"], 0),
-        "tx_rif"                => $res["inicial"] . '-' . $res["tx_rif"],
-        "tx_razon_social"       => $res["tx_razon_social"],
-        "co_ruta_requisicion"   => $this->getTxRutaReporte(1, $res["co_solicitud_cotizacion"]),
-        "co_ruta_presupuesto"   => $this->getTxRutaReporte(2, $res["co_solicitud_cotizacion"]),
-        "co_ruta_compra"        => $this->getTxRutaReporte(11, $res["co_solicitud"]),
-        "tipo"                  => trim($res["tipo"]),
-        "co_ramo"               => trim($res["co_ramo"]),
-        "tx_ramo"               => trim($res["tx_ramo"]),
-        "nu_iva"                => trim($res["nu_iva"]),
-        "nu_valor"              => trim($res["nu_iva_retencion"]),
-        "co_documento"          => trim($res["co_documento"])
+        "co_solicitud" => trim($res["co_solicitud"]),
+        "co_proveedor" => trim($res["co_proveedor"]),
+        "co_cotizacion" => trim($res["co_cotizacion"]),
+        "nu_requisicion" => trim($res["nu_requisicion"]),
+        "tx_serial_cotizacion" => trim($res["tx_serial_cotizacion"]),
+        "tx_observacion" => trim($res["tx_concepto"]),
+        "numero_compra" => trim($res["numero_compra"]),
+        "co_compras" => trim($res["co_compras"]),
+        "nu_iva" => round($res["nu_iva"], 0),
+        "tx_rif" => $res["inicial"] . '-' . $res["tx_rif"],
+        "tx_razon_social" => $res["tx_razon_social"],
+        "co_ruta_requisicion" => $this->getTxRutaReporte(1, $res["co_solicitud_cotizacion"]),
+        "co_ruta_presupuesto" => $this->getTxRutaReporte(2, $res["co_solicitud_cotizacion"]),
+        "co_ruta_compra" => $this->getTxRutaReporte(11, $res["co_solicitud"]),
+        "tipo" => trim($res["tipo"]),
+        "co_ramo" => trim($res["co_ramo"]),
+        "tx_ramo" => trim($res["tx_ramo"]),
+        "nu_iva" => trim($res["nu_iva"]),
+        "nu_valor" => trim($res["nu_iva_retencion"]),
+        "co_documento" => trim($res["co_documento"])
       );
     }
 
     $this->data = json_encode(array(
-      "success"   =>  true,
-      "total"     =>  $cantidadTotal,
-      "data"      =>  $registros
+      "success" => true,
+      "total" => $cantidadTotal,
+      "data" => $registros
     ));
 
     $this->setTemplate('store');

@@ -104,7 +104,8 @@ this.quitar_partida= new Ext.Button({
             url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuesto/quitarPartida',
             params:{
                 co_detalle_compras:ContabilidadEditar.main.gridPanel.getSelectionModel().getSelected().get('co_detalle_compras'),
-                co_compras:ContabilidadEditar.main.OBJ.co_compras
+                co_compras:ContabilidadEditar.main.OBJ.co_compras,
+                co_presupuesto_detalle_compra:ContabilidadEditar.main.gridPanel.getSelectionModel().getSelected().get('co_presupuesto_detalle_compra')
             },
             success:function(result, request ) {
                 obj = Ext.util.JSON.decode(result.responseText);
@@ -124,7 +125,7 @@ this.agregar_partida.disable();
 this.quitar_partida.disable();
 
 this.gridPanel = new Ext.grid.GridPanel({
-        title:'Detalle de la Compra',
+        title:'Detalle de las Partidas',
         iconCls: 'icon-libro',
         store: this.store_lista,
         loadMask:true,
@@ -134,11 +135,11 @@ this.gridPanel = new Ext.grid.GridPanel({
         columns: [
         new Ext.grid.RowNumberer(),
             {header: 'co_detalle_compras', hidden: true,width:80, menuDisabled:true,dataIndex: 'co_detalle_compras'},    
+            {header: 'co_presupuesto_detalle_compra', hidden: true,width:80, menuDisabled:true,dataIndex: 'co_presupuesto_detalle_compra'},              
             {header: 'id_partida', hidden: true,width:80, menuDisabled:true,dataIndex: 'co_partida'}, 
-            {header: 'co_tipo_movimiento', hidden: true,width:80, menuDisabled:true,dataIndex: 'co_tipo_movimiento'}, 
-//            {header: 'Estatus',width:130, menuDisabled:true,dataIndex: 'tx_tipo_movimiento'},    
-//            {header: 'Material',width:220, menuDisabled:true,dataIndex: 'tx_producto',renderer:textoLargo},                
-            {header: 'Cod. Partida', width:100, menuDisabled:true,dataIndex: 'nu_partida'},
+            {header: 'co_tipo_movimiento', hidden: true,width:80, menuDisabled:true,dataIndex: 'co_tipo_movimiento'},  
+            {header: 'Descripción', width:220, menuDisabled:true,dataIndex: 'tx_producto',renderer:textoLargo},
+            {header: 'Cod. Partida', width:200, menuDisabled:true,dataIndex: 'nu_partida'},
             {header: 'Partida',width:220, menuDisabled:true,dataIndex: 'de_partida',renderer:textoLargo},
             {header: 'Monto Disponible',width:180, menuDisabled:true,dataIndex: 'mo_disponible',renderer:renderMontoDisponible},
             {header: 'Monto',width:180, menuDisabled:true,dataIndex: 'monto',renderer:renderMonto}
@@ -393,7 +394,8 @@ getStoreCO_EJECUTOR:function(){
                 {name :'mo_disponible'},
                 {name :'monto'},
                 {name :'co_tipo_movimiento'},
-                {name: 'tx_tipo_movimiento'}
+                {name: 'tx_tipo_movimiento'},
+                {name: 'co_presupuesto_detalle_compra'}
            ]
     });
     return this.store;      

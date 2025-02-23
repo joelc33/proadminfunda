@@ -581,6 +581,7 @@ class PartidapresupuestoActions extends sfActions
             $created_at                      =   $this->getRequestParameter("created_at");
             $updated_at                      =   $this->getRequestParameter("updated_at");
             $in_movimiento                   =   $this->getRequestParameter("in_movimiento");
+            $co_detalle_cotizacion           =   $this->getRequestParameter("co_detalle_cotizacion");
 
             $co_ejecutor = $this->getRequestParameter("co_ejecutor");
             $co_accion   = $this->getRequestParameter("co_accion");
@@ -643,6 +644,13 @@ class PartidapresupuestoActions extends sfActions
             $c->addJoin(Tb084AccionEspecificaPeer::ID_TB083_PROYECTO_AC, Tb083ProyectoAcPeer::ID);
             $c->addJoin(Tb083ProyectoAcPeer::ID, Tb084AccionEspecificaPeer::ID_TB083_PROYECTO_AC);
             $c->addJoin(Tb085PresupuestoPeer::ID_TB139_APLICACION, Tb139AplicacionPeer::CO_APLICACION, Criteria::LEFT_JOIN);
+
+            if(!empty($co_detalle_cotizacion)){
+                $cotizacion = Tb207DetalleCotizacionPeer::retrieveByPK($co_detalle_cotizacion);
+                if($cotizacion->getCoProducto()==19336){
+                    $c->add(Tb085PresupuestoPeer::NU_PARTIDA,'4031801%',Criteria::LIKE);
+                }
+            }
 
             $c->add(Tb085PresupuestoPeer::NU_ANIO, $this->getUser()->getAttribute('ejercicio'));
             

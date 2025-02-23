@@ -416,6 +416,13 @@ class SolicitudAyudaActions extends sfActions
             $tb053_detalle_compras->setMonto($mo_total);
             $tb053_detalle_compras->save($con);
 
+            Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra(
+                $tb053_detalle_compras->getCoDetalleCompras(),
+                $mo_total,
+                $this->getUser()->getAttribute('codigo'),
+                $con
+            );
+
 
             $solicitud = Tb026SolicitudPeer::retrieveByPk($tb126_solicitud_ayudaForm["co_solicitud"]);
             $solicitud->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
@@ -1094,16 +1101,14 @@ class SolicitudAyudaActions extends sfActions
                     $tb053_detalle_compras->save($con);
 
 
-                    //                $tb129_detalle_factura  = new Tb129DetalleFactura();
-                    //                $tb129_detalle_factura->setCoProducto($v["co_producto"])
-                    //                                      ->setCantProducto(1)
-                    //                                      ->setMoUnitario($v["total_pagar"])
-                    //                                      ->setMoTotal($v["total_pagar"])
-                    //                                      ->setCoFactura($tb045_factura->getCoFactura())
-                    //                                      ->save($con);
+                    Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra(
+                        $tb053_detalle_compras->getCoDetalleCompras(),
+                        round($monto_iva, 2),
+                        $this->getUser()->getAttribute('codigo'),
+                        $con
+                    );
 
-
-
+                  
                     if ($v["nu_iva_retencion"] > 0) {
                         $tb046_factura_retencion = new Tb046FacturaRetencion();
                         $tb046_factura_retencion->setCoFactura($tb045_factura->getCoFactura());
@@ -1147,6 +1152,13 @@ class SolicitudAyudaActions extends sfActions
                         $tb053_detalle_compras->setInCalcularIva(false);
                         $tb053_detalle_compras->setCoFactura($tb045_factura->getCoFactura());
                         $tb053_detalle_compras->save($con);
+
+                        Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra(
+                            $tb053_detalle_compras->getCoDetalleCompras(),
+                            round($monto_iva, 2),
+                            $this->getUser()->getAttribute('codigo'),
+                            $con
+                        );
                     }
 
                 }
