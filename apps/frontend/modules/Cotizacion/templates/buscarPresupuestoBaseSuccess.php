@@ -76,7 +76,7 @@
                     },
                     {
                         header: 'Código Presupuesto',
-                        width: 150,
+                        width: 180,
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'tx_serial_cotizacion',
