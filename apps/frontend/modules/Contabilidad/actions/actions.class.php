@@ -124,6 +124,11 @@ class ContabilidadActions extends sfActions
   
   public function executeAgregarFactura(sfWebRequest $request)
   {
+      
+        $c = new Criteria();
+        $c->add(Tb052ComprasPeer::CO_SOLICITUD,$this->getRequestParameter("co_solicitud"));
+        $stmt = Tb052ComprasPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);      
    
         $this->data = json_encode(array(
                 "co_documento"     => $this->getRequestParameter("co_documento"),
@@ -131,7 +136,8 @@ class ContabilidadActions extends sfActions
                 "nu_iva"           => $this->getRequestParameter("nu_iva"),
                 "nu_iva_retencion" => $this->getRequestParameter("nu_iva_retencion"),
                 "co_solicitud"     => $this->getRequestParameter("co_solicitud"),
-                "co_proveedor"     => $this->getRequestParameter("co_proveedor")
+                "co_proveedor"     => $this->getRequestParameter("co_proveedor"),
+                "fecha_compra"     => $campos["fecha_compra"]
         ));
 
   }

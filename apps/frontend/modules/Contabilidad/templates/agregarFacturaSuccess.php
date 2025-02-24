@@ -48,6 +48,7 @@
                 name: 'fe_emision',
                 allowBlank: false,
                 format: 'd-m-Y',
+                minValue:this.OBJ.fecha_compra,
                 width: 100
             });
 
