@@ -831,10 +831,11 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb085.de_partida,
                          tb085.nu_partida,
                          upper(tb052.tx_observacion) as tx_observacion,
-                         sum(case when (tb053.in_calcular_iva) then tb053.monto else tb053.monto end) as monto
+                         sum(case when tb053.co_presupuesto is null then tb209.monto else tb053.monto end) as monto
                   from  tb052_compras as tb052
-                  left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras
-                  left join tb085_presupuesto as tb085 on tb085.id = tb053.co_presupuesto
+                  left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras            
+                  left join tb209_presupuesto_detalle_compra as tb209 on tb209.co_detalle_compra = tb053.co_detalle_compras
+                  left join tb085_presupuesto as tb085 on tb085.id = (case when tb053.co_presupuesto is null then tb209.co_presupuesto else tb053.co_presupuesto end)
                   left join tb084_accion_especifica as tb084 on tb085.id_tb084_accion_especifica = tb084.id
                   left join tb083_proyecto_ac as tb083 on tb084.id_tb083_proyecto_ac = tb083.id
                   left join tb082_ejecutor as tb082 on tb082.id = tb083.id_tb082_ejecutor
