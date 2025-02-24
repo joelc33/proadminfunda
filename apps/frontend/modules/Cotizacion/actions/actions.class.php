@@ -609,11 +609,11 @@ class CotizacionActions extends sfActions
 
     if ($this->getRequestParameter("co_tipo_tramite") == 64) //contrato
     {
-      $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(2, 3, 4, 5, 6), Criteria::IN);
+      $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(2, 3, 4, 5, 6,7), Criteria::IN);
     } else {
       $c->add(Tb206CotizacionPeer::CO_MODALIDAD, array(1), Criteria::IN);
     }
-
+ 
     $c->setIgnoreCase(true);
     $cantidadTotal = Tb206CotizacionPeer::doCount($c);
     $c->setLimit($limit)->setOffset($start);
