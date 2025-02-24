@@ -542,6 +542,7 @@
                 fieldLabel: 'Fecha Compra',
                 name: 'tb052_compras[fecha_compra]',
                 value: this.OBJ.fecha_compra,
+                maxValue: new Date(),
                 allowBlank: false,
                 width: 100
             });
