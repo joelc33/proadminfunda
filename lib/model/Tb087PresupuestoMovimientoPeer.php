@@ -18,6 +18,21 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
         return $campos["co_partida"];
     }
 
+    static public function verificarPresupuesto209($id, $tipo)
+    {
+
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::CO_PARTIDA);
+        $c->add(Tb087PresupuestoMovimientoPeer::CO_PRESUPUESTO_DETALLE_COMPRA, $id);
+        $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO, $tipo);
+
+        $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $campos["co_partida"];
+    }
+
     static public function movimientoPartida($con, $co_ejercicio, $co_usuario, $co_presupuesto, $co_tipo_movimiento, $monto, $co_detalle_cotizacion = '', $co_detalle_compras = '', $co_presupuesto_detalle_compra = '')
     {
 
