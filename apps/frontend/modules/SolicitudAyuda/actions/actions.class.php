@@ -415,6 +415,10 @@ class SolicitudAyudaActions extends sfActions
             $tb053_detalle_compras->setPrecioUnitario($mo_total);
             $tb053_detalle_compras->setMonto($mo_total);
             $tb053_detalle_compras->save($con);
+            
+            $wherec = new Criteria();
+            $wherec->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA,$tb053_detalle_compras->getCoDetalleCompras());
+            BasePeer::doDelete($wherec, $con);            
 
             Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra(
                 $tb053_detalle_compras->getCoDetalleCompras(),
