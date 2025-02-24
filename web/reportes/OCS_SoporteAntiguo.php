@@ -513,20 +513,20 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->Cell(100, 0, utf8_decode('CLÁUSULA PENAL 0,02% DIARIO'), 0, 1, 'L', 1);          
 
         //$style2 = array('width' => 0.5, 'cap' => 'round', 'join' => 'miter', 'dash' => '2,10', 'color' => array(0,0,0));
-        $this->Line(15, $Y+8, 200, $Y+8);
-
-        $this->SetY($Y + 10);
+        $this->Line(15, $Y-8, 200, $Y-8);
+//        $Y = $this->GetY();
+        $this->SetY($Y + 8);
         $this->SetX(15);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(50, 5, utf8_decode('FORMA DE PAGO: '), 0, 'L');
-        $this->SetY($Y + 10);
+        $this->SetY($Y + 8);
         $this->SetX(65);
         $this->SetFont('Times', '', 9);
         $this->MultiCell(100, 5, utf8_decode('CREDITO'), 0, 'L');
         $this->SetX(15);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(70, 5, utf8_decode('PLAZO DE ENTREGA:'), 0, 'L');
-        $this->SetY($Y + 15);
+        $this->SetY($Y + 13);
         $this->SetX(65);
         $this->SetFont('Times', '', 9);
         $this->MultiCell(100, 5, utf8_decode($this->punto['tx_entrega']), 0, 'L');
@@ -540,7 +540,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(15);
         $this->SetFont('Times', 'B', 8);
         $this->MultiCell(70, 5, utf8_decode('ANEXOS: '), 0, 'L');
-        $this->SetY($Y + 20);
+        $this->SetY($Y + 18);
         $this->SetX(65);
         $this->SetFont('Times', '', 9);
         $this->MultiCell(135, 5, utf8_decode($this->punto['nu_expediente']), 0, 'J');
@@ -801,7 +801,7 @@ class PDF_Flo extends PDF_FlowingBlock
     {
 
         $conex = new ConexionComun();
-        $sql = "SELECT UPPER((substr(tx_producto,1,50)||'-'||substr(tb053.detalle,1,50))) as tx_producto,
+        $sql = "SELECT UPPER((substr(tx_producto,1,50)||'-'||substr(tb053.detalle,1,150))) as tx_producto,
                          tb053.nu_cantidad,
                          tb052.nu_iva,
                          tb048.cod_producto,
