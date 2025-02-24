@@ -49,6 +49,7 @@
                 allowBlank: false,
                 format: 'd-m-Y',
                 minValue:this.OBJ.fecha_compra,
+                maxValue:new date(),
                 width: 100
             });
 
