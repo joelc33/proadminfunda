@@ -232,7 +232,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $Y = $this->GetY();
         $this->SetY($Y);
         $this->SetX(115);
-        $this->SetFont('Times', '', 7);
+        $this->SetFont('Times', '', 6);
         $this->MultiCell(80, 5, utf8_decode($this->datos['tx_concepto']), 0, 'J');        
 
         $Y = 40;
