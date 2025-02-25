@@ -424,8 +424,11 @@ class PDF_Flo extends PDF_FlowingBlock
 
                     $j++;
                 }
-
-
+                if (!empty($this->datos[0]['nu_exento'])) {
+                $this->SetWidths(array(113, 22, 20, 20));
+                $this->SetAligns(array("R", "R", "R", "R"));    
+                $this->Row(array('EXENTO', number_format($this->datos[0]['nu_exento'], 2, ',', '.')), 0, 0);
+                }
                 $y = $this->getY();
                 $Y = $this->GetY();
                 /*$this->line(76, $y + 1, 98, $y + 1);
@@ -963,6 +966,7 @@ class PDF_Flo extends PDF_FlowingBlock
                           numero_compra,
                           nu_total_retencion,
                           in_patria,
+                          nu_exento,
                           case when mo_pagar is null then tb052.monto_total else mo_pagar end total_pagar,
                           nu_factura,
 						  tb052.monto_total,
