@@ -173,10 +173,10 @@ class PDF_Flo extends PDF_FlowingBlock
       
          //***** Segundo emblema izq ******//
          $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(0, 0, 0));
-         $this->RoundedRect(15, 37, 90, 30, 3.5, '1111', 'DF', $style);
+         $this->RoundedRect(15, 37, 90, 35, 3.5, '1111', 'DF', $style);
  
          $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(0, 0, 0));
-         $this->RoundedRect(110, 37, 90, 30, 3.5, '1111', 'DF', $style);
+         $this->RoundedRect(110, 37, 90, 35, 3.5, '1111', 'DF', $style);
  
          $this->Ln(2);
 
