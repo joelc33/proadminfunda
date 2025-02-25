@@ -297,7 +297,7 @@ class PDF_Flo extends PDF_FlowingBlock
   
 
 
-        $this->SetY(70);
+        $this->SetY(75);
         $this->SetX(15);
         $this->SetWidths(array(111, 22, 25, 29, 20, 30));
         $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
