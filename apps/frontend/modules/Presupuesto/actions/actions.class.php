@@ -1028,6 +1028,7 @@ class PresupuestoActions extends sfActions
         $c->addSelectColumn(Tb206CotizacionPeer::MONTO_IVA);
         $c->addSelectColumn(Tb206CotizacionPeer::MONTO_TOTAL);
         $c->addSelectColumn(Tb206CotizacionPeer::CO_COTIZACION);
+        $c->addSelectColumn(Tb206CotizacionPeer::CO_FUENTE_FINANCIAMIENTO);
 
         $c->add(Tb206CotizacionPeer::CO_SOLICITUD, $codigo);
 
@@ -1037,14 +1038,15 @@ class PresupuestoActions extends sfActions
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $this->data = json_encode(array(
-            "nu_iva" => $campos["nu_iva"],
-            "tx_serial_cotizacion" => $campos["tx_serial_cotizacion"],
-            "tx_observacion" => $campos["tx_observacion"],
-            "monto_sub_total" => $campos["monto_sub_total"],
-            "co_solicitud" => $this->getRequestParameter("co_solicitud"),
-            "monto_iva" => $campos["monto_iva"],
-            "monto_total" => $campos["monto_total"],
-            "co_cotizacion" => $campos["co_cotizacion"]
+            "nu_iva"                    => $campos["nu_iva"],
+            "tx_serial_cotizacion"      => $campos["tx_serial_cotizacion"],
+            "tx_observacion"            => $campos["tx_observacion"],
+            "monto_sub_total"           => $campos["monto_sub_total"],
+            "co_solicitud"              => $this->getRequestParameter("co_solicitud"),
+            "monto_iva"                 => $campos["monto_iva"],
+            "monto_total"               => $campos["monto_total"],
+            "co_cotizacion"             => $campos["co_cotizacion"],
+            "co_fuente_financiamiento"  => $campos["co_fuente_financiamiento"]
         ));
     }
 
@@ -1770,6 +1772,10 @@ class PresupuestoActions extends sfActions
                         return;
                     }
                 }
+
+                $tb206_cotizacion = Tb206CotizacionPeer::retrieveByPK($co_cotizacion);
+                $tb206_cotizacion->setCoFuenteFinanciamiento($co_fuente_financiamiento);
+                $tb206_cotizacion->save($con);
 
                 $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
 
@@ -3657,6 +3663,26 @@ class PresupuestoActions extends sfActions
         ));
         $this->setTemplate('store');
     }
+
+    public function executeStorefkcofuentefinanciamiento(sfWebRequest $request)
+    {
+        $c = new Criteria();
+        $c->add(Tb073FuenteFinanciamientoPeer::IN_ACTIVO, TRUE);
+        $stmt = Tb073FuenteFinanciamientoPeer::doSelectStmt($c);
+        $registros = array();
+        while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $registros[] = $reg;
+        }
+
+        $this->data = json_encode(array(
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
+        ));
+        $this->setTemplate('store');
+    }
+
+    
 
     public function executeDesafectacion(sfWebRequest $request)
     {

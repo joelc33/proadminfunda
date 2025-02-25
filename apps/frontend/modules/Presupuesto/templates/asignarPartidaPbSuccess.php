@@ -66,6 +66,14 @@
                 iconCls: 'icon-add',
                 handler: function () {
 
+
+
+                    if(ContabilidadEditar.main.co_fuente_financiamiento.getValue() == ''){
+                        Ext.Msg.alert("Notificación", 'Para asignar una partida, debe seleccionar la fuente de financiamiento');
+                        return;
+                    }
+
+
                     ContabilidadEditar.main.mascara.show();
                     this.msg = Ext.get('formularioAgregar');
                     this.msg.load({
@@ -279,8 +287,8 @@
 
 
             this.fieldDatosEnte = new Ext.form.FieldSet({
-                title: 'Datos del Ente Ejecutor / Fuente Financiamiento',
-                items: [this.co_ejecutor]
+                title: 'Datos de la Fuente Financiamiento',
+                items: [this.co_fuente_financiamiento]
             });
 
             this.tx_concepto = new Ext.form.TextField({
@@ -325,7 +333,7 @@
                 this.co_solicitud,
                 this.fieldDatos,
                 // this.fieldDatosContrato,
-                //  this.fieldDatosEnte,
+                this.fieldDatosEnte,
                 this.gridPanel
                 ]
             });
@@ -407,8 +415,8 @@
                 //                 ContabilidadEditar.main.co_ejecutor.setReadOnly(true);
                 //                 
                 //                 
-                //                 Ext.get('co_fuente_financiamiento').setStyle('background-color','#c9c9c9');
-                //                 ContabilidadEditar.main.co_fuente_financiamiento.setReadOnly(true);
+                Ext.get('co_fuente_financiamiento').setStyle('background-color','#c9c9c9');
+                ContabilidadEditar.main.co_fuente_financiamiento.setReadOnly(true);
 
 
             } else {
