@@ -361,7 +361,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
 
             
-             $this->lista_retenciones = $this->getRetenciones($this->datos['co_solicitud'],2);
+             $this->lista_retenciones = $this->getRetenciones($this->datos['co_orden_pago'],2);
              
             
             if(count($this->lista_retenciones)>0){                     
@@ -519,7 +519,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 
             }
             
-             $this->lista_retenciones = $this->getRetenciones($this->datos['co_solicitud'],4);
+             $this->lista_retenciones = $this->getRetenciones($this->datos['co_orden_pago'],4);
              
             
             if(count($this->lista_retenciones)>0){                     
@@ -690,7 +690,7 @@ class PDF_Flo extends PDF_FlowingBlock
             } 
             
             
-             $this->lista_retenciones = $this->getRetenciones($this->datos['co_solicitud'],92);
+             $this->lista_retenciones = $this->getRetenciones($this->datos['co_orden_pago'],92);
              
             
             if(count($this->lista_retenciones)>0){
@@ -920,7 +920,7 @@ class PDF_Flo extends PDF_FlowingBlock
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol[0];   
     }
-    function getRetenciones($co_solicitud,$co_tipo_retencion){
+    function getRetenciones($co_odp,$co_tipo_retencion){
 
 	  $conex = new ConexionComun();
           $sql = "select  nu_factura,
@@ -951,7 +951,7 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb026_solicitud as tb026 on tb026.co_solicitud = tb046.co_solicitud
                   left join tb008_proveedor as tb008 on tb008.co_proveedor=tb026.co_proveedor
                   left join tb042_retencion as tb042 on (tb046.co_tipo_retencion = tb042.co_tipo_retencion and tb008.co_documento = tb042.co_documento and tb045.co_ramo = tb042.co_ramo) 
-                  where tb045.in_anular is null and tb046.co_tipo_retencion = $co_tipo_retencion and tb045.co_solicitud = ".$co_solicitud; 
+                  where tb045.in_anular is null and tb046.co_tipo_retencion = $co_tipo_retencion and tb045.co_odp = ".$co_odp; 
                   
 //          echo $sql; exit(); 
           
