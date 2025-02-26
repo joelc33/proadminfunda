@@ -10,7 +10,7 @@ class PDF_Flo extends PDF_FlowingBlock
     {
 
         $this->datos = $this->getAyuda();
-
+        $this->empresa = $this->getDatosEmpresa(1);
         $this->Image("imagenes/logosedezul.jpg", 88, 5, 35);
 
       
@@ -183,6 +183,16 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetFont('Arial', 'B', 10);
         $this->SetX(20);
         $this->Cell(0, 0, utf8_decode('Regístrese y Comuníquese'), 0, 0, 'L');
+        $this->Ln(5);
+         $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'C');
+         $this->SetFont('Arial','B',8);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('PRESIDENTE DE(L) '.$this->empresa['nb_institucion']),0,0,'C');
+         $this->SetFont('Arial','',8);
+         $this->Ln(4);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('Gaceta oficial extraordinaria del Estado Zulia N° 2966 de fecha 26 de Enero de 2022.'),0,0,'C');        
         /*$this->Ln(20);
         $this->SetX(20);
         $this->Cell(0, 0, utf8_decode('LA SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'L');
@@ -239,6 +249,29 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
         return $datosSol[0];
+    }
+    
+        function getDatosEmpresa( $codigo){
+
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion, nb_presidente,
+        tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
+        tx_sigla,
+        op_imagen->'izquierda'->0 as izquierda_x,
+        op_imagen->'izquierda'->1 as izquierda_y,
+        op_imagen->'izquierda'->2 as izquierda_w,
+        op_imagen->'centro'->0 as centro_x,
+        op_imagen->'centro'->1 as centro_y,
+        op_imagen->'centro'->2 as centro_w,
+        op_imagen->'derecha'->0 as derecha_x,
+        op_imagen->'derecha'->1 as derecha_y,
+        op_imagen->'derecha'->2 as derecha_w
+        FROM public.tb015_empresa
+        WHERE co_empresa = ".$codigo.";";
+
+        $conex = new ConexionComun();
+        $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+        return  $datosSol[0];
+  
     }
 
 
