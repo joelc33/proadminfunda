@@ -262,7 +262,7 @@ class PDF extends FPDF {
                     
           $sql = "select substring(tb085.co_categoria,1,100) as co_categoria,
                          tb085.de_partida,
-                         sum(case when tb207.co_presupuesto is null then tb209.monto else tb207.monto end) as monto
+                         sum(case when tb207.co_presupuesto is null then tb209.monto else tb207.monto end) as monto,
                          tb140.tx_descripcion
                   from   tb206_cotizacion as tb206 
                   left join tb207_detalle_cotizacion as tb207 on tb207.co_cotizacion = tb206.co_cotizacion
