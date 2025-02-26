@@ -651,7 +651,7 @@ class PDF_Flo extends PDF_FlowingBlock
             foreach($this->lista_retenciones as $key => $campo1){
                 
                  $this->SetAligns(array("L","L","L","L","R","R","L","R"));   
-                 
+                 $this->SetFont('Arial','',8);
                  $this->Row(array(utf8_decode($campo1['fe_emision']),utf8_decode($campo1['nu_factura']),utf8_decode($campo1['nu_control']),utf8_decode($campo1['de_concepto']),number_format($campo1['nu_base_imponible'], 2, ',','.'),number_format($campo1['nu_sustraendo'], 2, ',','.'),$campo1['po_retencion'],number_format($campo1['mo_retencion'], 2, ',','.')),0,0);  
    
                  $total_base = $total_base + $campo1['nu_base_imponible'];
@@ -737,7 +737,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 foreach($this->lista_retenciones as $key => $campo1){
                 
                  $this->SetAligns(array("L","L","L","R","R","C","R","R"));   
-                 
+                 $this->SetFont('Arial','',8);
                  $this->Row(array(utf8_decode($campo1['fe_emision']),utf8_decode($campo1['nu_factura']),utf8_decode($campo1['nu_control']),number_format($campo1['nu_total'], 2, ',','.'),number_format($campo1['nu_base_imponible'], 2, ',','.'),number_format($campo1['co_iva_factura'], 2, ',','.'). ' %',number_format($campo1['nu_iva_factura'], 2, ',','.'),number_format($campo1['mo_retencion'], 2, ',','.')),0,0);  
    
                  $total_base = $total_base + $campo1['nu_base_imponible'];
