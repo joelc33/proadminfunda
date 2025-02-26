@@ -246,7 +246,8 @@ class PresupuestoActions extends sfActions
 
         $co_solicitud = $this->getRequestParameter("co_solicitud");
         $tx_concepto = $this->getRequestParameter("tx_concepto");
-
+        list($dia, $mes, $anio ) = explode("/", $this->getRequestParameter("fecha"));
+        $fecha_odp = $anio.'-'.$mes.'-'.$dia;
 
         $con = Propel::getConnection();
         try {
@@ -254,7 +255,7 @@ class PresupuestoActions extends sfActions
 
 
 
-            $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'));
+            $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'),null,$fecha_odp);
 
             //          echo "odp=".$co_odp; exit();
 
