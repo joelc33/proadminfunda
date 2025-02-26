@@ -37,7 +37,7 @@ this.de_cuota = new Ext.form.TextArea({
 this.disponibilidad = new Ext.form.NumberField({
 	fieldLabel:'Monto Disponible',
 	name:'tb145_cuenta_cobrar_detalle[mo_disponible]',
-	value:this.OBJ.disponibilidad,
+	value:this.OBJ.mo_disponible,
 	allowBlank:false,
 	width:200,
     readOnly: true,
@@ -57,7 +57,7 @@ this.mo_cuota = new Ext.form.NumberField({
     listeners:{
         change: function(textfield, newValue, oldValue){
         var me = this;
-        if(CuentaPorCobrarCreditoDetalleEditar.main.mo_disponible.getValue() < newValue){
+        if(parseFloat(CuentaPorCobrarCreditoDetalleEditar.main.mo_disponible.getValue(),2) < parseFloat(newValue)){
             me.validFlag = 'El monto a solicitar no debe superar al monto Disponible.';
         }else{
             me.validFlag = true;
@@ -86,6 +86,11 @@ this.guardar = new Ext.Button({
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
             return false;
         }
+        
+        if(CuentaPorCobrarCreditoDetalleEditar.main.mo_cuota.getValue()==0){
+            Ext.Msg.alert("Alerta","El monto de la cuota debe ser mayor a 0");
+            return false;
+        }       
         CuentaPorCobrarCreditoDetalleEditar.main.formPanel_.getForm().submit({
             method:'POST',
             url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/CuentaPorCobrarCreditoDetalle/guardar',
