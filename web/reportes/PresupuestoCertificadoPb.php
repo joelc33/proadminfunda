@@ -262,11 +262,12 @@ class PDF extends FPDF {
                     
           $sql = "select substring(tb085.co_categoria,1,100) as co_categoria,
                          tb085.de_partida,
-                         sum(tb207.monto) as monto,
+                         sum(case when tb207.co_presupuesto is null then tb209.monto else tb207.monto end) as monto
                          tb140.tx_descripcion
                   from   tb206_cotizacion as tb206 
                   left join tb207_detalle_cotizacion as tb207 on tb207.co_cotizacion = tb206.co_cotizacion
-                  left join tb085_presupuesto as tb085 on (tb085.id = tb207.co_presupuesto)
+                  left join tb209_presupuesto_detalle_compra as tb209 on tb209.co_detalle_compra = tb207.co_detalle_cotizacion
+                  left join tb085_presupuesto as tb085 on tb085.id = (case when tb207.co_presupuesto is null then tb209.co_presupuesto else tb207.co_presupuesto end)
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb206.co_solicitud and tb030.in_cargar_dato is true
                   left join tb140_tipo_ingreso as tb140 on tb140.co_tipo_ingreso = tb085.tip_ing::numeric
                   where tb030.co_ruta = ".$_GET['codigo']."  group by co_categoria,tb085.de_partida,tb140.tx_descripcion
