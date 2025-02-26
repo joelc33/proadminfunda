@@ -183,7 +183,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetFont('Arial', 'B', 10);
         $this->SetX(20);
         $this->Cell(0, 0, utf8_decode('Regístrese y Comuníquese'), 0, 0, 'L');
-        $this->Ln(15);
+        $this->Ln(20);
          $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'C');
          $this->SetFont('Arial','B',8);
          $this->Ln(5);
