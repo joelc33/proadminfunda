@@ -551,6 +551,10 @@ if($data->sheets[0]['cells'][$i][2]==''){
                 $wherem = new Criteria();
                 $wherem->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $resw["co_detalle_compras"], Criteria::EQUAL);
                 BasePeer::doDelete($wherem, $con);
+
+                $where209 = new Criteria();
+                $where209->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, $resw["co_detalle_compras"], Criteria::EQUAL);
+                BasePeer::doDelete($where209, $con);
             }
 
             BasePeer::doDelete($wherec, $con);
@@ -573,6 +577,13 @@ if($data->sheets[0]['cells'][$i][2]==''){
 
                     $tb053_detalle_compras->setDetalle($res["tx_descripcion"]);
                     $tb053_detalle_compras->save($con);
+
+                    Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra($tb053_detalle_compras->getCoDetalleCompras(),
+                    $res["total"], 
+                    $this->getUser()->getAttribute("codigo"),
+                    $con,false);
+                   
+
                 } else {
                     if ($res["tx_tipo_movimiento"] == 'D') {
 
