@@ -173,7 +173,7 @@ class PDF extends FPDF {
          $this->SetFillColor(201, 199, 199);
          $this->Ln(6);
          $this->SetX(20);
-         $this->Row(array(utf8_decode('TOTAL ').$this->cuenta['tx_descripcion'],number_format($total_dia_debe, 2, ',','.'),number_format($total_dia_haber, 2, ',','.'),number_format($saldo, 2, ',','.')),1,1);  
+         $this->Row(array(utf8_decode('TOTAL ').utf8_decode($this->cuenta['tx_descripcion']),number_format($total_dia_debe, 2, ',','.'),number_format($total_dia_haber, 2, ',','.'),number_format($saldo, 2, ',','.')),1,1);  
          }else{
          $this->Ln(50);
          $this->Cell(0,0,utf8_decode('NO EXISTEN REGISTROS CON LOS PARAMETROS ESPECIFICADOS'),0,0,'C');    
