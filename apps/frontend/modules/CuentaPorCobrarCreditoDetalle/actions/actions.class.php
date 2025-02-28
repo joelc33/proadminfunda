@@ -43,7 +43,7 @@ class CuentaPorCobrarCreditoDetalleActions extends sfActions
     $stmt3 = Tb145CuentaCobrarDetallePeer::doSelectStmt($c3);
     $campos3 = $stmt3->fetch(PDO::FETCH_ASSOC);
 
-    $mo_disponible_nuevo = $campos2["mo_cuenta"] - $campos3["total_cuota"];
+    $mo_disponible_nuevo = round($campos2["mo_cuenta"] - $campos3["total_cuota"],2);
     //$mo_disponible_editar = $campos["mo_cuota"] + $mo_disponible_nuevo;
 
     if($codigo!=''||$codigo!=null){
@@ -170,10 +170,19 @@ class CuentaPorCobrarCreditoDetalleActions extends sfActions
             }
 
         }        
-        
-        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb142_cuenta_cobrar->getCoSolicitud()));
-        $ruta->setInCargarDato(true)->save($con);
 
+        $mo_cuenta =0;
+        $c5 = new Criteria();
+        $c5->add(Tb145CuentaCobrarDetallePeer::ID_TB142_CUENTA_COBRAR, $tb145_cuenta_cobrar_detalleForm["id_tb142_cuenta_cobrar"]);
+        $stmt5 = Tb145CuentaCobrarDetallePeer::doSelectStmt($c5);
+        while($res5 = $stmt5->fetch(PDO::FETCH_ASSOC)){
+          $mo_cuenta =   $mo_cuenta + $res5["mo_cuota"];
+        }
+        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb142_cuenta_cobrar->getCoSolicitud()));       
+
+         if($tb142_cuenta_cobrar->getMoCuenta()==$mo_cuenta){
+        $ruta->setInCargarDato(true)->save($con);
+        }
         $con->commit();
 
         Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());         

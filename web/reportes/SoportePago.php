@@ -361,7 +361,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
 
             
-             $this->lista_retenciones = $this->getRetenciones($this->datos['co_solicitud'],2);
+             $this->lista_retenciones = $this->getRetenciones($this->datos['co_orden_pago'],2);
              
             
             if(count($this->lista_retenciones)>0){                     
@@ -519,7 +519,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 
             }
             
-             $this->lista_retenciones = $this->getRetenciones($this->datos['co_solicitud'],4);
+             $this->lista_retenciones = $this->getRetenciones($this->datos['co_orden_pago'],4);
              
             
             if(count($this->lista_retenciones)>0){                     
@@ -651,7 +651,7 @@ class PDF_Flo extends PDF_FlowingBlock
             foreach($this->lista_retenciones as $key => $campo1){
                 
                  $this->SetAligns(array("L","L","L","L","R","R","L","R"));   
-                 
+                 $this->SetFont('Arial','',8);
                  $this->Row(array(utf8_decode($campo1['fe_emision']),utf8_decode($campo1['nu_factura']),utf8_decode($campo1['nu_control']),utf8_decode($campo1['de_concepto']),number_format($campo1['nu_base_imponible'], 2, ',','.'),number_format($campo1['nu_sustraendo'], 2, ',','.'),$campo1['po_retencion'],number_format($campo1['mo_retencion'], 2, ',','.')),0,0);  
    
                  $total_base = $total_base + $campo1['nu_base_imponible'];
@@ -690,7 +690,7 @@ class PDF_Flo extends PDF_FlowingBlock
             } 
             
             
-             $this->lista_retenciones = $this->getRetenciones($this->datos['co_solicitud'],92);
+             $this->lista_retenciones = $this->getRetenciones($this->datos['co_orden_pago'],92);
              
             
             if(count($this->lista_retenciones)>0){
@@ -737,7 +737,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 foreach($this->lista_retenciones as $key => $campo1){
                 
                  $this->SetAligns(array("L","L","L","R","R","C","R","R"));   
-                 
+                 $this->SetFont('Arial','',8);
                  $this->Row(array(utf8_decode($campo1['fe_emision']),utf8_decode($campo1['nu_factura']),utf8_decode($campo1['nu_control']),number_format($campo1['nu_total'], 2, ',','.'),number_format($campo1['nu_base_imponible'], 2, ',','.'),number_format($campo1['co_iva_factura'], 2, ',','.'). ' %',number_format($campo1['nu_iva_factura'], 2, ',','.'),number_format($campo1['mo_retencion'], 2, ',','.')),0,0);  
    
                  $total_base = $total_base + $campo1['nu_base_imponible'];
@@ -783,6 +783,164 @@ class PDF_Flo extends PDF_FlowingBlock
                  $this->SetX(10);
                  $this->Row(array(utf8_decode('Agente de Retención'),utf8_decode('Firma del Beneficiario')),0,0);          
          
+            }   
+            
+             $this->lista_retenciones = $this->getRetenciones($this->datos['co_orden_pago'],100);
+             
+            
+            if(count($this->lista_retenciones)>0){                     
+                
+            $this->AddPage();
+            
+            $this->datos1 = $this->getFacturas(); 
+            $this->nro_comprobante = $this->getComprobante($this->datos['co_solicitud'],100);
+
+            $this->Ln(5);      
+            
+            
+            
+            
+            $this->SetFont('Arial','B',9);
+            $this->Cell(0,0,utf8_decode('COMPROBANTE DE RETENCIÓN DE FIEL CUMPLIMIENTO'),0,0,'C');
+            $this->Ln(1);
+            $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'),0,0,'C'); 
+            $this->Ln(5);                 
+                
+            $this->SetFillColor(201, 199, 199);
+            $this->SetWidths(array(170,30, 30));
+            $this->SetAligns(array("R","L"));
+            $this->SetFont('Arial','B',8);
+            $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
+            $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->nro_comprobante['fe_emision'])),0,0);
+            $this->Ln(5);  
+            
+            $this->RoundedRect(10, $this->getY()-3, 95, 50, 0.5, '1001', '', $style);         
+            $this->RoundedRect(110, $this->getY()-3, 95, 50, 0.5, '1001', '', $style);    
+
+            $this->Cell(95,0,utf8_decode('DATOS DEL AGENTE DE RETENCIÓN'),0,0,'C');
+            $this->Cell(5,0,utf8_decode(''),0,0,'C');
+            $this->Cell(95,0,utf8_decode('DATOS DEL CONTRIBUYENTE'),0,0,'C'); 
+            $this->Ln(8);
+            
+            if (!empty($this->empresa['nb_institucion'])) 
+            {
+            $agente_retencion = utf8_decode($this->empresa['nb_institucion']);
+            }else{
+            $agente_retencion = utf8_decode($this->empresa['nb_empresa']);    
+            }
+            $y= $this->GetY();           
+            $this->SetY($y);
+            $this->SetX(12);
+            $this->MultiCell(90,4,$agente_retencion,0,1,'J',0);
+            $z= $this->GetY();
+            $this->SetY($y);            
+            $this->SetX(112);
+            $this->MultiCell(90,4,utf8_decode($this->datos1['tx_razon_social']),0,1,'J',0);
+            $p= $this->GetY();
+            $cant = $z-$y;
+            $this->SetX(12);
+            $this->SetFont('Arial','',8); 
+            if($z==$p){
+            if($cant==4){
+             $q = $y +4;      
+            }else{
+             $q = $y +8;                  
+            }
+            }else{
+            $q = $y +8;    
+            }
+            $this->SetY($q);
+            $this->SetX(12);
+            $this->MultiCell(90,4,utf8_decode('R.I.F. Agente de Retención:'),0,1,'J',0);
+            $this->SetY($q);
+            $this->SetX(112);
+            $this->MultiCell(90,4,utf8_decode('R.I.F. Contribuyente:'),0,1,'J',0);
+            
+            $y= $this->GetY();
+            $this->SetY($y);            
+            $this->SetX(12);
+            $this->SetFont('Arial','B',8);            
+            $this->MultiCell(90,4,utf8_decode($this->empresa['tx_rif']),0,1,'J',0);
+            $this->SetY($y);
+            $this->SetX(112);            
+            $this->MultiCell(90,4,utf8_decode($this->datos1['tx_rif']),0,1,'J',0);
+            $y= $this->GetY();
+            $this->SetY($y);              
+            $this->SetX(12);
+            $this->SetFont('Arial','',8);            
+            $this->MultiCell(90,4,utf8_decode('Dirección Fiscal:'),0,1,'J',0); 
+            $this->SetY($y);
+            $this->SetX(112);    
+            $this->MultiCell(90,4,utf8_decode('Dirección Fiscal:'),0,1,'J',0); 
+            
+            
+            $this->SetFont('Arial','B',8);
+            $y= $this->GetY();
+            $this->SetY($y);
+            $this->SetX(112);
+            $this->MultiCell(90,4,utf8_decode(strtoupper($this->datos1['tx_direccion'])),0,1,'J',0); 
+            $this->SetY($y);
+            $this->SetX(12);
+            $this->MultiCell(90,4,utf8_decode($this->empresa['tx_direccion']),0,1,'J',0);
+            
+                $this->Ln(15);
+                 $this->SetWidths(array(20, 25, 25, 45,30,15,30)); 
+                 $this->SetAligns(array("L","L","L","L","R","L","R"));              
+                 $this->SetFont('Arial','B',8);
+                     $this->SetFillColor(201, 199, 199);  
+                 $this->SetX(10);         
+                 $this->Row(array(utf8_decode('Fecha Fac.'),utf8_decode('Nro. Factura'),utf8_decode('Nro. Control'),utf8_decode('Concepto de Retención'),utf8_decode('Base Imponible'),utf8_decode('%'),utf8_decode('Monto Retenido')),0,0);  
+                 $this->ln(1);
+                 $this->SetX(10);
+                 $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'),0,0,'L');
+                 $this->ln(5);
+                 $this->SetX(10);
+                 $this->Cell(0,0,utf8_decode('Orden de Pago: OP-'.$this->datos['tx_serial']),0,0,'L');
+                 $this->ln(1);
+                 $this->SetX(10);
+                 $this->Cell(0,0,utf8_decode('_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'),0,0,'L');
+                 $this->ln(5);
+                 
+                 $total_base = 0;
+                 $total_impuesto = 0;
+                 
+            foreach($this->lista_retenciones as $key => $campo1){
+                
+                 $this->SetAligns(array("L","L","L","L","R","L","R"));   
+                 $this->SetFont('Arial','',8);
+                 $this->Row(array(utf8_decode($campo1['fe_emision']),utf8_decode($campo1['nu_factura']),utf8_decode($campo1['nu_control']),utf8_decode($campo1['tx_tipo_retencion']),number_format($campo1['nu_total'], 2, ',','.'),$campo1['po_retencion'],number_format($campo1['mo_retencion'], 2, ',','.')),0,0);  
+                 
+                 $total_base = $total_base + $campo1['nu_total'];
+                 $total_impuesto = $total_impuesto + $campo1['mo_retencion'];
+            
+           }
+           $this->SetFont('Arial','B',8);
+                  $this->ln(1);
+         $this->Cell(145,0,utf8_decode('_ _ _ _ _ _ _ _ _'),0,0,'R');
+         $this->Cell(45,0,utf8_decode('_ _ _ _ _ _ _ _ _'),0,0,'R');
+                  $this->ln(1);
+         $this->Cell(145,0,utf8_decode('_ _ _ _ _ _ _ _ _'),0,0,'R');
+                  $this->Cell(45,0,utf8_decode('_ _ _ _ _ _ _ _ _'),0,0,'R');
+                  $this->ln(1);
+ 
+         $this->SetWidths(array(115,30,15,30)); 
+         $this->SetAligns(array("R","R","R","R")); 
+         
+         $this->ln(3);
+         $this->SetX(10);         
+         $this->Row(array('TOTAL IMPUESTO RETENIDO:',number_format($total_base, 2, ',','.'),'',number_format($total_impuesto, 2, ',','.')),0,0);   
+        
+         
+         $this->ln(18);           
+           
+                 $this->ln(35); 
+                 $this->SetWidths(array(200)); 
+                 $this->SetAligns(array("C","C")); 
+                 $this->SetX(10);        
+                 $this->Row(array(utf8_decode('_ _ _ _ _ _  _ _ _ _  _ _ _ _ _  _ _')),0,0);
+                 $this->SetX(10);
+                 $this->Row(array(utf8_decode('Firma y Sello del Agente de Retención')),0,0); 
+                
             }            
  
          
@@ -920,7 +1078,7 @@ class PDF_Flo extends PDF_FlowingBlock
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol[0];   
     }
-    function getRetenciones($co_solicitud,$co_tipo_retencion){
+    function getRetenciones($co_odp,$co_tipo_retencion){
 
 	  $conex = new ConexionComun();
           $sql = "select  nu_factura,
@@ -951,7 +1109,7 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb026_solicitud as tb026 on tb026.co_solicitud = tb046.co_solicitud
                   left join tb008_proveedor as tb008 on tb008.co_proveedor=tb026.co_proveedor
                   left join tb042_retencion as tb042 on (tb046.co_tipo_retencion = tb042.co_tipo_retencion and tb008.co_documento = tb042.co_documento and tb045.co_ramo = tb042.co_ramo) 
-                  where tb045.in_anular is null and tb046.co_tipo_retencion = $co_tipo_retencion and tb045.co_solicitud = ".$co_solicitud; 
+                  where tb045.in_anular is null and tb046.co_tipo_retencion = $co_tipo_retencion and tb045.co_odp = ".$co_odp; 
                   
 //          echo $sql; exit(); 
           

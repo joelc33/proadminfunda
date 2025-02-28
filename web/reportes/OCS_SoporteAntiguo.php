@@ -133,9 +133,10 @@ class PDF_Flo extends PDF_FlowingBlock
 
     function Footer()
     {
-        $this->SetFont('Times', '', 9);
+        $this->SetFont('Arial', '', 9);
         $this->SetY(-20);
         $this->Cell(0, 0, utf8_decode(''), 0, 0, 'C');
+          
     }
 
     function Header()
@@ -169,14 +170,6 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->Row(array(utf8_decode($datos_empresa["nb_institucion"])), 0, 0);
          $this->SetX(15);
          $this->Row(array(utf8_decode('RIF: '.$datos_empresa["tx_rif"])), 0, 0);
- 
-      
-         //***** Segundo emblema izq ******//
-         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(0, 0, 0));
-         $this->RoundedRect(15, 37, 90, 30, 3.5, '1111', 'DF', $style);
- 
-         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(0, 0, 0));
-         $this->RoundedRect(110, 37, 90, 30, 3.5, '1111', 'DF', $style);
  
          $this->Ln(2);
 
@@ -214,27 +207,6 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(160);
         $this->finishFlowingBlock();
 
-       
-       
-        $this->SetY(40);
-        $this->SetX(115);
-        $this->SetFont('Times', 'B', 8);
-        $this->MultiCell(90, 5, utf8_decode('N° DE PROCESO: '), 0, 'L');
-        $this->SetY(40);
-        $this->SetX(140);
-        $this->SetFont('Times', '', 9);
-        $this->MultiCell(70, 5, utf8_decode($this->datos['numero_cotizacion']), 0, 'L');
-        $Y = $this->GetY();
-        $this->SetY($Y);
-        $this->SetX(115);
-        $this->SetFont('Times', 'B', 8);
-        $this->MultiCell(90, 5, utf8_decode('DESCRIPCIÓN DEL PROCESO: '), 0, 'L');
-        $Y = $this->GetY();
-        $this->SetY($Y);
-        $this->SetX(115);
-        $this->SetFont('Times', '', 7);
-        $this->MultiCell(80, 5, utf8_decode($this->datos['tx_concepto']), 0, 'J');        
-
         $Y = 40;
         $this->SetY($Y);
         $this->SetX(16);
@@ -263,8 +235,29 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->MultiCell(90, 5, utf8_decode('DIRECCIÓN: '), 0, 'L');
         $this->SetY($Y);
         $this->SetX(36);
-        $this->SetFont('Times', '', 8);
-        $this->MultiCell(70, 5, utf8_decode($this->datos['tx_direccion']), 0, 'L');
+        $this->SetFont('Times', '', 6);
+        $this->MultiCell(70, 5, utf8_decode($this->datos['tx_direccion']), 0, 'L');       
+       
+        $this->SetY(40);
+        $this->SetX(115);
+        $this->SetFont('Times', 'B', 8);
+        $this->MultiCell(90, 5, utf8_decode('N° DE PROCESO: '), 0, 'L');
+        $this->SetY(40);
+        $this->SetX(140);
+        $this->SetFont('Times', '', 9);
+        $this->MultiCell(70, 5, utf8_decode($this->datos['numero_cotizacion']), 0, 'L');
+        $Y = $this->GetY();
+        $this->SetY($Y);
+        $this->SetX(115);
+        $this->SetFont('Times', 'B', 8);
+        $this->MultiCell(90, 5, utf8_decode('DESCRIPCIÓN DEL PROCESO: '), 0, 'L');
+        $Y = $this->GetY();
+        $this->SetY($Y);
+        $this->SetX(115);
+        $this->SetFont('Times', '', 6);
+        $this->MultiCell(80, 5, utf8_decode($this->datos['tx_concepto']), 0, 'J');        
+
+
         //-------------
         //        $this->newFlowingBlock( 55, 5, '', 'J' );
         //            $this->SetFont('Times', 'B', 9 );
@@ -294,10 +287,15 @@ class PDF_Flo extends PDF_FlowingBlock
       /*  $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(0, 0, 0));
         $this->RoundedRect(15, 80, 186, 180, 3.5, '0110', 'DF', $style);*/
 
-  
+          //***** Segundo emblema izq ******//
+         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(0, 0, 0));
+         $this->RoundedRect(15, 37, 90, $Y-37, 3.5, '1111', '', $style);
+ 
+         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'phase' => 10, 'color' => array(0, 0, 0));
+         $this->RoundedRect(110, 37, 90, $Y-37, 3.5, '1111', '', $style); 
 
 
-        $this->SetY(70);
+        $this->SetY($Y+2);
         $this->SetX(15);
         $this->SetWidths(array(111, 22, 25, 29, 20, 30));
         $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
@@ -346,9 +344,38 @@ class PDF_Flo extends PDF_FlowingBlock
                 $j = 0;
             }
 
-            if ($this->getY() > 250) {
+            if ($this->getY() > 220) {
+                
+            $this->SetX(15);
+            $this->SetY(240);
+            $this->SetAligns(array("C", "C", "C", "C"));
+            $this->SetFillColor(201, 199, 199);
+            $this->SetWidths(array(46, 46, 48, 46));
+            $this->SetFont('Arial', 'B', 6);
+            $this->SetX(15);
+            $this->Row(array(utf8_decode('COORDINACIÓN DE COMPRAS'), utf8_decode('COORDINACIÓN DE PRESUPUESTO'), utf8_decode('COORD GRAL DE ADMINISTRACIÓN'), utf8_decode('PROVEEDOR')), 1, 1);
+            $this->SetFillColor(255, 255, 255);
+            $this->SetAligns(array("L", "L"));
+            $Y = $this->GetY();
+            $this->SetX(15);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(61);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(107);
+            $this->MultiCell(48, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(155);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y + 3);
+            $this->SetFont('Arial', '', 6);
+            $this->ln(6);
+            $this->SetX(15);
+            $this->Row(array('Realizado por:', 'Revisado por:', 'Aprobado por:', utf8_decode('Recibí conforme:')), 0, 0);
+                
                 $this->addPage();
-                $this->SetX(108);
+                $this->SetX(158);
                 $this->Row(array('ANEXOS' . $this->datos['numero_compra']), 0, 0);
                 $this->SetWidths(array(111, 20, 24, 28, 22, 29));
                 $this->SetAligns(array("C", "C", "R", "R", "R", "R"));
@@ -385,6 +412,43 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetFont('Times', 'B', 10);
         $this->Row(array('Total General', number_format($TotalGenerado, 2, ',', '.')), 0, 0);
 
+        if ($this->getY() > 220) {
+            
+            $this->SetX(15);
+            $this->SetY(240);
+            $this->SetAligns(array("C", "C", "C", "C"));
+            $this->SetFillColor(201, 199, 199);
+            $this->SetWidths(array(46, 46, 48, 46));
+            $this->SetFont('Arial', 'B', 6);
+            $this->SetX(15);
+            $this->Row(array(utf8_decode('COORDINACIÓN DE COMPRAS'), utf8_decode('COORDINACIÓN DE PRESUPUESTO'), utf8_decode('COORD GRAL DE ADMINISTRACIÓN'), utf8_decode('PROVEEDOR')), 1, 1);
+            $this->SetFillColor(255, 255, 255);
+            $this->SetAligns(array("L", "L"));
+            $Y = $this->GetY();
+            $this->SetX(15);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(61);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(107);
+            $this->MultiCell(48, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(155);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y + 3);
+            $this->SetFont('Arial', '', 6);
+            $this->ln(6);
+            $this->SetX(15);
+            $this->Row(array('Realizado por:', 'Revisado por:', 'Aprobado por:', utf8_decode('Recibí conforme:')), 0, 0);            
+            
+            $this->addPage();           
+            $this->SetX(158);
+            $this->SetFont('Times', 'B', 8);
+            $this->Row(array('ANEXOS ' . $this->datos['numero_compra']), 0, 0);
+
+        }        
+        
         $this->SetX(15);
         $this->SetWidths(array(186));
         $this->SetAligns(array("C"));
@@ -420,9 +484,39 @@ class PDF_Flo extends PDF_FlowingBlock
                 $j = 0;
             }
 
-            if ($this->getY() > 250) {
+            if ($this->getY() > 220) {
+                
+            $this->SetX(15);
+            $this->SetY(240);
+            $this->SetAligns(array("C", "C", "C", "C"));
+            $this->SetFillColor(201, 199, 199);
+            $this->SetWidths(array(46, 46, 48, 46));
+            $this->SetFont('Arial', 'B', 6);
+            $this->SetX(15);
+            $this->Row(array(utf8_decode('COORDINACIÓN DE COMPRAS'), utf8_decode('COORDINACIÓN DE PRESUPUESTO'), utf8_decode('COORD GRAL DE ADMINISTRACIÓN'), utf8_decode('PROVEEDOR')), 1, 1);
+            $this->SetFillColor(255, 255, 255);
+            $this->SetAligns(array("L", "L"));
+            $Y = $this->GetY();
+            $this->SetX(15);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(61);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(107);
+            $this->MultiCell(48, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(155);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y + 3);
+            $this->SetFont('Arial', '', 6);
+            $this->ln(6);
+            $this->SetX(15);
+            $this->Row(array('Realizado por:', 'Revisado por:', 'Aprobado por:', utf8_decode('Recibí conforme:')), 0, 0);                
+                
                 $this->addPage();
-                $this->SetX(108);
+                $this->SetX(158);
+                $this->SetFont('Times', 'B', 8);
                 $this->Row(array('ANEXOS ' . $this->datos['numero_compra']), 0, 0);
                 $this->SetX(15);
                 $this->SetWidths(array(70, 80, 34));
@@ -434,8 +528,38 @@ class PDF_Flo extends PDF_FlowingBlock
                     }
         }
 
-        if ($this->getY() > 250) {
-            $this->SetX(108);
+        if ($this->getY() > 220) {
+            
+            $this->SetX(15);
+            $this->SetY(240);
+            $this->SetAligns(array("C", "C", "C", "C"));
+            $this->SetFillColor(201, 199, 199);
+            $this->SetWidths(array(46, 46, 48, 46));
+            $this->SetFont('Arial', 'B', 6);
+            $this->SetX(15);
+            $this->Row(array(utf8_decode('COORDINACIÓN DE COMPRAS'), utf8_decode('COORDINACIÓN DE PRESUPUESTO'), utf8_decode('COORD GRAL DE ADMINISTRACIÓN'), utf8_decode('PROVEEDOR')), 1, 1);
+            $this->SetFillColor(255, 255, 255);
+            $this->SetAligns(array("L", "L"));
+            $Y = $this->GetY();
+            $this->SetX(15);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(61);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(107);
+            $this->MultiCell(48, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y);
+            $this->SetX(155);
+            $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+            $this->SetY($Y + 3);
+            $this->SetFont('Arial', '', 6);
+            $this->ln(6);
+            $this->SetX(15);
+            $this->Row(array('Realizado por:', 'Revisado por:', 'Aprobado por:', utf8_decode('Recibí conforme:')), 0, 0);            
+            
+            $this->SetX(158);
+            $this->SetFont('Times', 'B', 8);
             $this->Row(array('ANEXOS ' . $this->datos['numero_compra']), 0, 0);
             $this->addPage();
         }
@@ -643,39 +767,39 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->addPage();
         }*/
 
-        $this->ln();
-        $Y = $this->GetY();
-        if($Y>250){
-        $this->addPage();
-        $this->SetX(15);
-        $this->SetY(230);
-        $this->SetAligns(array("C", "C", "C", "C"));
-        $this->SetFillColor(201, 199, 199);
-        $this->SetWidths(array(46, 46, 48, 46));
-        $this->SetFont('Arial', 'B', 6);
-        $this->SetX(15);
-        $this->Row(array(utf8_decode('COORDINACIÓN DE COMPRAS'), utf8_decode('COORDINACIÓN DE PRESUPUESTO'), utf8_decode('COORD GRAL DE ADMINISTRACIÓN'), utf8_decode('PROVEEDOR')), 1, 1);
-        $this->SetFillColor(255, 255, 255);
-        $this->SetAligns(array("L", "L"));
-        $Y = $this->GetY();
-        $this->SetX(15);
-        $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
-        $this->SetY($Y);
-        $this->SetX(61);
-        $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
-        $this->SetY($Y);
-        $this->SetX(107);
-        $this->MultiCell(48, 10, '', 1, 1, 'L', 1);
-        $this->SetY($Y);
-        $this->SetX(155);
-        $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
-        $this->SetY($Y + 5);
-        $this->SetFont('Arial', '', 6);
-        $this->ln(8);
-        $this->SetX(15);
-        $this->Row(array('Realizado por:', 'Revisado por:', 'Aprobado por:', utf8_decode('Recibí conforme:')), 0, 0);         
-
-        }else{
+//        $this->ln();
+//        $Y = $this->GetY();
+//        if($Y>250){
+//        $this->addPage();
+//        $this->SetX(15);
+//        $this->SetY(220);
+//        $this->SetAligns(array("C", "C", "C", "C"));
+//        $this->SetFillColor(201, 199, 199);
+//        $this->SetWidths(array(46, 46, 48, 46));
+//        $this->SetFont('Arial', 'B', 6);
+//        $this->SetX(15);
+//        $this->Row(array(utf8_decode('COORDINACIÓN DE COMPRAS'), utf8_decode('COORDINACIÓN DE PRESUPUESTO'), utf8_decode('COORD GRAL DE ADMINISTRACIÓN'), utf8_decode('PROVEEDOR')), 1, 1);
+//        $this->SetFillColor(255, 255, 255);
+//        $this->SetAligns(array("L", "L"));
+//        $Y = $this->GetY();
+//        $this->SetX(15);
+//        $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+//        $this->SetY($Y);
+//        $this->SetX(61);
+//        $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+//        $this->SetY($Y);
+//        $this->SetX(107);
+//        $this->MultiCell(48, 10, '', 1, 1, 'L', 1);
+//        $this->SetY($Y);
+//        $this->SetX(155);
+//        $this->MultiCell(46, 10, '', 1, 1, 'L', 1);
+//        $this->SetY($Y + 5);
+//        $this->SetFont('Arial', '', 6);
+//        $this->ln(8);
+//        $this->SetX(15);
+//        $this->Row(array('Realizado por:', 'Revisado por:', 'Aprobado por:', utf8_decode('Recibí conforme:')), 0, 0);         
+//
+//        }else{
         $this->SetX(15);
         $this->SetY(240);
         $this->SetAligns(array("C", "C", "C", "C"));
@@ -703,7 +827,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->ln(6);
         $this->SetX(15);
         $this->Row(array('Realizado por:', 'Revisado por:', 'Aprobado por:', utf8_decode('Recibí conforme:')), 0, 0);            
-        }
+//        }
 
     }
 
@@ -900,6 +1024,7 @@ $update = "update tb030_ruta set tx_ruta_reporte = '" . $dir . "' where co_ruta 
 //echo $update; exit();
 $comm->Execute($update);
 $pdf->SetMargins(0, 0, 0);
+//$pdf->SetPrintFooter(false);
 $pdf->Output($dir, 'F');
 
 //$pdf=new PDF_Flo('P','mm','letter');

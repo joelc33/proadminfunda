@@ -482,7 +482,7 @@ recaudacion.formulario.displayfieldmonto.setValue("<span style='font-size:12px;'
 if(recaudacion.formulario.co_tipo_odp.getValue()==1){
     Ext.get('monto').setStyle('background-color','#c9c9c9');
     recaudacion.formulario.monto.setReadOnly(true);
-    recaudacion.formulario.tx_descripcion.setReadOnly(true);
+//    recaudacion.formulario.tx_descripcion.setReadOnly(true);
 
 }else{
    recaudacion.formulario.tx_descripcion.setValue(''); 
