@@ -108,7 +108,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',6);
          $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('MONTO')),1,1); 
          $this->SetFont('Arial','',6);
-         $this->lista_traspaso_origen = $this->getTraspaso_origen();
+         $this->lista_traspaso_origen = $this->getTraspaso_origen($this->datos['co_clase_credito']);
          $totalcred = 0;
          $totaldeb  = 0;
           $this->SetAligns(array("C","L","R","R","R","R")); 
@@ -129,7 +129,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',6);
          $this->Row(array(utf8_decode('PARTIDA'),utf8_decode('DENOMINACION'),utf8_decode('MONTO')),1,1);   
          $this->SetFont('Arial','',6);      
-         $this->lista_traspaso = $this->getTraspaso();
+         $this->lista_traspaso = $this->getTraspaso($this->datos['co_clase_credito']);
          $totalcred = 0;
          $totaldeb  = 0;
         $this->SetAligns(array("C","L","R","R","R","R")); 
@@ -228,7 +228,8 @@ class PDF extends FPDF {
                         nb_usuario,
                         to_char(fe_oficio,'dd') as dia,
                         to_char(fe_oficio,'mm') as mes,
-                        to_char(fe_oficio,'yyyy') as anio
+                        to_char(fe_oficio,'yyyy') as anio,
+                        co_clase_credito
                   FROM tb096_presupuesto_modificacion as tb096 
                   left join tb001_usuario as tb001 on tb001.co_usuario = tb096.co_usuario                   
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb096.co_solicitud 
@@ -238,34 +239,47 @@ class PDF extends FPDF {
           return  $datosSol[0];  
 	
     }
-    function getTraspaso_origen(){
+    function getTraspaso_origen($co_clase_credito){
+        
+        if($co_clase_credito==2){
+            $id_tipo_distribucion = 2;
+        }else{
+            $id_tipo_distribucion = 1;
+        }
 
           $conex = new ConexionComun();     
       $sql = " SELECT  tb064.tx_partida, tb064.nu_partida,  
         tb064.tx_descripcion,                    
         tb097.mo_disponible,
-case when (id_tb098_tipo_distribucion = 1) then
+case when (id_tb098_tipo_distribucion = $id_tipo_distribucion) then
                        (select t.mo_distribucion from tb097_modificacion_detalle as t where t.id = tb097.id)
                        else 0 end  as credito
                   FROM tb096_presupuesto_modificacion as tb096 
                   left join tb097_modificacion_detalle as tb097 on tb097.id_tb096_presupuesto_modificacion = tb096.id                     
                   left join tb064_presupuesto_ingreso as tb064 on tb064.co_presupuesto_ingreso = tb097.id_tb064_presupuesto_ingreso  
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb096.co_solicitud 
-                  where id_tb098_tipo_distribucion = 1 and tb030.co_ruta = ".$_GET['codigo'];
+                  where id_tb098_tipo_distribucion = $id_tipo_distribucion and tb030.co_ruta = ".$_GET['codigo'];
                         
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol;  
 	
     }
-    function getTraspaso(){
-
+    function getTraspaso($co_clase_credito){
+        
+        
+        if($co_clase_credito==2){
+            $id_tipo_distribucion = 1;
+        }else{
+            $id_tipo_distribucion = 2;
+        }
+        
           $conex = new ConexionComun();     
       $sql = " SELECT  tb085.co_partida,
                        tb085.co_categoria,
                        tb085.de_partida,
                        tb097.mo_disponible,
                        tb097.id_tb098_tipo_distribucion,
-                       case when (id_tb098_tipo_distribucion = 2) then
+                       case when (id_tb098_tipo_distribucion = $id_tipo_distribucion) then
                        (select t.mo_distribucion from tb097_modificacion_detalle as t where t.id = tb097.id)
                        else 0 end  as credito,
                        tb096.nu_modificacion
