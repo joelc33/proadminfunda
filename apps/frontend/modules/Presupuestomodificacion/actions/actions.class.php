@@ -310,6 +310,7 @@ class PresupuestomodificacionActions extends sfActions
           "id_tb068_numero_fuente_financiamiento" => $campos["id_tb068_numero_fuente_financiamiento"],
           "id_tb152_tipo_credito" => $campos["id_tb152_tipo_credito"],
           "id_tb073_fuente_financiamiento" => $campos["id_tb073_fuente_financiamiento"],
+          "co_clase_credito" => $campos["co_clase_credito"],
           "in_procesado" => $campos["in_procesado"],
         ));
       } else {
@@ -336,6 +337,7 @@ class PresupuestomodificacionActions extends sfActions
           "id_tb068_numero_fuente_financiamiento" => "",
           "id_tb152_tipo_credito" => "",
           "id_tb073_fuente_financiamiento" => "",
+          "co_clase_credito" => "",
           "in_procesado" => false,
         ));
       }
@@ -362,6 +364,7 @@ class PresupuestomodificacionActions extends sfActions
         "id_tb068_numero_fuente_financiamiento" => "",
         "id_tb152_tipo_credito" => "",
         "id_tb073_fuente_financiamiento" => "",
+        "co_clase_credito" => "",
         "in_procesado" => false,
       ));
     }
@@ -1408,28 +1411,28 @@ class PresupuestomodificacionActions extends sfActions
         $cantidad = Tb096PresupuestoModificacionPeer::doCount($c);
 
 
-        $cant = 0;
+//        $cant = 0;
+//
+//        $tx_fuente = substr($tb096_presupuesto_modificacionForm["numero_decreto"], 0, 1);
+//        $ci = new Criteria();
+//        $ci->add(Tb073FuenteFinanciamientoPeer::TX_SIGLAS, $tx_fuente);
+//        $ci->add(Tb073FuenteFinanciamientoPeer::IN_ACTIVO, true);
+//        $cant = Tb073FuenteFinanciamientoPeer::doCount($ci);
 
-        $tx_fuente = substr($tb096_presupuesto_modificacionForm["numero_decreto"], 0, 1);
-        $ci = new Criteria();
-        $ci->add(Tb073FuenteFinanciamientoPeer::TX_SIGLAS, $tx_fuente);
-        $ci->add(Tb073FuenteFinanciamientoPeer::IN_ACTIVO, true);
-        $cant = Tb073FuenteFinanciamientoPeer::doCount($ci);
-
-        if ($cant == 0) {
-
-          $this->data = json_encode(array(
-            "success" => false,
-            "msg" => "La inicial de la fuente no es valida o no esta activa, verifique!"
-          ));
-          echo $this->data;
-          return sfView::NONE;
-        }
+//        if ($cant == 0) {
+//
+//          $this->data = json_encode(array(
+//            "success" => false,
+//            "msg" => "La inicial de la fuente no es valida o no esta activa, verifique!"
+//          ));
+//          echo $this->data;
+//          return sfView::NONE;
+//        }
 
         if ($cantidad > 0) {
           $this->data = json_encode(array(
             'success' => false,
-            'msg' => '<span style="color:red;font-size:13px,"><b>El numero de fuente ya se encuentra registrado, verifiqe!</b></span>'
+            'msg' => '<span style="color:red;font-size:13px,"><b>El numero de credito ya se encuentra registrado, verifiqe!</b></span>'
           ));
 
           echo $this->data;
@@ -1529,6 +1532,8 @@ class PresupuestomodificacionActions extends sfActions
         $tb096_presupuesto_modificacion->setIdTb152TipoCredito($tb096_presupuesto_modificacionForm["id_tb152_tipo_credito"]);
 
         $tb096_presupuesto_modificacion->setIdTb073FuenteFinanciamiento($tb096_presupuesto_modificacionForm["id_tb073_fuente_financiamiento"]);
+        
+        $tb096_presupuesto_modificacion->setCoClaseCredito($tb096_presupuesto_modificacionForm["co_clase_credito"]);
 
         /*CAMPOS*/
         $tb096_presupuesto_modificacion->save($con);
@@ -2035,6 +2040,16 @@ class PresupuestomodificacionActions extends sfActions
 
     $codigo = $this->getRequestParameter("id");
     $tb096_presupuesto_modificacionForm = $this->getRequestParameter('tb096_presupuesto_modificacion');
+    
+    $tb096_presupuesto_modificacion = Tb096PresupuestoModificacionPeer::retrieveByPk($codigo);
+    
+    if($tb096_presupuesto_modificacion->getCoClaseCredito()==2){
+    $id_tipo_distribucion_origen = 2;
+    $id_tipo_distribucion_destino = 1;    
+    }else{
+    $id_tipo_distribucion_origen = 1;
+    $id_tipo_distribucion_destino = 2;  
+    }
 
     $con = Propel::getConnection();
     if ($codigo != '' || $codigo != null) {
@@ -2042,12 +2057,12 @@ class PresupuestomodificacionActions extends sfActions
       /*******Validar Traslados Origen************/
       $c_origen = new Criteria();
       $c_origen->add(Tb097ModificacionDetallePeer::ID_TB096_PRESUPUESTO_MODIFICACION, $codigo);
-      $c_origen->add(Tb097ModificacionDetallePeer::ID_TB098_TIPO_DISTRIBUCION, 1);
+      $c_origen->add(Tb097ModificacionDetallePeer::ID_TB098_TIPO_DISTRIBUCION, $id_tipo_distribucion_origen);
       $cantidad_origen = Tb097ModificacionDetallePeer::doCount($c_origen);
 
       $sum_origen = new Criteria();
       $sum_origen->add(Tb097ModificacionDetallePeer::ID_TB096_PRESUPUESTO_MODIFICACION, $codigo);
-      $sum_origen->add(Tb097ModificacionDetallePeer::ID_TB098_TIPO_DISTRIBUCION, 1);
+      $sum_origen->add(Tb097ModificacionDetallePeer::ID_TB098_TIPO_DISTRIBUCION, $id_tipo_distribucion_origen);
       $sum_origen->addSelectColumn('SUM(' . Tb097ModificacionDetallePeer::MO_DISTRIBUCION . ') AS suma_origen');
       $suma_origen = Tb097ModificacionDetallePeer::doSelectStmt($sum_origen);
       $campos_origen = $suma_origen->fetch(PDO::FETCH_ASSOC);
@@ -2064,12 +2079,12 @@ class PresupuestomodificacionActions extends sfActions
       /*******Validar Traslados Destino************/
       $c_destino = new Criteria();
       $c_destino->add(Tb097ModificacionDetallePeer::ID_TB096_PRESUPUESTO_MODIFICACION, $codigo);
-      $c_destino->add(Tb097ModificacionDetallePeer::ID_TB098_TIPO_DISTRIBUCION, 2);
+      $c_destino->add(Tb097ModificacionDetallePeer::ID_TB098_TIPO_DISTRIBUCION, $id_tipo_distribucion_destino);
       $cantidad_destino = Tb097ModificacionDetallePeer::doCount($c_destino);
 
       $sum_destino = new Criteria();
       $sum_destino->add(Tb097ModificacionDetallePeer::ID_TB096_PRESUPUESTO_MODIFICACION, $codigo);
-      $sum_destino->add(Tb097ModificacionDetallePeer::ID_TB098_TIPO_DISTRIBUCION, 2);
+      $sum_destino->add(Tb097ModificacionDetallePeer::ID_TB098_TIPO_DISTRIBUCION, $id_tipo_distribucion_destino);
       $sum_destino->addSelectColumn('SUM(' . Tb097ModificacionDetallePeer::MO_DISTRIBUCION . ') AS suma_destino');
       $suma_destino = Tb097ModificacionDetallePeer::doSelectStmt($sum_destino);
       $campos_destino_uno = $suma_destino->fetch(PDO::FETCH_ASSOC);
@@ -2098,7 +2113,7 @@ class PresupuestomodificacionActions extends sfActions
       try {
         $con->beginTransaction();
 
-        $tb096_presupuesto_modificacion = Tb096PresupuestoModificacionPeer::retrieveByPk($codigo);
+        
 
         list($dia, $mes, $anio) = explode("/", $tb096_presupuesto_modificacionForm["fe_modificacion"]);
         $fecha = $anio . "-" . $mes . "-" . $dia;
@@ -2141,8 +2156,13 @@ class PresupuestomodificacionActions extends sfActions
         while ($campos_destino = $suma_destino->fetch(PDO::FETCH_ASSOC)) {
 
           if ($campos_destino["in_traspaso"] != true) {
-            if ($campos_destino["id_tb098_tipo_distribucion"] == 2) {
+              
+            if($tb096_presupuesto_modificacion->getCoClaseCredito()==2){
+              
+            if ($campos_destino["id_tb098_tipo_distribucion"] == 1) {
 
+
+              $co_tipo_movimiento = 8;    
 
 
               $saldo_anterior = 0;
@@ -2150,7 +2170,87 @@ class PresupuestomodificacionActions extends sfActions
 
               $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
               $tb087_presupuesto_movimiento->setCoPartida($campos_destino["id_tb085_presupuesto"])
-                ->setCoTipoMovimiento(7)
+                ->setCoTipoMovimiento($co_tipo_movimiento)
+                ->setNuMonto($campos_destino["mo_distribucion"])
+                ->setNuAnio($campos_destino["id_tb013_anio_fiscal"])
+                ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                ->setTxObservacion('CREDITO ADICIONAL')
+                ->setMoSaldoNuevo($saldo_nuevo)
+                ->setMoSaldoAnterior($saldo_anterior)
+                ->setInActivo(true)
+                ->save($con);
+
+              $tb097_movimiento = Tb097ModificacionDetallePeer::retrieveByPK($campos_destino["id"]);
+              $tb097_movimiento->setIdTb085Presupuesto($campos_destino["id_tb085_presupuesto"]);
+              $tb097_movimiento->setInTraspaso(true);
+              $tb097_movimiento->save($con);
+            } else {
+
+              $c4 = new Criteria();
+              $c4->add(Tb064PresupuestoIngresoPeer::CO_PRESUPUESTO_INGRESO, $campos_destino["id_tb064_presupuesto_ingreso"]);
+              $stmt4 = Tb064PresupuestoIngresoPeer::doSelectStmt($c4);
+              $campos4 = $stmt4->fetch(PDO::FETCH_ASSOC);
+
+              $mo_devengado = $campos4["mo_comprometido"] + $campos_destino["mo_distribucion"];
+              $mo_modificado = $campos4["mo_actualizado"] + $campos_destino["mo_distribucion"];
+
+              $tb064_presupuesto_ingreso = Tb064PresupuestoIngresoPeer::retrieveByPk($campos_destino["id_tb064_presupuesto_ingreso"]);
+              $tb064_presupuesto_ingreso->setMoComprometido($mo_devengado);
+              $tb064_presupuesto_ingreso->setMoActualizado($mo_modificado);
+              $tb064_presupuesto_ingreso->save($con);
+
+              $tb150_presupuesto_ingreso_movimiento = new Tb150PresupuestoIngresoMovimiento();
+              $tb150_presupuesto_ingreso_movimiento->setIdTb064PresupuestoIngreso($campos_destino["id_tb064_presupuesto_ingreso"]);
+              $tb150_presupuesto_ingreso_movimiento->setMoMovimiento($campos_destino["mo_distribucion"]*-1);
+              $tb150_presupuesto_ingreso_movimiento->setNuAnio($this->getUser()->getAttribute('ejercicio'));
+              $tb150_presupuesto_ingreso_movimiento->setCoUsuario($this->getUser()->getAttribute('codigo'));
+              if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
+                $tb150_presupuesto_ingreso_movimiento->setCreatedAt($this->getUser()->getAttribute('fe_cierre'));
+              } else {
+                $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fecha);
+              }
+              $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(9);
+              $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos4["mo_comprometido"]);
+              $tb150_presupuesto_ingreso_movimiento->setMoSaldoNuevo($mo_devengado);
+              $tb150_presupuesto_ingreso_movimiento->setCoSolicitud($tb096_presupuesto_modificacion->getCoSolicitud());
+              $tb150_presupuesto_ingreso_movimiento->setTxObservacion('CREDITO ADICIONAL');
+              $tb150_presupuesto_ingreso_movimiento->save($con);
+
+              $tb150_presupuesto_ingreso_movimiento = new Tb150PresupuestoIngresoMovimiento();
+              $tb150_presupuesto_ingreso_movimiento->setIdTb064PresupuestoIngreso($campos_destino["id_tb064_presupuesto_ingreso"]);
+              $tb150_presupuesto_ingreso_movimiento->setMoMovimiento($campos_destino["mo_distribucion"]*-1);
+              $tb150_presupuesto_ingreso_movimiento->setNuAnio($this->getUser()->getAttribute('ejercicio'));
+              $tb150_presupuesto_ingreso_movimiento->setCoUsuario($this->getUser()->getAttribute('codigo'));
+              if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
+                $tb150_presupuesto_ingreso_movimiento->setCreatedAt($this->getUser()->getAttribute('fe_cierre'));
+              } else {
+                $tb150_presupuesto_ingreso_movimiento->setCreatedAt($fecha);
+              }
+              $tb150_presupuesto_ingreso_movimiento->setCoTipoMovimiento(7);
+              $tb150_presupuesto_ingreso_movimiento->setMoSaldoAnterior($campos4["mo_actualizado"]);
+              $tb150_presupuesto_ingreso_movimiento->setMoSaldoNuevo($mo_modificado);
+              $tb150_presupuesto_ingreso_movimiento->setCoSolicitud($tb096_presupuesto_modificacion->getCoSolicitud());
+              $tb150_presupuesto_ingreso_movimiento->setTxObservacion('CREDITO ADICIONAL');
+              $tb150_presupuesto_ingreso_movimiento->save($con);
+
+              $tb097_movimiento = Tb097ModificacionDetallePeer::retrieveByPK($campos_destino["id"]);
+              $tb097_movimiento->setInTraspaso(true);
+              $tb097_movimiento->save($con);
+            }
+            }else{
+               
+            if ($campos_destino["id_tb098_tipo_distribucion"] == 2) {
+
+
+              $co_tipo_movimiento = 7;    
+
+
+              $saldo_anterior = 0;
+              $saldo_nuevo = $campos_destino["mo_distribucion"];
+
+              $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
+              $tb087_presupuesto_movimiento->setCoPartida($campos_destino["id_tb085_presupuesto"])
+                ->setCoTipoMovimiento($co_tipo_movimiento)
                 ->setNuMonto($campos_destino["mo_distribucion"])
                 ->setNuAnio($campos_destino["id_tb013_anio_fiscal"])
                 ->setCoUsuario($this->getUser()->getAttribute('codigo'))
@@ -2216,7 +2316,11 @@ class PresupuestomodificacionActions extends sfActions
               $tb097_movimiento = Tb097ModificacionDetallePeer::retrieveByPK($campos_destino["id"]);
               $tb097_movimiento->setInTraspaso(true);
               $tb097_movimiento->save($con);
+            }                
+                
+                
             }
+            
           }
         }
 
@@ -3123,4 +3227,21 @@ class PresupuestomodificacionActions extends sfActions
     ));
     $this->setTemplate('store');
   }
+  
+  public function executeStorefkcoclasecredito(sfWebRequest $request)
+  {
+    $c = new Criteria();
+    $stmt = Tb210ClaseCreditoPeer::doSelectStmt($c);
+    $registros = array();
+    while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $registros[] = $reg;
+    }
+
+    $this->data = json_encode(array(
+      "success" => true,
+      "total" => count($registros),
+      "data" => $registros
+    ));
+    $this->setTemplate('store');
+  }  
 }

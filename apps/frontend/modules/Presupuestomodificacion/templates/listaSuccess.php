@@ -27,7 +27,7 @@
              * <Form Principal que carga el Filtro>
              */
             this.formFiltroPrincipal = new Ext.form.FormPanel({
-                title: 'Buscar Credito Adicional',
+                title: 'Buscar Credito Presupuestario',
                 iconCls: 'icon-solpendiente',
                 collapsible: true,
                 titleCollapse: true,
@@ -99,7 +99,7 @@
             });
 
             this.nueva_solicitud = new Ext.Button({
-                text: 'Nuevo Credito Adicional',
+                text: 'Nuevo Credito',
                 iconCls: 'icon-nuevo',
                 handler: function() {
                     //                                contribuyenteLista.main.mascara.show();
@@ -187,7 +187,7 @@
             }
 
             this.gridPanel_ = new Ext.grid.GridPanel({
-                title: 'Lista de Credito Adicional',
+                title: 'Lista de Creditos',
                 iconCls: 'icon-libro',
                 store: this.store_lista,
                 loadMask: true,
@@ -203,8 +203,8 @@
                     ?>
                     this.formulario, '-',
                     //  this.detalle, '-',
-                    this.estado, '-',
-                    this.anular
+                    this.estado
+//                    this.anular
                 ],
                 columns: [
                     new Ext.grid.RowNumberer(),

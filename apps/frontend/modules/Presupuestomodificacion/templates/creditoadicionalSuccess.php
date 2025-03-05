@@ -29,6 +29,7 @@
       //<Stores de fk>
       this.storeCO_FUENTE_FINANCIAMIENTO = this.getStoreID_TB073_FUENTE_FINANCIAMIENTO();
       //<Stores de fk>
+      this.storeCO_CLASE_CREDITO = this.getStoreCO_CLASE_CREDITO();
 
       this.mo_modificacion = new Ext.form.Hidden({
         name: 'tb096_presupuesto_modificacion[mo_modificacion]',
@@ -138,8 +139,8 @@
         fieldLabel: 'N° de Credito',
         name: 'tb096_presupuesto_modificacion[numero_decreto]',
         value: this.OBJ.nu_oficio,
-        maxLength:5,
-        minLength:5,
+        maxLength:4,
+        minLength:4,
         readOnly:(this.OBJ.nu_oficio!='')?true:false,
         allowBlank: false,
 	width:500,
@@ -148,7 +149,7 @@
         field.setValue(newValue.toUpperCase());
     }
         },
-//        maskRe: /[0-9]/ 
+        maskRe: /[0-9]/ 
       });      
       
       /*
@@ -213,6 +214,30 @@
         value: this.OBJ.id_tb152_tipo_credito,
         objStore: this.storeID_TIPO_CREDITO
       });
+      
+      this.co_clase_credito = new Ext.form.ComboBox({
+        fieldLabel: 'Clase de Credito',
+        store: this.storeCO_CLASE_CREDITO,
+        typeAhead: true,
+        valueField: 'co_clase_credito',
+        displayField: 'tx_clase_credito',
+        hiddenName: 'tb096_presupuesto_modificacion[co_clase_credito]',
+        readOnly:(this.OBJ.co_clase_credito!='')?true:false,
+        forceSelection: true,
+        resizable: true,
+        triggerAction: 'all',
+        emptyText: 'Seleccione clase de credito',
+        selectOnFocus: true,
+        mode: 'local',
+        width: 500,
+        allowBlank: false
+      });
+      this.storeCO_CLASE_CREDITO.load();
+      paqueteComunJS.funcion.seleccionarComboByCo({
+        objCMB: this.co_clase_credito,
+        value: this.OBJ.co_clase_credito,
+        objStore: this.storeCO_CLASE_CREDITO
+      });      
 
       this.id_tb082_ejecutor_origen = new Ext.form.ComboBox({
         fieldLabel: 'Ejecutor Presupuesto de Ingreso',
@@ -519,6 +544,7 @@
           this.de_modificacion,
 //          this.de_justificacion,
           //          this.nu_oficio,
+          this.co_clase_credito,
           this.id_tb073_fuente_financiamiento,
           this.numero_decreto,
 //          this.fe_oficio,
@@ -753,6 +779,7 @@
             params: {
               numero_fuente: PresupuestomodificacionEditar.main.numero_decreto.getValue(),
               tipo_fuente: PresupuestomodificacionEditar.main.id_tb073_fuente_financiamiento.getValue(),
+              co_clase_credito: PresupuestomodificacionEditar.main.co_clase_credito.getValue(),
               movimiento: PresupuestomodificacionEditar.main.id.getValue()
             },
             scripts: true,
@@ -1005,7 +1032,7 @@
       });
 
       this.winformPanel_ = new Ext.Window({
-        title: 'Formulario: Solicitud de Credito Adicional',
+        title: 'Formulario: Solicitud de Credito Presupuestario',
         modal: true,
         constrain: true,
         width: 811,
@@ -1227,7 +1254,21 @@
         ]
       });
       return this.store;
-    }
+    },
+    getStoreCO_CLASE_CREDITO: function() {
+      this.store = new Ext.data.JsonStore({
+        url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Presupuestomodificacion/storefkcoclasecredito',
+        root: 'data',
+        fields: [{
+            name: 'co_clase_credito'
+          },
+          {
+            name: 'tx_clase_credito'
+          }
+        ]
+      });
+      return this.store;
+    }    
   };
   Ext.onReady(PresupuestomodificacionEditar.main.init, PresupuestomodificacionEditar.main);
 </script>

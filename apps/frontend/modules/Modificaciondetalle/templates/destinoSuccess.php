@@ -162,6 +162,7 @@ this.id_tb084_accion_especifica = new Ext.form.ComboBox({
                 ae:this.getValue(),
                 tipo_fuente:ModificaciondetalleEditar.main.OBJ.tipo_fuente,
                 numero_fuente:ModificaciondetalleEditar.main.OBJ.numero_fuente,
+                co_clase_credito:ModificaciondetalleEditar.main.OBJ.co_clase_credito,
                 id_tb096_presupuesto_modificacion:ModificaciondetalleEditar.main.OBJ.id_tb096_presupuesto_modificacion
               }
           })
@@ -197,16 +198,12 @@ this.id_tb085_presupuesto = new Ext.form.ComboBox({
 	selectOnFocus: true,
 	mode: 'local',
 	width:500,
-	resizable:true,
-	allowBlank:false,
-  /*onSelect: function(record){
-    ModificaciondetalleEditar.main.mo_distribucion.setValue('');
-    ModificaciondetalleEditar.main.id_tb085_presupuesto.setValue(record.data.id);
-    ModificaciondetalleEditar.main.nu_partida.setValue(record.data.nu_partida);
-    ModificaciondetalleEditar.main.mo_disponible.setValue(record.data.mo_disponible);
-    this.collapse();
-  }*/
+	allowBlank:false
 });
+
+this.id_tb085_presupuesto.on('select',function(cmb,record,index){
+    ModificaciondetalleEditar.main.mo_disponible_partida.setValue(record.get('mo_disponible'));
+},this);
 /*this.storeID_PRESUPUESTO.load();
 	paqueteComunJS.funcion.seleccionarComboByCo({
 	objCMB: this.id_tb085_presupuesto,
@@ -218,6 +215,16 @@ this.mo_disponible = new Ext.form.NumberField({
 	fieldLabel:'Monto a Transferir',
 	name:'mo_disponible',
 	value:this.OBJ.mo_disponible,
+  readOnly: true,
+  style:'background:#c9c9c9;',
+	allowBlank:false,
+	width:200
+});
+
+this.mo_disponible_partida = new Ext.form.NumberField({
+	fieldLabel:'Monto Disponible',
+	name:'mo_disponible_partida',
+	value:0,
   readOnly: true,
   style:'background:#c9c9c9;',
 	allowBlank:false,
@@ -287,6 +294,14 @@ this.guardar = new Ext.Button({
     text:'Guardar',
     iconCls: 'icon-guardar',
     handler:function(){
+        
+        if(ModificaciondetalleEditar.main.OBJ.co_clase_credito==2){
+        if(ModificaciondetalleEditar.main.mo_distribucion.getValue()>ModificaciondetalleEditar.main.mo_disponible_partida.getValue()){
+            Ext.Msg.alert("Alerta","El Monto no puede ser mayor al disponible de la partida");
+            return false;
+            }
+            
+        }
 
         if(!ModificaciondetalleEditar.main.formPanel_.getForm().isValid()){
             Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
@@ -351,6 +366,7 @@ labelWidth: 140,
                     this.id_tb083_proyecto_ac,
                     this.id_tb084_accion_especifica,
                     this.id_tb085_presupuesto,
+                    this.mo_disponible_partida,
                     this.mo_disponible,
 //                    this.id_tb139_aplicacion,
 //                    this.nu_aplicacion,
@@ -422,7 +438,7 @@ getStoreID_PRESUPUESTO:function(){
             {name: 'mo_disponible'},
             {name: 'partida',
               convert:function(v,r){
-                return r.nu_pa+'.'+r.nu_ge+'.'+r.nu_es+'.'+r.nu_se+'.'+r.nu_sse+' - '+r.de_partida;
+                return r.nu_pa+'.'+r.nu_ge+'.'+r.nu_es+'.'+r.nu_se+'.'+r.nu_sse+'.'+r.nu_fi+' - '+r.de_partida;
               }
             }
             ]
