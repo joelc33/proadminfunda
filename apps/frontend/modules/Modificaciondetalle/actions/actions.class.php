@@ -1059,6 +1059,8 @@ class ModificaciondetalleActions extends sfActions
 
             $c->add(Tb085PresupuestoPeer::NU_ANIO, $this->getUser()->getAttribute('ejercicio'));
             //$c->add(Tb013AnioFiscalPeer::CO_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
+
+            echo $c->toString(); exit();
             $stmt = Tb085PresupuestoPeer::doSelectStmt($c);
             $registros = array();
             while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
