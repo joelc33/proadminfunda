@@ -1775,7 +1775,7 @@ class PresupuestoActions extends sfActions
                 }
 
                 $tb206_cotizacion = Tb206CotizacionPeer::retrieveByPK($co_cotizacion);
-                $tb206_cotizacion->setCoFuenteFinanciamiento($co_fuente_financiamiento);
+                $tb206_cotizacion->setCoFuenteFinanciamiento($co_fuente_financiamiento?$co_fuente_financiamiento:null);
                 $tb206_cotizacion->save($con);
 
                 $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
