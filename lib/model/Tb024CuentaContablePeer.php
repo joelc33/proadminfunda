@@ -7,15 +7,16 @@ class Tb024CuentaContablePeer extends BaseTb024CuentaContablePeer
         $c->clearSelectColumns();
         $c->addSelectColumn(Tb085PresupuestoPeer::CO_CUENTA_CONTABLE);
         $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
-        $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRESUPUESTO);
-        $c->addJoin(Tb085PresupuestoPeer::ID, Tb053DetalleComprasPeer::CO_PRESUPUESTO);
+        $c->addSelectColumn(Tb209PresupuestoDetalleCompraPeer::CO_PRESUPUESTO);
+        $c->addJoin(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+        $c->addJoin(Tb085PresupuestoPeer::ID, Tb209PresupuestoDetalleCompraPeer::CO_PRESUPUESTO);
         $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
 //        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA);
         
         if($co_producto!='')
           $c->add(Tb053DetalleComprasPeer::CO_PRODUCTO,$co_producto);
         else {
-          $c->add(Tb053DetalleComprasPeer::CO_PRESUPUESTO,$co_presupuesto);
+          $c->add(Tb209PresupuestoDetalleCompraPeer::CO_PRESUPUESTO,$co_presupuesto);
         }
 
 
