@@ -183,14 +183,21 @@
                     });
 
                     var monto_exento = 0;
+                    var monto_iva = 0;
                     agregarProducto.main.store_lista.each(function(store) {
                         if (store.data.in_exento == true) {
-                            monto_exento += store.data.mo_total
-                        }
+                            monto_exento += store.data.mo_total;
+                            
+                        }else{
+                            console.log(store.data.co_iva_producto);
+                            monto_iva += parseFloat((store.data.mo_total * store.data.co_iva_producto)/100);
+                              }
                     });
 
                     listaProducto.main.nu_base_imponible.setValue(base_imponible);
+                    listaProducto.main.nu_iva_factura.setValue(monto_iva);
                    // listaProducto.main.nu_iva_factura.setValue(base_imponible*(agregarProducto.main.OBJ.iva/100));
+                    listaProducto.main.mo_exento.setValue(monto_exento);
                     listaProducto.main.mo_exento.setValue(monto_exento);
 
                     listaProducto.main.calcular();
@@ -267,6 +274,12 @@
                     {
                         name: 'co_detalle_compras'
                     },
+                    {
+                        name: 'mo_iva_producto'
+                    },  
+                    {
+                        name: 'co_iva_producto'
+                    },                    
                     {}
                 ]
             });

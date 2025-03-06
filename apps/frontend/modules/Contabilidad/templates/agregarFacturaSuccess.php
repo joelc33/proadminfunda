@@ -145,19 +145,19 @@
                 handler: function() {
 
 
-                    if (listaProducto.main.co_iva_factura.getValue() == '') {
-
-                        Ext.MessageBox.show({
-                            title: 'Mensaje',
-                            msg: "Para agregar los productos, debe seleccionar el IVA",
-                            closable: false,
-                            icon: Ext.MessageBox.INFO,
-                            resizable: false,
-                            animEl: document.body,
-                            buttons: Ext.MessageBox.OK
-                        });
-
-                    } else {
+//                    if (listaProducto.main.co_iva_factura.getValue() == '') {
+//
+//                        Ext.MessageBox.show({
+//                            title: 'Mensaje',
+//                            msg: "Para agregar los productos, debe seleccionar el IVA",
+//                            closable: false,
+//                            icon: Ext.MessageBox.INFO,
+//                            resizable: false,
+//                            animEl: document.body,
+//                            buttons: Ext.MessageBox.OK
+//                        });
+//
+//                    } else {
 
                         this.msg = Ext.get('formularioProducto');
                         this.msg.load({
@@ -169,7 +169,7 @@
                                 iva: listaProducto.main.co_iva_factura.getValue()
                             }
                         });
-                    }
+//                    }
 
                 }
             });
@@ -199,7 +199,7 @@
                 items: [this.nu_factura,
                     this.nu_control,
                     this.fecha_emision,
-                    this.co_iva_factura,
+//                    this.co_iva_factura,
                     this.compositeBaseImponible,
                     this.compositefieldIVAFactura,
                     this.nu_total
@@ -363,8 +363,7 @@
                         nu_control: listaProducto.main.nu_control.getValue(),
                         fe_emision: listaProducto.main.fecha_emision.value,
                         nu_base_imponible: listaProducto.main.base_imp,
-                        co_iva_factura: listaProducto.main.po_iva_factura,
-                        nu_iva_factura: listaProducto.main.mo_iva_factura,
+                        nu_iva_factura: listaProducto.main.nu_iva_factura.getValue(),
                         nu_total: listaProducto.main.mo_total,
                         co_iva_retencion: listaProducto.main.po_iva_retencion,
                         nu_iva_retencion: listaProducto.main.mo_iva_retencion,
@@ -457,7 +456,7 @@
                 autoScroll: true,
                 bodyStyle: 'padding:10px;',
                 items: [this.fieldDatosFactura,
-                    this.fieldDatosRetencion,
+//                    this.fieldDatosRetencion,
                     this.gridPanel,
                     this.fieldDatosPagar
                 ]
@@ -541,7 +540,9 @@
             listaProducto.main.storeDETALLE_RETENCION.baseParams.nu_base_imponible = listaProducto.main.nu_base_imponible.getValue();
             listaProducto.main.storeDETALLE_RETENCION.baseParams.co_iva_retencion = listaProducto.main.co_iva_retencion.getValue();
             listaProducto.main.storeDETALLE_RETENCION.baseParams.mo_exento = listaProducto.main.mo_exento.getValue();
-            listaProducto.main.storeDETALLE_RETENCION.baseParams.co_proveedor = listaProducto.main.OBJ.co_proveedor
+            listaProducto.main.storeDETALLE_RETENCION.baseParams.co_proveedor = listaProducto.main.OBJ.co_proveedor;
+            listaProducto.main.storeDETALLE_RETENCION.baseParams.mo_iva_factura = listaProducto.main.nu_iva_factura.getValue();
+            listaProducto.main.storeDETALLE_RETENCION.baseParams.po_iva_retencion = listaProducto.main.co_iva_retencion.getValue();
 
             listaProducto.main.storeDETALLE_RETENCION.load({
                 callback: function() {
@@ -557,21 +558,21 @@
             if (listaProducto.main.mo_exento.getValue() == '') {
                 listaProducto.main.mo_exento.setValue(0);
             }
-
-            listaProducto.main.mo_total = listaProducto.main.base_imp + (listaProducto.main.base_imp - listaProducto.main.mo_exento.getValue()) * (listaProducto.main.po_iva_factura / 100);
-            listaProducto.main.mo_iva_factura = (listaProducto.main.base_imp - listaProducto.main.mo_exento.getValue()) * (listaProducto.main.po_iva_factura / 100);
+            listaProducto.main.mo_total = parseFloat(listaProducto.main.base_imp) + parseFloat(listaProducto.main.nu_iva_factura.getValue());
+//            listaProducto.main.mo_total = listaProducto.main.base_imp + (listaProducto.main.base_imp - listaProducto.main.mo_exento.getValue()) * (listaProducto.main.po_iva_factura / 100);
+//            listaProducto.main.mo_iva_factura = (listaProducto.main.base_imp - listaProducto.main.mo_exento.getValue()) * (listaProducto.main.po_iva_factura / 100);
             listaProducto.main.mo_iva_retencion = listaProducto.main.mo_iva_factura * (listaProducto.main.po_iva_retencion / 100);
 
             listaProducto.main.mo_retencion = paqueteComunJS.funcion.getSumaColumnaGrid({
                 store: listaProducto.main.storeDETALLE_RETENCION,
                 campo: 'nu_valor'
             });
-
-            listaProducto.main.mo_retencion = parseFloat(listaProducto.main.mo_retencion) + parseFloat(listaProducto.main.mo_iva_retencion);
+            listaProducto.main.mo_retencion = parseFloat(listaProducto.main.mo_retencion);
+//            listaProducto.main.mo_retencion = parseFloat(listaProducto.main.mo_retencion) + parseFloat(listaProducto.main.mo_iva_retencion);
             listaProducto.main.mo_total_pagar = listaProducto.main.mo_total - listaProducto.main.mo_retencion; //-listaProducto.main.mo_iva_retencion;
 
             listaProducto.main.nu_total.setValue(paqueteComunJS.funcion.getNumeroFormateado(listaProducto.main.mo_total));
-            listaProducto.main.nu_iva_factura.setValue(paqueteComunJS.funcion.getNumeroFormateado(listaProducto.main.mo_iva_factura));
+//            listaProducto.main.nu_iva_factura.setValue(paqueteComunJS.funcion.getNumeroFormateado(listaProducto.main.mo_iva_factura));
             listaProducto.main.nu_iva_retencion.setValue(paqueteComunJS.funcion.getNumeroFormateado(listaProducto.main.mo_iva_retencion));
             listaProducto.main.total_pagar.setValue(paqueteComunJS.funcion.getNumeroFormateado(listaProducto.main.mo_total_pagar));
 

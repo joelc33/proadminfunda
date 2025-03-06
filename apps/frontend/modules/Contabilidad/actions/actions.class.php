@@ -200,8 +200,9 @@ class ContabilidadActions extends sfActions
     $co_ramo             = $this->getRequestParameter('co_ramo');
     $co_iva_factura      = $this->getRequestParameter('co_iva_factura');
     $nu_base_imponible   = $this->getRequestParameter('nu_base_imponible');
-    $co_iva_retencion    = $this->getRequestParameter('co_iva_retencion');
+    $po_iva_retencion    = $this->getRequestParameter('po_iva_retencion');
     $co_proveedor        = $this->getRequestParameter('co_proveedor');
+    $mo_iva_factura      = $this->getRequestParameter('mo_iva_factura');
     
     
    
@@ -218,7 +219,12 @@ class ContabilidadActions extends sfActions
 
            
            
-             if($reg["co_tipo_retencion"]!=95 && $reg["co_tipo_retencion"]!=100){    
+             if($reg["co_tipo_retencion"]!=95 && $reg["co_tipo_retencion"]!=100){ 
+                 
+             if($reg["co_tipo_retencion"]==92){
+             $reg["nu_valor"] = $po_iva_retencion;
+             $valor = $mo_iva_factura*($po_iva_retencion/100);    
+             }else{                  
                                            
                if($co_documento==1 && $monto_total>$reg["mo_minimo"]){
                     $valor = ($nu_base_imponible*($reg["nu_valor"]/100)) - $reg["nu_sustraendo"];    
@@ -226,6 +232,8 @@ class ContabilidadActions extends sfActions
                      
                      $valor = $nu_base_imponible*($reg["nu_valor"]/100);
                }
+               
+             }
              }else{
               //   
                $valor = $monto_total*($reg["nu_valor"]/100);  
@@ -240,11 +248,19 @@ class ContabilidadActions extends sfActions
         }else if($co_ramo == $reg["co_ramo"]){           
             
              if($reg["co_tipo_retencion"]!=95 && $reg["co_tipo_retencion"]!=100){
+                 
+             if($reg["co_tipo_retencion"]==92){
+             $reg["nu_valor"] = $po_iva_retencion;
+             $valor = $mo_iva_factura*($po_iva_retencion/100); 
+             }else{    
+                 
                if($co_documento==1 && $monto_total>$reg["mo_minimo"]){              
                     $valor = ($nu_base_imponible*($reg["nu_valor"]/100)) - $reg["nu_sustraendo"];    
                }else{  
                      $valor = $nu_base_imponible*($reg["nu_valor"]/100);
                }
+               
+             }
              }else{
 
                      $valor = $monto_total*($reg["nu_valor"]/100);  
@@ -571,7 +587,7 @@ class ContabilidadActions extends sfActions
                                    ->setCoIvaFactura($v["co_iva_factura"])
                                    ->setNuIvaFactura($v["nu_iva_factura"])
                                    ->setCoIvaRetencion($v["co_iva_retencion"])
-                                   ->setNuIvaRetencion($v["nu_iva_retencion"])
+                                   ->setNuIvaRetencion($v["nu_iva_factura"]*($v["co_iva_retencion"]/100))
                                    ->setNuTotalRetencion($v["nu_total_retencion"])
                                    ->setTotalPagar($v["total_pagar"])
                                    ->setTxConcepto($v["tx_concepto"])  
@@ -959,10 +975,12 @@ class ContabilidadActions extends sfActions
         $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRESUPUESTO);
         $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_REQUISICION);
         $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::MO_IVA_PRODUCTO);
+        $c->addSelectColumn(Tb053DetalleComprasPeer::CO_IVA_PRODUCTO);
         $c->addJoin(Tb048ProductoPeer::CO_PRODUCTO, Tb053DetalleComprasPeer::CO_PRODUCTO);
         $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
         $c->add(Tb052ComprasPeer::CO_SOLICITUD,$co_solicitud);
-        $c->add(Tb053DetalleComprasPeer::CO_IVA_PRODUCTO,$iva);
+//        $c->add(Tb053DetalleComprasPeer::CO_IVA_PRODUCTO,$iva);
         $c->add(Tb053DetalleComprasPeer::IN_CALCULAR_IVA,true);
                
         $cantidadTotal = Tb053DetalleComprasPeer::doCount($c);
