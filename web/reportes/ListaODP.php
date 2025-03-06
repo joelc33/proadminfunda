@@ -83,6 +83,7 @@ class PDF extends FPDF {
 //         $this->Line(10, 40, 210, 40);        
          $this->Ln(5);
          $total = 0;
+         $total_desafectado = 0;
          $total_anuladas = 0;
          $total_otras = 0;
          foreach($this->lista_op as $key => $campo){              
@@ -103,7 +104,7 @@ class PDF extends FPDF {
                 $this->SetFont('COURIER','',10);  
                 $this->SetWidths(array(30,80,25,25,40));
                 $this->SetAligns(array("C","L","C","C","R"));  
-                $this->Row(array($campo['tx_serial'],utf8_decode($campo['beneficiario']), $campo['estatus'],date("d/m/Y", strtotime($campo['fecha'])),number_format($campo['monto'], 2, ',','.')),0,0);         
+                $this->Row(array($campo['tx_serial'].$campo['in_desafectado'],utf8_decode($campo['beneficiario']), $campo['estatus'],date("d/m/Y", strtotime($campo['fecha'])),number_format($campo['monto'], 2, ',','.')),0,0);         
          
                 $total = $total + $campo['monto'];
                 
@@ -113,7 +114,12 @@ class PDF extends FPDF {
                 $total_otras = $total_otras + $campo['monto'];    
                 }                
                 
+                if($campo['in_desafectado']=='t'){
+                $total_desafectado = $total_desafectado +  $campo['mo_pendiente'];   
                 }
+                
+                }
+                $total_otras = $total_otras - $total_desafectado;
                 $this->SetFont('COURIER','',10);  
                 $this->SetWidths(array(30,80,25,25,40));
                 $this->SetAligns(array("C","L","C","R","R"));  
@@ -123,6 +129,8 @@ class PDF extends FPDF {
                 $this->SetWidths(array(40,80,25,25,40));
                 $this->SetAligns(array("L","L","C","R","R"));
                 $this->Row(array('TOTAL ANULADAS',number_format($total_anuladas, 2, ',','.')),0,0);
+                $this->Ln(5);
+                $this->Row(array('TOTAL DESAFECTADO',number_format($total_desafectado, 2, ',','.')),0,0);
                 $this->Ln(5);
                 $this->Row(array('TOTAL APROBADAS',number_format($total_otras, 2, ',','.')),0,0);
                   
@@ -164,7 +172,7 @@ class PDF extends FPDF {
                         else prov2.tx_razon_social end as beneficiario , tb060.fe_emision as fecha , 
                         case when tb060.in_anulado = true then 'Anulada' else 
                         case when tb060.in_pagado = true then 'Pagada' else 'Pendiente' end end as estatus, 
-                        tb060.mo_total as monto 
+                        tb060.mo_total as monto,in_desafectado,mo_pendiente 
                   from tb060_orden_pago tb060 
                         left join tb026_solicitud as tb026 on (tb026.co_solicitud=tb060.co_solicitud) 
                         left join tb008_proveedor as prov1 on (tb026.co_proveedor=prov1.co_proveedor) 
