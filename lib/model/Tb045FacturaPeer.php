@@ -40,7 +40,7 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
 
                 $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable($res["co_producto"], $co_solicitud);
 
-                $mo_iva = self::getIVA($campos["nu_base_imponible"], $res["mo_total"], $campos["nu_iva_factura"]);
+                
 
                 $monto = $res["mo_total"]; //+$mo_retencion;
 
@@ -51,7 +51,6 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                     ->setCoFactura($campos["co_factura"])
                     ->setCoUsuario($co_usuario)
                     ->setCoTipoAsiento(1)
-                    ->setCoPresupuesto($res["co_presupuesto"])
                     ->setCoRuta($co_ruta)
                     ->save($con);
 
@@ -116,12 +115,15 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                     //    }
                 }
 
-                if ($mo_iva > 0) {
+//                if ($mo_iva > 0) {
                     $ci = new Criteria();
                     $ci->add(Tb053DetalleComprasPeer::CO_DETALLE_COMPRA_ENLACE, $res["co_detalle_compra"]);
                     $stmti = Tb053DetalleComprasPeer::doSelectStmt($ci);
                     $campos_iva = $stmti->fetch(PDO::FETCH_ASSOC);
 
+                    if($campos_iva["co_producto"]!=null || $campos_iva["co_producto"]!=''){
+                        
+                    $mo_iva = self::getIVA($res["mo_total"], $detalle_compra->getCoIvaProducto());
 
                     $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable($campos_iva["co_producto"], $co_solicitud);
 
@@ -134,7 +136,6 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                         ->setCoFactura($campos["co_factura"])
                         ->setCoUsuario($co_usuario)
                         ->setCoTipoAsiento(1)
-                        ->setCoPresupuesto($campos_iva["co_presupuesto"])
                         ->setCoRuta($co_ruta)
                         ->save($con);
 
@@ -156,7 +157,7 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                             ->save($con);
                     }
                 }
-
+//                }
                 //$total_iva += $mo_iva;
             }
 
@@ -187,10 +188,10 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
         
     }
 
-    static public function getIVA($baseimponible, $monto, $iva)
+    static public function getIVA($monto, $iva)
     {
 
-        $nu_iva = ($monto * $iva) / $baseimponible; //se calcula el iva por cada producto
+        $nu_iva = ($monto * $iva) / 100; //se calcula el iva por cada producto
 
         return $nu_iva; //$monto * $valor_iva;        
     }
