@@ -239,11 +239,12 @@ class ContabilidadActions extends sfActions
                $valor = $monto_total*($reg["nu_valor"]/100);  
              }
              
+             if($valor>0){
              $registros[] = array("nu_valor" => $valor,
                                   "po_deduccion" => $reg["nu_valor"],
                                   "co_tipo_retencion" => $reg["co_tipo_retencion"],
                                   "tx_tipo_retencion" => $reg["tx_tipo_retencion"]);
-           
+             }
              
         }else if($co_ramo == $reg["co_ramo"]){           
             
@@ -266,10 +267,12 @@ class ContabilidadActions extends sfActions
                      $valor = $monto_total*($reg["nu_valor"]/100);  
              }            
            
+             if($valor>0){
              $registros[] = array("nu_valor" => $valor,
-                  "po_deduccion" => $reg["nu_valor"],
-                  "co_tipo_retencion" => $reg["co_tipo_retencion"],
-                  "tx_tipo_retencion" => $reg["tx_tipo_retencion"]);
+                                  "po_deduccion" => $reg["nu_valor"],
+                                  "co_tipo_retencion" => $reg["co_tipo_retencion"],
+                                  "tx_tipo_retencion" => $reg["tx_tipo_retencion"]);
+             }
             
         }
     }
