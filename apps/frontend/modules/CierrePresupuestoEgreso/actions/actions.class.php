@@ -172,8 +172,8 @@ class CierrePresupuestoEgresoActions extends sfActions
         $sql = "SELECT distinct 
                 (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$ejercicio,2,'$fe_desde','$fe_hasta')),0)) -coalesce(sum(afectacion_partida(tb085.id,$ejercicio,1,'$fe_desde','$fe_hasta')),0) mo_modificado_mov,
                 sum(mo_inicial)+ (coalesce(sum(mo_modificado_admon),0)+coalesce(sum(afectacion_partida(tb085.id,$ejercicio,2,'$fe_desde','$fe_hasta')),0)) -coalesce(sum(afectacion_partida(tb085.id,$ejercicio,1,'$fe_desde','$fe_hasta')),0) as mo_aprobado,
-                coalesce(sum(comprometido_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$ejercicio,1,'$fe_desde','$fe_hasta')),0) mo_comprometido,
-                coalesce(sum(causado_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$ejercicio,2,'$fe_desde','$fe_hasta')),0) mo_causado,
+                coalesce(sum(comprometido_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$ejercicio,1,'$fe_desde','$fe_hasta')),0)-coalesce(sum(movimiento_partida(tb085.id,$ejercicio,17,'$fe_desde','$fe_hasta')),0) mo_comprometido,
+                coalesce(sum(causado_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$ejercicio,2,'$fe_desde','$fe_hasta')),0)-coalesce(sum(movimiento_partida(tb085.id,$ejercicio,17,'$fe_desde','$fe_hasta')),0) mo_causado,
                 coalesce(sum(pagado_dia),0)+coalesce(sum(movimiento_partida(tb085.id,$ejercicio,3,'$fe_desde','$fe_hasta')),0) mo_pagado
                 FROM tb085_presupuesto as tb085 
                 where in_movimiento is true and tb085.nu_anio = $ejercicio";
