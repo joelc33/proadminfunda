@@ -104,7 +104,7 @@ class PDF extends FPDF {
                 $this->SetFont('COURIER','',10);  
                 $this->SetWidths(array(30,80,25,25,40));
                 $this->SetAligns(array("C","L","C","C","R"));  
-                $this->Row(array($campo['tx_serial'].$campo['in_desafectado'],utf8_decode($campo['beneficiario']), $campo['estatus'],date("d/m/Y", strtotime($campo['fecha'])),number_format($campo['monto'], 2, ',','.')),0,0);         
+                $this->Row(array($campo['tx_serial'],utf8_decode($campo['beneficiario']), $campo['estatus'],date("d/m/Y", strtotime($campo['fecha'])),number_format($campo['monto'], 2, ',','.')),0,0);         
          
                 $total = $total + $campo['monto'];
                 
