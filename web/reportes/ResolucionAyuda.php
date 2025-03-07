@@ -29,19 +29,20 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->Cell(0, 0, utf8_decode('RIF. G-200121661'), 0, 0, 'C');
         $this->Ln(4);
         $this->line(20, 50, 190, 50);
-        $this->Ln(10);
+        $this->Ln(5);
 
-        $this->Ln();
+        $this->SetFont('Arial', 'BI', 7);
+        $this->SetX(140);
+        $this->Cell(0, 0, utf8_decode('Maracaibo ') . date("d/m/Y", strtotime($this->datos['fe_resolucion'])), 0, 0, 'C');
+       
+
+        $this->Ln(5);
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 7);
         $this->Cell(0, 0, utf8_decode('RESOLUCIÓN Nro.: ') . $this->datos['nu_resolucion'], 0, 0, 'L');
 
-        $this->Ln(5);
-
+        $this->Ln(10);
         $this->SetFont('Arial', 'BI', 10);
-
-        $this->Cell(0, 0, utf8_decode('MARACAIBO ') . date("d/m/Y", strtotime($this->datos['fe_resolucion'])), 0, 0, 'C');
-        $this->Ln(5);
         $this->Cell(0, 0, utf8_decode('214° y 265°'), 0, 0, 'C');
 
         $this->Ln(1);
