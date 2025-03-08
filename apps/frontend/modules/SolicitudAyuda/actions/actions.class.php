@@ -135,9 +135,9 @@ class SolicitudAyudaActions extends sfActions
 
     public function executeEditarResponsabilidad(sfWebRequest $request)
     {
-        $codigo = $this->getRequestParameter("co_solicitud");
+        $codigo = $this->getRequestParameter("co_solicitud_ayuda");
         $c = new Criteria();
-        $c->add(Tb126SolicitudAyudaPeer::CO_SOLICITUD, $codigo);
+        $c->add(Tb126SolicitudAyudaPeer::CO_SOLICITUD_AYUDA, $codigo);
 
         $stmt = Tb126SolicitudAyudaPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -175,6 +175,11 @@ class SolicitudAyudaActions extends sfActions
             "co_usuario" => $this->getUser()->getAttribute('codigo')
         ));
 
+
+    }
+
+    public function executeAgregarProveedor(sfWebRequest $request)
+    {
 
     }
 
@@ -323,29 +328,30 @@ class SolicitudAyudaActions extends sfActions
 
         $codigo = $this->getRequestParameter("co_solicitud_ayuda");
         $tb126_solicitud_ayudaForm = $this->getRequestParameter('tb126_solicitud_ayuda');
+        $json_proveedor = $this->getRequestParameter("json_proveedor");
 
         $con = Propel::getConnection();
         if ($codigo != '' || $codigo != null) {
             $tb126_solicitud_ayuda = Tb126SolicitudAyudaPeer::retrieveByPk($codigo);
-            
-            $cc = new Criteria();
-            $cc->add(Tb052ComprasPeer::CO_SOLICITUD, $tb126_solicitud_ayuda->getCoSolicitud());
-            $stmt = Tb052ComprasPeer::doSelectStmt($cc);
-            $datosCompra = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $tb052_compras = Tb052ComprasPeer::retrieveByPK($datosCompra["co_compras"]);
+            /* $cc = new Criteria();
+             $cc->add(Tb052ComprasPeer::CO_SOLICITUD, $tb126_solicitud_ayuda->getCoSolicitud());
+             $stmt = Tb052ComprasPeer::doSelectStmt($cc);
+             $datosCompra = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $cdc = new Criteria();
-            $cdc->add(Tb053DetalleComprasPeer::CO_COMPRAS, $datosCompra["co_compras"]);
-            $stmt = Tb053DetalleComprasPeer::doSelectStmt($cdc);
-            $datosDetalleCompra = $stmt->fetch(PDO::FETCH_ASSOC);
+             $tb052_compras = Tb052ComprasPeer::retrieveByPK($datosCompra["co_compras"]);
 
-            $tb053_detalle_compras =  Tb053DetalleComprasPeer::retrieveByPK($datosDetalleCompra["co_detalle_compras"]);
+             $cdc = new Criteria();
+             $cdc->add(Tb053DetalleComprasPeer::CO_COMPRAS, $datosCompra["co_compras"]);
+             $stmt = Tb053DetalleComprasPeer::doSelectStmt($cdc);
+             $datosDetalleCompra = $stmt->fetch(PDO::FETCH_ASSOC);
+
+             $tb053_detalle_compras =  Tb053DetalleComprasPeer::retrieveByPK($datosDetalleCompra["co_detalle_compras"]);*/
 
         } else {
             $tb126_solicitud_ayuda = new Tb126SolicitudAyuda();
 
-            $tb026_solicitudForm = array(
+            /*$tb026_solicitudForm = array(
                 "co_tipo_solicitud" => 25,
                 "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
                 "fe_solicitud" => $tb126_solicitud_ayudaForm["fe_solicitud"],
@@ -366,78 +372,112 @@ class SolicitudAyudaActions extends sfActions
                 ));
 
                 return;
-            }
+            }*/
         }
         try {
             $con->beginTransaction();
+            $listaProveedor = json_decode($json_proveedor, true);
 
-            $receptorForm = $this->getRequestParameter('receptor');
+            // $receptorForm = $this->getRequestParameter('receptor');
             $solicitanteForm = $this->getRequestParameter('solicitante');
 
-            $co_proveedor = $this->getProveedor($receptorForm, $con);
+            // $co_proveedor = $this->getProveedor($receptorForm, $con);
             $co_proveedor_solicitante = $this->getProveedor($solicitanteForm, $con);
 
-            $mo_total = $tb126_solicitud_ayudaForm["monto"];
+            // $mo_total = $tb126_solicitud_ayudaForm["monto"];
+
+
 
             list($dia, $mes, $anio) = explode("/", $tb126_solicitud_ayudaForm["fe_solicitud"]);
             $fecha = $anio . '-' . $mes . '-' . $dia;
             //Datos Receptor Cheque               
-            $tb126_solicitud_ayuda->setCoProveedor($co_proveedor);
+            // $tb126_solicitud_ayuda->setCoProveedor($co_proveedor);
             $tb126_solicitud_ayuda->setCoProveedorSolicitante($co_proveedor_solicitante);
             $tb126_solicitud_ayuda->setCoTipoAyuda($tb126_solicitud_ayudaForm["co_tipo_ayuda"]);
             $tb126_solicitud_ayuda->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
-            $tb126_solicitud_ayuda->setCoSolicitud($tb126_solicitud_ayudaForm["co_solicitud"]);
+            //  $tb126_solicitud_ayuda->setCoSolicitud($tb126_solicitud_ayudaForm["co_solicitud"]);
             $tb126_solicitud_ayuda->setCoUsuario($tb126_solicitud_ayudaForm["co_usuario"]);
             $tb126_solicitud_ayuda->setIdTb013AnioFiscal($this->getUser()->getAttribute('ejercicio'));
-            $tb126_solicitud_ayuda->setMoTotalAyuda($mo_total);
+            //   $tb126_solicitud_ayuda->setMoTotalAyuda($mo_total);
             $tb126_solicitud_ayuda->setFeResolucion($fecha);
             $tb126_solicitud_ayuda->save($con);
 
-            
-            $tb052_compras->setCoUsuario($this->getUser()->getAttribute('codigo'));
-            $tb052_compras->setFechaCompra($fecha);
-            $tb052_compras->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
-            $tb052_compras->setCoSolicitud($tb126_solicitud_ayudaForm["co_solicitud"]);
-            $tb052_compras->setCoTipoSolicitud(25);
-            $tb052_compras->setAnio($this->getUser()->getAttribute('ejercicio'));
-            $tb052_compras->setNuIva(0);
-            $tb052_compras->setMontoIva(0);
-            $tb052_compras->setMontoSubTotal(0);
-            $tb052_compras->setMontoTotal($tb126_solicitud_ayudaForm["monto"]);
-            $tb052_compras->setCoTipoMovimiento(0);
-            $tb052_compras->save($con);
+            $monto = 0;
+
+            foreach ($listaProveedor as $v) {
+
+                if (empty($v["co_solicitud"])) {
+
+                    $tb026_solicitudForm = array(
+                        "co_tipo_solicitud" => 25,
+                        "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
+                        "fe_solicitud" => $tb126_solicitud_ayudaForm["fe_solicitud"],
+                        "observacion" => $v["tx_observacion"],
+                        "codigo" => $this->getUser()->getAttribute('codigo')
+                    );
+
+                    $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
+
+                    if ($resp["success"] == true) {
+                        $tb126_solicitud_ayudaForm["co_solicitud"] = $resp["co_solicitud"];
+                        $tb052_compras = new Tb052Compras();
+                        $tb053_detalle_compras = new Tb053DetalleCompras();
+                    } else {
+                        $this->data = json_encode(array(
+                            "success" => false,
+                            "msg" => $resp["msg"]
+                        ));
+
+                        return;
+                    }
+
+                    $tb052_compras->setCoUsuario($this->getUser()->getAttribute('codigo'));
+                    $tb052_compras->setFechaCompra($fecha);
+                    $tb052_compras->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
+                    $tb052_compras->setCoSolicitud($tb126_solicitud_ayudaForm["co_solicitud"]);
+                    $tb052_compras->setCoTipoSolicitud(25);
+                    $tb052_compras->setAnio($this->getUser()->getAttribute('ejercicio'));
+                    $tb052_compras->setNuIva(0);
+                    $tb052_compras->setMontoIva(0);
+                    $tb052_compras->setMontoSubTotal(0);
+                    $tb052_compras->setMontoTotal($v["monto"]);
+                    $tb052_compras->setCoTipoMovimiento(0);
+                    $tb052_compras->save($con);
+
+                    $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
+                    $tb053_detalle_compras->setNuCantidad(1);
+                    $tb053_detalle_compras->setCoProducto(18554);
+                    $tb053_detalle_compras->setDetalle($v["tx_observacion"]);
+                    $tb053_detalle_compras->setPrecioUnitario($v["monto"]);
+                    $tb053_detalle_compras->setMonto($v["monto"]);
+                    $tb053_detalle_compras->save($con);
+
+                    $wherec = new Criteria();
+                    $wherec->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, $tb053_detalle_compras->getCoDetalleCompras());
+                    BasePeer::doDelete($wherec, $con);
+
+                    Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra(
+                        $tb053_detalle_compras->getCoDetalleCompras(),
+                        $v["monto"],
+                        $this->getUser()->getAttribute('codigo'),
+                        $con
+                    );
 
 
-            $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
-            $tb053_detalle_compras->setNuCantidad(1);
-            $tb053_detalle_compras->setCoProducto(18554);
-            $tb053_detalle_compras->setDetalle($tb126_solicitud_ayudaForm["tx_observacion"]);
-            $tb053_detalle_compras->setPrecioUnitario($mo_total);
-            $tb053_detalle_compras->setMonto($mo_total);
-            $tb053_detalle_compras->save($con);
-            
-            $wherec = new Criteria();
-            $wherec->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA,$tb053_detalle_compras->getCoDetalleCompras());
-            BasePeer::doDelete($wherec, $con);            
-
-            Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra(
-                $tb053_detalle_compras->getCoDetalleCompras(),
-                $mo_total,
-                $this->getUser()->getAttribute('codigo'),
-                $con
-            );
+                    $solicitud = Tb026SolicitudPeer::retrieveByPk($tb126_solicitud_ayudaForm["co_solicitud"]);
+                    $solicitud->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
+                    $solicitud->setCoSolicitudAyuda($tb126_solicitud_ayuda->getCoSolicitudAyuda());
+                    $solicitud->setCoProveedor($v["co_proveedor"])->setFeRegistro($fecha)->save($con);
 
 
-            $solicitud = Tb026SolicitudPeer::retrieveByPk($tb126_solicitud_ayudaForm["co_solicitud"]);
-            $solicitud->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
-            $solicitud->setCoProveedor($co_proveedor)->setFeRegistro($fecha)->save($con);
+                    $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb126_solicitud_ayudaForm["co_solicitud"]));
+                    $ruta->setObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
+                    $ruta->setInCargarDato(true)->save($con);
 
-            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb126_solicitud_ayudaForm["co_solicitud"]));
-            $ruta->setObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
-            $ruta->setInCargarDato(true)->save($con);
-
-            $con->commit();
-            Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
+                    $con->commit();
+                    Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
+                }
+            }
 
             $this->data = json_encode(array(
                 "success" => true,
@@ -454,28 +494,56 @@ class SolicitudAyudaActions extends sfActions
     }
 
 
-    public function executeEliminar(sfWebRequest $request)
+    public function executeEliminarSolicitudAyuda(sfWebRequest $request)
     {
-        $codigo = $this->getRequestParameter("co_solicitud_ayuda");
+        $codigo = $this->getRequestParameter("co_solicitud");
         $con = Propel::getConnection();
         try {
             $con->beginTransaction();
-            /*CAMPOS*/
-            $tb126_solicitud_ayuda = Tb126SolicitudAyudaPeer::retrieveByPk($codigo);
-            $tb126_solicitud_ayuda->delete($con);
-            $this->data = json_encode(array(
-                "success" => true,
-                "msg" => 'Registro Borrado con exito!'
-            ));
+
+            $wherer = new Criteria();
+            $wherer->add(Tb030RutaPeer::CO_SOLICITUD, $codigo);
+            Tb030RutaPeer::doDelete($wherer, $con);
+
+            $wheredp = new Criteria();
+            $wheredp->clearSelectColumns();
+            $wheredp->addSelectColumn(Tb209PresupuestoDetalleCompraPeer::ID);
+            $wheredp->addJoin(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+            $wheredp->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
+            $wheredp->add(Tb052ComprasPeer::CO_SOLICITUD, $codigo); 
+            $stmtdp = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($wheredp);
+            $t209_datos_detalle = $stmtdp->fetch(PDO::FETCH_ASSOC);
+
+
+            $wheredc = new Criteria();
+            $wheredc->clearSelectColumns();
+            $wheredc->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+            $wheredc->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
+            $wheredc->add(Tb052ComprasPeer::CO_SOLICITUD, $codigo);
+            $stmtdc = Tb053DetalleComprasPeer::doSelectStmt($wheredc);
+            $datos_detalle = $stmtdc->fetch(PDO::FETCH_ASSOC);
+            Tb053DetalleComprasPeer::retrieveByPK($datos_detalle["co_detalle_compras"])->delete($con);
+
+            $wherec = new Criteria();
+            $wherec->add(Tb052ComprasPeer::CO_SOLICITUD, $codigo);
+            Tb052ComprasPeer::doDelete($wherec, $con);
+
+           
+            Tb209PresupuestoDetalleCompraPeer::retrieveByPK($t209_datos_detalle["id"])->delete($con);
+
+            Tb026SolicitudPeer::retrieveByPK($codigo)->delete();
+
             $con->commit();
         } catch (PropelException $e) {
             $con->rollback();
             $this->data = json_encode(array(
                 "success" => false,
                 //		    "msg" =>  $e->getMessage()
-                "msg" => 'Este registro no se puede borrar porque <br>se encuentra asociado a otros registros'
+                "msg" => 'Ocurrio un error al borrar la solicitud ' . $e->getMessage()
             ));
         }
+
+        $this->setTemplate('eliminar');
     }
 
     public function executeLista(sfWebRequest $request)
@@ -584,106 +652,54 @@ class SolicitudAyudaActions extends sfActions
 
 
 
-        if ($co_solicitud != '') {
-            $c->add(Tb026SolicitudPeer::CO_SOLICITUD, $co_solicitud);
-        }
 
-        if ($in_ventanilla == 'true') {
-            $c->add(Tb030RutaPeer::NU_ORDEN, 1);
-        } else {
-            $c->add(Tb030RutaPeer::NU_ORDEN, 1, Criteria::GREATER_THAN);
-
-            if ($co_proceso != '') {
-                $c->add(Tb028ProcesoPeer::CO_PROCESO, $co_proceso);
-            } else {
-
-                $registro_proceso = Tb028ProcesoPeer::getListaProcesoAsignado($this->getUser()->getAttribute('codigo'));
-
-
-                $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
-            }
-        }
-
-
-
-        $registro_proceso = Tb028ProcesoPeer::getListaProcesoAsignado($this->getUser()->getAttribute('codigo'));
-        $registro_tramite = Tb006TipoSolicitudUsuarioPeer::getListaTramiteAsignado($this->getUser()->getAttribute('codigo'));
 
         $c->setIgnoreCase(true);
-        $c->addSelectColumn(Tb030RutaPeer::CO_PROCESO);
-        $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
-        $c->addSelectColumn(Tb028ProcesoPeer::TX_PROCESO);
-        $c->addSelectColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
-        $c->addSelectColumn(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
-        $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD);
-        $c->addSelectColumn(Tb001UsuarioPeer::TX_LOGIN);
-        $c->addSelectColumn(Tb026SolicitudPeer::FE_REGISTRO);
-        $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);
-        //  $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
-        $c->addSelectColumn(Tb026SolicitudPeer::TX_OBSERVACION);
-        // $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
-        //  $c->addSelectColumn(Tb052ComprasPeer::NUMERO_COMPRA);
+        $c->addSelectColumn(Tb126SolicitudAyudaPeer::CO_SOLICITUD_AYUDA);
+        $c->addSelectColumn(Tb127TipoAyudaPeer::TX_TIPO_AYUDA);
+        $c->addSelectColumn(Tb126SolicitudAyudaPeer::TX_OBSERVACION);
+        $c->addSelectColumn(Tb126SolicitudAyudaPeer::MO_TOTAL_AYUDA);
+        $c->addSelectColumn(Tb126SolicitudAyudaPeer::FE_RESOLUCION);
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
-        $c->addSelectColumn(Tb030RutaPeer::TX_RUTA_REPORTE);
+        ;
+        $c->addSelectColumn(Tb001UsuarioPeer::TX_LOGIN);
 
-        // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR, Criteria::LEFT_JOIN);
+
+        $c->addJoin(Tb126SolicitudAyudaPeer::CO_PROVEEDOR_SOLICITANTE, Tb008ProveedorPeer::CO_PROVEEDOR, Criteria::LEFT_JOIN);
         $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO, Criteria::LEFT_JOIN);
-        // $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb060OrdenPagoPeer::CO_SOLICITUD,   Criteria::LEFT_JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, Criteria::JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD, Criteria::JOIN);
-        $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO, Criteria::JOIN);
-        $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO, Criteria::JOIN);
-        //  $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD,  Criteria::JOIN);
+        $c->addJoin(Tb126SolicitudAyudaPeer::CO_TIPO_AYUDA, Tb127TipoAyudaPeer::CO_TIPO_AYUDA, Criteria::JOIN);
+        $c->addJoin(Tb126SolicitudAyudaPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO, Criteria::JOIN);
 
-        $c->addAnd(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, 25);
-        $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
+        $c->addAnd(Tb126SolicitudAyudaPeer::IN_PROCESADO, false);
 
-        $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
-        $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2), Criteria::IN);
-        $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
-        $c->addAnd(Tb030RutaPeer::NU_ORDEN, 1);
-        $c->addAnd(Tb030RutaPeer::IN_ACTUAL, true);
-        $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
-
-
-        //  echo $c->toString(); exit();
-
-        $cantidadTotal = Tb026SolicitudPeer::doCount($c);
+        $cantidadTotal = Tb126SolicitudAyudaPeer::doCount($c);
 
         $c->setLimit($limit)->setOffset($start);
-        $c->addDescendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
+        $c->addDescendingOrderByColumn(Tb126SolicitudAyudaPeer::CO_SOLICITUD_AYUDA);
 
-        $stmt = Tb026SolicitudPeer::doSelectStmt($c);
+        $stmt = Tb126SolicitudAyudaPeer::doSelectStmt($c);
         $registros = array();
         $encrip = new myConfig();
         while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-            $cantidad = Tb026SolicitudPeer::getCantRevision($res["co_solicitud"]);
+
 
             $tx_rif = $res["inicial"] . "-" . $res["tx_rif"];
             $tx_razon_social = strtoupper($res["tx_razon_social"]);
 
 
-            list($anio, $mes, $dia) = explode('-', $res["fe_registro"]);
+            list($anio, $mes, $dia) = explode('-', $res["fe_resolucion"]);
             $registros[] = array(
-                "tx_proceso" => trim($res["tx_proceso"]),
+                "co_solicitud_ayuda" => trim($res["co_solicitud_ayuda"]),
                 "tx_observacion" => strtoupper(trim($res["tx_observacion"])),
-                "co_proceso" => trim($res["co_proceso"]),
-                "numero_compra" => trim($res["numero_compra"]),
-                "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
-                "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
-                "co_solicitud" => trim($res["co_solicitud"]),
-                "tx_login" => trim($res["tx_login"]),
-                "tx_serial" => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
-                "in_reporte" => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
-                "co_ruta" => $encrip->encrypt($res["co_ruta"]),
+                "tx_tipo_solicitud" => strtoupper(trim($res["tx_tipo_ayuda"])),
+                "mo_total_ayuda" => strtoupper(trim($res["mo_total_ayuda"])),
+                "tx_login" => strtoupper(trim($res["tx_login"])),
                 "tx_rif" => $tx_rif,
                 "tx_razon_social" => $tx_razon_social,
-                "fe_creacion" => $dia . '-' . $mes . '-' . $anio,
-                "cant_revision" => $cantidad
+                "fe_creacion" => $dia . '-' . $mes . '-' . $anio
             );
         }
 
@@ -1112,7 +1128,7 @@ class SolicitudAyudaActions extends sfActions
                         $con
                     );
 
-                  
+
                     if ($v["nu_iva_retencion"] > 0) {
                         $tb046_factura_retencion = new Tb046FacturaRetencion();
                         $tb046_factura_retencion->setCoFactura($tb045_factura->getCoFactura());
@@ -1217,6 +1233,93 @@ class SolicitudAyudaActions extends sfActions
             "co_tipo_solicitud" => $this->getRequestParameter('co_tipo_solicitud'),
             "mo_exento" => 0
         ));
+    }
+
+    public function executeStorefkcosolicitudayuda(sfWebRequest $request)
+    {
+        $limit = $this->getRequestParameter("limit", 15);
+        $start = $this->getRequestParameter("start", 0);
+        $co_solicitud_ayuda = $this->getRequestParameter("co_solicitud_ayuda");
+
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->setIgnoreCase(true);
+        $c->addSelectColumn(Tb030RutaPeer::CO_PROCESO);
+        $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
+        $c->addSelectColumn(Tb028ProcesoPeer::TX_PROCESO);
+        $c->addSelectColumn(Tb027TipoSolicitudPeer::TX_TIPO_SOLICITUD);
+        $c->addSelectColumn(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD);
+        $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD);
+        $c->addSelectColumn(Tb001UsuarioPeer::TX_LOGIN);
+        $c->addSelectColumn(Tb026SolicitudPeer::FE_REGISTRO);
+        $c->addSelectColumn(Tb026SolicitudPeer::CO_PERSONA);
+        $c->addSelectColumn(Tb026SolicitudPeer::TX_OBSERVACION);
+        $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
+        $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
+        $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+        $c->addSelectColumn(Tb052ComprasPeer::MONTO_TOTAL);
+
+        // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR, Criteria::LEFT_JOIN);
+        $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO, Criteria::LEFT_JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD, Criteria::LEFT_JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD, Criteria::JOIN);
+        $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO, Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO, Criteria::JOIN);
+
+        $c->addAnd(Tb027TipoSolicitudPeer::CO_TIPO_SOLICITUD, 25);
+        $c->addAnd(Tb026SolicitudPeer::CO_SOLICITUD_AYUDA, $co_solicitud_ayuda);
+
+        $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+        $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2), Criteria::IN);
+        $c->addAnd(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
+        $c->addAnd(Tb030RutaPeer::NU_ORDEN, 1);
+        $c->addAnd(Tb030RutaPeer::IN_ACTUAL, true);
+        $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
+
+
+        //  echo $c->toString(); exit();
+
+        $cantidadTotal = Tb026SolicitudPeer::doCount($c);
+
+        $c->setLimit($limit)->setOffset($start);
+        $c->addDescendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
+
+        $stmt = Tb026SolicitudPeer::doSelectStmt($c);
+        $registros = array();
+        $encrip = new myConfig();
+        while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+            $cantidad = Tb026SolicitudPeer::getCantRevision($res["co_solicitud"]);
+
+            $tx_rif = $res["inicial"] . "-" . $res["tx_rif"];
+            $tx_razon_social = strtoupper($res["tx_razon_social"]);
+
+
+            list($anio, $mes, $dia) = explode('-', $res["fe_registro"]);
+            $registros[] = array(
+                "tx_proceso" => trim($res["tx_proceso"]),
+                "tx_observacion" => strtoupper(trim($res["tx_observacion"])),
+                "co_proceso" => trim($res["co_proceso"]),
+                "tx_tipo_solicitud" => trim($res["tx_tipo_solicitud"]),
+                "co_tipo_solicitud" => trim($res["co_tipo_solicitud"]),
+                "co_solicitud" => trim($res["co_solicitud"]),
+                "tx_login" => trim($res["tx_login"]),
+                "monto" => trim($res["monto_total"]),
+                "tx_documento" => $tx_rif,
+                "nb_persona" => $tx_razon_social,
+                "fe_creacion" => $dia . '-' . $mes . '-' . $anio
+            );
+        }
+
+        $this->data = json_encode(array(
+            "success" => true,
+            "total" => $cantidadTotal,
+            "data" => $registros
+        ));
+
+        $this->setTemplate('store');
     }
 
     public function executeStorefkcoproducto(sfWebRequest $request)

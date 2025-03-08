@@ -15,8 +15,8 @@
             this.co_proceso;
 
             this.co_solicitud = new Ext.form.TextField({
-                fieldLabel: 'N° Proceso',
-                name: 'co_solicitud',
+                fieldLabel: 'N° Ayuda',
+                name: 'co_solicitud_ayuda',
                 maskRe: /[0-9]/,
                 value: '',
                 width: 100
@@ -86,9 +86,9 @@
 
                             Ext.Ajax.request({
                                 method: 'POST',
-                                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/enviarEntidades',
+                                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/enviarEntidadesAyuda',
                                 params: {
-                                    co_solicitud: solicitudLista.main.gridPanel_.getSelectionModel().getSelected().get('co_solicitud')
+                                    co_solicitud_ayuda: solicitudLista.main.gridPanel_.getSelectionModel().getSelected().get('co_solicitud_ayuda')
                                 },
                                 failure: function (result, request) {
                                     Ext.MessageBox.alert('Error en transacción', action.result.msg);
@@ -156,13 +156,11 @@
                 handler: function () {
                     this.msg = Ext.get('formulariosolicitud');
                     this.msg.load({
-                        url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/cargarDatos",
+                        url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/SolicitudAyuda/editarResponsabilidad",
                         scripts: true,
                         text: "Cargando..",
                         params: {
-                            co_solicitud: solicitudLista.main.codigo,
-                            co_tipo_solicitud: solicitudLista.main.co_tipo_solicitud,
-                            co_proceso: solicitudLista.main.co_proceso
+                            co_solicitud_ayuda: solicitudLista.main.codigo
                         }
                     });
                 }
@@ -220,10 +218,10 @@
                 columns: [
                     new Ext.grid.RowNumberer(),
                     {
-                        header: 'N° Proceso',
+                        header: 'N° Ayuda',
                         width: 100,
                         menuDisabled: true,
-                        dataIndex: 'co_solicitud'
+                        dataIndex: 'co_solicitud_ayuda'
                     },
                     {
                         header: 'RIF',
@@ -238,9 +236,10 @@
                         dataIndex: 'tx_razon_social'
                     },
                     {
-                        header: 'Tipo de Proceso',
-                        width: 200,
+                        header: 'Tipo Solicitud',
+                        width: 300,
                         menuDisabled: true,
+                        sortable: true,
                         dataIndex: 'tx_tipo_solicitud'
                     },
                     {
@@ -284,10 +283,7 @@
                         solicitudLista.main.formulario.enable();
                         solicitudLista.main.detalle.enable();
 
-                        solicitudLista.main.codigo = solicitudLista.main.store_lista.getAt(rowIndex).get('co_solicitud');
-                        solicitudLista.main.co_tipo_solicitud = solicitudLista.main.store_lista.getAt(rowIndex).get('co_tipo_solicitud');
-                        solicitudLista.main.co_proceso = solicitudLista.main.store_lista.getAt(rowIndex).get('co_proceso');
-
+                        solicitudLista.main.codigo = solicitudLista.main.store_lista.getAt(rowIndex).get('co_solicitud_ayuda');
 
 
                     }
@@ -340,7 +336,7 @@
                     name: 'tx_tipo_solicitud'
                 },
                 {
-                    name: 'co_solicitud'
+                    name: 'co_solicitud_ayuda'
                 },
                 {
                     name: 'fe_creacion'

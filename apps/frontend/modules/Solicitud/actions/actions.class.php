@@ -449,6 +449,7 @@ class SolicitudActions extends sfActions
         $this->setTemplate('enviarEntidades');
     }
 
+
     public function executeEnviarEntidades(sfWebRequest $request)
     {
 
@@ -504,6 +505,51 @@ class SolicitudActions extends sfActions
             "in_estatus" => $estatus,
             "in_carga_datos" => $in_carga_datos
         ));
+    }
+
+    public function executeEnviarEntidadesAyuda(sfWebRequest $request)
+    {
+
+        $con = Propel::getConnection();
+
+
+        try {
+            $co_solicitud_ayuda = $this->getRequestParameter("co_solicitud_ayuda");
+            $co_usuario = $this->getUser()->getAttribute('codigo');
+           
+            $c = new Criteria();
+            $c->add(Tb026SolicitudPeer::CO_SOLICITUD_AYUDA, $co_solicitud_ayuda);
+
+            $stmt = Tb026SolicitudPeer::doSelectStmt($c);
+
+            while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                $Tb030Ruta = Tb030RutaPeer::retrieveByPK($this->getCoRuta($reg["co_solicitud"]));
+                $Tb030Ruta->setCoEstatusRuta(2);
+                $Tb030Ruta->setCoUsuarioActualizo($co_usuario);
+                $Tb030Ruta->save($con);
+
+                $Tb126_solicitud_ayuda = Tb126SolicitudAyudaPeer::retrieveByPK($co_solicitud_ayuda);
+                $Tb126_solicitud_ayuda->setInProcesado(TRUE)->save($con);
+            
+            }
+
+            $con->commit();
+        } catch (PropelException $e) {
+            $con->rollback();
+            $data = json_encode(array(
+                "success" => false,
+                "msg" => $e->getMessage()
+            ));
+        }
+
+
+        $this->data = json_encode(array(
+            "in_estatus" => $estatus,
+            "in_carga_datos" => $in_carga_datos
+        ));
+
+        $this->setTemplate('enviarEntidades');
     }
 
     public function executeStorefkcoproceso(sfWebRequest $request)
