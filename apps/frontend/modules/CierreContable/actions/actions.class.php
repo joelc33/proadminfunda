@@ -160,6 +160,7 @@ class CierreContableActions extends sfActions
        $codigo = explode(',',$co_comprobante_contable);
        $c1  = new Criteria();
        $c1->add(Tb176ComprobanteContablePeer::CO_COMPROBANTE_CONTABLE,$codigo, Criteria::IN);
+       $c1->addAscendingOrderByColumn(Tb176ComprobanteContablePeer::CO_COMPROBANTE_CONTABLE);
        $stmt1 = Tb176ComprobanteContablePeer::doSelectStmt($c1);
        $registros1 = array();
         while($row = $stmt1->fetch(PDO::FETCH_ASSOC)){
@@ -192,15 +193,15 @@ class CierreContableActions extends sfActions
         $c->addSelectColumn('SUM('. Tb177DetComprobantePeer::MO_DEBITO.') as mo_debito');
 //        $c->addSelectColumn(Tb177DetComprobantePeer::MO_CREDITO);
 //        $c->addSelectColumn(Tb177DetComprobantePeer::MO_DEBITO);
-//        $c->add(Tb177DetComprobantePeer::CO_COMPROBANTE_CONTABLE,$tb176_comprobante_contable->getCoComprobanteContable());  
-        $c->add(Tb177DetComprobantePeer::CO_COMPROBANTE_CONTABLE,$codigo, Criteria::IN);
+        $c->add(Tb177DetComprobantePeer::CO_COMPROBANTE_CONTABLE,$row["co_comprobante_contable"]);  
+//        $c->add(Tb177DetComprobantePeer::CO_COMPROBANTE_CONTABLE,$codigo, Criteria::IN);
 //        $c->add(Tb177DetComprobantePeer::CO_CUENTA_CONTABLE,122234);
         $c->addGroupByColumn(Tb177DetComprobantePeer::CO_CUENTA_CONTABLE);
         $stmt = Tb177DetComprobantePeer::doSelectStmt($c);
         while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
 
 
-//        var_dump($reg["mo_debito"]);
+//        var_dump($reg["mo_credito"]);
 //        exit();                   
         
         $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($reg["co_cuenta_contable"]);
