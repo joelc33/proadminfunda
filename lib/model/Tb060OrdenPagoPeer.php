@@ -1299,6 +1299,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $date = mktime(0, 0, 0, $mes, $dia, $anio);
 
+               
                 if ($co_tipo_solicitud != 28 && $co_tipo_solicitud != 38) {
                     if (date("Y") > $ejercicio) {
                         $tx_serial = $ejercicio . '12-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
@@ -1309,11 +1310,34 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     $tx_serial = '';
                 }
 
-                if (date("Y") > $ejercicio) {
-                    $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . $ejercicio . '12-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
-                } else {
-                    $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . date('Ym', $date) . '-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
+
+                $solicitud_odp = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
+                $datosSolicitudAyuda = '';
+                if(!empty($solicitud_odp->getCoSolicitudAyuda())){
+                    $cs = new Criteria();
+                    $cs->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb026SolicitudPeer::CO_SOLICITUD);
+                    $cs->add(Tb026SolicitudPeer::CO_SOLICITUD_AYUDA,$solicitud_odp->getCoSolicitudAyuda());
+                    $cs->setLimit(1);
+                    $stmts = Tb060OrdenPagoPeer::doSelectStmt($cs);
+                    $datosSolicitudAyuda = $stmts->fetch(PDO::FETCH_ASSOC);
                 }
+
+                if(!empty($datosSolicitudAyuda)){
+
+                    $tx_docuemnto_odp       = $datosSolicitudAyuda['tx_documento_odp'];
+                   // $tx_serial              = $datosSolicitudAyuda['tx_serial'];
+
+                }else{
+
+                   
+
+                    if (date("Y") > $ejercicio) {
+                        $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . $ejercicio . '12-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
+                    } else {
+                        $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . date('Ym', $date) . '-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
+                    }
+
+                }               
 
                 if (date("Y") > $ejercicio) {
                     //$FeEmision = $ejercicio.'-12-31';
