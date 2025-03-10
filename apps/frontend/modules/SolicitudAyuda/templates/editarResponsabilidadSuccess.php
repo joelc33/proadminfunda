@@ -347,8 +347,8 @@
                 objCMB: this.co_tipo_ayuda,
                 value: this.OBJ.co_tipo_ayuda,
                 objStore: this.storeCO_TIPO_AYUDA
-            });
-
+            }); 
+            
             this.tx_observacion = new Ext.form.TextArea({
                 fieldLabel: 'Motivo',
                 name: 'tb126_solicitud_ayuda[tx_observacion]',
