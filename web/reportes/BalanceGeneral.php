@@ -10,26 +10,34 @@ class PDF extends FPDF {
 
         $this->empresa = $this->getDatosEmpresa(1);
 
-        if(!empty($this->empresa['tx_imagen_izq'])){
-            $this->Image("imagenes/".$this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+        if (!empty($this->empresa['tx_imagen_izq'])) {
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
-        
 
-//        if(!empty($this->empresa['tx_imagen_der'])){
-//            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
-//        }
+        /*if(!empty($this->empresa['tx_imagen_cen'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_cen'],  $this->empresa['centro_x'], $this->empresa['centro_y'], $this->empresa['centro_w']);
+        }*/
 
-        $this->SetFont('Arial','B',8);
-        $this->SetTextColor(0,0,0);
-        $this->SetY(10);
-        $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
+        /*  if(!empty($this->empresa['tx_imagen_der'])){
+            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
+        }*/
+
+        $this->SetFont('Arial', 'B', 9);
+
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(12);
+        $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
         $this->Ln(4);
-        $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');
-        $this->Ln(4);
-        $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('COORDINACIÓN DE CONTABILIDAD'),0,0,'C');
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        if (!empty($this->empresa['nb_institucion'])) {
+            $this->Ln(2);
+            $this->SetX(52);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->Ln(2);
+        }else{
+        $this->Ln(4);    
+        }
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(4);
 //        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
@@ -83,196 +91,221 @@ class PDF extends FPDF {
     function ChapterBody() {
      
          
-         //************ Cuentas del Tesoro *****************//
+
          $this->SetFont('Arial','B',8);     
          $this->SetFillColor(201, 199, 199);
-         $this->Row(array('CUENTAS DEL TESORO'),1,1); 
-         $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(20,50,30,20,40,40)); 
-         $this->SetAligns(array("C","L","R","C","L","R"));              
-         $this->SetFont('Arial','B',8);
+         $this->Row(array('ACTIVOS'),0,1); 
          $this->Ln(3);
-         $this->Row(array(utf8_decode('Nº'),' ACTIVOS','BOLIVARES',utf8_decode('Nº'), 'PASIVOS','BOLIVARES'),0,1);         
-         $this->lista_activos = $this->getActivos();
-         $sub_actTesoro = 0;
-         $sub_pasTesoro  = 0;
-         //$this->SetX(10);
-         $y = $this->GetY();
-          $this->SetAligns(array("C","L","R")); 
-         foreach($this->lista_activos as $key => $campo){
+         $this->lista_cuentas = $this->getCuentas(1,2);
+         $total = 0;
+         foreach($this->lista_cuentas as $key => $cuenta){
              
-         if($campo['codigo']<200 && $campo['codigo']!=''){    
+         $this->SetWidths(array(120)); 
+         $this->SetAligns(array("L"));                   
+         $this->SetFont('Arial','B',8);     
+         $this->SetFillColor(201, 199, 199);    
              
-         $this->Row(array($campo['codigo'],$campo['tx_descripcion'],number_format($campo['saldo_actual'], 2, ',','.')),0,1);         
-         $sub_actTesoro = $campo['saldo_actual'] + $sub_actTesoro;
-         }
-         } 
-         $this->lista_pasivos = $this->getPasivos();
-//         var_dump($this->lista_pasivos);
-//         exit();
-         $this->SetY($y);
-         $sub_total = 0;
-         $codigo = 0;
-         foreach($this->lista_pasivos as $key => $campo_pasivo){
-         $this->SetX(110);     
-         if($campo_pasivo['codigo']<200 && $campo_pasivo['codigo']!=''){
-             
-         if($campo_pasivo['codigo']==199){
-         $codigo = 1;
-         $this->SetWidths(array(60,40,60, 40)); 
-         $this->SetAligns(array("R","R","R","R")); 
-         $this->Row(array('','',' SUB TOTAL ', number_format($sub_total, 2, ',','.')),0,1);     
-         }    
-         $this->SetWidths(array(20,50,30,20,40,40)); 
-         $this->SetAligns(array("C","L","R","C","L","R")); 
-         $saldo = -1*$campo_pasivo['saldo_actual'];
-         $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($saldo, 2, ',','.')),0,1);         
-         $sub_pasTesoro = $campo_pasivo['saldo_actual'] + $sub_pasTesoro;
-         if($campo_pasivo['codigo']!=199){
-         $sub_total += $campo_pasivo['saldo_actual'];    
-         }
-         }
-         }
-         if($codigo==0){
-         $this->Ln(10);
-         $this->SetWidths(array(60,40,60, 40)); 
-         $this->SetAligns(array("R","R","R","R")); 
-         $this->Row(array('','',' SUB TOTAL ', number_format(-1*$sub_total, 2, ',','.')),0,1);         
-         }
-         $situacion_financiera = ($sub_actTesoro + $sub_pasTesoro);
-         $situacion_fiscal = ($sub_actTesoro + $sub_pasTesoro);
-         $this->SetWidths(array(20,50,30,20,40,40)); 
-         $this->SetAligns(array("C","L","R","C","L","R")); 
-         $this->Row(array('','','','199','Situacion Financiera del Tesoro', number_format($situacion_financiera, 2, ',','.')),0,1);
-         $this->Ln(10);
-         $total_pasivo = (-1*$sub_pasTesoro) + $situacion_financiera;
-         $this->SetWidths(array(60,40,60, 40)); 
-         $this->SetAligns(array("R","R","R","R")); 
-         $this->Row(array('TOTAL ',number_format($sub_actTesoro, 2, ',','.'),'TOTAL ', number_format($total_pasivo, 2, ',','.')),0,1);         
-                  
-          
-         //************ Cuentas de Hacienda *****************//
-         $this->SetFont('Arial','B',8); 
-         $this->SetWidths(array(200));
-         $this->SetAligns(array("C")); 
-         $this->SetFillColor(201, 199, 199);
-         $this->Row(array('CUENTAS DE HACIENDA'),1,1); 
+         $this->Row(array($cuenta['tx_descripcion']),0,1); 
+         
          $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(20,50,30,20,40,40)); 
-         $this->SetAligns(array("C","L","R","C","L","R"));              
-         $this->SetFont('Arial','B',8);
-         $this->Ln(3);
-         $this->Row(array(utf8_decode('Nº'),' ACTIVOS','BOLIVARES',utf8_decode('Nº'), 'PASIVOS','BOLIVARES'),0,1);    
-         $sub_actHacienda = 0;
-         $sub_pasHacienda  = 0;
-         //$this->SetX(10);
+         $this->SetWidths(array(85,30,20,40,40)); 
+         $this->SetAligns(array("L","L","R","C","L","R"));              
+         $this->SetFont('Arial','B',8);         
+      
+         $this->lista_activos = $this->getActivos($cuenta['nu_cuenta_contable'],3);
+
+
          $y = $this->GetY();
-          $this->SetAligns(array("C","L","R"));
-          
-         $this->SetWidths(array(20,50,30,20,40,40)); 
-         $this->SetAligns(array("C","L","R","C","L","R")); 
-         $this->Row(array('200','Situacion Fiscal del Tesoro', number_format($situacion_fiscal, 2, ',','.')),0,1);            
-         foreach($this->lista_activos as $key => $campo2){
+          $this->SetAligns(array("L","R","R")); 
+         foreach($this->lista_activos as $key => $campo){ 
+           
+        if($campo['nu_cuenta_contable']=='10101'){
+        $tx_observacion = 'EFECTIVO Y EQUIVALENTE DE EFECTIVO';   
+        }else{
+        $tx_observacion = $campo['tx_descripcion'];
+        }            
              
-         if($campo2['codigo']>=200 && $campo2['codigo']!=''){    
-             
-         $this->Row(array($campo2['codigo'],$campo2['tx_descripcion'],number_format($campo2['saldo_actual'], 2, ',','.')),0,1);         
-         $sub_actHacienda = $campo2['saldo_actual'] + $sub_actHacienda;
+         $this->montos = $this->getMontos($campo['nu_cuenta_contable']);
+
+         $this->SetX(15);   
+         $this->Row(array(utf8_decode($tx_observacion),number_format($this->montos['saldo_actual']<0?$this->montos['saldo_actual']*-1:$this->montos['saldo_actual'], 2, ',','.')),0,1);        
+         $total = $this->montos['saldo_actual'] + $total;
+         
+         
+         if($campo['nu_cuenta_contable']=='10101'){
+
+         $this->montos = $this->getMontosFondoTerceros($campo['nu_cuenta_contable']);
+         if($this->montos['saldo_actual']!=0){
+         $this->SetX(15);   
+         $this->Row(array(utf8_decode('FONDOS DE TERCEROS'),number_format($this->montos['saldo_actual']<0?$this->montos['saldo_actual']*-1:$this->montos['saldo_actual'], 2, ',','.')),0,1);        
+         $total = $this->montos['saldo_actual'] + $total;
+         }             
          }
-         } 
-       
-         $this->lista_pasivos = $this->getPasivos();
-//         var_dump($this->lista_pasivos);
-//         exit();
-         $this->SetY($y);    
-         foreach($this->lista_pasivos as $key => $campo_pasivo){
-         $this->SetX(110);     
-         if($campo_pasivo['codigo']>200 && $campo_pasivo['codigo']!=''){    
-         $saldo = -1*$campo_pasivo['saldo_actual'];    
-         $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($saldo, 2, ',','.')),0,1);         
-         $sub_pasHacienda = $campo_pasivo['saldo_actual'] + $sub_pasHacienda;
-         }
-         }
-         $this->Ln(20);
-         $this->SetWidths(array(60,40,60, 40)); 
-         $this->SetAligns(array("R","R","R","R")); 
-         //$this->Row(array('TOTAL ',number_format($sub_actHacienda, 2, ',','.'),'TOTAL ', number_format($sub_pasHacienda, 2, ',','.')),0,1);     
-         $this->Ln(3); 
-        //************ Cuentas de Presupusto *****************//
-         $this->SetFont('Arial','B',8); 
-         $this->SetWidths(array(200));
-         $this->SetAligns(array("C")); 
-         $this->SetFillColor(201, 199, 199);
-         $this->Row(array('CUENTAS DE PRESUPUESTO'),1,1); 
-         $this->SetFillColor(255, 255, 255);
-         $this->SetWidths(array(20,50,30,20,40,40)); 
-         $this->SetAligns(array("C","L","R","C","L","R"));              
-         $this->SetFont('Arial','B',8);
-         $this->Ln(3);
-         $this->Row(array(utf8_decode('Nº'),' ACTIVOS','BOLIVARES',utf8_decode('Nº'), 'PASIVOS','BOLIVARES'),0,1);     
-         $this->lista_presupuesto = $this->getPresuepuestoActivos();
-         $sub_actPresupuesto = 0;
-         $sub_pasPresupuesto  = 0;
-         //$this->SetX(10);
-         $y = $this->GetY();
-          $this->SetAligns(array("C","L","R")); 
-         foreach($this->lista_presupuesto as $key => $campo2){
-             
-         if($campo2['codigo']>=200 && $campo2['codigo']!=''){    
-             
-         $this->Row(array($campo2['codigo'],$campo2['tx_descripcion'],number_format($campo2['saldo_actual'], 2, ',','.')),0,1);         
-         $sub_actPresupuesto = $campo2['saldo_actual'] + $sub_actPresupuesto;
-         }
-         } 
-         $this->lista_presupuesto_pasivos = $this->getPresuepuestoPasivos();
-//         var_dump($this->lista_pasivos);
-//         exit();
-         $this->SetY($y);    
-         foreach($this->lista_presupuesto_pasivos as $key => $campo_pasivo){
-         $this->SetX(110);     
-         $saldo = -1*$campo_pasivo['saldo_actual'];    
-         $this->Row(array($campo_pasivo['codigo'],$campo_pasivo['tx_descripcion'],number_format($saldo, 2, ',','.')),0,1);         
-         $sub_pasPresupuesto = $campo_pasivo['saldo_actual'] + $sub_pasPresupuesto;
          
          }
-         $this->Ln(5);
-         $this->SetWidths(array(60,40,60, 40)); 
-         $this->SetAligns(array("R","R","R","R")); 
-         $this->Row(array('TOTAL ',number_format($sub_actHacienda + $sub_actPresupuesto + $situacion_fiscal, 2, ',','.'),'TOTAL ', number_format(-1*($sub_pasHacienda + $sub_pasPresupuesto), 2, ',','.')),0,1);     
-         $this->Ln(5);        
-       //************ Cuentas del Orden *****************//
-//         $this->SetFont('Arial','B',8); 
-//         $this->SetWidths(array(200));
-//         $this->SetAligns(array("C")); 
-//         $this->SetFillColor(201, 199, 199);
-//         $this->Row(array('CUENTAS DE ORDEN'),1,1); 
-//         $this->SetFillColor(255, 255, 255);
-//         $this->SetWidths(array(70,30,60,40)); 
-//         $this->SetAligns(array("C","L","R","C","L","R"));              
-//         $this->SetFont('Arial','B',8); 
-//         $this->Ln(3);
-//         $this->lista_cuentasOrdenDeudoras = $this->getCuentasOrdenDeudoras();
-//         $this->lista_cuentasOrdenAcreedoras = $this->getCuentasOrdenAcreedoras();
-//        //$this->SetX(10);
-//         $y = $this->GetY();
-//         $this->SetAligns(array("L","R","L","R")); 
-//         $this->SetY($y);    
-//          foreach($this->lista_cuentasOrdenDeudoras as $key => $campo2){
-//            
-//         $saldo_deudora = number_format($campo2['saldo_actual'], 2, ',','.');
-//         $tx_deudora = $campo2['tx_descripcion']; 
-//         
-//         } 
-//         foreach($this->lista_cuentasOrdenAcreedoras as $key => $campo){        
-//         $this->Row(array($tx_deudora,$saldo_deudora,$campo['tx_descripcion'],number_format($campo['saldo_actual'], 2, ',','.')),0,1);         
-//         
-//         }
+         $this->Ln(3);
+    }
+    
+         $this->SetAligns(array("R","R","R"));
+         $this->SetX(15);
+         $this->Row(array(utf8_decode('TOTAL ACTIVOS'),number_format($total<0?$total*-1:$total, 2, ',','.')),0,1);    
+    
+         $this->SetWidths(array(200)); 
+         $this->SetAligns(array("C")); 
+         $this->SetFont('Arial','B',8);     
+         $this->SetFillColor(201, 199, 199);
+         $this->Row(array('PASIVO Y PATRIMONIO'),0,1); 
+         $this->Ln(3);
+         
+         $this->lista_cuentas = $this->getCuentas(2,2);
+         foreach($this->lista_cuentas as $key => $cuenta){
+             
+         $this->SetWidths(array(120)); 
+         $this->SetAligns(array("L"));                   
+         $this->SetFont('Arial','B',8);     
+         $this->SetFillColor(201, 199, 199);    
+             
+         $this->Row(array($cuenta['tx_descripcion']),0,1); 
+         
+         $this->SetFillColor(255, 255, 255);
+         $this->SetWidths(array(85,30,20,40,40)); 
+         $this->SetAligns(array("L","R","R","C","L","R"));              
+         $this->SetFont('Arial','B',8);         
+      
+         $this->lista_activos = $this->getActivos($cuenta['nu_cuenta_contable'],4);
+         $sub_actTesoro = 0;
+         $sub_pasTesoro  = 0;
+
+         $y = $this->GetY();
+          $this->SetAligns(array("L","R","R")); 
+         foreach($this->lista_activos as $key => $campo){ 
+             
+         $this->montos = $this->getMontos($campo['nu_cuenta_contable']);    
+         $this->SetX(15);             
+         $this->Row(array(utf8_decode($campo['tx_descripcion']),number_format($this->montos['saldo_actual']<0?$this->montos['saldo_actual']*-1:$this->montos['saldo_actual'], 2, ',','.')),0,1);         
+         $sub_actTesoro = $campo['saldo_actual'] + $sub_actTesoro;
+
+         }
+         
+    }         
+
+         $this->lista_cuentas = $this->getCuentas(5,2);
+         foreach($this->lista_cuentas as $key => $cuenta){
+             
+         $this->SetWidths(array(120)); 
+         $this->SetAligns(array("L"));                   
+         $this->SetFont('Arial','B',8);     
+         $this->SetFillColor(201, 199, 199);    
+             
+         $this->Row(array($cuenta['tx_descripcion']),0,1); 
+         
+         $this->SetFillColor(255, 255, 255);
+         $this->SetWidths(array(85,30,20,40,40)); 
+         $this->SetAligns(array("L","L","R","C","L","R"));              
+         $this->SetFont('Arial','B',8);         
+      
+         $this->lista_activos = $this->getActivos($cuenta['nu_cuenta_contable'],4);
+         $sub_actTesoro = 0;
+         $sub_pasTesoro  = 0;
+
+         $y = $this->GetY();
+          $this->SetAligns(array("L","R","R")); 
+         foreach($this->lista_activos as $key => $campo){ 
+             
+         $this->montos = $this->getMontos($campo['nu_cuenta_contable']);    
+         $this->SetX(15);             
+         $this->Row(array(utf8_decode($campo['tx_descripcion']),number_format($this->montos['saldo_actual']<0?$this->montos['saldo_actual']*-1:$this->montos['saldo_actual'], 2, ',','.')),0,1);
+         $sub_actTesoro = $campo['saldo_actual'] + $sub_actTesoro;
+
+         }
+         
+    }    
+    
          $this->Ln(5);
          $this->SetWidths(array(200)); 
          $this->SetAligns(array("L")); 
          $this->Row(array('* ANEXOS'),0,1);         
          $this->Row(array('NOTA: VER INFORME DE PREPARACION DEL CONTADOR PUBLICO'),0,1);  
          
+         $this->addPage();
+
+         $this->SetWidths(array(200)); 
+         $this->SetAligns(array("C")); 
+         $this->SetFont('Arial','B',8);     
+         $this->SetFillColor(201, 199, 199);
+         $this->Row(array('INGRESOS'),0,1); 
+         $this->Ln(3); 
+         $total = 0;
+         $this->lista_cuentas = $this->getCuentas(3,2);
+         foreach($this->lista_cuentas as $key => $cuenta){
+             
+         $this->SetWidths(array(120)); 
+         $this->SetAligns(array("L"));                   
+         $this->SetFont('Arial','B',8);     
+         $this->SetFillColor(201, 199, 199);    
+             
+         $this->Row(array($cuenta['tx_descripcion']),0,1); 
+         
+         $this->SetFillColor(255, 255, 255);
+         $this->SetWidths(array(100,30)); 
+         $this->SetAligns(array("L","R"));              
+         $this->SetFont('Arial','B',8);         
+      
+         $this->lista_activos = $this->getActivos($cuenta['nu_cuenta_contable'],4);
+         
+         
+         $y = $this->GetY();
+         $this->SetWidths(array(85,30));
+          $this->SetAligns(array("L","R")); 
+         foreach($this->lista_activos as $key => $campo){ 
+             
+         $this->montos = $this->getMontos($campo['nu_cuenta_contable']);    
+         $this->SetX(15);   
+         $this->Row(array(utf8_decode($campo['tx_descripcion']),number_format($this->montos['saldo_actual']<0?$this->montos['saldo_actual']*-1:$this->montos['saldo_actual'], 2, ',','.')),0,1);         
+         $total = $this->montos['saldo_actual'] + $total;
+
+         }        
+         
+    }
+    
+         $this->SetAligns(array("R","R","R"));
+         $this->SetX(15);
+         $this->Row(array(utf8_decode('TOTAL INGRESOS'),number_format($total<0?$total*-1:$total, 2, ',','.')),0,1);     
+    
+         $this->SetWidths(array(200)); 
+         $this->SetAligns(array("C")); 
+         $this->SetFont('Arial','B',8);     
+         $this->SetFillColor(201, 199, 199);
+         $this->Row(array('EGRESOS'),0,1); 
+         $this->Ln(3); 
+
+         $this->SetFillColor(255, 255, 255);
+         $this->SetWidths(array(85,30,20,40,40)); 
+         $this->SetAligns(array("L","L","R","C","L","R"));              
+         $this->SetFont('Arial','B',8);         
+      
+         $this->lista_activos = $this->getActivos(4,2);
+         $total = 0;
+         
+         $y = $this->GetY();
+          $this->SetAligns(array("L","R","R")); 
+         foreach($this->lista_activos as $key => $campo){ 
+             
+         $this->montos = $this->getMontos($campo['nu_cuenta_contable']);    
+         $this->SetX(15);   
+         $this->Row(array(utf8_decode($campo['tx_descripcion']),number_format($this->montos['saldo_actual']<0?$this->montos['saldo_actual']*-1:$this->montos['saldo_actual'], 2, ',','.')),0,1);         
+         $total = $this->montos['saldo_actual'] + $total;
+
+         }
+         $this->SetAligns(array("R","R","R"));
+         $this->SetX(15);
+         $this->Row(array(utf8_decode('TOTAL EGRESOS'),number_format($total<0?$total*-1:$total, 2, ',','.')),0,1);
+    
+         $this->Ln(5);
+         $this->SetWidths(array(200)); 
+         $this->SetAligns(array("L")); 
+         $this->Row(array('* ANEXOS'),0,1);         
+         $this->Row(array('NOTA: VER INFORME DE PREPARACION DEL CONTADOR PUBLICO'),0,1);     
 
    }
 
@@ -292,16 +325,61 @@ class PDF extends FPDF {
         $this->ChapterBody();
     }
 
-   
-    function getActivos(){
+     function getCuentas($nu_cuenta,$nu_nivel){
+        $conex = new ConexionComun();  
+ 
+          $sql = "SELECT nu_cuenta_contable,tx_descripcion
+                    from tb024_cuenta_contable tb024
+                    where (tb024.nu_cuenta_contable like '$nu_cuenta%') and nu_nivel = $nu_nivel 
+                    GROUP BY nu_cuenta_contable,tx_descripcion";            
+
+
+                        
+          $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+          return  $datosSol;  
+	
+    }
+    
+    function getMontos($nu_cuenta){ // Nivel 1
+
+
+        
+        $conex = new ConexionComun(); 
+                  $sql = "SELECT sum(pre_deb) as pre_deb, sum(pre_cre) as pre_cre,sum(pre_deb)  - sum(pre_cre) as saldo, (sum(acu_deb) + sum(mes_deb)) - (sum(acu_cre) + sum(mes_cre)) as saldo_anterior,
+                  (sum(acu_deb) + sum(mes_deb)) - (sum(acu_cre) + sum(mes_cre)) + (sum(pre_deb)  - sum(pre_cre)) as saldo_actual  
+from tb024_cuenta_contable tb024
+where (tb024.nu_cuenta_contable like '$nu_cuenta%') and tb024.co_cuenta_contable not in (select co_cuenta_contable from tb011_cuenta_bancaria where co_descripcion_cuenta = 3)";
+           //echo var_dump($sql); exit();  
+          $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+          return  $datosSol[0];  
+	
+    }  
+    
+    function getMontosFondoTerceros($nu_cuenta){ // Nivel 1
+
+
+        
+        $conex = new ConexionComun(); 
+                  $sql = "SELECT sum(pre_deb) as pre_deb, sum(pre_cre) as pre_cre,sum(pre_deb)  - sum(pre_cre) as saldo, (sum(acu_deb) + sum(mes_deb)) - (sum(acu_cre) + sum(mes_cre)) as saldo_anterior,
+                  (sum(acu_deb) + sum(mes_deb)) - (sum(acu_cre) + sum(mes_cre)) + (sum(pre_deb)  - sum(pre_cre)) as saldo_actual  
+from tb024_cuenta_contable tb024
+where (tb024.nu_cuenta_contable like '$nu_cuenta%') and tb024.co_cuenta_contable in (select co_cuenta_contable from tb011_cuenta_bancaria where co_descripcion_cuenta = 3)";
+           //echo var_dump($sql); exit();  
+          $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+          return  $datosSol[0];  
+	
+    }    
+    
+    function getActivos($nu_cuenta_contable,$nu_nivel){
         $conex = new ConexionComun();  
         if($_GET['in_periodo']){
 
              
-          $sql = "select *  from (SELECT  (sum(acu_deb) + sum(mes_deb) + sum(pre_deb)) - (sum(acu_cre) + sum(mes_cre) + sum(pre_cre)) as saldo_actual , codigo,descripcion as tx_descripcion
-from tb024_cuenta_contable tb024
-left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
-where (tb024.nu_cuenta_contable like '1%') GROUP BY codigo,descripcion) as q1 order by codigo";            
+          $sql = "SELECT tb024.tx_descripcion,nu_cuenta_contable,nu_nivel
+               from tb024_cuenta_contable tb024
+               left join tb011_cuenta_bancaria tb011 on (tb011.co_cuenta_contable = tb024.co_cuenta_contable)
+               where tb024.nu_cuenta_contable like '$nu_cuenta_contable%' and nu_nivel = $nu_nivel
+               order by nu_cuenta_contable";            
         }else{
 
     $co_mes = $_GET['co_mes'];
@@ -315,7 +393,8 @@ where (tb024.nu_cuenta_contable like '1%') and co_mes = $co_mes and nu_anio = $n
          
         }
 
-                        
+//          echo var_dump($sql);  exit();
+        
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol;  
 	
@@ -454,7 +533,7 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
     
     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, nb_institucion, co_estado, co_municipio, tx_rif, tx_nit, 
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,
