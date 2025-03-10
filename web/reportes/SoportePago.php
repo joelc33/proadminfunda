@@ -328,7 +328,7 @@ class PDF_Flo extends PDF_FlowingBlock
          
          $this->SetY(220); 
          $this->SetX(20);
-         $this->Cell(200,5,utf8_decode('PRESIDENTE'),0,0,'L');
+         $this->Cell(200,5,utf8_decode('DIRECTOR GENERAL'),0,0,'L');
          $this->SetX(80);
          $this->Cell(200,5,utf8_decode('ADMINISTRADOR'),0,0,'L');          
          $this->SetX(150);
