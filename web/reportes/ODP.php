@@ -400,7 +400,8 @@ class PDF_Flo extends PDF_FlowingBlock
                             $this->Row(array($documento, $soporte, date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), utf8_decode($this->datos[0]['tx_observacion']), number_format($valor['nu_total'], 2, ',', '.'), utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), number_format($this->datos[0]['nu_total'] - ($this->datos[0]['nu_total_retencion']), 2, ',', '.')), 0, 0);
                             $j++;
                         } else {
-                            //$this->SetX(142);
+                            $Y = $this->GetY();
+                            $this->SetY($Y-10);
                             $this->SetWidths(array(135, 25, 20, 20));
                             $this->SetAligns(array("L", "R", "R", "R"));
                             $this->Row(array('', utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), ''), 0, 0);
