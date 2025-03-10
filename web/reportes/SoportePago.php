@@ -261,16 +261,16 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->Cell(200,5,$montopagado,0,0,'L'); 
          
          $this->Ln(10);
-         $this->RoundedRect(10, 120, 200, 10, 0.5, '1001', '', $style);
+         $this->RoundedRect(10, 120, 200, 14, 0.5, '1001', '', $style);
          
          $this->SetX(25);
          $this->Cell(200,5,utf8_decode('MOTIVO DE LA TRANSFERENCIA'),0,0,'L');   
          $this->Ln(10);
          $this->SetX(25);
-         $this->MultiCell(200,5,utf8_decode($this->datos['de_observacion']),0,1,'L',1); 
+         $this->MultiCell(185,5,utf8_decode($this->datos['de_observacion']),0,1,'L',1); 
          
-          $this->RoundedRect(10, 135, 200, 10, 0.5, '1001', '', $style);
-          $this->RoundedRect(11, 136, 198, 8, 0.5, '1001', '', $style);
+          $this->RoundedRect(10, 139, 200, 10, 0.5, '1001', '', $style);
+          $this->RoundedRect(11, 140, 198, 8, 0.5, '1001', '', $style);
          $this->Ln(10); 
          $this->SetX(25);
          $this->Cell(200,5,utf8_decode('ORDEN DE PAGO'),0,0,'L');
@@ -279,7 +279,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetX(153);
          $this->Cell(200,5,utf8_decode('TOTAL DEDUCCIONES'),0,0,'L');
          
-          $this->RoundedRect(10, 150, 200, 50, 0.5, '1001', '', $style);
+          $this->RoundedRect(10, 154, 200, 46, 0.5, '1001', '', $style);
           
         $this->lista_retenciones = $this->getDeducciones($this->datos['co_orden_pago']);
         
