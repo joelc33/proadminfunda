@@ -261,7 +261,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->Cell(200,5,$montopagado,0,0,'L'); 
          
          $this->Ln(10);
-         $this->RoundedRect(10, 120, 200, 14, 0.5, '1001', '', $style);
+         $this->RoundedRect(10, 120, 200, 17, 0.5, '1001', '', $style);
          
          $this->SetX(25);
          $this->Cell(200,5,utf8_decode('MOTIVO DE LA TRANSFERENCIA'),0,0,'L');   
