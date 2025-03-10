@@ -428,7 +428,7 @@ class PDF_Flo extends PDF_FlowingBlock
                 if (!empty($this->datos[0]['nu_exento'])) {
                 $this->SetWidths(array(113, 22, 20, 20));
                 $this->SetAligns(array("R", "R", "R", "R"));    
-                $this->Row(array('EXENTO', number_format($this->datos[0]['nu_exento'], 2, ',', '.')), 0, 0);
+                $this->Row(array('', 'EXENTO '.number_format($this->datos[0]['nu_exento'], 2, ',', '.')), 0, 0);
                 }
                 $y = $this->getY();
                 $Y = $this->GetY();
