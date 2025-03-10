@@ -433,7 +433,7 @@ class SolicitudAyudaActions extends sfActions
 
                     $tb052_compras->setCoUsuario($this->getUser()->getAttribute('codigo'));
                     $tb052_compras->setFechaCompra($fecha);
-                    $tb052_compras->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
+                    $tb052_compras->setTxObservacion($v["tx_observacion"]);
                     $tb052_compras->setCoSolicitud($tb126_solicitud_ayudaForm["co_solicitud"]);
                     $tb052_compras->setCoTipoSolicitud(25);
                     $tb052_compras->setAnio($this->getUser()->getAttribute('ejercicio'));
@@ -465,13 +465,13 @@ class SolicitudAyudaActions extends sfActions
 
 
                     $solicitud = Tb026SolicitudPeer::retrieveByPk($tb126_solicitud_ayudaForm["co_solicitud"]);
-                    $solicitud->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
+                    $solicitud->setTxObservacion($v["tx_observacion"]);
                     $solicitud->setCoSolicitudAyuda($tb126_solicitud_ayuda->getCoSolicitudAyuda());
                     $solicitud->setCoProveedor($v["co_proveedor"])->setFeRegistro($fecha)->save($con);
 
 
                     $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb126_solicitud_ayudaForm["co_solicitud"]));
-                    $ruta->setObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
+                    $ruta->setObservacion($v["tx_observacion"]);
                     $ruta->setInCargarDato(true)->save($con);
 
                     $con->commit();

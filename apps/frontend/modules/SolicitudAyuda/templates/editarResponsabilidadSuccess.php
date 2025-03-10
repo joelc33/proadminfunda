@@ -350,7 +350,7 @@
             });
 
             this.tx_observacion = new Ext.form.TextArea({
-                fieldLabel: 'Descripción Orden de pago',
+                fieldLabel: 'Motivo',
                 name: 'tb126_solicitud_ayuda[tx_observacion]',
                 value: this.OBJ.tx_observacion,
                 allowBlank: false,

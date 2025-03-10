@@ -1094,6 +1094,20 @@ class SolicitudActions extends sfActions
     }
 
 
+    protected function getDatosProveedorAyuda($codigo)
+    {
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
+        $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
+        $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+        $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb126SolicitudAyudaPeer::CO_PROVEEDOR_SOLICITANTE);
+        $c->add(Tb126SolicitudAyudaPeer::CO_SOLICITUD_AYUDA, $codigo);
+        $stmt = Tb008ProveedorPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $campos;
+    }
 
 
 
@@ -1175,6 +1189,8 @@ class SolicitudActions extends sfActions
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
         $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
         $c->addSelectColumn(Tb030RutaPeer::TX_RUTA_REPORTE);
+        $c->addSelectColumn(Tb026SolicitudPeer::CO_SOLICITUD_AYUDA);
+
 
         // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR, Criteria::LEFT_JOIN);
@@ -1207,8 +1223,18 @@ class SolicitudActions extends sfActions
 
             $cantidad = Tb026SolicitudPeer::getCantRevision($res["co_solicitud"]);
 
-            $tx_rif = $res["inicial"] . "-" . $res["tx_rif"];
-            $tx_razon_social = strtoupper($res["tx_razon_social"]);
+            if(!empty($res["co_solicitud_ayuda"])){
+
+                $datosProveedor = $this->getDatosProveedorAyuda($res["co_solicitud_ayuda"]);
+                $tx_rif             = $datosProveedor["inicial"] . "-" . $datosProveedor["tx_rif"];
+                $tx_razon_social    = strtoupper($datosProveedor["tx_razon_social"]);
+
+            }else{
+                $tx_rif = $res["inicial"] . "-" . $res["tx_rif"];
+                $tx_razon_social = strtoupper($res["tx_razon_social"]);
+            }
+
+           
 
 
             list($anio, $mes, $dia) = explode('-', $res["fe_registro"]);

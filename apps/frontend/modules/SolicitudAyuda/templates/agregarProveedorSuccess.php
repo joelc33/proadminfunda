@@ -72,7 +72,7 @@
             });
 
             this.tx_observacion = new Ext.form.TextArea({
-                fieldLabel: 'Motivo',
+                fieldLabel: 'Descripción Orden de pago',
                 name: 'tx_observacion',
                 allowBlank: false,
                 width: 700
