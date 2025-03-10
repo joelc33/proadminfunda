@@ -266,7 +266,7 @@ class IngresoFinancieroActions extends sfActions
                 $tb026_solicitudForm = array(
                     "co_tipo_solicitud"   => 35,
                     "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-                    "fe_solicitud"        => date("d/m/Y"),
+                    "fe_solicitud"        => $tb155_cuenta_bancaria_historicoForm["fe_transaccion"],
                     "observacion"         => $tb155_cuenta_bancaria_historicoForm["de_observacion"],
                     "codigo"              => $this->getUser()->getAttribute('codigo')
                 );
