@@ -272,6 +272,8 @@ class PDF_Flo extends PDF_FlowingBlock
           $this->RoundedRect(10, 139, 200, 10, 0.5, '1001', '', $style);
           $this->RoundedRect(11, 140, 198, 8, 0.5, '1001', '', $style);
          $this->Ln(10); 
+         
+         $this->SetY(141);
          $this->SetX(25);
          $this->Cell(200,5,utf8_decode('ORDEN DE PAGO'),0,0,'L');
          $this->SetX(80);
