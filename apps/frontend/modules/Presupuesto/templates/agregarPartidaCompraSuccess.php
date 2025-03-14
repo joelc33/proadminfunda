@@ -146,7 +146,7 @@
 
                         cambiarPartida.main.storeCO_PARTIDA.baseParams.co_accion = this.getValue();
                         cambiarPartida.main.storeCO_PARTIDA.baseParams.co_partida = cambiarPartida.main.co_partida.getValue();
-                        cambiarPartida.main.storeCO_PARTIDA.baseParams.co_detalle_compra =  cambiarPartida.main.OBJ.co_detalle_compra
+                        cambiarPartida.main.storeCO_PARTIDA.baseParams.co_detalle_compra = cambiarPartida.main.OBJ.co_detalle_compra
                         cambiarPartida.main.storeCO_PARTIDA.load();
                     }
                 }
@@ -246,6 +246,13 @@
                                 });
                             }
 
+
+                            pendienteEntidadesLista.main.store_lista.load();
+                            pendienteEntidadesLista.main.store_lista.on('load', function () {
+                                pendienteEntidadesLista.main.estado.disable();
+                                pendienteEntidadesLista.main.revision.disable();
+                            });
+
                             ContabilidadEditar.main.store_lista.baseParams.co_compra = ContabilidadEditar.main.OBJ.co_compras;
                             ContabilidadEditar.main.store_lista.load({
                                 callback: function () {
@@ -262,6 +269,8 @@
                                     ContabilidadEditar.main.monto_total.setValue("<span style='font-size:12px;'><b>Total a Pagar: </b>" + paqueteComunJS.funcion.getNumeroFormateado(ContabilidadEditar.main.total_pagar) + "</b></span>");
                                 }
                             });
+
+
 
                             cambiarPartida.main.winformPanel_.close();
 

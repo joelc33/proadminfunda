@@ -334,71 +334,23 @@ class SolicitudAyudaActions extends sfActions
         if ($codigo != '' || $codigo != null) {
             $tb126_solicitud_ayuda = Tb126SolicitudAyudaPeer::retrieveByPk($codigo);
 
-            /* $cc = new Criteria();
-             $cc->add(Tb052ComprasPeer::CO_SOLICITUD, $tb126_solicitud_ayuda->getCoSolicitud());
-             $stmt = Tb052ComprasPeer::doSelectStmt($cc);
-             $datosCompra = $stmt->fetch(PDO::FETCH_ASSOC);
-
-             $tb052_compras = Tb052ComprasPeer::retrieveByPK($datosCompra["co_compras"]);
-
-             $cdc = new Criteria();
-             $cdc->add(Tb053DetalleComprasPeer::CO_COMPRAS, $datosCompra["co_compras"]);
-             $stmt = Tb053DetalleComprasPeer::doSelectStmt($cdc);
-             $datosDetalleCompra = $stmt->fetch(PDO::FETCH_ASSOC);
-
-             $tb053_detalle_compras =  Tb053DetalleComprasPeer::retrieveByPK($datosDetalleCompra["co_detalle_compras"]);*/
-
+          
         } else {
-            $tb126_solicitud_ayuda = new Tb126SolicitudAyuda();
-
-            /*$tb026_solicitudForm = array(
-                "co_tipo_solicitud" => 25,
-                "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
-                "fe_solicitud" => $tb126_solicitud_ayudaForm["fe_solicitud"],
-                "observacion" => $tb126_solicitud_ayudaForm["tx_observacion"],
-                "codigo" => $this->getUser()->getAttribute('codigo')
-            );
-
-            $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
-
-            if ($resp["success"] == true) {
-                $tb126_solicitud_ayudaForm["co_solicitud"] = $resp["co_solicitud"];
-                $tb052_compras = new Tb052Compras();
-                $tb053_detalle_compras = new Tb053DetalleCompras();
-            } else {
-                $this->data = json_encode(array(
-                    "success" => false,
-                    "msg" => $resp["msg"]
-                ));
-
-                return;
-            }*/
+            $tb126_solicitud_ayuda = new Tb126SolicitudAyuda();           
         }
         try {
             $con->beginTransaction();
             $listaProveedor = json_decode($json_proveedor, true);
-
-            // $receptorForm = $this->getRequestParameter('receptor');
             $solicitanteForm = $this->getRequestParameter('solicitante');
-
-            // $co_proveedor = $this->getProveedor($receptorForm, $con);
             $co_proveedor_solicitante = $this->getProveedor($solicitanteForm, $con);
-
-            // $mo_total = $tb126_solicitud_ayudaForm["monto"];
-
-
 
             list($dia, $mes, $anio) = explode("/", $tb126_solicitud_ayudaForm["fe_solicitud"]);
             $fecha = $anio . '-' . $mes . '-' . $dia;
-            //Datos Receptor Cheque               
-            // $tb126_solicitud_ayuda->setCoProveedor($co_proveedor);
             $tb126_solicitud_ayuda->setCoProveedorSolicitante($co_proveedor_solicitante);
             $tb126_solicitud_ayuda->setCoTipoAyuda($tb126_solicitud_ayudaForm["co_tipo_ayuda"]);
             $tb126_solicitud_ayuda->setTxObservacion($tb126_solicitud_ayudaForm["tx_observacion"]);
-            //  $tb126_solicitud_ayuda->setCoSolicitud($tb126_solicitud_ayudaForm["co_solicitud"]);
             $tb126_solicitud_ayuda->setCoUsuario($tb126_solicitud_ayudaForm["co_usuario"]);
             $tb126_solicitud_ayuda->setIdTb013AnioFiscal($this->getUser()->getAttribute('ejercicio'));
-            //   $tb126_solicitud_ayuda->setMoTotalAyuda($mo_total);
             $tb126_solicitud_ayuda->setFeResolucion($fecha);
             $tb126_solicitud_ayuda->save($con);
 

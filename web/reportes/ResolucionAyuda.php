@@ -233,19 +233,21 @@ class PDF_Flo extends PDF_FlowingBlock
 	                    tb127.tx_tipo_ayuda,
                         fe_resolucion
                     FROM public.tb030_ruta as tb030 
-                        join tb052_compras as tb052 on (tb030.co_solicitud = tb052.co_solicitud)
+                        left join tb052_compras as tb052 on (tb030.co_solicitud = tb052.co_solicitud)
                         join tb053_detalle_compras as tb053 on (tb053.co_compras = tb052.co_compras)
-                        join tb085_presupuesto as tb085 on (tb085.id = tb053.co_presupuesto)
-                        join tb084_accion_especifica as tb084 on (tb085.id_tb084_accion_especifica = tb084.id)
-                        join tb083_proyecto_ac as tb083 on (tb084.id_tb083_proyecto_ac = tb083.id)
-                        join tb082_ejecutor as tb082 on (tb082.id = tb083.id_tb082_ejecutor)
-                        join tb080_sector as tb080 on (tb080.id = tb083.id_tb080_sector)
-                        join tb126_solicitud_ayuda as tb126 on (tb126.co_solicitud = tb030.co_solicitud)
-                        join tb127_tipo_ayuda as tb127 on (tb127.co_tipo_ayuda = tb126.co_tipo_ayuda)
-                        join tb008_proveedor as tb008 on (tb008.co_proveedor = tb126.co_proveedor_solicitante)
-                        join tb007_documento as tb007 on (tb007.co_documento = tb008.co_documento)
-                        join tb008_proveedor as tb008p on (tb008p.co_proveedor = tb126.co_proveedor)
-                        join tb007_documento as tb007p on (tb007p.co_documento = tb008p.co_documento)
+						 join tb209_presupuesto_detalle_compra as tb209 on (tb053.co_detalle_compras = tb209.co_detalle_compra)
+                        left join tb085_presupuesto as tb085 on (tb085.id = tb209.co_presupuesto)
+                        left join tb084_accion_especifica as tb084 on (tb085.id_tb084_accion_especifica = tb084.id)
+                        left join tb083_proyecto_ac as tb083 on (tb084.id_tb083_proyecto_ac = tb083.id)
+                        left join tb082_ejecutor as tb082 on (tb082.id = tb083.id_tb082_ejecutor)
+                        left join tb080_sector as tb080 on (tb080.id = tb083.id_tb080_sector)
+                        left join tb026_solicitud as tb026 on (tb026.co_solicitud = tb030.co_solicitud)
+                        left join tb126_solicitud_ayuda as tb126 on (tb026.co_solicitud_ayuda = tb126.co_solicitud_ayuda)
+                        left join tb127_tipo_ayuda as tb127 on (tb127.co_tipo_ayuda = tb126.co_tipo_ayuda)
+                        left join tb008_proveedor as tb008 on (tb008.co_proveedor = tb126.co_proveedor_solicitante)
+                        left join tb007_documento as tb007 on (tb007.co_documento = tb008.co_documento)
+                        left join tb008_proveedor as tb008p on (tb008p.co_proveedor = tb026.co_proveedor)
+                        left join tb007_documento as tb007p on (tb007p.co_documento = tb008p.co_documento)
                     where co_ruta = ". $_GET['codigo']; //$conex->decrypt($_GET['codigo']);
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);

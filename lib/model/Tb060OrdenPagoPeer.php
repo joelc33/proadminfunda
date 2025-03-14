@@ -1315,17 +1315,14 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $datosSolicitudAyuda = '';
                 if(!empty($solicitud_odp->getCoSolicitudAyuda())){
                     $cs = new Criteria();
-                    $cs->addJoin(Tb060OrdenPagoPeer::CO_SOLICITUD, Tb026SolicitudPeer::CO_SOLICITUD);
-                    $cs->add(Tb026SolicitudPeer::CO_SOLICITUD_AYUDA,$solicitud_odp->getCoSolicitudAyuda());
-                    $cs->setLimit(1);
-                    $stmts = Tb060OrdenPagoPeer::doSelectStmt($cs);
+                    $cs->add(Tb126SolicitudAyudaPeer::CO_SOLICITUD_AYUDA,$solicitud_odp->getCoSolicitudAyuda());
+                    $stmts = Tb126SolicitudAyudaPeer::doSelectStmt($cs);
                     $datosSolicitudAyuda = $stmts->fetch(PDO::FETCH_ASSOC);
                 }
 
                 if(!empty($datosSolicitudAyuda)){
 
-                    $tx_docuemnto_odp       = $datosSolicitudAyuda['tx_documento_odp'];
-                   // $tx_serial              = $datosSolicitudAyuda['tx_serial'];
+                    $tx_docuemnto_odp       = $datosSolicitudAyuda['nu_resolucion'];
 
                 }else{
 
