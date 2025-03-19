@@ -74,7 +74,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->SetX(20);
         $this->SetFont('Arial', '', 9);
-        $data = ", eróguese por la Tesorería del SEDEZUL, con cargo a Unidad Ejecutora " . 
+        $data = ", eróguese por la Tesorería de SEDEZUL, con cargo a Unidad Ejecutora " . 
                 $this->datos['nu_ejecutor'] . 
                 ", Sector " . $this->datos['nu_sector'] . 
                 ", Proyecto / A.C. " . $this->datos['nu_proyecto_ac'] . 
