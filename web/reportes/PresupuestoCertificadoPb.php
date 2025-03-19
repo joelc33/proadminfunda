@@ -112,7 +112,7 @@ class PDF extends FPDF {
          $this->Ln(5);
          $this->Cell(200,10,utf8_decode($this->empresa['nb_presidente']),0,0,'C'); 
          $this->SetFont('Arial','B',8);
-         $this->Ln(15);
+         $this->Ln(10);
          $this->SetX(25);
          $this->Cell(0,0,utf8_decode('DIRECTOR GENERAL DE(L) '.$this->empresa['nb_institucion']),0,0,'C');  
          
