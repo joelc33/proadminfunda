@@ -107,7 +107,7 @@ class PDF extends FPDF {
          $this->SetWidths(array(170));
          $this->SetAligns(array("J"));
          $this->SetX(25);
-         $this->Row(array(utf8_decode('     La presente tiene como finalidad, solicitarle los siguientes ítems para el proceso, '.$this->datos['tx_concepto'])), 0, 0);
+         $this->Row(array(utf8_decode('     La presente tiene como finalidad, solicitarle para el proceso, '.$this->datos['tx_concepto'])), 0, 0);
   
         // $this->line(1, 60, 220, 60);
 //         $this->SetFont('Arial','B',10);
@@ -227,12 +227,18 @@ class PDF extends FPDF {
          $this->ln(10);
          
          $this->SetFont('Arial','B',10);
-         $this->Ln(5);
-         $this->Cell(200,10,utf8_decode($this->datos['nb_responsable']),0,0,'C'); 
+//         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode('Unidad Usuaria'),0,0,'C'); 
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
-         $this->Cell(200,10,utf8_decode($this->datos['cargo']),0,0,'C');          
-         
+         $this->SetX(25);
+         $this->Cell(200,10,utf8_decode('Nombre:'),0,0,'L');          
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(200,10,utf8_decode('C.I.:'),0,0,'L');
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(200,10,utf8_decode('Firma:'),0,0,'L');         
          //$this->Cell(0,0,'Elaborado por: '.$this->datos['nb_usuario'],0,0,'L');
          $this->ln();
 	 $this->SetY($this->GetY()+5);
