@@ -1307,6 +1307,9 @@ class ComprasActions extends sfActions
                 $fecha_compra = $anio . "-" . $mes . "-" . $dia;
                 $tb052_compras->setFechaCompra($fecha_compra);
             } else {
+                
+                list($dia, $mes, $anio) = explode("/", $tb052_comprasForm["fecha_compra"]);
+                $fecha_compra = $anio . "-" . $mes . "-" . $dia;                
                 $tb052_compras->setFechaCompra($fecha_compra);
             }
 
