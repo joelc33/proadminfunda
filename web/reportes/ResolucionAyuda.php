@@ -13,7 +13,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->empresa = $this->getDatosEmpresa(1);
         $this->Image("imagenes/logosedezul.jpg", 88, 5, 35);
 
-      
+
         $this->SetFont('Arial', 'B', 8);
 
         $this->SetTextColor(0, 0, 0);
@@ -34,7 +34,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetFont('Arial', 'BI', 7);
         $this->SetX(140);
         $this->Cell(0, 0, utf8_decode('Maracaibo ') . date("d/m/Y", strtotime($this->datos['fe_resolucion'])), 0, 0, 'C');
-       
+
 
         $this->Ln(5);
         $this->SetX(20);
@@ -74,16 +74,16 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->SetX(20);
         $this->SetFont('Arial', '', 9);
-        $data = ", eróguese por la Tesorería de SEDEZUL, con cargo a Unidad Ejecutora " . 
-                $this->datos['nu_ejecutor'] . 
-                ", Sector " . $this->datos['nu_sector'] . 
-                ", Proyecto / A.C. " . $this->datos['nu_proyecto_ac'] . 
-                ", Acción Específica " . $this->datos['nu_accion_especifica'].
-                ", Partida " . $this->datos['nu_pa']. 
-                ", Genérica " . $this->datos['nu_ge']. 
-                ", Específica " . $this->datos['nu_es']. 
-                ", Subespecífica " . $this->datos['nu_se'].
-                ", de la vigente Ley de Presupuesto la cantidad de ";
+        $data = ", eróguese por la Tesorería de SEDEZUL, con cargo a Unidad Ejecutora " .
+            $this->datos['nu_ejecutor'] .
+            ", Sector " . $this->datos['nu_sector'] .
+            ", Proyecto / A.C. " . $this->datos['nu_proyecto_ac'] .
+            ", Acción Específica " . $this->datos['nu_accion_especifica'] .
+            ", Partida " . $this->datos['nu_pa'] .
+            ", Genérica " . $this->datos['nu_ge'] .
+            ", Específica " . $this->datos['nu_es'] .
+            ", Subespecífica " . $this->datos['nu_se'] .
+            ", de la vigente Ley de Presupuesto la cantidad de ";
         $this->SetX(20);
         $this->WriteFlowingBlock(utf8_decode($data));
 
@@ -153,10 +153,11 @@ class PDF_Flo extends PDF_FlowingBlock
         $data = ". Tal suma será pagada a ";
         $this->WriteFlowingBlock(utf8_decode($data));
 
-        
+
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 9);
-        $receptor = $this->datos['proveedor'];;
+        $receptor = $this->datos['proveedor'];
+        ;
         $this->WriteFlowingBlock(utf8_decode($receptor));
 
 
@@ -167,7 +168,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 9);
-        $receptor =  $this->datos['inicia_proveedor'] . "-" . $this->datos['rif_proveedor'];
+        $receptor = $this->datos['inicia_proveedor'] . "-" . $this->datos['rif_proveedor'];
         $this->WriteFlowingBlock(utf8_decode($receptor));
 
 
@@ -185,15 +186,15 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(20);
         $this->Cell(0, 0, utf8_decode('Regístrese y Comuníquese'), 0, 0, 'L');
         $this->Ln(20);
-         $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'C');
-         $this->SetFont('Arial','B',8);
-         $this->Ln(5);
-         $this->SetX(25);
-         $this->Cell(0,0,utf8_decode('DIRECTOR GENERAL DE(L) '.$this->empresa['nb_institucion']),0,0,'C');
-         $this->SetFont('Arial','',8);
-         $this->Ln(4);
-         $this->SetX(25);
-         $this->Cell(0,0,utf8_decode('Gaceta oficial extraordinaria del Estado Zulia N° 2966 de fecha 26 de Enero de 2022.'),0,0,'C');        
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_presidente']), 0, 0, 'C');
+        $this->SetFont('Arial', 'B', 8);
+        $this->Ln(5);
+        $this->SetX(25);
+        $this->Cell(0, 0, utf8_decode('DIRECTOR GENERAL DE(L) ' . $this->empresa['nb_institucion']), 0, 0, 'C');
+        $this->SetFont('Arial', '', 8);
+        $this->Ln(4);
+        $this->SetX(25);
+        $this->Cell(0, 0, utf8_decode('Gaceta oficial extraordinaria del Estado Zulia N° 2966 de fecha 26 de Enero de 2022.'), 0, 0, 'C');
         /*$this->Ln(20);
         $this->SetX(20);
         $this->Cell(0, 0, utf8_decode('LA SECRETARIA DE ADMINISTRACIÓN Y FINANZAS'), 0, 0, 'L');
@@ -205,7 +206,258 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(20);
         $this->Cell(0, 0, utf8_decode('Usuario del sistema: ' . $this->datos['nb_usuario']), 0, 0, 'L');*/
 
+      
+
+        
+
+
     }
+
+    function HeaderCertificado() {
+
+        $this->empresa = $this->getDatosEmpresa(1);
+
+        $this->Image("imagenes/logosedezul.jpg", 88, 5, 35);
+
+
+        $this->SetFont('Arial', 'B', 8);
+
+        $this->SetTextColor(0, 0, 0);
+        $this->SetY(32);
+        $this->Cell(0, 0, utf8_decode('REPÚBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode('GOBERNACIÓN DEL ESTADO ZULIA'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode('SERVICIO DESCONCENTRADO PARA LOS CENTROS ASISTENCIALES'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode('DE SALUD DEL ESTADO ZULIA'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode('RIF. G-200121661'), 0, 0, 'C');
+        $this->Ln(4);
+        $this->line(20, 50, 190, 50);
+        $this->Ln(5);
+
+     
+
+    }
+
+    function getOpcionReporte( $ruta){
+        
+        $sql = "SELECT tb030.co_ruta, op_reporte,
+        op_reporte->>'cargo_firma' as cargo_firma,
+        op_reporte->>'ciudadano' as ciudadano
+        FROM tb030_ruta as tb030
+        INNER JOIN tb032_configuracion_ruta AS tb032 ON tb030.co_tipo_solicitud = tb032.co_tipo_solicitud AND tb030.co_proceso = tb032.co_proceso
+        WHERE tb030.co_ruta = ".$ruta;
+     
+        //echo $sql; exit();
+
+        $conex = new ConexionComun(); 
+
+        $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+        return  $datosSol[0];                          
+       
+    }
+
+    function getOrden(){
+
+        $conex = new ConexionComun(); 
+                      
+            $sql = "select tb052.monto_total as monto, tb052.tx_observacion,                         
+                           upper(tb047.nb_responsable) as nb_responsable, 
+                           upper(tb047.cargo) as cargo 
+                    from   tb052_compras as tb052 
+                    left join tb026_solicitud as tb026 on tb026.co_solicitud = tb052.co_solicitud
+                    left join tb030_ruta as tb030 on tb030.co_solicitud = tb026.co_solicitud and tb030.in_cargar_dato is true
+                    left join tb001_usuario as tb001 on tb001.co_usuario = tb030.co_usuario
+                    left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
+                    where tb030.co_ruta = ".$_GET['codigo']; 
+                    
+           
+            $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+            return  $datosSol[0];     
+                         
+             
+            
+    
+    }
+
+    function ChapterBodyCertificado() {
+
+        $this->op_reporte = $this->getOpcionReporte($_GET['codigo']);
+        $this->empresa = $this->getDatosEmpresa(1);
+
+         $this->Ln(15);
+
+         $this->datos = $this->getOrden();
+            $this->SetFont('Arial','B',10);
+         $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+         
+         $this->SetFont('Arial','',10);
+         $this->Ln(15);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('Señor(a):'),0,0,'L');
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode($this->datos['nb_responsable']),0,0,'L');
+         $this->SetFont('Arial','B',8);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode($this->datos['cargo']),0,0,'L');
+         $this->SetFont('Arial','',8);
+         $this->Ln(4);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('Su Despacho.'),0,0,'L');
+         
+         $this->SetFont('Arial','',10);
+         $this->Ln(10);
+         $this->SetX(35);
+         $this->Cell(10,0,utf8_decode('Reciba un cordial y respetuoso saludo.'),0,0,'L');
+         
+         $this->SetFont('Arial','',10);
+         $this->Ln(10);
+         $this->SetWidths(array(170));
+         $this->SetAligns(array("J"));
+         $this->SetX(25);
+         $this->Row(array(utf8_decode('     La presente tiene la finalidad de solicitarle la disponibilidad presupuestaria para la ejecución del proceso de: '.$this->datos['tx_observacion']).'.'), 0, 0);
+  
+        $this->Ln(31);         
+        
+             $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode('Atentamente.'),0,0,'C');         
+         $this->ln(10);
+         
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode($this->empresa['nb_presidente']),0,0,'C'); 
+         $this->SetFont('Arial','B',8);
+         $this->Ln(10);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('DIRECTOR GENERAL DE(L) '.$this->empresa['nb_institucion']),0,0,'C');  
+         
+         $this->AddPage();
+         $this->Ln(15);
+         
+        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+        $this->Ln(15);
+        $this->SetFont('Arial','B',12);
+         $this->Cell(0, 0, utf8_decode('CERTIFICACIÓN'), 0, 0, 'C');
+         $this->Ln(5);
+         $this->SetFont('Arial','B',10);
+        // $this->Cell(0, 0, utf8_decode($this->datos['numero_cotizacion']), 0, 0, 'C');
+         $this->Ln(10);         
+         
+         $this->SetFont('Arial','',10);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('Señor(a):'),0,0,'L');
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'L');
+         $this->SetFont('Arial','B',8);
+         $this->Ln(5);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('DIRECTOR GENERAL DE(L) '.$this->empresa['nb_institucion']),0,0,'L');
+         $this->SetFont('Arial','',8);
+         $this->Ln(4);
+         $this->SetX(25);
+         $this->Cell(0,0,utf8_decode('Su Despacho.'),0,0,'L');
+
+         
+         $this->SetY(100);  
+         $this->SetX(20);
+         $this->SetFont('Arial','',10);
+         $montoletra = numtoletras($this->datos['monto'], 1);
+         $montonum = number_format($this->datos['monto'], 2, ',','.');
+         
+         $html='     Por medio de la presente, se informa que en el presupuesto de egreso se encuentra contemplado el código presupuestario que se describe a continuación: ';
+
+         $this->SetX(25);
+         $this->MultiCell(170,5,utf8_decode($html),0,1,'J',1);                                                              
+                          
+                 
+         $this->Ln();
+         $this->SetFillColor(255, 255, 255); 
+         $this->SetFont('Arial','B',8); 
+         $this->SetAligns(array("C","C","C","C"));
+         $this->SetWidths(array(35,75,30,30));
+         $this->SetX(25); 
+         $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','FUENTE FINANCIAMIENTO','MONTO (Bs.) DISPONIBLE TOTAL'),1,1);
+         $this->SetAligns(array("C","C","C","C"));         
+         $this->SetFont('Arial','',8);
+         $this->lista_partidas = $this->getPartidas();
+         foreach($this->lista_partidas as $key => $campo){  
+             
+                            if($this->getY()>240){
+                     $this->AddPage();
+                     $this->Ln(20);
+                     $this->SetFillColor(255, 255, 255); 
+                     $this->SetFont('Arial','',8); 
+                     $this->SetAligns(array("C","C","C","C"));
+                     $this->SetWidths(array(35,75,30,30));
+                     $this->SetX(25); 
+                     $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','FUENTE FINANCIAMIENTO','MONTO (Bs.) DISPONIBLE TOTAL'),1,1);
+         
+                            }             
+             $prueba = utf8_decode($campo['de_partida']);
+                            
+          $this->SetX(25);   
+          $this->SetWidths(array(35,75,30,30));
+          $this->SetAligns(array("C","C","C","C"));
+          $this->Row(array(utf8_decode($campo['co_categoria']),$prueba,utf8_decode($campo['tx_descripcion']),number_format($campo['monto'], 2, ',','.')),1,1);
+          
+         }
+         
+         
+         
+         $this->ln();
+         $this->SetX(20); 
+         $this->SetWidths(array(170));
+         $this->SetAligns(array("L"));  
+         $this->SetFont('Arial','',10); 
+         $this->Cell(170,5,utf8_decode('Sin más a que hacer referencia, me despido de usted.'),0,0,'L');         
+         $this->ln(15);
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode('Atentamente.'),0,0,'C');         
+         $this->ln(10);
+         
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode($this->datos['nb_responsable']),0,0,'C'); 
+         $this->SetFont('Arial','B',10);
+         $this->Ln(5);
+         $this->Cell(200,10,utf8_decode($this->datos['cargo']),0,0,'C');   
+         
+
+    }
+
+    function getPartidas()
+    {
+                    
+          $conex = new ConexionComun(); 
+                    
+          $sql = "select substring(tb085.co_categoria,1,100) as co_categoria,
+                         tb085.de_partida,
+                         tb209.monto,
+                         tb140.tx_descripcion
+                  from   tb052_compras as tb052 
+                   left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras
+				   left join tb209_presupuesto_detalle_compra as tb209 on tb209.co_detalle_compra = tb053.co_detalle_compras				  
+                  left join tb085_presupuesto as tb085 on tb085.id = tb209.co_presupuesto
+                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud and tb030.in_cargar_dato is true
+                  left join tb140_tipo_ingreso as tb140 on tb140.co_tipo_ingreso = tb085.tip_ing::numeric
+                  where tb030.co_ruta =  ". $_GET['codigo']."
+                  order by co_categoria asc"; //$conex->decrypt($_GET['codigo']);
+                  
+          $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+          return  $datosSol;  
+		  
+    }
+
 
     function getAyuda()
     {
@@ -248,13 +500,14 @@ class PDF_Flo extends PDF_FlowingBlock
                         left join tb007_documento as tb007 on (tb007.co_documento = tb008.co_documento)
                         left join tb008_proveedor as tb008p on (tb008p.co_proveedor = tb026.co_proveedor)
                         left join tb007_documento as tb007p on (tb007p.co_documento = tb008p.co_documento)
-                    where co_ruta = ". $_GET['codigo']; //$conex->decrypt($_GET['codigo']);
+                    where co_ruta = " . $_GET['codigo']; //$conex->decrypt($_GET['codigo']);
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
         return $datosSol[0];
     }
-    
-        function getDatosEmpresa( $codigo){
+
+    function getDatosEmpresa($codigo)
+    {
 
         $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion, nb_presidente,
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
@@ -269,12 +522,12 @@ class PDF_Flo extends PDF_FlowingBlock
         op_imagen->'derecha'->1 as derecha_y,
         op_imagen->'derecha'->2 as derecha_w
         FROM public.tb015_empresa
-        WHERE co_empresa = ".$codigo.";";
+        WHERE co_empresa = " . $codigo . ";";
 
         $conex = new ConexionComun();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
-        return  $datosSol[0];
-  
+        return $datosSol[0];
+
     }
 
 
@@ -286,6 +539,9 @@ $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->AddPage();
 $pdf->AliasNbPages();
 $pdf->ChapterBody();
+$pdf->AddPage();
+$pdf->HeaderCertificado();
+$pdf->ChapterBodyCertificado();
 //$pdf->Output();
 
 
