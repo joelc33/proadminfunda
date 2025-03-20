@@ -542,10 +542,10 @@ $pdf->ChapterBody();
 $pdf->AddPage();
 $pdf->HeaderCertificado();
 $pdf->ChapterBodyCertificado();
-$pdf->Output();
+//$pdf->Output();
 
 
-/*$comm = new ConexionComun();
+$comm = new ConexionComun();
 $ruta = $comm->getRuta();
 //rmdir($ruta);
 //mkdir($ruta, 0777, true);    
@@ -557,7 +557,7 @@ $update = "update tb030_ruta set tx_ruta_reporte = '" . $dir . "' where co_ruta 
 
 $comm->Execute($update);
 $pdf->SetMargins(0, 0);
-$pdf->Output($dir, 'F');*/
+$pdf->Output($dir, 'F');
 
 
 
