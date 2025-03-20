@@ -523,7 +523,6 @@ class PDF extends FPDF
 $pdf=new PDF('P','mm','letter');
 $pdf->AliasNbPages();
 $pdf->PrintChapter();
-$pdf->SetPrintFooter(false);
 //$pdf->PrintChapter2();
 $comm = new ConexionComun();
 $ruta = $comm->getRuta();
