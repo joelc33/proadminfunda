@@ -107,7 +107,7 @@ class PDF extends FPDF {
          $this->SetWidths(array(170));
          $this->SetAligns(array("J"));
          $this->SetX(25);
-         $this->Row(array(utf8_decode('     La presente tiene como finalidad, solicitarle los siguientes ítems para el proceso, '.$this->datos['tx_concepto'])), 0, 0);
+         $this->Row(array(utf8_decode('     La presente tiene como finalidad, solicitarle para el proceso, '.$this->datos['tx_concepto'])), 0, 0);
   
         // $this->line(1, 60, 220, 60);
 //         $this->SetFont('Arial','B',10);
