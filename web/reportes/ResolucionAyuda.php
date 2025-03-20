@@ -74,7 +74,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->SetX(20);
         $this->SetFont('Arial', '', 9);
-        $data = ", eróguese por la Tesorería del Estado, con cargo a Unidad Ejecutora " . 
+        $data = ", eróguese por la Tesorería de SEDEZUL, con cargo a Unidad Ejecutora " . 
                 $this->datos['nu_ejecutor'] . 
                 ", Sector " . $this->datos['nu_sector'] . 
                 ", Proyecto / A.C. " . $this->datos['nu_proyecto_ac'] . 
@@ -119,7 +119,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $beneficiado = $this->datos['nomb_sol'];
         $this->WriteFlowingBlock(utf8_decode("DIR. GRAL de SEDEZUL"));
 
-        $this->SetX(20);
+        /*$this->SetX(20);
         $this->SetFont('Arial', '', 9);
         $data = utf8_decode(" a ");
         $this->WriteFlowingBlock(utf8_decode($data));
@@ -136,7 +136,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 9);
-        $this->WriteFlowingBlock(utf8_decode($this->datos['inicial'].'-'.$this->datos['tx_rif']));
+        $this->WriteFlowingBlock(utf8_decode($this->datos['inicial'].'-'.$this->datos['tx_rif']));*/
 
         $this->SetX(20);
         $this->SetFont('Arial', '', 9);
