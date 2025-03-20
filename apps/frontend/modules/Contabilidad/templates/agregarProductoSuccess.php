@@ -13,7 +13,7 @@
             });
 
             this.gridPanel = new Ext.grid.EditorGridPanel({
-                title: 'Lista de Productos Requeridos (Doble click para agregar la cantidad)',
+                title: 'Lista de Productos Requeridos (Doble click para editar la cantidad y precio unitario)',
                 iconCls: 'icon-libro',
                 store: this.store_lista,
                 loadMask: true,
@@ -29,6 +29,13 @@
                         menuDisabled: true,
                         dataIndex: 'co_detalle_factura'
                     },
+                    {
+                        header: 'monto',
+                        hidden: true,
+                        width: 80,
+                        menuDisabled: true,
+                        dataIndex: 'monto'
+                    },                    
                     {
                         header: 'co_detalle_compras',
                         hidden: true,
@@ -87,14 +94,21 @@
                             listeners: {
                                 change: function(cmb, record, index) {
                                     var cantidad = agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.cantidad;
-                                    var monto = this.getValue() * agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.precio_unitario;
-                                    agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.mo_total = monto;
+                                    var monto = this.getValue() * agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.precio_unitario;                                    
+                                    var monto_producto = agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.monto;
 
                                     if (parseInt(this.getValue()) > parseInt(cantidad)) {
+                                        agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.mo_total = 0;
                                         Ext.Msg.alert("Alerta", "La cantidad ingresada es mayor a la cantidad requerida");
                                         return false;
-                                    }
-
+                                    }else{
+                                        
+                                    if (parseFloat(monto) > parseFloat(monto_producto)) {
+                                        agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.mo_total = 0;
+                                        Ext.Msg.alert("Alerta", "El monto total es mayor a la monto certificado "+monto_producto);
+                                        return false;
+                                    }else{                                        
+                                    agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.mo_total = monto;
                                     var base_imponible = paqueteComunJS.funcion.getSumaColumnaGrid({
                                         store: agregarProducto.main.store_lista,
                                         campo: 'mo_total'
@@ -108,6 +122,8 @@
 
                                     agregarProducto.main.mo_total.setValue("<span style='font-size:12px;'><b>Base Imponible: </b>" + paqueteComunJS.funcion.getNumeroFormateado(base_imponible) + "</b></span>");
                                 }
+                                }
+                                }
                             }
                         })
                     },
@@ -115,7 +131,43 @@
                         header: 'Valor Unitario',
                         width: 200,
                         menuDisabled: true,
-                        dataIndex: 'precio_unitario'
+                        dataIndex: 'precio_unitario',
+                        editor: new Ext.form.NumberField({
+                            allowBlank: false,
+                            autoCreate: {
+                                tag: "input",
+                                type: "text",
+                                autocomplete: "off",
+                                maxlength: 400
+                            },
+                            listeners: {
+                                change: function(cmb, record, index) {
+                                    var monto = this.getValue() * agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.cant_producto;
+                                    var monto_producto = agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.monto;
+                                    
+
+                                    if (parseFloat(monto) > parseFloat(monto_producto)) {
+                                        agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.mo_total = 0;
+                                        Ext.Msg.alert("Alerta", "El monto total es mayor a la monto certificado "+monto_producto);
+                                        return false;
+                                    }else{
+                                    agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.mo_total = monto;
+                                    var base_imponible = paqueteComunJS.funcion.getSumaColumnaGrid({
+                                        store: agregarProducto.main.store_lista,
+                                        campo: 'mo_total'
+                                    });
+
+                                    if (base_imponible > 0) {
+                                        agregarProducto.main.guardar.enable();
+                                    } else {
+                                        agregarProducto.main.guardar.disable();
+                                    }
+
+                                    agregarProducto.main.mo_total.setValue("<span style='font-size:12px;'><b>Base Imponible: </b>" + paqueteComunJS.funcion.getNumeroFormateado(base_imponible) + "</b></span>");
+                                }
+                                }
+                            }
+                        })                        
                     },
                     {
                         header: 'Monto Total',
@@ -279,6 +331,9 @@
                     },  
                     {
                         name: 'co_iva_producto'
+                    },
+                    {
+                        name: 'monto'
                     },                    
                     {}
                 ]
