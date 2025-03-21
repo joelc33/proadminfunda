@@ -76,7 +76,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','',10);
          $this->Ln(15);
          $this->SetX(25);
-         $this->Cell(0,0,utf8_decode('Señor(a):'),0,0,'L');
+//         $this->Cell(0,0,utf8_decode('Señor(a):'),0,0,'L');
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
          $this->SetX(25);
@@ -131,7 +131,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','',10);
          $this->Ln(5);
          $this->SetX(25);
-         $this->Cell(0,0,utf8_decode('Sres:'),0,0,'L');
+//         $this->Cell(0,0,utf8_decode('Sres:'),0,0,'L');
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
          $this->SetX(25);
