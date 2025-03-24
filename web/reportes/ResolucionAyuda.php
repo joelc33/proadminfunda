@@ -363,7 +363,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->Cell(0,0,utf8_decode('Su Despacho.'),0,0,'L');
 
          
-         $this->SetY(100);  
+         $this->SetY(110);  
          $this->SetX(20);
          $this->SetFont('Arial','',10);
          $montoletra = numtoletras($this->datos['monto'], 1);
