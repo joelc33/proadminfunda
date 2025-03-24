@@ -270,7 +270,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     left join tb026_solicitud as tb026 on tb026.co_solicitud = tb052.co_solicitud
                     left join tb030_ruta as tb030 on tb030.co_solicitud = tb026.co_solicitud and tb030.in_cargar_dato is true
                     left join tb001_usuario as tb001 on tb001.co_usuario = tb030.co_usuario
-                    left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
+                    left join tb047_ente as tb047 on tb047.co_ente = 8
                     where tb030.co_ruta = ".$_GET['codigo']; 
                     
            
@@ -342,10 +342,10 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->Ln(15);
         $this->SetFont('Arial','B',12);
          $this->Cell(0, 0, utf8_decode('CERTIFICACIÓN'), 0, 0, 'C');
-         $this->Ln(5);
-         $this->SetFont('Arial','B',10);
-         $this->Cell(0, 0, utf8_decode($this->datos['numero_cotizacion']), 0, 0, 'C');
-         $this->Ln(10);         
+//         $this->Ln(5);
+//         $this->SetFont('Arial','B',10);
+//         $this->Cell(0, 0, utf8_decode($this->datos['numero_cotizacion']), 0, 0, 'C');
+//         $this->Ln(10);         
          
          $this->SetFont('Arial','',10);
          $this->Ln(5);
@@ -362,7 +362,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->Cell(0,0,utf8_decode('Su Despacho.'),0,0,'L');
 
          
-         $this->SetY(100);  
+         $this->SetY(80);  
          $this->SetX(20);
          $this->SetFont('Arial','',10);
          $montoletra = numtoletras($this->datos['monto'], 1);
