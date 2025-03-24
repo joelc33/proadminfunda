@@ -336,6 +336,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->Cell(200,10,utf8_decode('COORDINACIÓN DE CONTRATACIONES'),0,0,'C');    
 
          $this->AddPage();
+         $this->HeaderCertificado();
          $this->Ln(15);
          
         $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
@@ -362,7 +363,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->Cell(0,0,utf8_decode('Su Despacho.'),0,0,'L');
 
          
-         $this->SetY(80);  
+         $this->SetY(60);  
          $this->SetX(20);
          $this->SetFont('Arial','',10);
          $montoletra = numtoletras($this->datos['monto'], 1);
