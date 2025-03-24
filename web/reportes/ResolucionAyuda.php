@@ -263,17 +263,17 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $conex = new ConexionComun(); 
                       
-          $sql = "select sum(tb207.monto) as monto, tb206.tx_observacion, upper(tb039.tx_concepto) as tx_concepto,                         
-                         upper(tb047.nb_responsable) as nb_responsable, numero_cotizacion,
-                         upper(tb047.cargo) as cargo,co_modalidad,to_char(tb039.fe_registro,'dd') as dia,to_char(tb039.fe_registro,'mm') as mes,to_char(tb039.fe_registro,'yyyy') as anio
-                  from   tb206_cotizacion as tb206 
-                  left join tb039_requisiciones as tb039 on tb039.co_solicitud = tb206.co_solicitud
-                  left join tb207_detalle_cotizacion as tb207 on tb206.co_cotizacion = tb207.co_cotizacion
-                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb206.co_solicitud and tb030.in_cargar_dato is true
-                  left join tb001_usuario as tb001 on tb001.co_usuario = tb030.co_usuario
-                  left join tb047_ente as tb047 on tb047.co_ente = 8
-                  where tb030.co_ruta = ".$_GET['codigo']." group by tb206.co_cotizacion, tx_concepto, tb047.nb_responsable,tb047.cargo,tb039.fe_registro "; 
-                  
+            $sql = "select tb052.monto_total as monto, tb052.tx_observacion,                         
+                           upper(tb047.nb_responsable) as nb_responsable, 
+                           upper(tb047.cargo) as cargo ,to_char(tb026.fe_registro,'dd') as dia,to_char(tb026.fe_registro,'mm') as mes,to_char(tb026.fe_registro,'yyyy') as anio
+                    from   tb052_compras as tb052 
+                    left join tb026_solicitud as tb026 on tb026.co_solicitud = tb052.co_solicitud
+                    left join tb030_ruta as tb030 on tb030.co_solicitud = tb026.co_solicitud and tb030.in_cargar_dato is true
+                    left join tb001_usuario as tb001 on tb001.co_usuario = tb030.co_usuario
+                    left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
+                    where tb030.co_ruta = ".$_GET['codigo']; 
+                    
+           
             $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
             return  $datosSol[0];     
                          
@@ -332,11 +332,9 @@ class PDF_Flo extends PDF_FlowingBlock
          
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
-         if($this->datos['co_modalidad']==3 || $this->datos['co_modalidad'] ==4){
-         $this->Cell(200,10,utf8_decode('COMISIÓN DE CONTRATACIONES'),0,0,'C'); 
-         }else{
+
          $this->Cell(200,10,utf8_decode('COORDINACIÓN DE CONTRATACIONES'),0,0,'C');    
-         }
+
          $this->AddPage();
          $this->Ln(15);
          
@@ -356,11 +354,8 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
          $this->SetX(25);
-         if($this->datos['co_modalidad']==3 || $this->datos['co_modalidad'] ==4){
-             $this->Cell(0,0,utf8_decode('COMISIÓN DE CONTRATACIONES'),0,0,'L');
-         }else{
              $this->Cell(0,0,utf8_decode('COORDINACIÓN DE CONTRATACIONES'),0,0,'L');   
-         }
+
          $this->SetFont('Arial','',8);
          $this->Ln(4);
          $this->SetX(25);
@@ -442,15 +437,15 @@ class PDF_Flo extends PDF_FlowingBlock
                     
           $sql = "select substring(tb085.co_categoria,1,100) as co_categoria,
                          tb085.de_partida,
-                         sum(case when tb207.co_presupuesto is null then tb209.monto else tb207.monto end) as monto,
+                         tb209.monto,
                          tb140.tx_descripcion
-                  from   tb206_cotizacion as tb206 
-                  left join tb207_detalle_cotizacion as tb207 on tb207.co_cotizacion = tb206.co_cotizacion
-                  left join tb209_presupuesto_detalle_compra as tb209 on tb209.co_detalle_cotizacion = tb207.co_detalle_cotizacion
-                  left join tb085_presupuesto as tb085 on tb085.id = (case when tb207.co_presupuesto is null then tb209.co_presupuesto else tb207.co_presupuesto end)
-                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb206.co_solicitud and tb030.in_cargar_dato is true
+                  from   tb052_compras as tb052 
+                   left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras
+				   left join tb209_presupuesto_detalle_compra as tb209 on tb209.co_detalle_compra = tb053.co_detalle_compras				  
+                  left join tb085_presupuesto as tb085 on tb085.id = tb209.co_presupuesto
+                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud and tb030.in_cargar_dato is true
                   left join tb140_tipo_ingreso as tb140 on tb140.co_tipo_ingreso = tb085.tip_ing::numeric
-                  where tb030.co_ruta = ".$_GET['codigo']."  group by co_categoria,tb085.de_partida,tb140.tx_descripcion
+                  where tb030.co_ruta =  ". $_GET['codigo']."
                   order by co_categoria asc"; //$conex->decrypt($_GET['codigo']);
                   
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
