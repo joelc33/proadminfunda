@@ -263,17 +263,17 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $conex = new ConexionComun(); 
                       
-            $sql = "select tb052.monto_total as monto, tb052.tx_observacion,                         
-                           upper(tb047.nb_responsable) as nb_responsable, 
-                           upper(tb047.cargo) as cargo 
-                    from   tb052_compras as tb052 
-                    left join tb026_solicitud as tb026 on tb026.co_solicitud = tb052.co_solicitud
-                    left join tb030_ruta as tb030 on tb030.co_solicitud = tb026.co_solicitud and tb030.in_cargar_dato is true
-                    left join tb001_usuario as tb001 on tb001.co_usuario = tb030.co_usuario
-                    left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
-                    where tb030.co_ruta = ".$_GET['codigo']; 
-                    
-           
+          $sql = "select sum(tb207.monto) as monto, tb206.tx_observacion, upper(tb039.tx_concepto) as tx_concepto,                         
+                         upper(tb047.nb_responsable) as nb_responsable, numero_cotizacion,
+                         upper(tb047.cargo) as cargo,co_modalidad,to_char(tb039.fe_registro,'dd') as dia,to_char(tb039.fe_registro,'mm') as mes,to_char(tb039.fe_registro,'yyyy') as anio
+                  from   tb206_cotizacion as tb206 
+                  left join tb039_requisiciones as tb039 on tb039.co_solicitud = tb206.co_solicitud
+                  left join tb207_detalle_cotizacion as tb207 on tb206.co_cotizacion = tb207.co_cotizacion
+                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb206.co_solicitud and tb030.in_cargar_dato is true
+                  left join tb001_usuario as tb001 on tb001.co_usuario = tb030.co_usuario
+                  left join tb047_ente as tb047 on tb047.co_ente = 8
+                  where tb030.co_ruta = ".$_GET['codigo']." group by tb206.co_cotizacion, tx_concepto, tb047.nb_responsable,tb047.cargo,tb039.fe_registro "; 
+                  
             $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
             return  $datosSol[0];     
                          
@@ -291,12 +291,13 @@ class PDF_Flo extends PDF_FlowingBlock
 
          $this->datos = $this->getOrden();
             $this->SetFont('Arial','B',10);
-         $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+         $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
+//         $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
          
          $this->SetFont('Arial','',10);
          $this->Ln(15);
          $this->SetX(25);
-         $this->Cell(0,0,utf8_decode('Señor(a):'),0,0,'L');
+//         $this->Cell(0,0,utf8_decode('Señor(a):'),0,0,'L');
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
          $this->SetX(25);
@@ -331,36 +332,35 @@ class PDF_Flo extends PDF_FlowingBlock
          
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
-         $this->Cell(200,10,utf8_decode($this->empresa['nb_presidente']),0,0,'C'); 
-         $this->SetFont('Arial','B',8);
-         $this->Ln(10);
-         $this->SetX(25);
-         $this->Cell(0,0,utf8_decode('DIRECTOR GENERAL DE(L) '.$this->empresa['nb_institucion']),0,0,'C');  
-         
+         if($this->datos['co_modalidad']==3 || $this->datos['co_modalidad'] ==4){
+         $this->Cell(200,10,utf8_decode('COMISIÓN DE CONTRATACIONES'),0,0,'C'); 
+         }else{
+         $this->Cell(200,10,utf8_decode('COORDINACIÓN DE CONTRATACIONES'),0,0,'C');    
+         }
          $this->AddPage();
          $this->Ln(15);
          
-        $this->Cell(0,0,utf8_decode('Maracaibo, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
+        $this->Cell(0,0,utf8_decode('Maracaibo, '.$this->datos['dia'].' de '.mes($this->datos['mes']).' del '.$this->datos['anio']),0,0,'R');
         $this->Ln(15);
         $this->SetFont('Arial','B',12);
          $this->Cell(0, 0, utf8_decode('CERTIFICACIÓN'), 0, 0, 'C');
          $this->Ln(5);
          $this->SetFont('Arial','B',10);
-        // $this->Cell(0, 0, utf8_decode($this->datos['numero_cotizacion']), 0, 0, 'C');
+         $this->Cell(0, 0, utf8_decode($this->datos['numero_cotizacion']), 0, 0, 'C');
          $this->Ln(10);         
          
          $this->SetFont('Arial','',10);
          $this->Ln(5);
          $this->SetX(25);
-         $this->Cell(0,0,utf8_decode('Señor(a):'),0,0,'L');
+//         $this->Cell(0,0,utf8_decode('Sres:'),0,0,'L');
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
          $this->SetX(25);
-         $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'L');
-         $this->SetFont('Arial','B',8);
-         $this->Ln(5);
-         $this->SetX(25);
-         $this->Cell(0,0,utf8_decode('DIRECTOR GENERAL DE(L) '.$this->empresa['nb_institucion']),0,0,'L');
+         if($this->datos['co_modalidad']==3 || $this->datos['co_modalidad'] ==4){
+             $this->Cell(0,0,utf8_decode('COMISIÓN DE CONTRATACIONES'),0,0,'L');
+         }else{
+             $this->Cell(0,0,utf8_decode('COORDINACIÓN DE CONTRATACIONES'),0,0,'L');   
+         }
          $this->SetFont('Arial','',8);
          $this->Ln(4);
          $this->SetX(25);
@@ -383,7 +383,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->SetFillColor(255, 255, 255); 
          $this->SetFont('Arial','B',8); 
          $this->SetAligns(array("C","C","C","C"));
-         $this->SetWidths(array(35,75,30,30));
+         $this->SetWidths(array(55,55,30,30));
          $this->SetX(25); 
          $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','FUENTE FINANCIAMIENTO','MONTO (Bs.) DISPONIBLE TOTAL'),1,1);
          $this->SetAligns(array("C","C","C","C"));         
@@ -397,7 +397,7 @@ class PDF_Flo extends PDF_FlowingBlock
                      $this->SetFillColor(255, 255, 255); 
                      $this->SetFont('Arial','',8); 
                      $this->SetAligns(array("C","C","C","C"));
-                     $this->SetWidths(array(35,75,30,30));
+                     $this->SetWidths(array(55,55,30,30));
                      $this->SetX(25); 
                      $this->Row(array('CODIGO PRESUPUESTARIO','DENOMINACION','FUENTE FINANCIAMIENTO','MONTO (Bs.) DISPONIBLE TOTAL'),1,1);
          
@@ -405,7 +405,7 @@ class PDF_Flo extends PDF_FlowingBlock
              $prueba = utf8_decode($campo['de_partida']);
                             
           $this->SetX(25);   
-          $this->SetWidths(array(35,75,30,30));
+          $this->SetWidths(array(55,55,30,30));
           $this->SetAligns(array("C","C","C","C"));
           $this->Row(array(utf8_decode($campo['co_categoria']),$prueba,utf8_decode($campo['tx_descripcion']),number_format($campo['monto'], 2, ',','.')),1,1);
           
@@ -430,7 +430,7 @@ class PDF_Flo extends PDF_FlowingBlock
          $this->Cell(200,10,utf8_decode($this->datos['nb_responsable']),0,0,'C'); 
          $this->SetFont('Arial','B',10);
          $this->Ln(5);
-         $this->Cell(200,10,utf8_decode($this->datos['cargo']),0,0,'C');   
+         $this->Cell(200,10,utf8_decode($this->datos['cargo']),0,0,'C');  
          
 
     }
@@ -442,15 +442,15 @@ class PDF_Flo extends PDF_FlowingBlock
                     
           $sql = "select substring(tb085.co_categoria,1,100) as co_categoria,
                          tb085.de_partida,
-                         tb209.monto,
+                         sum(case when tb207.co_presupuesto is null then tb209.monto else tb207.monto end) as monto,
                          tb140.tx_descripcion
-                  from   tb052_compras as tb052 
-                   left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras
-				   left join tb209_presupuesto_detalle_compra as tb209 on tb209.co_detalle_compra = tb053.co_detalle_compras				  
-                  left join tb085_presupuesto as tb085 on tb085.id = tb209.co_presupuesto
-                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud and tb030.in_cargar_dato is true
+                  from   tb206_cotizacion as tb206 
+                  left join tb207_detalle_cotizacion as tb207 on tb207.co_cotizacion = tb206.co_cotizacion
+                  left join tb209_presupuesto_detalle_compra as tb209 on tb209.co_detalle_cotizacion = tb207.co_detalle_cotizacion
+                  left join tb085_presupuesto as tb085 on tb085.id = (case when tb207.co_presupuesto is null then tb209.co_presupuesto else tb207.co_presupuesto end)
+                  left join tb030_ruta as tb030 on tb030.co_solicitud = tb206.co_solicitud and tb030.in_cargar_dato is true
                   left join tb140_tipo_ingreso as tb140 on tb140.co_tipo_ingreso = tb085.tip_ing::numeric
-                  where tb030.co_ruta =  ". $_GET['codigo']."
+                  where tb030.co_ruta = ".$_GET['codigo']."  group by co_categoria,tb085.de_partida,tb140.tx_descripcion
                   order by co_categoria asc"; //$conex->decrypt($_GET['codigo']);
                   
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
