@@ -167,10 +167,10 @@ this.winformPanel_.show();
       var co_cuenta_contable = agregarAjuste.main.co_cuenta_contable.getValue();
     var reg = ComprobanteAjuste.main.store_lista.find('co_cuenta_contable', co_cuenta_contable, 0, true, false);
 
-    if (reg >= 0) {
-        
-        Ext.utiles.msg('Mensaje', "La cuenta contable ya se encuentra agregada");
-    }else{
+//    if (reg >= 0) {
+//        
+//        Ext.utiles.msg('Mensaje', "La cuenta contable ya se encuentra agregada");
+//    }else{
         
        
         var e = new ComprobanteAjuste.main.Registro({  
@@ -199,7 +199,7 @@ this.winformPanel_.show();
         
         Ext.utiles.msg('Mensaje', "El registro se agregó exitosamente");        
 
-    }
+//    }
 //        agregarAjuste.main.winformPanel_.close();
 },
 getDataTipoAsiento: function(){
