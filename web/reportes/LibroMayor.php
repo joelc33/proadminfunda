@@ -213,14 +213,15 @@ class PDF extends FPDF {
             
             $sql = "SELECT to_char(tb061.created_at::date,'dd/mm/yyyy') as fecha,
                 case when substring(tb024.nu_cuenta_contable,1,1)::integer= 4 then 300 when substring(tb024.nu_cuenta_contable,1,3)::integer= 301 then 301 when substring(tb024.nu_cuenta_contable,1,3)::integer= 302 then 28 else tb190.codigo end as anexo,tb027.tx_tipo_solicitud||' - '||tb026.tx_observacion as tx_descripcion,
-                tb133.tx_tipo_asiento,tb061.mo_debe,tb061.mo_haber,tb061.co_solicitud,tb024.tx_cuenta,tb061.nu_comprobante,
+                tb133.tx_tipo_asiento,tb061.mo_debe,tb061.mo_haber,tb061.co_solicitud,tb024.tx_cuenta,tb176.nu_comprobante,
                 case when substring(tb024.nu_cuenta_contable,1,1)::integer= 4 then 26 when substring(tb024.nu_cuenta_contable,1,3)::integer= 301 then 27 when substring(tb024.nu_cuenta_contable,1,3)::integer= 302 then 28 else tb190.co_anexo_contable end as co_anexo_contable,tb024.co_cuenta_contable
                 from tb061_asiento_contable tb061 
                 left join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb061.co_cuenta_contable) 
                 left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,7) end) 
                 left join tb026_solicitud tb026 on (tb026.co_solicitud = tb061.co_solicitud) 
                 left join tb027_tipo_solicitud tb027 on (tb027.co_tipo_solicitud = tb026.co_tipo_solicitud)
-                left join tb133_tipo_asiento tb133 on (tb133.co_tipo_asiento = tb061.co_tipo_asiento) 
+                left join tb133_tipo_asiento tb133 on (tb133.co_tipo_asiento = tb061.co_tipo_asiento)
+                left join tb176_comprobante_contable tb176 on (tb176.co_comprobante_contable = tb061.nu_comprobante::bigint)
                 where tb061.created_at::date >= '".$fe_inicio."' and tb061.created_at::date <= '".$fe_fin."' $co_anexo_contable order by nu_cuenta_contable asc,tb061.created_at::date asc, tb061.co_solicitud asc,tb061.co_tipo_asiento";
                         
 //            var_dump($sql);
