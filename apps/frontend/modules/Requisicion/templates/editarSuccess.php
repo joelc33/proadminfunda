@@ -289,6 +289,17 @@
                 width: 100
             });
 
+
+            this.fe_requisicion = new Ext.form.DateField({
+                fieldLabel: 'Fecha de Requisicion',
+                name: 'tb039_requisiciones[fe_requisicion]',
+                value: this.OBJ.fe_requisicion,
+                allowBlank: false,
+                width: 100,
+                minValue: this.OBJ.fe_ini,
+                maxValue: this.OBJ.fe_fin,
+            });
+            
             this.tx_observacion = new Ext.form.TextArea({
                 fieldLabel: 'Observaciones',
                 name: 'tb039_requisiciones[tx_observacion]',
@@ -297,7 +308,7 @@
             });
 
             this.fieldDatosRequisicion = new Ext.form.FieldSet({
-                items: [this.tx_concepto,
+                items: [this.fe_requisicion,this.tx_concepto,
                     this.tx_observacion
                 ]
             });

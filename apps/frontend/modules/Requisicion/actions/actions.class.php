@@ -177,6 +177,9 @@ class RequisicionActions extends sfActions
                 "nu_requisicion"     => $campos["nu_requisicion"],
                 "nu_iva"             => $campos["nu_iva"],
                 "co_programa"        => $campos["co_programa"],
+                "fe_requisicion"     => $campos["fe_registro"],
+                "fe_ini"   => $this->getUser()->getAttribute('fe_apertura'),
+                "fe_fin"   => date("Y-m-d")                
             ));
         } else {
 
@@ -194,14 +197,16 @@ class RequisicionActions extends sfActions
                 "co_tipo_solicitud"  => $this->getRequestParameter("co_tipo_solicitud"),
                 "nb_solicitante"     => $datos["nb_usuario"],
                 "tx_entidad"         => $datos["tx_ente"],
-                "fe_registro"        => date("Y-m-d"),
+//                "fe_requisicion"        => date("Y-m-d"),
 //                "fe_registro"        => $dia . '-' . $mes . '-' . $anio,
                 "co_usuario"         => $datos["co_usuario"],
                 "tx_concepto"        => $co_solicitud["tx_observacion"],
                 "tx_observacion"     => "",
                 "co_ente"            =>  $datos["co_ente"],
                 "co_programa"        =>  $campos["co_programa"],
-                "nu_requisicion"     => ""
+                "nu_requisicion"     => "",
+                "fe_ini"   => $this->getUser()->getAttribute('fe_apertura'),
+                "fe_fin"   => date("Y-m-d")                
             ));
         }
     }
@@ -217,14 +222,20 @@ class RequisicionActions extends sfActions
         $con = Propel::getConnection();
         $con->beginTransaction();
         
+        list($dia, $mes, $anio) = explode("/", $tb039_requisicionesForm["fe_requisicion"]);
+        $fecha = $anio . "-" . $mes . "-" . $dia;        
+        
         if ($codigo != '' || $codigo != null) {
             $tb039_requisiciones = Tb039RequisicionesPeer::retrieveByPk($codigo);
+            $tb026_solicitud = Tb026SolicitudPeer::retrieveByPk($tb039_requisicionesForm["co_solicitud"]);
+            $tb026_solicitud->setFeRegistro($fecha);
+            $tb026_solicitud->save($con);
         } else {
 
             $tb026_solicitudForm = array(
                 "co_tipo_solicitud"   => 61,
                 "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-                "fe_solicitud"        => date("d/m/Y"),
+                "fe_solicitud"        => $tb039_requisicionesForm["fe_requisicion"],
                 "observacion"         => $tb039_requisicionesForm["tx_observacion"],
                 "codigo"              =>  $this->getUser()->getAttribute('codigo')
             );
@@ -258,9 +269,9 @@ class RequisicionActions extends sfActions
             //$tb039_requisiciones->setFeRegistro($tb039_requisicionesForm["fe_registro"]); 
             if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
                 //$tb039_requisiciones->setFeRegistro($this->getUser()->getAttribute('fe_cierre')); 
-                $tb039_requisiciones->setFeRegistro($tb039_requisicionesForm["fe_registro"]);
+                $tb039_requisiciones->setFeRegistro($fecha);
             } else {
-                $tb039_requisiciones->setFeRegistro(date("Y-m-d"));
+                $tb039_requisiciones->setFeRegistro($fecha);
             }
         }
         try {
@@ -270,6 +281,7 @@ class RequisicionActions extends sfActions
             $tb039_requisiciones->setTxObservacion($tb039_requisicionesForm["tx_observacion"]);
             $tb039_requisiciones->setCoServicio($tb039_requisicionesForm["co_servicio"]);
             $tb039_requisiciones->setCoEnte($tb039_requisicionesForm["co_ente"]);
+            $tb039_requisiciones->setFeRegistro($fecha);
             $tb039_requisiciones->setCoPrograma($tb039_requisicionesForm["co_programa"]?$tb039_requisicionesForm["co_programa"]:null);
             $tb039_requisiciones->save($con);
 
