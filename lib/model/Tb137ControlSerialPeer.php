@@ -2,7 +2,7 @@
 
 class Tb137ControlSerialPeer extends BaseTb137ControlSerialPeer
 {
-    static public function getSerial($codigo, $con, $ejercicio, $co_tipo_contrato = '')
+    static public function getSerial($codigo, $con, $ejercicio, $co_tipo_contrato = '',$co_programa = '')
     {
 
         $c = new Criteria();
@@ -11,7 +11,10 @@ class Tb137ControlSerialPeer extends BaseTb137ControlSerialPeer
         if ($co_tipo_contrato != '') {
             $c->add(Tb137ControlSerialPeer::CO_TP_CONTRATO, $co_tipo_contrato);
         }
-
+        
+        if ($co_programa != '') {
+            $c->add(Tb137ControlSerialPeer::CO_PROGRAMA, $co_programa);
+        }
         //$c->add(Tb137ControlSerialPeer::NU_ANIO,date('Y'));
         $c->add(Tb137ControlSerialPeer::NU_ANIO, $ejercicio);
 
@@ -25,6 +28,10 @@ class Tb137ControlSerialPeer extends BaseTb137ControlSerialPeer
             if ($co_tipo_contrato != '') {
                 $Tb137ControlSerial->setCoTpContrato($co_tipo_contrato);
             }
+            
+            if ($co_programa != '') {
+                $Tb137ControlSerial->setCoPrograma($co_programa);
+            }            
 
             $Tb137ControlSerial->setNuAnio($ejercicio);
             $Tb137ControlSerial->setNuSerial($cant);
@@ -42,6 +49,10 @@ class Tb137ControlSerialPeer extends BaseTb137ControlSerialPeer
             if ($co_tipo_contrato != '') {
                 $wherec->add(Tb137ControlSerialPeer::CO_TP_CONTRATO, $co_tipo_contrato);
             }
+            
+            if ($co_programa != '') {
+                $wherec->add(Tb137ControlSerialPeer::CO_PROGRAMA, $co_programa);
+            }            
 
             $wherec->add(Tb137ControlSerialPeer::NU_ANIO, $ejercicio);
 
