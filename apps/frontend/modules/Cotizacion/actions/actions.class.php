@@ -239,6 +239,21 @@ class CotizacionActions extends sfActions
       $ce->add(Tb015EmpresaPeer::CO_EMPRESA, 1);
       $stmte = Tb015EmpresaPeer::doSelectStmt($ce);
       $datos_empresa = $stmte->fetch(PDO::FETCH_ASSOC);
+      
+      $cp = new Criteria();
+      $cp->clearSelectColumns();
+      $cp->addSelectColumn(Tb019ProgramaPeer::CO_PROGRAMA);
+      $cp->addSelectColumn(Tb019ProgramaPeer::NU_PROGRAMA);      
+      $cp->add(Tb039RequisicionesPeer::CO_REQUISICION, $tb206_cotizacionForm["co_requisicion"]);
+      $cp->addJoin(Tb039RequisicionesPeer::CO_PROGRAMA, Tb019ProgramaPeer::CO_PROGRAMA);
+      $stmtp = Tb039RequisicionesPeer::doSelectStmt($cp);
+      $datos_programa = $stmtp->fetch(PDO::FETCH_ASSOC);  
+      
+        if($tb206_cotizacionForm["co_tipo_cotizacion"]==1){
+            $tipo = 'ADQ';
+        }else{
+            $tipo = 'SER';
+        }      
 
       $cc = new Criteria();
       $cc->add(Tb208TipoCotizacionPeer::CO_TIPO_COTIZACION, $tb206_cotizacionForm["co_tipo_cotizacion"]);
@@ -262,7 +277,7 @@ class CotizacionActions extends sfActions
       $datos_documento = $stmtc->fetch(PDO::FETCH_ASSOC);
 
       $tb206_cotizacion = new Tb206Cotizacion();
-      $serial = $datos_tipo_modalidad['tx_sigla'] . '-' . $datos_empresa['tx_sigla_serial'] . '-' . $datos_documento['tx_sigla'] . '-' . 'SC' . '-' . date("Y") . '-' . Tb137ControlSerialPeer::getSerial($datos_solicitud['id_136_tipo_documento'], $con, $this->getUser()->getAttribute('ejercicio'), $tb206_cotizacionForm["co_tipo_modalidad"]);
+      $serial = $datos_tipo_modalidad['tx_sigla'] . '-' . $datos_programa['nu_programa'] . '-' . $tipo . '-' . date("Y") . '-' . Tb137ControlSerialPeer::getSerial($datos_solicitud['id_136_tipo_documento'], $con, $this->getUser()->getAttribute('ejercicio'), $tb206_cotizacionForm["co_tipo_modalidad"], $datos_programa['co_programa']);
 
       $tb206_cotizacion->setNumeroCotizacion($serial);
       $tb206_cotizacion->setTxSerialCotizacion($serial);
