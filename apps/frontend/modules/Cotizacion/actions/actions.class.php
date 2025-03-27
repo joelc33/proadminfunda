@@ -277,8 +277,12 @@ class CotizacionActions extends sfActions
       $datos_documento = $stmtc->fetch(PDO::FETCH_ASSOC);
 
       $tb206_cotizacion = new Tb206Cotizacion();
+      
+      if($datos_programa['nu_programa']=='' || $datos_programa['nu_programa']==null){
+      $serial = $datos_tipo_modalidad['tx_sigla'] . '-' . $datos_empresa['tx_sigla_serial'] . '-' . $tipo . '-' . 'SC' . '-' . date("Y") . '-' . Tb137ControlSerialPeer::getSerial($datos_solicitud['id_136_tipo_documento'], $con, $this->getUser()->getAttribute('ejercicio'), $tb206_cotizacionForm["co_tipo_modalidad"]);    
+      }else{
       $serial = $datos_tipo_modalidad['tx_sigla'] . '-' . $datos_programa['nu_programa'] . '-' . $tipo . '-' . date("Y") . '-' . Tb137ControlSerialPeer::getSerial($datos_solicitud['id_136_tipo_documento'], $con, $this->getUser()->getAttribute('ejercicio'), $tb206_cotizacionForm["co_tipo_modalidad"], $datos_programa['co_programa']);
-
+      }
       $tb206_cotizacion->setNumeroCotizacion($serial);
       $tb206_cotizacion->setTxSerialCotizacion($serial);
 
