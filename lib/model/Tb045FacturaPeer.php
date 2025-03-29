@@ -173,6 +173,7 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                             ->setCoDetalleCompra($resdci["co_detalle_compra"])
                             ->setInActivo(true)
                             ->setCoFactura($campos["co_factura"])
+                            ->setCoPresupuestoDetalleCompra($resdci["id"])
                             ->save($con);
                         
                     }
