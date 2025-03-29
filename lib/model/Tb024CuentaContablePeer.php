@@ -2,7 +2,7 @@
 
 class Tb024CuentaContablePeer extends BaseTb024CuentaContablePeer
 {
-    static public function getCuentaContable($co_detalle_compras,$co_solicitud,$co_presupuesto=''){
+    static public function getCuentaContable($co_producto,$co_solicitud,$co_presupuesto=''){
         $c = new Criteria();
         $c->clearSelectColumns();
         $c->addSelectColumn(Tb085PresupuestoPeer::CO_CUENTA_CONTABLE);
@@ -13,8 +13,8 @@ class Tb024CuentaContablePeer extends BaseTb024CuentaContablePeer
         $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
 //        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb045FacturaPeer::CO_COMPRA);
         
-        if($co_detalle_compras!='')
-          $c->add(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS,$co_detalle_compras);
+        if($co_producto!='')
+          $c->add(Tb053DetalleComprasPeer::CO_PRODUCTO,$co_producto);
         else {
           $c->add(Tb209PresupuestoDetalleCompraPeer::CO_PRESUPUESTO,$co_presupuesto);
         }
