@@ -1270,7 +1270,7 @@ class TesoreriaActions extends sfActions
             $cpresupuesto->clearSelectColumns();
             $cpresupuesto->addSelectColumn(Tb209PresupuestoDetalleCompraPeer::CO_PRESUPUESTO);
             $cpresupuesto->addSelectColumn(Tb053DetalleComprasPeer::CO_PRODUCTO);
-            $cpresupuesto->addSelectColumn(Tb053DetalleComprasPeer::MONTO);
+            $cpresupuesto->addSelectColumn(Tb209PresupuestoDetalleCompraPeer::MONTO);
             $cpresupuesto->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
             $cpresupuesto->addSelectColumn(Tb209PresupuestoDetalleCompraPeer::ID);
             $cpresupuesto->addJoin(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS, Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA);
