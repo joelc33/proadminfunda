@@ -103,12 +103,15 @@
                                         return false;
                                     }else{
                                         
-                                    if (parseFloat(monto) > parseFloat(monto_producto)) {
+                                    if (parseFloat(monto).toFixed(2) > parseFloat(monto_producto)) {
+                                        
+                                        console.log(parseFloat(monto).toFixed(2));
+                                        console.log(parseFloat(monto_producto).toFixed(2));
                                         agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.mo_total = 0;
                                         Ext.Msg.alert("Alerta", "El monto total es mayor a la monto certificado "+monto_producto);
                                         return false;
                                     }else{                                        
-                                    agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.mo_total = monto;
+                                    agregarProducto.main.gridPanel.getStore().getAt(agregarProducto.main.rowIndex).data.mo_total = parseFloat(monto).toFixed(2);
                                     var base_imponible = paqueteComunJS.funcion.getSumaColumnaGrid({
                                         store: agregarProducto.main.store_lista,
                                         campo: 'mo_total'
@@ -247,7 +250,7 @@
                     });
 
                     listaProducto.main.nu_base_imponible.setValue(base_imponible);
-                    listaProducto.main.nu_iva_factura.setValue(monto_iva);
+                    listaProducto.main.nu_iva_factura.setValue(parseFloat(monto_iva).toFixed(2));
                    // listaProducto.main.nu_iva_factura.setValue(base_imponible*(agregarProducto.main.OBJ.iva/100));
                     listaProducto.main.mo_exento.setValue(monto_exento);
                     listaProducto.main.mo_exento.setValue(monto_exento);

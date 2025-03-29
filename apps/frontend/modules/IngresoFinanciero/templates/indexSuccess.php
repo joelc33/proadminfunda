@@ -15,7 +15,7 @@
             this.co_proceso;
 
             this.co_solicitud = new Ext.form.TextField({
-                fieldLabel: 'N° Procesos',
+                fieldLabel: 'N° Proceso',
                 name: 'co_solicitud',
                 maskRe: /[0-9]/,
                 value: '',
@@ -113,7 +113,7 @@
             });
 
             this.anular = new Ext.Button({
-                text: 'Anular Contrato',
+                text: 'Anular',
                 iconCls: 'icon-anteriores',
                 handler: function() {
 
@@ -122,7 +122,7 @@
                         if (boton == "yes") {
                             this.msg = Ext.get('formulariosolicitud');
                             this.msg.load({
-                                url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/enviarAnular",
+                                url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/IngresoFinanciero/enviarAnular",
                                 params: {
                                     co_solicitud: solicitudLista.main.gridPanel_.getSelectionModel().getSelected().get('co_solicitud')
                                 },
@@ -189,7 +189,7 @@
                 store: this.store_lista,
                 loadMask: true,
                 //    frame:true,
-                height: 396,
+                height: 496,
                 tbar: [
                     <?php
                     if ($sf_request->getAttribute('in_activo') == true) {
@@ -198,16 +198,16 @@
                     <?php
                     }
                     ?>
-                    this.formulario, '-',
+//                    this.formulario, '-',
                     //  this.detalle, '-',
-                    this.estado, '-',
+//                    this.estado, '-',
                     this.anular
                 ],
                 columns: [
                     new Ext.grid.RowNumberer(),
                     {
                         header: 'N° Proceso',
-                        width: 100,
+                        width: 80,
                         menuDisabled: true,
                         dataIndex: 'co_solicitud'
                     },
@@ -254,37 +254,41 @@
                     },
                     {
                         header: 'Monto',
-                        width: 150,
+                        width: 100,
                         menuDisabled: true,
                         sortable: true,
                         renderer: formatoNumero,
                         dataIndex: 'mo_transaccion'
+                    },
+                    {
+                        header: 'Descripcion',
+                        width: 400,
+                        menuDisabled: true,
+                        sortable: true,
+                        renderer:textoLargo,
+                        dataIndex: 'tx_observacion'
+                    },
+                    {
+                        header: 'Estatus',
+                        width: 80,
+                        menuDisabled: true,
+                        sortable: true,
+                        dataIndex: 'tx_estatus'
                     }
-//                    {
-//                        header: 'Saldo Nuevo',
-//                        width: 150,
-//                        menuDisabled: true,
-//                        sortable: true,
-//                        renderer: formatoNumero,
-//                        dataIndex: 'mo_saldo_nuevo'
-//                    },
-//                    {
-//                        header: 'Saldo Anterior',
-//                        width: 150,
-//                        menuDisabled: true,
-//                        sortable: true,
-//                        renderer: formatoNumero,
-//                        dataIndex: 'mo_saldo_anterior'
-//                    }
                 ],
                 stripeRows: true,
                 autoScroll: true,
                 stateful: true,
                 listeners: {
                     cellclick: function(Grid, rowIndex, columnIndex, e) {
+                        
+                        if(solicitudLista.main.store_lista.getAt(rowIndex).get('co_estatus')==4){
+                        solicitudLista.main.anular.disable();                            
+                        }else{
+                        solicitudLista.main.anular.enable();                           
+                        }                        
 
                         solicitudLista.main.estado.enable();
-                        solicitudLista.main.anular.enable();
                         solicitudLista.main.formulario.enable();
                         solicitudLista.main.detalle.enable();
 
@@ -388,6 +392,15 @@
                     {
                         name: 'nu_transaccion'
                     },
+                    {
+                        name: 'tx_observacion'
+                    },             
+                    {
+                        name: 'tx_estatus'
+                    },
+                    {
+                        name: 'co_estatus'
+                    },                    
                     {
                         name: 'cuenta',
                         convert: function(v, r) {

@@ -625,54 +625,59 @@ class ContratoActions extends sfActions
     
             $co_enlace = $tb053_detalle_compras->getCoDetalleCompras();
     
-          //  echo 'llego'; exit();
-    
-    
-            if (empty($productoForm["co_detalle_compras"])) {
-    
-              /*$wherec = new Criteria();
-              $wherec->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_PRESU_BASE, $productoForm["co_detalle_cotizacion"]);
-    
-              $updc = new Criteria();
-              $updc->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $tb053_detalle_compras->getCoDetalleCompras());
-              BasePeer::doUpdate($wherec, $updc, $con);*/
-    
-    
-              $c = new Criteria();
-              $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336);
-              $c->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION_ENLACE, $productoForm["co_detalle_cotizacion"]);
-              $stmt = Tb207DetalleCotizacionPeer::doSelectStmt($c);
-              $campoIva = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-             
-              $monto_iva_ant = $campoIva["monto"];
-              $monto_iva = $this->getIVA($productoForm["mo_iva_producto"], $tb008_proveedorForm["co_proveedor"]);
+                /**Crear partida Items */
 
-    
-              $tb053_detalle_compras_iva = new Tb053DetalleCompras();
-            } else {
-    
-              $c = new Criteria();
-              $c->add(Tb053DetalleComprasPeer::CO_DETALLE_COMPRA_ENLACE, $co_enlace);
-              $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
-              $campoIva = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-              $monto_iva_ant = $campoIva["monto"];
-    
-              $monto_iva = $this->getIVA($productoForm["mo_iva_producto"], $tb008_proveedorForm["co_proveedor"]);
-              
-    
-              $tb053_detalle_compras_iva = Tb053DetalleComprasPeer::retrieveByPK($campoIva["co_detalle_compras"]);
-            }
-    
-            
-           /* if ($productoForm["in_modificado"]) {
-              if($tb053_detalle_compras_iva != null){
-                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $campoIva["co_presupuesto"], 4, $monto_iva_ant, '', $tb053_detalle_compras_iva->getCoDetalleCompras());
-    
-                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $campoIva["co_presupuesto"], 1, $monto_iva, '', $tb053_detalle_compras_iva->getCoDetalleCompras());
-              }
-            }*/
+
+                $Tb207DetalleCotizacion = Tb207DetalleCotizacionPeer::retrieveByPK($productoForm["co_detalle_cotizacion"]);
+
+
+                $monto_cotizacion = $Tb207DetalleCotizacion->getMonto();
+
+                $porcentaje = ($productoForm["monto"] * 100) / $monto_cotizacion;
+                $porc = ($productoForm["monto"] * 100) / $monto_cotizacion;
+                if ($porcentaje == 100)
+                    $porc = 1;
+                else
+                    $porc = ($porc / 100);
+
+
+
+
+                $c = new Criteria();
+                $c->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION, $productoForm["co_detalle_cotizacion"]);
+                $stmt = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($c);
+
+                $wherec = new Criteria();
+                $wherec->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, $co_enlace, Criteria::EQUAL);
+                BasePeer::doDelete($wherec, $con);
+
+                $monto = 0;
+
+                while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                    $monto += $res["monto"] * $porc;
+
+                    $id = Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra(
+                        $co_enlace,
+                        ($res["monto"] * $porc),
+                        $this->getUser()->getAttribute('codigo')
+                    );
+
+                    $tb209_update = Tb209PresupuestoDetalleCompraPeer::retrieveByPK($id);
+                    $tb209_update->setCoPresupuesto($res['co_presupuesto']);
+                    $tb209_update->save($con);
+
+                }
+                
+                /**
+                 * entra aqui si hay diferencia con el total de la tb053
+                 */
+                $pendiente = $productoForm["monto"] - $monto;
+                if ($pendiente > 0) {
+                    $tb209Detalle = Tb209PresupuestoDetalleCompraPeer::retrieveByPK($id);
+                    $tb209Detalle->setMonto($tb209Detalle->getMonto() + $pendiente);
+                    $tb209Detalle->save();
+                }                
 
             /**********************Actualiza la Cotizacion Disponible********************/
     
@@ -681,58 +686,119 @@ class ContratoActions extends sfActions
             $cotizacion->setCoDetalleCompra($co_enlace);
             $cotizacion->save($con);
     
-            /************************************************************************** */
-    
-          
-    
-            /**********************IVA*******************************/
-            if ($monto_iva > 0) {            
-
-              $dc = new Criteria();
-              $dc->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, $co_enlace);
-              $stmtdc = Tb207DetalleCotizacionPeer::doSelectStmt($dc);
-              $campodc = $stmtdc->fetch(PDO::FETCH_ASSOC);
-
-              $dci = new Criteria();
-              $dci->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION_ENLACE, $campodc["co_detalle_cotizacion"]);
-              $stmtdci = Tb207DetalleCotizacionPeer::doSelectStmt($dci);
-              $campodci = $stmtdci->fetch(PDO::FETCH_ASSOC);
-
-             
-              $tb053_detalle_compras_iva->setCoCompras($tb052_compras->getCoCompras());
-              $tb053_detalle_compras_iva->setCoProducto(19336); //IMPUESTO AL VALOR AGREGADO (IVA)
-              $tb053_detalle_compras_iva->setNuCantidad(1);
-              $tb053_detalle_compras_iva->setCoPresupuesto($campodci["co_presupuesto"]);
-              $tb053_detalle_compras_iva->setPrecioUnitario(round($monto_iva, 2));
-              $tb053_detalle_compras_iva->setMonto(round($monto_iva, 2));
-              $tb053_detalle_compras_iva->setDetalle('IMPUESTO AL VALOR AGREGADO (IVA)');
-              $tb053_detalle_compras_iva->setCoPartida($campoIva["co_presupuesto"]);
-              $tb053_detalle_compras_iva->setCoUnidadProducto(638);
-              $tb053_detalle_compras_iva->setCoDetalleCompraEnlace($co_enlace);
-              $tb053_detalle_compras_iva->save($con);
-
-              
-
-              $cotizacioniva = Tb207DetalleCotizacionPeer::retrieveByPK($campodci["co_detalle_cotizacion"]);
-              $cotizacioniva->setCoDetalleCompra($tb053_detalle_compras_iva->getCoDetalleCompras());
-              $cotizacioniva->save($con);
-    
-             /* if (!empty($tb052_comprasForm["tx_serial_cotizacion"])) {
-    
-                $wherec = new Criteria();
-                $wherec->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_PRESU_BASE, $this->getCoDetalleCotizacionIva($tb052_comprasForm["tx_serial_cotizacion"]));
-    
-                $updc = new Criteria();
-                $updc->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $tb053_detalle_compras->getCoDetalleCompras());
-                BasePeer::doUpdate($wherec, $updc, $con);
-              }*/
-            }
-    
-    
             /********************************************************/
     
             
           }
+          
+          
+        $dIva = new Criteria();
+        $dIva->add(Tb053DetalleComprasPeer::CO_COMPRAS, $tb052_compras->getCoCompras(), Criteria::EQUAL);
+        $dIva->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336, Criteria::EQUAL);
+        $stmtdIva = Tb053DetalleComprasPeer::doSelectStmt($dIva);          
+        while ($regdIva = $stmtdIva->fetch(PDO::FETCH_ASSOC)) {
+
+        $wherec = new Criteria();
+        $wherec->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, $regdIva["co_detalle_compras"], Criteria::EQUAL);
+        BasePeer::doDelete($wherec, $con);
+    
+        }            
+            
+      $wherec = new Criteria();
+      $wherec->add(Tb053DetalleComprasPeer::CO_COMPRAS, $tb052_compras->getCoCompras(), Criteria::EQUAL);
+      $wherec->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336, Criteria::EQUAL);
+      BasePeer::doDelete($wherec, $con);            
+            
+      $cIva = new Criteria();
+      $cIva->add(Tb053DetalleComprasPeer::CO_COMPRAS, $tb052_compras->getCoCompras());
+      $stmtIva = Tb053DetalleComprasPeer::doSelectStmt($cIva);
+      while ($regIva = $stmtIva->fetch(PDO::FETCH_ASSOC)) {
+          $mo_iva_producto = $mo_iva_producto + $regIva["mo_iva_producto"];
+          $precio_unitario = $precio_unitario + $regIva["monto"];
+      }
+
+
+                /**********************IVA*******************************/
+                if ($mo_iva_producto > 0) {
+                    
+                    
+                    $tb053_detalle_compras_iva = new Tb053DetalleCompras();
+                    $tb053_detalle_compras_iva->setCoCompras($tb052_compras->getCoCompras());
+                    $tb053_detalle_compras_iva->setCoProducto(19336); //IMPUESTO AL VALOR AGREGADO (IVA)
+                    $tb053_detalle_compras_iva->setNuCantidad(1);
+                    $tb053_detalle_compras_iva->setPrecioUnitario($precio_unitario);
+                    $tb053_detalle_compras_iva->setMonto(round($mo_iva_producto, 2));
+                    $tb053_detalle_compras_iva->setDetalle('IMPUESTO AL VALOR AGREGADO (IVA)');
+                    $tb053_detalle_compras_iva->setCoUnidadProducto(638);
+                    $tb053_detalle_compras_iva->save($con);                    
+                    
+
+                    $dci = new Criteria();
+                    $dci->add(Tb206CotizacionPeer::CO_SOLICITUD, $co_solicitud_cotizacion);
+                    $stmtdci = Tb206CotizacionPeer::doSelectStmt($dci);
+                    $campodci = $stmtdci->fetch(PDO::FETCH_ASSOC);
+                   
+
+                    $dc = new Criteria();
+                    $dc->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336);
+                    $dc->add(Tb207DetalleCotizacionPeer::CO_COTIZACION, $campodci["co_cotizacion"]);
+                    $stmtdc = Tb207DetalleCotizacionPeer::doSelectStmt($dc);
+                    $i=0;
+                    $sum_monto_iva = 0;
+                    while($regDC = $stmtdc->fetch(PDO::FETCH_ASSOC)){
+                        
+                    $cotizacion = Tb207DetalleCotizacionPeer::retrieveByPK($regDC["co_detalle_cotizacion"]);
+                    $cotizacion->setCoDetalleCompra($tb053_detalle_compras_iva->getCoDetalleCompras());
+                    $cotizacion->save($con);
+                        
+                    $registro[$i] = $regDC["co_detalle_cotizacion"];
+                    $sum_monto_iva = $sum_monto_iva + $regDC["monto"];
+                    $i++;
+                    }
+
+                    $porcentaje_iva = ($mo_iva_producto * 100) / $sum_monto_iva;
+                    $porc_iva = ($mo_iva_producto * 100) / $sum_monto_iva;
+                    if ($porcentaje_iva == 100)
+                        $porc_iva = 1;
+                    else
+                        $porc_iva = ($porc_iva / 100);
+                   
+
+
+                    $c = new Criteria();
+                    $c->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION, $registro, Criteria::IN);
+                    $stmt = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($c);
+                    $monto = 0;
+                    while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                        $monto += ($res["monto"] * $porc_iva);
+
+                        $idIVA = Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra(
+                            $tb053_detalle_compras_iva->getCoDetalleCompras(),
+                            ($res["monto"] * $porc_iva),
+                            $this->getUser()->getAttribute('codigo')
+                        );
+
+                        $tb209_update = Tb209PresupuestoDetalleCompraPeer::retrieveByPK($idIVA);
+                        $tb209_update->setCoPresupuesto($res['co_presupuesto']);
+                        $tb209_update->save($con);
+
+                    }
+
+
+                    /**
+                     * entra aqui si hay diferencia con el total de la tb053
+                     */
+                    $pendiente_iva = $mo_iva_producto - $monto;
+                    //  echo $pendiente_iva."=". $monto_iva." - ".$monto." % ".$porc; exit();
+                    if ($pendiente_iva > 0) {
+                        $tb209Detalleiva = Tb209PresupuestoDetalleCompraPeer::retrieveByPK($idIVA);
+                        $tb209Detalleiva->setMonto($tb209Detalleiva->getMonto() + $pendiente_iva);
+                        $tb209Detalleiva->save();
+                    }
+
+
+                }           
 
             if ($tb052_comprasForm["co_contrato_compras"] != '' || $tb052_comprasForm["co_contrato_compras"] != null) {
                 $tb056_contrato_compras = Tb056ContratoComprasPeer::retrieveByPk($tb052_comprasForm["co_contrato_compras"]);

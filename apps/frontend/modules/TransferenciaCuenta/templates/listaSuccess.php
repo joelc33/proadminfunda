@@ -27,7 +27,7 @@
              * <Form Principal que carga el Filtro>
              */
             this.formFiltroPrincipal = new Ext.form.FormPanel({
-                title: 'Buscar Ordenes de Compras / Servicios',
+                title: 'Buscar Transferecnia entre Cuentas',
                 iconCls: 'icon-solpendiente',
                 collapsible: true,
                 titleCollapse: true,
@@ -184,7 +184,7 @@
             }
 
             this.gridPanel_ = new Ext.grid.GridPanel({
-                title: 'Lista de Ordenes de Compras / Servicios',
+                title: 'Lista de Transferecnias entre Cuentas',
                 iconCls: 'icon-libro',
                 store: this.store_lista,
                 loadMask: true,

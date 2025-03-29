@@ -452,6 +452,9 @@ class IngresoFinancieroActions extends sfActions
                         ->save($con);
                 }
 
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb155_cuenta_bancaria_historicoForm["co_solicitud"]));
+            $ruta->setCoEstatusRuta(2)->save($con);                
+                
                 $this->data = json_encode(array(
                     "success" => true,
                     "msg" => 'Modificación realizada exitosamente'
@@ -518,7 +521,7 @@ class IngresoFinancieroActions extends sfActions
         $id_tb156_subtipo_documento      =   $this->getRequestParameter("id_tb156_subtipo_documento");
         $nu_documento      =   $this->getRequestParameter("nu_documento");
         $mo_saldo_anterior      =   $this->getRequestParameter("mo_saldo_anterior");
-        //$co_solicitud      =   $this->getRequestParameter("co_solicitud");
+        $co_solicitud      =   $this->getRequestParameter("co_solicitud");
 
 
         $c = new Criteria();
@@ -582,15 +585,20 @@ class IngresoFinancieroActions extends sfActions
             if ($mo_saldo_anterior != "") {
                 $c->add(Tb155CuentaBancariaHistoricoPeer::mo_saldo_anterior, $mo_saldo_anterior);
             }
+            
+            if ($co_solicitud != "") {
+                $c->add(Tb155CuentaBancariaHistoricoPeer::CO_SOLICITUD, $co_solicitud);
+            }            
+            
         }
         $c->setIgnoreCase(true);
         //   $c->add(Tb155CuentaBancariaHistoricoPeer::CO_SOLICITUD, $co_solicitud);
 
-        $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2), Criteria::IN);
+        $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 3,4), Criteria::IN);
         $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, 35, Criteria::IN);
         $cantidadTotal = Tb155CuentaBancariaHistoricoPeer::doCount($c);
         $c->setLimit($limit)->setOffset($start);
-        $c->addAscendingOrderByColumn(Tb155CuentaBancariaHistoricoPeer::ID);
+        $c->addDescendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
 
 
 
@@ -605,9 +613,13 @@ class IngresoFinancieroActions extends sfActions
         $c->addSelectColumn(Tb155CuentaBancariaHistoricoPeer::MO_SALDO_ANTERIOR);
         $c->addSelectColumn(Tb155CuentaBancariaHistoricoPeer::FE_TRANSACCION);
         $c->addSelectColumn(Tb155CuentaBancariaHistoricoPeer::NU_TRANSACCION);
+        $c->addSelectColumn(Tb155CuentaBancariaHistoricoPeer::DE_OBSERVACION);
+        $c->addSelectColumn(Tb029EstatusPeer::TX_ESTATUS);
+        $c->addSelectColumn(Tb026SolicitudPeer::CO_ESTATUS);
 
         $c->addJoin(Tb010BancoPeer::CO_BANCO, Tb155CuentaBancariaHistoricoPeer::ID_TB010_BANCO);
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb155CuentaBancariaHistoricoPeer::CO_SOLICITUD);
+        $c->addJoin(Tb029EstatusPeer::CO_ESTATUS, Tb026SolicitudPeer::CO_ESTATUS);
         $c->addJoin(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA, Tb155CuentaBancariaHistoricoPeer::ID_TB011_CUENTA_BANCARIA);
 
         $c->addDescendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
@@ -633,7 +645,10 @@ class IngresoFinancieroActions extends sfActions
                 "nu_documento"                      => trim($res["nu_documento"]),
                 "mo_saldo_anterior"                 => trim($res["mo_saldo_anterior"]),
                 "nu_transaccion"                    => trim($res["nu_transaccion"]),
-                "co_solicitud"                    => trim($res["co_solicitud"]),
+                "co_solicitud"                      => trim($res["co_solicitud"]),
+                "tx_observacion"                    => trim($res["de_observacion"]),
+                "tx_estatus"                        => trim($res["tx_estatus"]),
+                "co_estatus"                        => trim($res["co_estatus"]),
             );
         }
 
@@ -767,4 +782,184 @@ class IngresoFinancieroActions extends sfActions
 
         $this->setTemplate('store');
     }
+    
+    
+    public function executeEnviarAnular(sfWebRequest $request)
+    {
+
+        $co_solicitud = $this->getRequestParameter("co_solicitud");
+        
+        $c = new Criteria();
+        $c->add(Tb155CuentaBancariaHistoricoPeer::CO_SOLICITUD, $co_solicitud);
+        $stmt = Tb155CuentaBancariaHistoricoPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC); 
+        
+        $fecha_solicitud = date('Y-m-d');
+
+            $tb026_solicitud = new Tb026Solicitud();
+            $tb026_solicitud->setCoProceso(46);
+            $tb026_solicitud->setCoTipoSolicitud(35);
+            $tb026_solicitud->setTxObservacion('Anulacion Transcripcion de movimiento: solicitud Nº: ' .$co_solicitud);
+            $tb026_solicitud->setCoEstatus(1);
+            $tb026_solicitud->setCreatedAt($fecha_solicitud);
+            $tb026_solicitud->setUpdatedAt($fecha_solicitud);
+
+            $tb026_solicitud->setCoUsuario($this->getUser()->getAttribute('codigo'));
+            $tb026_solicitud->setIdTb013AnioFiscal($this->getUser()->getAttribute('ejercicio'));
+           
+            $tb026_solicitud->setFeRegistro($fecha_solicitud);
+            $tb026_solicitud->save($con);
+            
+            
+        $Tb030Ruta = new Tb030Ruta();
+       $Tb030Ruta->setCoUsuario($this->getUser()->getAttribute('codigo'))
+               ->setCoEstatusRuta(1)
+               ->setNuOrden(1)
+               ->setInActual(true)
+               ->setCreatedAt($fecha_solicitud)
+               ->setUpdatedAt($fecha_solicitud)
+               ->setCoSolicitud($tb026_solicitud->getCoSolicitud())
+               ->setCoProceso(46)
+               ->setCoTipoSolicitud(35);
+            $Tb030Ruta->setObservacion('Anulacion Transcripcion de movimiento: solicitud Nº: ' .$co_solicitud);
+        
+        $Tb030Ruta->save($con);            
+        
+         if ($campos["id_tb154_tipo_cuenta_movimiento"] == 3) {
+
+            $tb011_cuenta_bancaria = new Criteria();
+            $tb011_cuenta_bancaria->add(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA, $campos["id_tb011_cuenta_bancaria"]);
+            $tb011_cuenta_bancaria->addSelectColumn(Tb011CuentaBancariaPeer::TX_CUENTA_BANCARIA);
+            $tb011_cuenta_bancaria->addSelectColumn(Tb011CuentaBancariaPeer::MO_DISPONIBLE);
+            $tb011_cuenta_bancaria->addSelectColumn(Tb011CuentaBancariaPeer::MO_INGRESO);
+            $tb011_cuenta_bancaria->addSelectColumn(Tb011CuentaBancariaPeer::MO_EGRESO);
+            $stmtTb001 = Tb011CuentaBancariaPeer::doSelectStmt($tb011_cuenta_bancaria);
+            $campos11 = $stmtTb001->fetch(PDO::FETCH_ASSOC);
+
+            $saldo_anterior = $campos11["mo_disponible"];
+            $saldo_nuevo = $campos11["mo_disponible"] + $campos["mo_transaccion"];
+            $tipo_cuenta_movieminto = 4;
+            $tipo_cuenta_documento = 2;
+
+            $tb011_cuenta_bancaria = Tb011CuentaBancariaPeer::retrieveByPK($campos["id_tb011_cuenta_bancaria"]);
+            $tb011_cuenta_bancaria->setMoDisponible($saldo_nuevo);
+            $tb011_cuenta_bancaria->save($con);
+        }
+
+        if ($campos["id_tb154_tipo_cuenta_movimiento"] == 4) {
+
+            $tb011_cuenta_bancaria = new Criteria();
+            $tb011_cuenta_bancaria->add(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA, $campos["id_tb011_cuenta_bancaria"]);
+            $tb011_cuenta_bancaria->addSelectColumn(Tb011CuentaBancariaPeer::TX_CUENTA_BANCARIA);
+            $tb011_cuenta_bancaria->addSelectColumn(Tb011CuentaBancariaPeer::MO_DISPONIBLE);
+            $tb011_cuenta_bancaria->addSelectColumn(Tb011CuentaBancariaPeer::MO_INGRESO);
+            $tb011_cuenta_bancaria->addSelectColumn(Tb011CuentaBancariaPeer::MO_EGRESO);
+            $stmtTb001 = Tb011CuentaBancariaPeer::doSelectStmt($tb011_cuenta_bancaria);
+            $campos11 = $stmtTb001->fetch(PDO::FETCH_ASSOC);
+
+            $saldo_anterior = $campos11["mo_disponible"];
+            $saldo_nuevo = $campos11["mo_disponible"] - $campos["mo_transaccion"];
+            $tipo_cuenta_movieminto = 3;
+            $tipo_cuenta_documento = 3;
+
+            $tb011_cuenta_bancaria = Tb011CuentaBancariaPeer::retrieveByPK($campos["id_tb011_cuenta_bancaria"]);
+            $tb011_cuenta_bancaria->setMoDisponible($saldo_nuevo);
+            $tb011_cuenta_bancaria->save($con);
+        }       
+
+
+        $tb155_cuenta_bancaria_historico = new Tb155CuentaBancariaHistorico();
+        $tb155_cuenta_bancaria_historico->setInActivo(true);
+        $tb155_cuenta_bancaria_historico->setIdTb011CuentaBancaria($campos["id_tb011_cuenta_bancaria"]);
+        $tb155_cuenta_bancaria_historico->setMoTransaccion($campos["mo_transaccion"]);
+        $tb155_cuenta_bancaria_historico->setFeTransaccion($fecha_solicitud);
+        $tb155_cuenta_bancaria_historico->setDeObservacion('Anulacion Transcripcion de movimiento: solicitud Nº: ' .$co_solicitud);
+        $tb155_cuenta_bancaria_historico->setIdTb010Banco($campos["id_tb010_banco"]);
+        $tb155_cuenta_bancaria_historico->setIdTb154TipoCuentaMovimiento($tipo_cuenta_movieminto);
+        $tb155_cuenta_bancaria_historico->setIdTb153TipoDocumentoCuenta($tipo_cuenta_documento);
+        $tb155_cuenta_bancaria_historico->setIdTb156SubtipoDocumento($campos["id_tb156_subtipo_documento"]);
+        $tb155_cuenta_bancaria_historico->setMoSaldoNuevo($saldo_nuevo);
+        $tb155_cuenta_bancaria_historico->setMoSaldoAnterior($saldo_anterior);
+        $tb155_cuenta_bancaria_historico->setNuTransaccion($campos["nu_transaccion"]);
+        $tb155_cuenta_bancaria_historico->setCoSolicitud($tb026_solicitud->getCoSolicitud());
+        $tb155_cuenta_bancaria_historico->save();        
+
+        if ($campos["id_tb153_tipo_documento_cuenta"] == 1) {
+            $co_tipo_asiento = 9;
+        } else {
+            if ($campos["id_tb153_tipo_documento_cuenta"] == 2) {
+                $co_tipo_asiento = 9;
+            } else {
+                $co_tipo_asiento = 10;
+            }
+        }
+
+        $c = new Criteria();
+        $c->add(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA, $campos["id_tb011_cuenta_bancaria"]);
+        $stmt11 = Tb011CuentaBancariaPeer::doSelectStmt($c);
+        $reg = $stmt11->fetch(PDO::FETCH_ASSOC);
+
+        $c1 = new Criteria();
+        $c1->add(Tb156SubtipoDocumentoPeer::ID, $campos["id_tb156_subtipo_documento"]);
+        $stmt1 = Tb156SubtipoDocumentoPeer::doSelectStmt($c1);
+        $reg1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+
+        if ($campos["id_tb154_tipo_cuenta_movimiento"] == 3) {
+
+            $tb061_asiento_contable = new Tb061AsientoContable();
+            $tb061_asiento_contable->setMoHaber($campos["mo_transaccion"])
+                ->setCoCuentaContable($reg1["co_cuenta_contable"])
+                ->setCreatedAt($fecha_solicitud)
+                ->setCoSolicitud($tb026_solicitud->getCoSolicitud())
+                ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                ->setCoTipoAsiento($co_tipo_asiento)
+                ->setInActivo(true)
+                ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
+                ->save($con);
+
+
+            $tb061_asiento_contable = new Tb061AsientoContable();
+            $tb061_asiento_contable->setMoDebe($campos["mo_transaccion"])
+                ->setCoCuentaContable($reg["co_cuenta_contable"])
+                ->setCreatedAt($fecha_solicitud)
+                ->setCoSolicitud($tb026_solicitud->getCoSolicitud())
+                ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                ->setCoTipoAsiento($co_tipo_asiento)
+                ->setInActivo(true)
+                ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
+                ->save($con);
+        } else {
+
+            $tb061_asiento_contable = new Tb061AsientoContable();
+            $tb061_asiento_contable->setMoDebe($campos["mo_transaccion"])
+                ->setCoCuentaContable($reg1["co_cuenta_contable"])
+                ->setCreatedAt($fecha_solicitud)
+                ->setCoSolicitud($tb026_solicitud->getCoSolicitud())
+                ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                ->setCoTipoAsiento($co_tipo_asiento)
+                ->setInActivo(true)
+                ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
+                ->save($con);
+
+
+            $tb061_asiento_contable = new Tb061AsientoContable();
+            $tb061_asiento_contable->setMoHaber($campos["mo_transaccion"])
+                ->setCoCuentaContable($reg["co_cuenta_contable"])
+                ->setCreatedAt($fecha_solicitud)
+                ->setCoSolicitud($tb026_solicitud->getCoSolicitud())
+                ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                ->setCoTipoAsiento($co_tipo_asiento)
+                ->setInActivo(true)
+                ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
+                ->save($con);
+        } 
+        
+        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb026_solicitud->getCoSolicitud()));
+        $ruta->setCoEstatusRuta(2)->save($con);        
+
+        $tb026_solicitud_vieja = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
+        $tb026_solicitud_vieja->setCoEstatus(4);
+        $tb026_solicitud_vieja->save();
+    }    
+    
 }

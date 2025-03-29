@@ -314,6 +314,8 @@ class CotizacionActions extends sfActions
       $listaProducto = json_decode($json_producto, true);
       $array_producto = array();
       $i = 0;
+      $mo_iva_producto = 0;
+      $precio_unitario = 0;
 
       foreach ($listaProducto as $productoForm) {
 
@@ -340,29 +342,39 @@ class CotizacionActions extends sfActions
 
           Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra($co_detalle_cotizacion,$productoForm["monto"],$this->getUser()->getAttribute('codigo'),$con,true);
 
+        }
+      }
 
-          if ($productoForm["mo_iva_producto"] > 0) {
+      
+      $wherec = new Criteria();
+      $wherec->add(Tb207DetalleCotizacionPeer::CO_COTIZACION, $tb206_cotizacion->getCoCotizacion(), Criteria::EQUAL);
+      $wherec->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336, Criteria::EQUAL);
+      BasePeer::doDelete($wherec, $con);      
+
+      $cIva = new Criteria();
+      $cIva->add(Tb207DetalleCotizacionPeer::CO_COTIZACION, $tb206_cotizacion->getCoCotizacion());
+      $stmtIva = Tb207DetalleCotizacionPeer::doSelectStmt($cIva);
+      while ($regIva = $stmtIva->fetch(PDO::FETCH_ASSOC)) {
+          $mo_iva_producto = $mo_iva_producto + $regIva["mo_iva_producto"];
+          $precio_unitario = $precio_unitario + $regIva["monto"];
+      }
+      
+      if($mo_iva_producto>0){
+      
             $tb207_detalle_cotizacion = new Tb207DetalleCotizacion();
             $tb207_detalle_cotizacion->setCoCotizacion($tb206_cotizacion->getCoCotizacion());
             $tb207_detalle_cotizacion->setCoProducto(19336); //IMPUESTO AL VALOR AGREGADO (IVA)
             $tb207_detalle_cotizacion->setNuCantidad(1);
-            if (!empty($productoForm["co_detalle_requisicion"])) {
-              $tb207_detalle_cotizacion->setCoDetalleRequisicion($productoForm["co_detalle_requisicion"]);
-            }
-            $tb207_detalle_cotizacion->setPrecioUnitario($productoForm["precio_unitario"]);
-            $tb207_detalle_cotizacion->setMonto(round($productoForm["mo_iva_producto"], 2));
+            $tb207_detalle_cotizacion->setPrecioUnitario($precio_unitario);
+            $tb207_detalle_cotizacion->setMonto(round($mo_iva_producto, 2));
             $tb207_detalle_cotizacion->setDetalle('IMPUESTO AL VALOR AGREGADO (IVA)');
             $tb207_detalle_cotizacion->setCoPartida($tb206_cotizacionForm["co_partida_iva"]);
             $tb207_detalle_cotizacion->setCoUnidadProducto(638);
-            $tb207_detalle_cotizacion->setCoDetalleCotizacionEnlace($co_detalle_cotizacion);
-            $tb207_detalle_cotizacion->save($con);
-
-            Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra($tb207_detalle_cotizacion->getCoDetalleCotizacion(),$productoForm["mo_iva_producto"],$this->getUser()->getAttribute('codigo'),$con,true);
-
-          }
-        }
+//            $tb207_detalle_cotizacion->setCoDetalleCotizacionEnlace($co_detalle_cotizacion);
+            $tb207_detalle_cotizacion->save($con);      
+            
+            Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra($tb207_detalle_cotizacion->getCoDetalleCotizacion(),round($mo_iva_producto, 2),$this->getUser()->getAttribute('codigo'),$con,true);            
       }
-
       
       $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb206_cotizacionForm["co_solicitud"]));
       $ruta->setCoUsuario($this->getUser()->getAttribute('codigo'));
