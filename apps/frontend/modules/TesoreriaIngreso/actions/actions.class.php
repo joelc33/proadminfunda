@@ -248,7 +248,8 @@ class TesoreriaIngresoActions extends sfActions
   public function executeGuardar(sfWebRequest $request)
   {
 
-            $codigo = $this->getRequestParameter("id");
+     $codigo = $this->getRequestParameter("id");
+
         
      $con = Propel::getConnection();
      if($codigo!=''||$codigo!=null){
@@ -376,6 +377,8 @@ class TesoreriaIngresoActions extends sfActions
     
     $c = new Criteria();  
     $c->clearSelectColumns();
+
+
     
     if($co_proceso!=''){
         $c->add(Tb028ProcesoPeer::CO_PROCESO,$co_proceso);
