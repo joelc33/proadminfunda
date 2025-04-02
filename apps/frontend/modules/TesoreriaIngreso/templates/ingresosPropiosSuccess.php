@@ -307,6 +307,14 @@
             });
             this.storeCO_IVA_FACTURA.load();
 
+            this.referencia_iva = new Ext.form.TextField({
+                fieldLabel: 'Referencia IVA',
+                id: 'referencia_iva',
+                name: 'tb148_cuenta_cobrar_pago[tx_referencia_iva]',
+                width: '350px',
+                blankText: 'Debe introducir la referencia del IVA'
+            });
+
             this.mo_pendiente = new Ext.form.NumberField({
                 fieldLabel: 'Monto IVA',
                 name: 'tb148_cuenta_cobrar_pago[mo_iva]',
@@ -380,6 +388,7 @@
                     recaudacion.formulario.referencia,
                     recaudacion.formulario.monto,
                     recaudacion.formulario.co_iva_factura,
+                    recaudacion.formulario.referencia_iva,
                     recaudacion.formulario.mo_pendiente,
                     recaudacion.formulario.monto_pagado,
                     recaudacion.formulario.nu_factura
