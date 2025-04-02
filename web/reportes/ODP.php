@@ -401,7 +401,7 @@ class PDF_Flo extends PDF_FlowingBlock
                             $j++;
                         } else {
                             $Z = $this->GetY();
-                            if(($Z-$Y)>15){
+                            if(($Z-$Y)>10){
                             $this->SetY($Z-9);
                             }
                             $this->SetWidths(array(135, 25, 20, 20));
