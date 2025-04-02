@@ -406,7 +406,7 @@ class PDF_Flo extends PDF_FlowingBlock
                             }
                             $this->SetWidths(array(135, 25, 20, 20));
                             $this->SetAligns(array("L", "R", "R", "R"));
-                            $this->Row(array('', utf8_decode($campo1['tx_tipo_retencion']), number_format($campo1['mo_retencion'], 2, ',', '.'), ''), 0, 0);
+                            $this->Row(array('', utf8_decode($campo1['tx_tipo_retencion'].$Z.$Y), number_format($campo1['mo_retencion'], 2, ',', '.'), ''), 0, 0);
                         }
                         $monto = $monto + $campo1['mo_retencion'];
                     }
