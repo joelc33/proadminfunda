@@ -301,8 +301,10 @@ class CotizacionActions extends sfActions
       $con->beginTransaction();
 
 
-      $tb206_cotizacion->setNumeroCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
-      $tb206_cotizacion->setTxSerialCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
+      if(!empty($tb206_cotizacionForm["tx_serial_cotizacion"])){
+        $tb206_cotizacion->setNumeroCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
+        $tb206_cotizacion->setTxSerialCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
+      }
       /*Campo tipo BIGINT */
       $tb206_cotizacion->setCoRequisicion($tb206_cotizacionForm["co_requisicion"]);
       $tb206_cotizacion->setCoEnte($tb206_cotizacionForm["co_ente"]);
