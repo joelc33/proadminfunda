@@ -307,13 +307,17 @@ class CotizacionActions extends sfActions
         $tb206_cotizacion->setTxSerialCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
       }
       /*Campo tipo BIGINT */
+
+      list($dia,$mes,$anio) = explode("/",$tb206_cotizacionForm["fecha_cotizacion"]);
+      $fecha = $anio."-".$mes."-".$dia;
+
       $tb206_cotizacion->setCoRequisicion($tb206_cotizacionForm["co_requisicion"]);
       $tb206_cotizacion->setCoEnte($tb206_cotizacionForm["co_ente"]);
       $tb206_cotizacion->setCoUsuario($this->getUser()->getAttribute('codigo'));
       $tb206_cotizacion->setTxObservacion($tb206_cotizacionForm["tx_observacion"]);
       $tb206_cotizacion->setCoSolicitud($tb206_cotizacionForm["co_solicitud"]);
       $tb206_cotizacion->setCoTipoSolicitud($tb206_cotizacionForm["co_tipo_solicitud"]);
-      $tb206_cotizacion->setFechaCotizacion($tb206_cotizacionForm["fecha_cotizacion"]);
+      $tb206_cotizacion->setFechaCotizacion($fecha);
       $tb206_cotizacion->setAnio($this->getUser()->getAttribute('ejercicio'));
       //  $tb206_cotizacion->setNuIva($tb206_cotizacionForm["co_iva_factura"]);
       $tb206_cotizacion->setMontoIva($tb206_cotizacionForm["monto_iva"]);
