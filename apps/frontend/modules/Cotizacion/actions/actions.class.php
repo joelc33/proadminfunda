@@ -283,8 +283,15 @@ class CotizacionActions extends sfActions
       }else{
       $serial = $datos_tipo_modalidad['tx_sigla'] . '-' . $datos_programa['nu_programa'] . '-' . $tipo . '-' . date("Y") . '-' . Tb137ControlSerialPeer::getSerial($datos_solicitud['id_136_tipo_documento'], $con, $this->getUser()->getAttribute('ejercicio'), $tb206_cotizacionForm["co_tipo_modalidad"], $datos_programa['co_programa']);
       }
-      $tb206_cotizacion->setNumeroCotizacion($serial);
-      $tb206_cotizacion->setTxSerialCotizacion($serial);
+
+
+      if(!empty($tb206_cotizacionForm["tx_serial_cotizacion"])){
+        $tb206_cotizacion->setNumeroCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
+        $tb206_cotizacion->setTxSerialCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
+      }else{
+        $tb206_cotizacion->setNumeroCotizacion($serial);
+        $tb206_cotizacion->setTxSerialCotizacion($serial);
+      }     
 
     }
 
@@ -294,6 +301,8 @@ class CotizacionActions extends sfActions
       $con->beginTransaction();
 
 
+      $tb206_cotizacion->setNumeroCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
+      $tb206_cotizacion->setTxSerialCotizacion($tb206_cotizacionForm["tx_serial_cotizacion"]);
       /*Campo tipo BIGINT */
       $tb206_cotizacion->setCoRequisicion($tb206_cotizacionForm["co_requisicion"]);
       $tb206_cotizacion->setCoEnte($tb206_cotizacionForm["co_ente"]);
