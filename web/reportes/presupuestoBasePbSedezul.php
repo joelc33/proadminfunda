@@ -21,7 +21,7 @@ class PDF extends FPDF
         }*/
 
         if (!empty($this->empresa['tx_imagen_izq'])) {
-            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'],  $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
+            $this->Image("imagenes/" . $this->empresa['tx_imagen_izq'], $this->empresa['izquierda_x'], $this->empresa['izquierda_y'], $this->empresa['izquierda_w']);
         }
 
         /*if(!empty($this->empresa['tx_imagen_der'])){
@@ -38,10 +38,10 @@ class PDF extends FPDF
         if (!empty($this->empresa['nb_institucion'])) {
             $this->Ln(2);
             $this->SetX(52);
-            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'C',0); 
+            $this->MultiCell(110, 4, utf8_decode($this->empresa['nb_institucion']), 0, 'C', 0);
             $this->Ln(2);
-        }else{
-        $this->Ln(4);    
+        } else {
+            $this->Ln(4);
         }
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(4);
@@ -54,15 +54,15 @@ class PDF extends FPDF
     function Footer()
     {
         $this->SetFont('Arial', '', 9);
-//        $this->SetY(-20);
+        //        $this->SetY(-20);
     }
 
     function dwawCell($title, $data)
     {
         $width = 8;
         $this->SetFont('Arial', 'B', 12);
-        $y =  $this->getY() * 20;
-        $x =  $this->getX();
+        $y = $this->getY() * 20;
+        $x = $this->getX();
         $this->SetFillColor(206, 230, 100);
         $this->MultiCell(175, 8, $title, 0, 1, 'L', 0);
         $this->SetY($y);
@@ -86,14 +86,20 @@ class PDF extends FPDF
         $this->SetWidths(array(190));
         $this->SetAligns(array("J"));
         $this->SetX(15);
-        $this->Row(array('     '.utf8_decode($this->datos['tx_concepto'])), 0, 0);
+        $this->Row(array('     ' . utf8_decode($this->datos['tx_concepto'])), 0, 0);
         $this->Ln(10);
         $this->SetFont('Arial', 'B', 9);
         $this->Cell(0, 0, utf8_decode('PRESUPUESTO BASE '), 0, 0, 'C');
         $this->Ln(5);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(0, 0, utf8_decode($this->datos['numero_cotizacion']), 0, 0, 'C');
-        $this->Ln(5);        
+        $this->Ln(5);
+
+
+        $this->SetWidths(array(160, 100));
+        $this->SetAligns(array("L", "L"));
+        $this->SetFont('Arial', '', 9);
+        $this->Row(array('', 'Fecha: ' . date("d/m/Y", strtotime($this->datos['fecha_cotizacion']))), 0, 0);
 
         //$this->line(1, 60, 220, 60);
 //        $this->SetFont('Arial', 'B', 10);
@@ -129,15 +135,15 @@ class PDF extends FPDF
         $this->SetWidths(array(200));
         $this->SetAligns(array("C"));
         $this->SetFillColor(201, 199, 199);
-//        $this->Row(array(utf8_decode('ESPECIFICACIONES TÉCNICAS')), 1, 1);
+        //        $this->Row(array(utf8_decode('ESPECIFICACIONES TÉCNICAS')), 1, 1);
         $this->SetFillColor(255, 255, 255);
         $this->SetWidths(array(40, 160));
         $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
-        $this->SetWidths(array(10, 65,30 ,20, 30, 35));
+        $this->SetWidths(array(10, 65, 30, 20, 30, 35));
         $this->SetX(15);
         $this->Row(array('ITEM', utf8_decode('DESCRIPCIÓN'), utf8_decode('PRESENTACIÓN'), utf8_decode('CANTIDAD'), utf8_decode('PRECIO UNITARIO'), utf8_decode('PRECIO TOTAL')), 1, 1);
         $this->SetAligns(array("C", "L", "C", "C", "C", "C"));
-        $this->SetWidths(array(10, 65,30 ,20, 30, 35));
+        $this->SetWidths(array(10, 65, 30, 20, 30, 35));
 
         $item = 0;
         $SubTotal = 0;
@@ -154,40 +160,40 @@ class PDF extends FPDF
             $this->SetFont('Arial', '', 9);
             //$iva = round(($campo['monto']*$campo['nu_iva'])/100, 2);
             $iva = $campo['monto_iva'];
-            
-            if($campo['co_producto']!=19336){
+
+            if ($campo['co_producto'] != 19336) {
                 $item = $item + 1;
                 $i++;
-                            if($this->getY()>240){
+                if ($this->getY() > 240) {
                     $this->AddPage();
                     $this->SetX(15);
                     $this->SetY(40);
-        $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
-        $this->SetWidths(array(10, 65,30 ,20, 30, 35));
-        $this->SetX(15);
-        $this->Row(array('ITEM', utf8_decode('DESCRIPCIÓN'), utf8_decode('PRESENTACIÓN'), utf8_decode('CANTIDAD'), utf8_decode('PRECIO UNITARIO'), utf8_decode('PRECIO TOTAL')), 1, 1);
-        $this->SetAligns(array("C", "L", "C", "C", "C", "C"));
-        $this->SetWidths(array(10, 65,30 ,20, 30, 35));
-                            }
-                            $this->SetX(15);
+                    $this->SetAligns(array("C", "C", "C", "C", "C", "C"));
+                    $this->SetWidths(array(10, 65, 30, 20, 30, 35));
+                    $this->SetX(15);
+                    $this->Row(array('ITEM', utf8_decode('DESCRIPCIÓN'), utf8_decode('PRESENTACIÓN'), utf8_decode('CANTIDAD'), utf8_decode('PRECIO UNITARIO'), utf8_decode('PRECIO TOTAL')), 1, 1);
+                    $this->SetAligns(array("C", "L", "C", "C", "C", "C"));
+                    $this->SetWidths(array(10, 65, 30, 20, 30, 35));
+                }
+                $this->SetX(15);
                 $this->Row(array($item, utf8_decode($campo['tx_producto'] . ' - ' . $campo['detalle']), utf8_decode($campo['tx_unidad_producto']), utf8_decode($campo['nu_cantidad']), number_format($campo['precio_unitario'], 2, ',', '.'), number_format($campo['monto'], 2, ',', '.')), 1, 1);
                 //$SubTotal =     $SubTotal + round($campo['monto'],2);
-                $SubTotal =     $SubTotal + $campo['monto'];
-            }else{
-                $TotalIVA =     $TotalIVA + $campo['monto'];
+                $SubTotal = $SubTotal + $campo['monto'];
+            } else {
+                $TotalIVA = $TotalIVA + $campo['monto'];
             }
 
-            
-            $TotalExcento =  0;
+
+            $TotalExcento = 0;
         }
-//        while ($i < 11) {
+        //        while ($i < 11) {
 //            $this->SetX(15);
 //            $this->Row(array('', '', '', '', '', ''), 1, 1);
 //            $i++;
 //        }
         //$total_iva = round(($SubTotal * $iva)/100,2);
         $total_iva = $TotalIVA;
-       // $total_iva = $this->datos['monto_iva'];
+        // $total_iva = $this->datos['monto_iva'];
 
         $TotalGenerado = $SubTotal + $total_iva;
         $this->SetX(15);
@@ -198,26 +204,26 @@ class PDF extends FPDF
         $this->SetX(15);
         $this->Row(array(utf8_decode('Total I.V.A '), number_format($total_iva, 2, ',', '.')), 1, 1);
         $this->SetX(15);
-//        $this->Row(array(utf8_decode('Total Excento'), number_format($TotalExcento, 2, ',', '.')), 1, 1);
+        //        $this->Row(array(utf8_decode('Total Excento'), number_format($TotalExcento, 2, ',', '.')), 1, 1);
         $this->Row(array(utf8_decode('Total Generado'), number_format($TotalGenerado, 2, ',', '.')), 1, 1);
 
-         
-         $this->SetFont('Arial','B',10);
-         $this->Ln(5);
-         $this->Cell(180,10,utf8_decode('UNIDAD CONTRATANTE'),0,0,'C'); 
-         $this->SetFont('Arial','B',10);
-         $this->Ln(10);
-         $this->SetX(15);
-         $this->Cell(135,10,utf8_decode('Nombre:'),0,0,'L');
-         $this->Cell(60,10,utf8_decode('Nombre:'),0,0,'L');
-         $this->Ln(5);
-         $this->SetX(15);
-         $this->Cell(135,10,utf8_decode('C.I.:'),0,0,'L');
-         $this->Cell(60,10,utf8_decode('C.I.:'),0,0,'L');
-         $this->Ln(5);
-         $this->SetX(15);
-         $this->Cell(135,10,utf8_decode('Firma:'),0,0,'L');
-         $this->Cell(60,10,utf8_decode('Firma:'),0,0,'L');
+
+        $this->SetFont('Arial', 'B', 10);
+        $this->Ln(5);
+        $this->Cell(180, 10, utf8_decode('UNIDAD CONTRATANTE'), 0, 0, 'C');
+        $this->SetFont('Arial', 'B', 10);
+        $this->Ln(10);
+        $this->SetX(15);
+        $this->Cell(135, 10, utf8_decode('Nombre:'), 0, 0, 'L');
+        $this->Cell(60, 10, utf8_decode('Nombre:'), 0, 0, 'L');
+        $this->Ln(5);
+        $this->SetX(15);
+        $this->Cell(135, 10, utf8_decode('C.I.:'), 0, 0, 'L');
+        $this->Cell(60, 10, utf8_decode('C.I.:'), 0, 0, 'L');
+        $this->Ln(5);
+        $this->SetX(15);
+        $this->Cell(135, 10, utf8_decode('Firma:'), 0, 0, 'L');
+        $this->Cell(60, 10, utf8_decode('Firma:'), 0, 0, 'L');
 
         //         $this->ln();
         //         $this->SetAligns(array("C","C", "C"));
@@ -261,7 +267,7 @@ class PDF extends FPDF
 
     function SetTitle($title)
     {
-        $this->title   = $title;
+        $this->title = $title;
     }
 
     function PrintChapter()
@@ -282,6 +288,7 @@ class PDF extends FPDF
                          tb206.tx_serial_cotizacion,
                          tb206.created_at as fecha_compra,
                          tb206.numero_cotizacion,
+                         tb206.fecha_cotizacion,
                          tb039.co_solicitud,
                          tb206.tx_observacion,
                          upper(tb047.tx_ente) as tx_ente, 
@@ -299,7 +306,7 @@ class PDF extends FPDF
                   where tb030.co_ruta = " . $_GET['codigo']; //$conex->decrypt($_GET['codigo']);
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
-        return  $datosSol[0];
+        return $datosSol[0];
     }
 
     function getMateriales()
@@ -437,7 +444,7 @@ class PDF extends FPDF
         //.$_GET['co_ruta'];
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
-        return  $datosSol[0];
+        return $datosSol[0];
     }
     function getOrden()
     {
@@ -456,7 +463,7 @@ class PDF extends FPDF
                   where tb030.co_ruta =  " . $_GET['codigo']; //$conex->decrypt($_GET['codigo']);
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
-        return  $datosSol[0];
+        return $datosSol[0];
     }
 
     function getPartidas2()
@@ -473,7 +480,7 @@ class PDF extends FPDF
                   where tb030.co_ruta = " . $_GET['codigo'] . ' order by tb053.co_detalle_compras asc'; //$conex->decrypt($_GET['codigo']);
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
-        return  $datosSol;
+        return $datosSol;
     }
 
     function getDatosEmpresa($codigo)
@@ -496,7 +503,7 @@ class PDF extends FPDF
 
         $conex = new ConexionComun();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
-        return  $datosSol[0];
+        return $datosSol[0];
     }
 
     function getOpcionReporte($ruta)
@@ -515,12 +522,12 @@ class PDF extends FPDF
         $conex = new ConexionComun();
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
-        return  $datosSol[0];
+        return $datosSol[0];
     }
 }
 
 
-$pdf=new PDF('P','mm','letter');
+$pdf = new PDF('P', 'mm', 'letter');
 $pdf->AliasNbPages();
 $pdf->PrintChapter();
 //$pdf->PrintChapter2();
@@ -530,13 +537,13 @@ $ruta = $comm->getRuta();
 //rmdir($ruta);
 //mkdir($ruta, 0777, true);    
 
-$dir="$ruta".$_GET["codigo"].".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
+$dir = "$ruta" . $_GET["codigo"] . ".pdf"; //$comm->decrypt($_GET["codigo"]).".pdf";
 
 
-$update = "update tb030_ruta set tx_ruta_reporte = '".$dir."' where co_ruta = ".$_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
+$update = "update tb030_ruta set tx_ruta_reporte = '" . $dir . "' where co_ruta = " . $_GET['codigo']; //$comm->decrypt($_GET["codigo"]);
 
 //echo $update; exit();
-$comm->Execute($update);    
+$comm->Execute($update);
 
 $pdf->Output($dir, 'F');
 

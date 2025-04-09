@@ -106,16 +106,16 @@ class PDF extends FPDF
 //        $this->SetFillColor(201, 199, 199);
 //        $this->Row(array(utf8_decode('DATOS DEL PRESUPUESTO BASE')), 1, 1);
 //        $this->SetFillColor(255, 255, 255);
-//        $this->SetWidths(array(100, 100));
+        $this->SetWidths(array(160, 100));
 //        $Y = $this->GetY();
 //        $this->MultiCell(100, 10, '', 1, 1, 'L', 1);
 //        $this->SetY($Y);
 //        $this->SetX(110);
 //        $this->MultiCell(100, 10, '', 1, 1, 'L', 1);
 //        $this->SetY(68);
-//        $this->SetAligns(array("L", "L"));
-//        $this->SetFont('Arial', '', 9);
-//        $this->Row(array(utf8_decode('Código: ') . utf8_decode($this->datos['tx_serial_cotizacion']), utf8_decode('  FECHA:  ') . date("d/m/Y", strtotime($this->datos['fe_registro']))), 0, 0);
+        $this->SetAligns(array("L", "L"));
+        $this->SetFont('Arial', '', 9);
+        $this->Row(array('', 'Fecha: '.date("d/m/Y", strtotime($this->datos['fecha_cotizacion']))), 0, 0);
 //        $this->SetWidths(array(200));
 //        $this->Ln(2);
 //        $Y = $this->GetY() + 3;
@@ -271,6 +271,7 @@ class PDF extends FPDF
                          tb027.tx_tipo_solicitud,
                          tb206.tx_serial_cotizacion,
                          tb206.created_at as fecha_compra,
+                         tb206.fecha_cotizacion,
                          tb206.numero_cotizacion,
                          tb039.co_solicitud,
                          tb206.tx_observacion,
