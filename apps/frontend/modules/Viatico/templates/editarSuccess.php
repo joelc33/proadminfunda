@@ -210,6 +210,14 @@
                 maskRe: /[0-9]/,
             });
 
+            this.fecha = new Ext.form.DateField({
+                fieldLabel: 'Fecha',
+                name: 'tb109_persona[fecha]',
+                value: this.OBJ.fecha_cotizacion,
+                allowBlank: false,
+                width: 100
+            });
+
             this.nu_extension = new Ext.form.TextField({
                 fieldLabel: 'Nro Extension',
                 name: 'tb109_persona[nu_extension]',
@@ -226,7 +234,7 @@
                     flex: 1
                 },
                 items: [
-                    this.nu_celular,
+                    this.nu_celular
                     /* {
                            xtype: 'displayfield',
                            value: '&nbsp;&nbsp;&nbsp; Nro Extensión:',
@@ -297,6 +305,7 @@
                     //                this.co_nivel_organizacional,
                     //                this.co_nivel_trabajador,
                     this.telefono,
+                    this.fecha
                     //    this.in_empleado
                 ]
             });

@@ -411,7 +411,7 @@ function PutLink($URL, $txt)
                         upper(tb108.tx_evento) as tx_evento, 
                         tb108.fe_desde, 
                         tb108.fe_hasta, 
-                        tb108.created_at as fecha, 
+                        tb026.fe_registro as fecha, 
                         upper(tb047.tx_ente) as tx_ente, 
                         upper(tb110.tx_origen_viatico) as destino, 
                         upper(tb107.tx_tipo_viatico ) as tx_tipo_viatico,
