@@ -361,7 +361,7 @@ function PutLink($URL, $txt)
          $this->SetAligns(array("J"));
          
          $html = '<p>     Por medio de la presente, me dirijo a usted con finalidad de solicitarle el <b>CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022</b> que seran utilizados para '.$this->datos['tx_evento'].' <b>'.$this->datos['tx_tipo_viatico'].'</b>, durante los dias '.date("d/m/Y", strtotime($this->datos['fe_desde'])).' al '.date("d/m/Y", strtotime($this->datos['fe_hasta'])).' , a '.$this->datos['tx_razon_social'].' portador(a) de la cedula de identidad N° '.$this->datos['tx_rif'].' representante de <b>'.$empresa.'</b>.</p>';
-         $inf = "     Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022 que seran utilizados para ".$this->datos['tx_evento']." hacia ".$this->datos['tx_tipo_viatico'].", donde se visitará ".$this->datos['destino']." durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_razon_social']." portador(a) de la cedula de identidad N° ".$this->datos['tx_rif']." representante de ".$empresa."."; 
+         $inf = "     Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022 que seran utilizados para ".$this->datos['tx_evento']." hacia ".$this->datos['tx_tipo_viatico'].", donde se visitará ".$this->datos['destino']." durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_razon_social']." portador(a) de la cedula de identidad N° ".$this->datos['tx_rif']." en representación de ".$this->datos['tx_ente']."."; 
          $this->SetX(50);
          $this->WriteHTML(utf8_decode($inf));
 
@@ -382,7 +382,7 @@ function PutLink($URL, $txt)
          $this->Cell(200,10,utf8_decode($this->empresa['nb_presidente']),0,0,'C'); 
          $this->SetFont('Arial','B',12);
          $this->Ln(5);
-         $this->Cell(200,10,utf8_decode('Presidente(a)'),0,0,'C');         
+         $this->Cell(200,10,utf8_decode('Director'),0,0,'C');         
   
 
     }
@@ -411,11 +411,12 @@ function PutLink($URL, $txt)
                         upper(tb108.tx_evento) as tx_evento, 
                         tb108.fe_desde, 
                         tb108.fe_hasta, 
-                        tb060.fe_emision as fecha, 
+                        tb026.fe_registro as fecha, 
                         upper(tb047.tx_ente) as tx_ente, 
                         upper(tb110.tx_origen_viatico) as destino, 
                         upper(tb107.tx_tipo_viatico ) as tx_tipo_viatico,
-                        tb047.nb_responsable,tb047a.cargo,tb008.tx_razon_social,tb008.tx_rif
+                        tb047.nb_responsable,tb047a.cargo,tb008.tx_razon_social,tb008.tx_rif,
+                        tb047e.tx_ente
                     from tb026_solicitud as tb026 
                     left join tb108_viatico as tb108 on tb108.co_solicitud = tb026.co_solicitud 
                     left join tb107_tipo_viatico as tb107 on tb107.co_tipo_viatico = tb108.co_tipo_viatico 
@@ -426,6 +427,7 @@ function PutLink($URL, $txt)
                     left join tb047_ente as tb047a on tb047a.co_ente = 1
                     left join tb030_ruta as tb030 on tb030.co_solicitud = tb108.co_solicitud
                     left join tb060_orden_pago as tb060 on tb060.co_solicitud = tb108.co_solicitud
+                    left join tb047_ente as tb047e on (tb047e.co_ente = tb108.co_ente)
                     where tb030.co_ruta = ".$_GET['codigo']; //$conex->decrypt($_GET['codigo']);
                   
           //echo var_dump($sql); exit();
