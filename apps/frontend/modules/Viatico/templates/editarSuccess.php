@@ -213,7 +213,7 @@
             this.fecha = new Ext.form.DateField({
                 fieldLabel: 'Fecha',
                 name: 'tb109_persona[fecha]',
-                value: this.OBJ.fecha_cotizacion,
+                value: this.OBJ.fecha,
                 allowBlank: false,
                 width: 100
             });

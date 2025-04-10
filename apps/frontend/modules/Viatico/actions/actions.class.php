@@ -81,6 +81,10 @@ class ViaticoActions extends sfActions
 
             $stmt = Tb108ViaticoPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $datos = Tb026SolicitudPeer::retrieveByPK($codigo);
+
+
             $this->data = json_encode(array(
                 "co_viatico"                => $campos["co_viatico"],
                 "co_tipo_viatico"           => $campos["co_tipo_viatico"],
@@ -97,7 +101,8 @@ class ViaticoActions extends sfActions
                 "co_solicitud"              => $this->getRequestParameter("co_solicitud"),
                 "co_proveedor"              => $campos["co_proveedor"],
                 "co_categoria"              => $campos["co_categoria"],
-                "co_ente"                   => $campos["co_ente"]
+                "co_ente"                   => $campos["co_ente"],
+                "fecha"                     => $datos->getFeRegistro()
             ));
         } else {
             $this->data = json_encode(array(
@@ -145,8 +150,8 @@ class ViaticoActions extends sfActions
         $tb008_proveedor = Tb008ProveedorPeer::retrieveByPk($co_proveedor);
         $tb108_viaticoForm = $this->getRequestParameter('tb108_viatico');
 
-        list($dia,$mes,$anio) = explode("/",$tb109_personaForm["fecha"]);
-        $fecha = $anio."-".$mes."-".$dia;
+        //list($dia,$mes,$anio) = explode("/",$tb109_personaForm["fecha"]);
+        $fecha = $tb109_personaForm["fecha"];
 
         $con = Propel::getConnection();
         if ($codigo != '' || $codigo != null) {
@@ -165,8 +170,7 @@ class ViaticoActions extends sfActions
                 );
 
                 $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm,$con);
-
-                
+              
                 if ($resp["success"] == true) {
                     $tb108_viaticoForm["co_solicitud"] = $resp["co_solicitud"];
                 }
@@ -226,6 +230,9 @@ class ViaticoActions extends sfActions
             $tb108_viatico->setCoCategoria($tb108_viaticoForm["co_categoria"]);
             $tb108_viatico->setCoUsuario($this->getUser()->getAttribute('codigo'));
             $tb108_viatico->setCoProveedor($co_proveedor);
+
+            list($dia,$mes,$anio) = explode("/",$tb109_personaForm["fecha"]);
+            $fecha = $anio."-".$mes."-".$dia;
 
             $tb026_solicitud = Tb026SolicitudPeer::retrieveByPK($tb108_viaticoForm["co_solicitud"]);
             $tb026_solicitud->setFeRegistro($fecha);
