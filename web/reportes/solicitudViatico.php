@@ -411,7 +411,11 @@ function PutLink($URL, $txt)
                         upper(tb108.tx_evento) as tx_evento, 
                         tb108.fe_desde, 
                         tb108.fe_hasta, 
+<<<<<<< HEAD
                         tb026.fe_registro as fecha, 
+=======
+                        tb060.fe_emision as fecha, 
+>>>>>>> ff563ab0aaf380995048a25aa1802edeedfa7cb2
                         upper(tb047.tx_ente) as tx_ente, 
                         upper(tb110.tx_origen_viatico) as destino, 
                         upper(tb107.tx_tipo_viatico ) as tx_tipo_viatico,
@@ -424,7 +428,8 @@ function PutLink($URL, $txt)
                     left join tb001_usuario as tb001 on tb001.co_usuario = tb108.co_usuario 
                     left join tb047_ente as tb047 on tb047.co_ente = tb001.co_ente
                     left join tb047_ente as tb047a on tb047a.co_ente = 1
-                    left join tb030_ruta as tb030 on tb030.co_solicitud = tb108.co_solicitud 
+                    left join tb030_ruta as tb030 on tb030.co_solicitud = tb108.co_solicitud
+                    left join tb060_orden_pago as tb060 on tb060.co_solicitud = tb108.co_solicitud
                     where tb030.co_ruta = ".$_GET['codigo']; //$conex->decrypt($_GET['codigo']);
                   
           //echo var_dump($sql); exit();
