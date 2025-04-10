@@ -1568,6 +1568,7 @@ class ComprasActions extends sfActions
 
                         $tb209_update = Tb209PresupuestoDetalleCompraPeer::retrieveByPK($idIVA);
                         $tb209_update->setCoPresupuesto($res['co_presupuesto']);
+                        $tb209_update->setCoDetalleCotizacion($res['co_detalle_cotizacion']);
                         $tb209_update->save($con);
 
                     }
@@ -2228,10 +2229,11 @@ class ComprasActions extends sfActions
             $c->addSelectColumn(Tb207DetalleCotizacionPeer::IN_EXENTO);
             $c->addSelectColumn(Tb207DetalleCotizacionPeer::CO_IVA_PRODUCTO);
             $c->addSelectColumn(Tb207DetalleCotizacionPeer::MO_IVA_PRODUCTO);
+            $c->addSelectColumn(Tb207DetalleCotizacionPeer::PRECIO_UNITARIO.' as monto_base');
 
             $c->addJoin(Tb207DetalleCotizacionPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO);
             $c->add(Tb207DetalleCotizacionPeer::CO_COTIZACION, $co_cotizacion);
-            $c->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, null, Criteria::ISNULL);
+//            $c->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, null, Criteria::ISNULL);
             $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336, Criteria::NOT_EQUAL); //Excluye el IVA
 
             $cantidadTotal = Tb207DetalleCotizacionPeer::doCount($c);
@@ -2257,9 +2259,12 @@ class ComprasActions extends sfActions
             $c->addSelectColumn(Tb053DetalleComprasPeer::CO_IVA_PRODUCTO);
             $c->addSelectColumn(Tb053DetalleComprasPeer::MO_IVA_PRODUCTO);
             $c->addSelectColumn(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION);
+            $c->addSelectColumn(Tb207DetalleCotizacionPeer::PRECIO_UNITARIO.' as monto_base');
+            $c->addSelectColumn(Tb207DetalleCotizacionPeer::NU_CANTIDAD.' as cantidad_base');
             $c->addJoin(Tb053DetalleComprasPeer::CO_PRODUCTO, Tb048ProductoPeer::CO_PRODUCTO);
-            $c->addJoin(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS, Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, Criteria::LEFT_JOIN);
+            $c->addJoin(Tb053DetalleComprasPeer::CO_DETALLE_REQUISICION, Tb207DetalleCotizacionPeer::CO_DETALLE_REQUISICION, Criteria::LEFT_JOIN);
             $c->add(Tb053DetalleComprasPeer::CO_COMPRAS, $co_compras);
+            $c->add(Tb207DetalleCotizacionPeer::CO_PRODUCTO, 19336, Criteria::NOT_EQUAL);
             $c->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336, Criteria::NOT_EQUAL); //Excluye el IVA
 
             $cantidadTotal = Tb053DetalleComprasPeer::doCount($c);
@@ -2275,7 +2280,16 @@ class ComprasActions extends sfActions
             /* if (isset($reg['co_detalle_cotizacion'])) {
                 $reg['co_detalle_compras'] = '';
             }*/
-
+            if (!empty($co_cotizacion)) {
+            $reg["nu_cantidad_restante"]=$reg["nu_cantidad"]-$this->getCantProducto($reg["co_detalle_requisicion"]);
+            $reg["nu_cantidad"]=$reg["nu_cantidad"]-$this->getCantProducto($reg["co_detalle_requisicion"]);
+            $reg["monto"]=$reg["nu_cantidad"]*$reg["precio_unitario"];
+            $reg["mo_iva_producto"]=round(($reg["monto"]*$reg["co_iva_producto"])/100,2);
+            
+            }else{
+            $reg["nu_cantidad_restante"]=$reg["cantidad_base"]-$this->getCantProducto($reg["co_detalle_requisicion"],$reg["co_detalle_compras"]);    
+            }
+            
             $reg["monto_total"] = $reg["monto"] + $reg["mo_iva_producto"];
             $reg["nu_iva_producto"] = $reg["co_iva_producto"];
             $reg["in_modificado"] = false;
@@ -2292,6 +2306,24 @@ class ComprasActions extends sfActions
 
         $this->setTemplate('store');
     }
+    
+  protected function getCantProducto($co_detalle_requisicion,$co_detalle_compras){
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn('coalesce(SUM('. Tb053DetalleComprasPeer::NU_CANTIDAD.'),0) as cant_total');
+        if (!empty($co_detalle_compras)) {
+        $c->add(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS,$co_detalle_compras, Criteria::NOT_IN); 
+        }
+        $c->add(Tb053DetalleComprasPeer::IN_ANULAR,NULL, Criteria::ISNULL); 
+        $c->add(Tb053DetalleComprasPeer::CO_DETALLE_REQUISICION,$co_detalle_requisicion); 
+
+       // echo $c->toString(); exit();
+
+        $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $datos["cant_total"];
+  }    
 
     public function executeStorefkcodocumento(sfWebRequest $request)
     {

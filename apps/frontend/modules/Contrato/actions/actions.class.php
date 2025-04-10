@@ -781,6 +781,7 @@ class ContratoActions extends sfActions
 
                         $tb209_update = Tb209PresupuestoDetalleCompraPeer::retrieveByPK($idIVA);
                         $tb209_update->setCoPresupuesto($res['co_presupuesto']);
+                        $tb209_update->setCoDetalleCotizacion($res['co_detalle_cotizacion']);
                         $tb209_update->save($con);
 
                     }

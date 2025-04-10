@@ -760,8 +760,11 @@
                                     var monto = this.getValue() * ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.precio_unitario;
 
                                     var cantidad = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_cantidad;
+                                    
+                                    var cantidad_restante = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_cantidad_restante;
 
-                                    if (parseInt(this.getValue()) > parseInt(cantidad)) {
+                                    if (parseInt(this.getValue()) > parseInt(cantidad_restante)) {
+                                        this.setValue(cantidad);
                                         Ext.Msg.alert("Alerta", "La cantidad ingresada es mayor a la cantidad requerida");
                                         return false;
                                     }
@@ -798,10 +801,12 @@
                             listeners: {
                                 change: function(cmb, record, index) {
 
+                                    var precio_base = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.monto_base;
                                     var precio_unitario = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.precio_unitario;
 
-                                    if (parseInt(this.getValue()) > parseInt(precio_unitario)) {
-                                        Ext.Msg.alert("Alerta", "El precio unitario ingresado es mayor al precio el presupuesto base");
+                                    if (parseFloat(this.getValue()) > parseFloat(precio_base)) {
+                                        this.setValue(precio_unitario);
+                                        Ext.Msg.alert("Alerta", "El precio unitario ingresado es mayor al precio del presupuesto base");
                                         return false;
                                     }
 
@@ -1160,6 +1165,12 @@
                     },
                     {
                         name: 'in_modificado'
+                    },
+                    {
+                        name: 'monto_base'
+                    },
+                    {
+                        name: 'nu_cantidad_restante'
                     }
                 ]
             });

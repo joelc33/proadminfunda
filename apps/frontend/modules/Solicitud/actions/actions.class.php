@@ -382,26 +382,26 @@ class SolicitudActions extends sfActions
 
                 while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-                    $cc = new Criteria();
-                    $cc->addJoin(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION, Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION);
-                    $cc->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
-                    $stmtc = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($cc);
-
-
-                    while ($cotizacion = $stmtc->fetch(PDO::FETCH_ASSOC)) {
-
-                        Tb087PresupuestoMovimientoPeer::movimientoPartida(
-                            $con,
-                            $this->getUser()->getAttribute('ejercicio'),
-                            $this->getUser()->getAttribute('codigo'),
-                            $cotizacion["co_presupuesto"],
-                            16,
-                            $cotizacion["monto"],
-                            $cotizacion["co_detalle_cotizacion"],
-                            '',
-                            $cotizacion["id"]
-                        );
-                    }
+//                    $cc = new Criteria();
+//                    $cc->addJoin(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION, Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION);
+//                    $cc->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
+//                    $stmtc = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($cc);
+//
+//
+//                    while ($cotizacion = $stmtc->fetch(PDO::FETCH_ASSOC)) {
+//
+//                        Tb087PresupuestoMovimientoPeer::movimientoPartida(
+//                            $con,
+//                            $this->getUser()->getAttribute('ejercicio'),
+//                            $this->getUser()->getAttribute('codigo'),
+//                            $cotizacion["co_presupuesto"],
+//                            16,
+//                            $cotizacion["monto"],
+//                            $cotizacion["co_detalle_cotizacion"],
+//                            '',
+//                            $cotizacion["id"]
+//                        );
+//                    }
 
                     $dc = new Criteria();
                     $dc->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
@@ -409,6 +409,29 @@ class SolicitudActions extends sfActions
 
 
                     while ($detalle_compra = $stmtdc->fetch(PDO::FETCH_ASSOC)) {
+                        
+                    $cc = new Criteria();
+                    $cc->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
+                    $stmtc = Tb207DetalleCotizacionPeer::doSelectStmt($cc);
+                    $cotizacion = $stmtc->fetch(PDO::FETCH_ASSOC);
+                    
+                    if($reg["co_producto"]!=19336){
+                    $co_detalle_cotizacion = $cotizacion["co_detalle_cotizacion"];   
+                    }else{
+                    $co_detalle_cotizacion = $detalle_compra["co_detalle_cotizacion"];    
+                    }
+                        
+                        Tb087PresupuestoMovimientoPeer::movimientoPartida(
+                            $con,
+                            $this->getUser()->getAttribute('ejercicio'),
+                            $this->getUser()->getAttribute('codigo'),
+                            $detalle_compra["co_presupuesto"],
+                            16,
+                            $detalle_compra["monto"],
+                            $co_detalle_cotizacion,                                
+                            '',
+                            $detalle_compra["id"]
+                        );                        
 
                         Tb087PresupuestoMovimientoPeer::movimientoPartida(
                             $con,
@@ -421,7 +444,178 @@ class SolicitudActions extends sfActions
                             $detalle_compra["co_detalle_compra"],
                             $detalle_compra["id"]
                         );
+
+                    
+                    
                     }
+                    
+   
+                    
+                }
+                
+                 $c = new Criteria();
+                $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
+                $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
+
+                $c->addAscendingOrderByColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+
+                $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);               
+                while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                    $dc = new Criteria();
+                    $dc->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
+                    $stmtdc = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($dc);
+
+
+                    while ($detalle_compra = $stmtdc->fetch(PDO::FETCH_ASSOC)) {
+                        
+                    $cc = new Criteria();
+                    $cc->add(Tb207DetalleCotizacionPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
+                    $stmtc = Tb207DetalleCotizacionPeer::doSelectStmt($cc);
+                    $cotizacion = $stmtc->fetch(PDO::FETCH_ASSOC);
+                       
+                   $cantidad = $this->getCantProducto($cotizacion["co_detalle_requisicion"]);  
+                   
+
+                    if($reg["co_producto"]!=19336){    
+                    if (($cantidad-$cotizacion["nu_cantidad"])== 0) {
+                        $count = 0;
+                        
+                $cMonto = new Criteria();
+                $cMonto->clearSelectColumns();
+                $cMonto->addSelectColumn('coalesce(SUM('. Tb087PresupuestoMovimientoPeer::NU_MONTO.'),0) as monto_total');
+                $cMonto->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(15,16), Criteria::IN); 
+                $cMonto->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_PRESU_BASE,$cotizacion["co_detalle_cotizacion"]); 
+                $stmtcMonto = Tb087PresupuestoMovimientoPeer::doSelectStmt($cMonto);
+                $datos = $stmtcMonto->fetch(PDO::FETCH_ASSOC);
+                
+                $cMontoCotizacion = new Criteria();
+                $cMontoCotizacion->clearSelectColumns();
+                $cMontoCotizacion->addSelectColumn('coalesce(SUM('. Tb209PresupuestoDetalleCompraPeer::MONTO.'),0) as monto_total');
+                $cMontoCotizacion->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION,$cotizacion["co_detalle_cotizacion"]); 
+                $stmtcMontoCotizacion = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($cMontoCotizacion);
+                $datosCotizacion = $stmtcMontoCotizacion->fetch(PDO::FETCH_ASSOC);                
+
+                $porcentaje = ($datos["monto_total"] * 100) / $datosCotizacion["monto_total"];
+                $porc = ($datos["monto_total"] * 100) / $datosCotizacion["monto_total"];
+                if ($porcentaje == 100)
+                    $porc = 1;
+                else
+                    $porc = ($porc / 100);   
+
+                
+                    if($porc!=0){
+                        
+                    $dcotizacion = new Criteria();
+                    $dcotizacion->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION, $cotizacion["co_detalle_cotizacion"]);
+                    $stmtdcotizacion = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($dcotizacion);
+
+
+                    while ($detalle_cotizacion = $stmtdcotizacion->fetch(PDO::FETCH_ASSOC)) {                
+
+                        Tb087PresupuestoMovimientoPeer::movimientoPartida(
+                            $con,
+                            $this->getUser()->getAttribute('ejercicio'),
+                            $this->getUser()->getAttribute('codigo'),
+                            $detalle_cotizacion["co_presupuesto"],
+                            16,
+                            ($detalle_cotizacion["monto"] * $porc),
+                            $cotizacion["co_detalle_cotizacion"],                                
+                            '',
+                            $detalle_cotizacion["id"]
+                        );
+                        
+                    }
+                    
+                    }
+                        
+                    }else{
+                        $count = 1;
+                        $co_cotizacion = $cotizacion["co_cotizacion"];
+                    }                       
+                    
+                    
+                    }else{
+                   
+                if($count==0){        
+                $cMonto = new Criteria();
+                $cMonto->clearSelectColumns();
+                $cMonto->addSelectColumn('coalesce(SUM('. Tb087PresupuestoMovimientoPeer::NU_MONTO.'),0) as monto_total');
+                $cMonto->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(15,16), Criteria::IN); 
+                $cMonto->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_PRESU_BASE,$detalle_compra["co_detalle_cotizacion"]); 
+                $stmtcMonto = Tb087PresupuestoMovimientoPeer::doSelectStmt($cMonto);
+                $datos = $stmtcMonto->fetch(PDO::FETCH_ASSOC);
+                
+                $cMontoCotizacion = new Criteria();
+                $cMontoCotizacion->clearSelectColumns();
+                $cMontoCotizacion->addSelectColumn('coalesce(SUM('. Tb209PresupuestoDetalleCompraPeer::MONTO.'),0) as monto_total');
+                $cMontoCotizacion->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION,$detalle_compra["co_detalle_cotizacion"]);
+                $cMontoCotizacion->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, null, Criteria::ISNULL);
+                $stmtcMontoCotizacion = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($cMontoCotizacion);
+                $datosCotizacion = $stmtcMontoCotizacion->fetch(PDO::FETCH_ASSOC);                
+
+                $porcentaje = ($datos["monto_total"] * 100) / $datosCotizacion["monto_total"];
+                $porc = ($datos["monto_total"] * 100) / $datosCotizacion["monto_total"];
+                if ($porcentaje == 100)
+                    $porc = 1;
+                else
+                    $porc = ($porc / 100);   
+
+          
+                    if($porc!=0){                                              
+                        
+                    $dcotizacion = new Criteria();
+                    $dcotizacion->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION, $detalle_compra["co_detalle_cotizacion"]);
+                    $dcotizacion->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, null, Criteria::ISNULL);
+                    $stmtdcotizacion = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($dcotizacion);
+
+
+                    while ($detalle_cotizacion = $stmtdcotizacion->fetch(PDO::FETCH_ASSOC)) {  
+                        
+                $cMontoPartida = new Criteria();
+                $cMontoPartida->clearSelectColumns();
+                $cMontoPartida->addSelectColumn('coalesce(SUM('. Tb087PresupuestoMovimientoPeer::NU_MONTO.'),0) as monto_total');
+                $cMontoPartida->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(15,16), Criteria::IN); 
+                $cMontoPartida->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_PRESU_BASE,$detalle_compra["co_detalle_cotizacion"]);
+                $cMontoPartida->add(Tb087PresupuestoMovimientoPeer::CO_PARTIDA,$detalle_cotizacion["co_presupuesto"]);
+                $stmtcMontoPartida = Tb087PresupuestoMovimientoPeer::doSelectStmt($cMontoPartida);
+                $datosPartida = $stmtcMontoPartida->fetch(PDO::FETCH_ASSOC);
+                                
+                    if($datosPartida["monto_total"]!=0){
+                        
+                        Tb087PresupuestoMovimientoPeer::movimientoPartida(
+                            $con,
+                            $this->getUser()->getAttribute('ejercicio'),
+                            $this->getUser()->getAttribute('codigo'),
+                            $detalle_cotizacion["co_presupuesto"],
+                            16,
+                            ($datosPartida["monto_total"]),
+                            $detalle_compra["co_detalle_cotizacion"],                                
+                            '',
+                            $detalle_cotizacion["id"]
+                        );
+                        
+                    }
+                        
+                    }
+                    
+                    } 
+                    
+                    }
+                        
+                    }  
+                    
+                    
+                    }
+                    
+   
+                    
+                }   
+                
+                if($count==1){
+                $Tb206Cotizacion = Tb206CotizacionPeer::retrieveByPK($co_cotizacion); 
+                $Tb206Cotizacion->setInActivo(true);
+                $Tb206Cotizacion->save($con);
                 }
 
                 $Tb030Ruta = Tb030RutaPeer::retrieveByPK($this->getCoRuta($co_solicitud));
@@ -448,6 +642,24 @@ class SolicitudActions extends sfActions
 
         $this->setTemplate('enviarEntidades');
     }
+    
+  protected function getCantProducto($co_detalle_requisicion,$co_detalle_compras){
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn('coalesce(SUM('. Tb053DetalleComprasPeer::NU_CANTIDAD.'),0) as cant_total');
+        if (!empty($co_detalle_compras)) {
+        $c->add(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS,$co_detalle_compras, Criteria::NOT_IN); 
+        }
+        $c->add(Tb053DetalleComprasPeer::IN_ANULAR,NULL, Criteria::ISNULL); 
+        $c->add(Tb053DetalleComprasPeer::CO_DETALLE_REQUISICION,$co_detalle_requisicion); 
+
+       // echo $c->toString(); exit();
+
+        $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $datos["cant_total"];
+  }    
 
 
     public function executeEnviarEntidades(sfWebRequest $request)
