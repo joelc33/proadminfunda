@@ -2294,8 +2294,9 @@ class ComprasActions extends sfActions
             $reg["nu_iva_producto"] = $reg["co_iva_producto"];
             $reg["in_modificado"] = false;
 
-
+            if($reg["nu_cantidad"]>0){
             $registros[] = $reg;
+            }
         }
 
         $this->data = json_encode(array(
