@@ -336,6 +336,7 @@ class ContratoActions extends sfActions
 
     $c->addAnd(Tb027TipoSolicitudPeer::CO_PROCESO, 67);
     $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
+    $c->addAnd(Tb052ComprasPeer::IN_CONTRATO, true);
 
     $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
     $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2), Criteria::IN);
