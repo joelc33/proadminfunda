@@ -12,6 +12,7 @@ this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'<?php echo $data ?>'});
 this.mascara = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 
 //objeto store
+this.store_lista_pre_comprometido = this.getListaPreComprometido();
 this.store_lista_comprometido = this.getLista();
 this.store_lista_causado      = this.getLista();
 this.store_lista_pagado       = this.getLista();
@@ -125,6 +126,31 @@ this.eliminar.disable();
 function formatoNro(val){
 	return '<p align="right">'+paqueteComunJS.funcion.getNumeroFormateado(val)+'</p>';
 }
+
+//Grid principal
+this.gridPanel_PreComprometido = new Ext.grid.GridPanel({
+    //title:'Lista de Movimiento',
+    //iconCls: 'icon-libro',
+    store: this.store_lista_pre_comprometido,
+    loadMask:true,
+//    frame:true,
+    height:520,
+    border:false,    
+    tbar:[
+//        this.filtro
+    ],
+    columns: [
+    new Ext.grid.RowNumberer(),
+        {header: 'Solicitud', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'co_solicitud'},
+        {header: 'Monto', width:200,  menuDisabled:true, sortable: true,  dataIndex: 'nu_monto',renderer:formatoNro},
+        {header: 'Fecha', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'created_at'}    
+
+
+    ],
+    stripeRows: true,
+    autoScroll:true,
+    stateful: true
+});
 
 //Grid principal
 this.gridPanel_Comprometido = new Ext.grid.GridPanel({
@@ -246,6 +272,9 @@ this.gridPanel_Disminucion = new Ext.grid.GridPanel({
     stateful: true
 });
 
+this.total_pre_comprometido = new Ext.form.DisplayField({
+    value:"<span style='font-size:12px;'><b>Total Pre Comprometido: </b>0,00</b></span>"
+});
 
 this.total_comprometido = new Ext.form.DisplayField({
     value:"<span style='font-size:12px;'><b>Total Comprometido: </b>0,00</b></span>"
@@ -269,7 +298,7 @@ this.total_disminucion = new Ext.form.DisplayField({
 
 this.tabuladores = new Ext.TabPanel({
         resizeTabs:true, // turn on tab resizing
-        minTabWidth: 100,
+        minTabWidth: 130,
         border:false,
         enableTabScroll:true,
         autoWidth:true,
@@ -279,9 +308,13 @@ this.tabuladores = new Ext.TabPanel({
         defaults: {autoScroll:true},
         items:[
                 {
+                        title: 'Pre Comprometido',
+                        items:[this.gridPanel_PreComprometido]
+                },
+                {
                         title: 'Comprometido',
                         items:[this.gridPanel_Comprometido]
-                },
+                },                
                 {
                         title: 'Causado',
                         items:[this.gridPanel_Causado]
@@ -303,7 +336,8 @@ this.tabuladores = new Ext.TabPanel({
             id: 'basic-statusbar',
             autoScroll:true,
             defaults:{style:'color:black;font-size:30px;',autoWidth:true},
-            items:[ this.total_comprometido,'-',
+            items:[ this.total_pre_comprometido,'-',
+                    this.total_comprometido,'-',
                     this.total_causado,'-',
                     this.total_pagado,'-',
                     this.total_aumento,'-',
@@ -327,6 +361,20 @@ this.winformPanel_ = new Ext.Window({
 });
 this.winformPanel_.show();
 //PartidapresupuestoLista.main.mascara.hide();
+
+MovimientoLista.main.store_lista_pre_comprometido.baseParams.codigo=MovimientoLista.main.OBJ.codigo;
+MovimientoLista.main.store_lista_pre_comprometido.baseParams.co_tipo_movimiento ='16';
+MovimientoLista.main.store_lista_pre_comprometido.load({
+    callback: function(){
+                var monto = paqueteComunJS.funcion.getSumaColumnaGrid({
+                    store:MovimientoLista.main.store_lista_pre_comprometido,
+                    campo:'nu_monto'
+                });
+                    
+                MovimientoLista.main.total_pre_comprometido.setValue("<span style='font-size:12px;'><b>Total Pre Comprometido: </b>"+paqueteComunJS.funcion.getNumeroFormateado(monto)+"</b></span>");     
+
+    }
+});
 
 MovimientoLista.main.store_lista_comprometido.baseParams.codigo=MovimientoLista.main.OBJ.codigo;
 MovimientoLista.main.store_lista_comprometido.baseParams.co_tipo_movimiento ='1';
@@ -411,6 +459,19 @@ getLista: function(){
             {name: 'tx_serial'},
             {name: 'tx_rif'},
             {name: 'tx_razon_social'}
+           ]
+    });
+    return this.store;
+},
+getListaPreComprometido: function(){
+    this.store = new Ext.data.JsonStore({
+    url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/Movimiento/storelistaprecomprometido',
+    root:'data',
+    fields:[
+            {name: 'de_tipo_movimiento'},
+            {name: 'nu_monto'},
+            {name: 'created_at'},
+            {name: 'co_solicitud'}
            ]
     });
     return this.store;

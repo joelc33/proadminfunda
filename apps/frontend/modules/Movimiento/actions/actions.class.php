@@ -263,6 +263,89 @@ class MovimientoActions extends sfActions
             ));
     }
     
+  public function executeStorelistaprecomprometido(sfWebRequest $request)
+  {
+        $paginar    =   $this->getRequestParameter("paginar");
+        $limit      =   $this->getRequestParameter("limit",20);
+        $start      =   $this->getRequestParameter("start",0);
+
+        $id_tb085_presupuesto       =   $this->getRequestParameter("codigo");
+        $co_tipo_movimiento         =   $this->getRequestParameter("co_tipo_movimiento");
+        $mo_movimiento              =   $this->getRequestParameter("mo_movimiento");
+        $id_tb088_tipo_movimiento   =   $this->getRequestParameter("id_tb088_tipo_movimiento");
+        $nu_referencia              =   $this->getRequestParameter("nu_referencia");
+        $in_activo                  =   $this->getRequestParameter("in_activo");
+        $created_at                 =   $this->getRequestParameter("created_at");
+        $updated_at                 =   $this->getRequestParameter("updated_at");
+
+
+        $c = new Criteria();
+    
+        $c->clearSelectColumns();
+//        $c->setDistinct();
+        $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::NU_MONTO);
+        $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO);
+//        $c->addSelectColumn(Tb060OrdenPagoPeer::TX_SERIAL);
+        $c->addSelectColumn(Tb206CotizacionPeer::CO_SOLICITUD);
+       // $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::CREATED_AT);
+        $c->addSelectColumn("cast(".Tb087PresupuestoMovimientoPeer::CREATED_AT." as date) as created_at");
+
+        $c->setIgnoreCase(true);
+        
+        $c->addJoin(Tb085PresupuestoPeer::ID,Tb087PresupuestoMovimientoPeer::CO_PARTIDA);
+        $c->addJoin(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION,Tb087PresupuestoMovimientoPeer::CO_DETALLE_PRESU_BASE);        
+        $c->addJoin(Tb206CotizacionPeer::CO_COTIZACION,Tb207DetalleCotizacionPeer::CO_COTIZACION);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD,Tb206CotizacionPeer::CO_SOLICITUD);        
+        $c->add(Tb087PresupuestoMovimientoPeer::CO_PARTIDA,$id_tb085_presupuesto);
+        $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,array(15,16),Criteria::IN);   
+            
+        //$c->add(Tb087PresupuestoMovimientoPeer::IN_ACTIVO, TRUE);
+        
+        $c->addJoin(Tb085PresupuestoPeer::NU_ANIO, Tb013AnioFiscalPeer::CO_ANIO_FISCAL);
+//        $c->add(Tb087PresupuestoMovimientoPeer::NU_MONTO,0, Criteria::GREATER_THAN);
+        $c->add(Tb087PresupuestoMovimientoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
+//        $c->add(Tb060OrdenPagoPeer::IN_ANULAR,NULL, Criteria::ISNULL);
+        $c->add(Tb013AnioFiscalPeer::CO_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
+        
+        $c->addAscendingOrderByColumn(Tb206CotizacionPeer::CO_SOLICITUD);
+        $c->addAscendingOrderByColumn(Tb087PresupuestoMovimientoPeer::CREATED_AT);
+        
+        $cantidadTotal = Tb087PresupuestoMovimientoPeer::doCount($c);
+        $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
+        
+        //echo $c->toString(); exit();
+    
+        $registros = "";
+        while($res = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+            list($fecha,$hora)      = explode(" ", $res["created_at"]);
+            list($anio,$mes,$dia)   = explode("-", $fecha);
+            
+            if($res["co_tipo_movimiento"]==17){
+            $nu_monto = $res["nu_monto"]*-1;    
+            }else{
+            $nu_monto = $res["nu_monto"];    
+            }
+
+
+            $registros[] = array(
+                "de_tipo_movimiento"       => trim($res["de_tipo_movimiento"]),
+                "nu_monto"                 => trim($nu_monto),
+                "created_at"               => trim($dia.'/'.$mes.'/'.$anio),
+                "co_solicitud"             => $res["co_solicitud"],
+                "tx_serial"                => $res["tx_serial"], 
+                "tx_razon_social"          => $res["tx_razon_social"],
+                "tx_rif"                   => $res["inicial"]."-".$res["tx_rif"]
+            );
+        }
+
+        $this->data = json_encode(array(
+            "success"   =>  true,
+            "total"     =>  $cantidadTotal,
+            "data"      =>  $registros
+            ));
+    }    
+    
   public function executeStorelistaIngreso(sfWebRequest $request)
   {
 
