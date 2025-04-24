@@ -10,10 +10,14 @@ class Tb137ControlSerialPeer extends BaseTb137ControlSerialPeer
 
         if ($co_tipo_contrato != '') {
             $c->add(Tb137ControlSerialPeer::CO_TP_CONTRATO, $co_tipo_contrato);
+        }else{
+           $c->add(Tb137ControlSerialPeer::CO_TP_CONTRATO, null, Criteria::ISNULL); 
         }
         
         if ($co_programa != '') {
             $c->add(Tb137ControlSerialPeer::CO_PROGRAMA, $co_programa);
+        }else{
+            $c->add(Tb137ControlSerialPeer::CO_PROGRAMA, null, Criteria::ISNULL);
         }
         //$c->add(Tb137ControlSerialPeer::NU_ANIO,date('Y'));
         $c->add(Tb137ControlSerialPeer::NU_ANIO, $ejercicio);
@@ -48,10 +52,14 @@ class Tb137ControlSerialPeer extends BaseTb137ControlSerialPeer
 
             if ($co_tipo_contrato != '') {
                 $wherec->add(Tb137ControlSerialPeer::CO_TP_CONTRATO, $co_tipo_contrato);
+            }else{
+                $wherec->add(Tb137ControlSerialPeer::CO_TP_CONTRATO, null, Criteria::ISNULL);
             }
             
             if ($co_programa != '') {
                 $wherec->add(Tb137ControlSerialPeer::CO_PROGRAMA, $co_programa);
+            }else{
+                $wherec->add(Tb137ControlSerialPeer::CO_PROGRAMA, null, Criteria::ISNULL);
             }            
 
             $wherec->add(Tb137ControlSerialPeer::NU_ANIO, $ejercicio);
