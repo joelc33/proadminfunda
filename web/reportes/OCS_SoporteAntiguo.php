@@ -192,7 +192,7 @@ class PDF_Flo extends PDF_FlowingBlock
         if($this->datos['co_tipo_solicitud']==1){
         $this->WriteFlowingBlock(utf8_decode('ORDEN DE COMPRA ').': '.$this->datos['numero_compra']);    
         }else{    
-        $this->WriteFlowingBlock(utf8_decode('CONTRATO N ').': '.$this->datos['numero_compra']);  
+        $this->WriteFlowingBlock(utf8_decode('CONTRATO N° ').': '.$this->datos['numero_compra']);  
         }
         }
         $this->finishFlowingBlock();
@@ -245,7 +245,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetY(40);
         $this->SetX(140);
         $this->SetFont('Times', '', 9);
-        $this->MultiCell(70, 5, utf8_decode($this->datos['numero_cotizacion']), 0, 'L');
+        $this->MultiCell(70, 5, utf8_decode($this->datos['tx_serial_cotizacion']), 0, 'L');
         $Y = $this->GetY();
         $this->SetY($Y);
         $this->SetX(115);
@@ -898,7 +898,7 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb001.nb_usuario,
                          tb027.co_tipo_solicitud,
                          tb082.de_ejecutor,
-                         tb206.numero_cotizacion,
+                         tb206.tx_serial_cotizacion,
                          in_contrato
                   from   tb026_solicitud as tb026
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud
