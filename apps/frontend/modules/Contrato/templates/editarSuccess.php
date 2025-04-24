@@ -138,15 +138,16 @@
             });
 
 
-            /*this.nu_compra = new Ext.form.DisplayField({
+            this.nu_compra = new Ext.form.DisplayField({
                 value: "<span style='color:black;font-size:15px;'><b>N° Contrato: </b>" + ComprasEditar.main.OBJ.nu_compra + "</b></span>"
-            });*/
+            });
 
-            this.nu_compra = new Ext.form.TextField({
+            this.nu_proceso = new Ext.form.TextField({
                 fieldLabel: 'Nro Proceso',
-                name: 'tb052_compras[nu_compra]',
-                value: ComprasEditar.main.OBJ.nu_compra,
-                width: 250
+                name: 'tb052_compras[nu_proceso]',
+                value: ComprasEditar.main.OBJ.nu_proceso,
+                width: 250,
+                allowBlank: false                
             });
 
             this.co_documento = new Ext.form.ComboBox({
@@ -529,7 +530,7 @@
             this.fieldContrato = new Ext.form.FieldSet({
                 title: 'Datos de la Orden de Compra',
                 items: [
-                    this.nu_compra,
+                    this.nu_proceso,
                     this.tx_concepto,
                     //this.tx_observacion,
                     //   this.co_tp_contrato,
@@ -1026,7 +1027,7 @@
                 ]
             });
 
-          /*  var tbar = {
+            var tbar = {
                 xtype: 'toolbar',
                 layout: 'hbox',
                 items: this.nu_compra,
@@ -1034,7 +1035,7 @@
                 layoutConfig: {
                     align: 'left'
                 }
-            };*/
+            };
 
             this.winformPanel_ = new Ext.Window({
                 title: 'Contrato',
@@ -1044,7 +1045,7 @@
                 frame: true,
                 closabled: true,
                 height: 700,
-              //  tbar: tbar,
+                tbar: tbar,
                 items: [
                     this.formPanel_
 

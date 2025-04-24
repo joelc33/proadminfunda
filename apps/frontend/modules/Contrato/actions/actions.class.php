@@ -89,6 +89,7 @@ class ContratoActions extends sfActions
     $c->addSelectColumn(Tb056ContratoComprasPeer::MONTO);
     $c->addSelectColumn(Tb056ContratoComprasPeer::CO_TP_CONTRATO);
     $c->addSelectColumn(Tb056ContratoComprasPeer::CO_FUENTE_FINANCIAMIENTO);
+    $c->addSelectColumn(Tb052ComprasPeer::CO_SOLICITUD_COTIZACION);
     $c->addSelectColumn(Tb045FacturaPeer::CO_FACTURA);
     $c->add(Tb052ComprasPeer::CO_SOLICITUD, $codigo);
     $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD, Tb045FacturaPeer::CO_SOLICITUD, Criteria::LEFT_JOIN);
@@ -103,6 +104,9 @@ class ContratoActions extends sfActions
       $requisicion = $this->getRequisicion($this->getRequestParameter("co_solicitud"));
       $this->co_requisicion = $requisicion["co_requisicion"];
       list($anio, $mes, $dia) = explode("-", $campos["created_at"]);
+
+            
+      $cotizacion = Tb206CotizacionPeer::getDatosCotizacion($campos["co_solicitud_cotizacion"]);
 
       $this->data = json_encode(array(
         "co_proveedor" => $campos["co_proveedor"],
@@ -146,6 +150,7 @@ class ContratoActions extends sfActions
         "forma_pago" => $campos["forma_pago"],
         "tx_entrega" => $campos["tx_entrega"],
         "forma_entrega" => $campos["forma_entrega"],
+        "nu_proceso" => $cotizacion['tx_serial_cotizacion']
 
       ));
     } else {
@@ -217,6 +222,7 @@ class ContratoActions extends sfActions
         "monto_iva" => 0,
         "monto_total" => 0,
         "nu_orden_compra" => "",
+        "nu_proceso" => "",
         "monto" => ($monto["total"] != '') ? $monto["total"] : 0,
         "co_iva_factura" => ($campos_proveedor["co_iva_factura"] == null) ? "" : $campos_proveedor["co_iva_factura"],
         "tx_rif" => ($campos_proveedor["tx_rif"] == null) ? "" : $campos_proveedor["tx_rif"],
@@ -462,8 +468,7 @@ class ContratoActions extends sfActions
     $con->beginTransaction();
     if ($codigo != '' || $codigo != null) {
       $tb052_compras = Tb052ComprasPeer::retrieveByPk($codigo);
-      $serial = $tb052_comprasForm["nu_compra"];
-      $tb052_compras->setNumeroCompra($serial);
+     
     } else {
       $tb052_compras = new Tb052Compras();
 
@@ -497,15 +502,13 @@ class ContratoActions extends sfActions
       $tb015_empresa = Tb015EmpresaPeer::retrieveByPk(1);
       $prefix = $tb015_empresa->getTxSiglaSerial();
 
-      if (empty($tb052_comprasForm["nu_compra"])) {
+     
         if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
           $serial = $prefix . '-' . $tipo . '-' . date("Y", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial(11, $con, $this->getUser()->getAttribute('ejercicio'));
         } else {
           $serial = $prefix . '-' . $tipo . '-' . date("Y") . '-' . Tb137ControlSerialPeer::getSerial(11, $con, $this->getUser()->getAttribute('ejercicio'));
         }
-      } else {
-        $serial = $tb052_comprasForm["nu_compra"];
-      }
+      
 
       $tb052_compras->setNumeroCompra($serial);
     }
@@ -514,17 +517,7 @@ class ContratoActions extends sfActions
       if (!empty($co_solicitud_cotizacion)) {
         $tb052_comprasForm["co_requisicion"] = $this->getDatosRequisicion($co_solicitud_cotizacion);
       }
-
-      if (empty($serial)) {
-        $this->data = json_encode(array(
-          "success" => false,
-          "msg" => 'Debe Ingresar el Número de Contrato'
-        ));
-
-        return;
-      }
-
-     
+    
 
       $tb052_compras->setCoRequisicion($tb052_comprasForm["co_requisicion"]);
 
@@ -606,6 +599,7 @@ class ContratoActions extends sfActions
       $array_producto = array();
       $i = 0;
 
+      $co_cotizacion = '';
 
       foreach ($listaProducto as $productoForm) {
 
@@ -648,6 +642,8 @@ class ContratoActions extends sfActions
 
 
         $Tb207DetalleCotizacion = Tb207DetalleCotizacionPeer::retrieveByPK($productoForm["co_detalle_cotizacion"]);
+
+        $co_cotizacion = $Tb207DetalleCotizacion->getCoCotizacion();
 
 
         $monto_cotizacion = $Tb207DetalleCotizacion->getMonto();
@@ -709,6 +705,9 @@ class ContratoActions extends sfActions
 
 
       }
+
+      $tb206_cotizacion = Tb206CotizacionPeer::retrieveByPK($co_cotizacion);
+      $tb206_cotizacion->setTxSerialCotizacion(strtoupper($tb052_comprasForm["nu_proceso"]))->save($con);
 
 
       $dIva = new Criteria();
