@@ -1283,12 +1283,13 @@ class ComprasActions extends sfActions
             }
 
 
-
+                list($dia, $mes, $anio) = explode("/", $tb052_comprasForm["fecha_compra"]);
 
             if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
-                $serial = date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
+                $serial = $anio.$mes. '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
+//                $serial = date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
             } else {
-                $serial = date("Ym") . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
+                $serial = $anio.$mes. '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
             }
 
             $tb052_compras->setNumeroCompra($serial);
