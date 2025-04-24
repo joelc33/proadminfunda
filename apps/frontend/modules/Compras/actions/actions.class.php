@@ -168,7 +168,7 @@ class ComprasActions extends sfActions
                 "co_tipo_solicitud" => $this->getRequestParameter("co_tipo_solicitud"),
                 "fe_registro" => "",
                 "co_documento" => $campos_proveedor["co_documento"],
-                "nu_compra" => 'Por Asignar',
+                "nu_compra" => '',
                 "co_usuario" => "",
                 "co_proyecto" => "",
                 "co_accion" => "",
@@ -1243,6 +1243,8 @@ class ComprasActions extends sfActions
         $con->beginTransaction();
         if ($codigo != '' || $codigo != null) {
             $tb052_compras = Tb052ComprasPeer::retrieveByPk($codigo);
+            $serial = $tb052_comprasForm["nu_compra"];
+            $tb052_compras->setNumeroCompra($serial);
         } else {
             $tb052_compras = new Tb052Compras();
 
@@ -1275,12 +1277,22 @@ class ComprasActions extends sfActions
                 $prefix = 'OS';
             }
 
+           
 
-            if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
-                $serial = date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
-            } else {
-                $serial = date("Ym") . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
+            if(empty($tb052_comprasForm["nu_compra"])){
+                if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
+                    $serial = date("Ym", strtotime($this->getUser()->getAttribute('fe_cierre'))) . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
+                } else {
+                    $serial = date("Ym") . '-' . Tb137ControlSerialPeer::getSerial($co_serial, $con, $this->getUser()->getAttribute('ejercicio'));
+                }
+
+               
+            }else{
+                $serial = $tb052_comprasForm["nu_compra"];
+                
             }
+
+           
 
             $tb052_compras->setNumeroCompra($serial);
         }
@@ -1289,6 +1301,17 @@ class ComprasActions extends sfActions
             if (!empty($co_solicitud_cotizacion)) {
                 $tb052_comprasForm["co_requisicion"] = $this->getDatosRequisicion($co_solicitud_cotizacion);
             }
+
+
+            if(empty($serial)){
+                $this->data = json_encode(array(
+                    "success" => false,
+                    "msg" => 'Debe Ingresar el Número de Compra'
+                ));
+
+                return;
+            }          
+            
 
             $tb052_compras->setCoRequisicion($tb052_comprasForm["co_requisicion"]);
 

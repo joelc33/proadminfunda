@@ -143,8 +143,15 @@
             });
 
 
-            this.nu_compra = new Ext.form.DisplayField({
+/*            this.nu_compra = new Ext.form.DisplayField({
                 value: "<span style='color:black;font-size:15px;'><b>N° Compra: </b>" + ComprasEditar.main.OBJ.nu_compra + "</b></span>"
+            });*/
+
+            this.nu_compra = new Ext.form.TextField({
+                fieldLabel: 'Nro Proceso',
+                name: 'tb052_compras[nu_compra]',
+                value: ComprasEditar.main.OBJ.nu_compra,
+                width: 250                
             });
 
             this.co_documento = new Ext.form.ComboBox({
@@ -419,7 +426,7 @@
                 name: 'tb052_compras[tx_serial_cotizacion]',
                 value: this.OBJ.tx_serial_cotizacion,
                 allowBlank: false,
-                width: 100,
+                width: 238,
                 readOnly: true,
                 style: 'background:#c9c9c9;',
             });
@@ -508,7 +515,7 @@
 
             this.compositefieldPresupuestoBase = new Ext.form.CompositeField({
                 fieldLabel: 'Codigo',
-                width: 190,
+                width: 310,
                 items: [
                     this.tx_serial_cotizacion,
                     this.buscar,
@@ -527,6 +534,8 @@
             this.fieldContrato = new Ext.form.FieldSet({
                 title: 'Datos de la Orden de Compra',
                 items: [
+
+                    this.nu_compra,
                     this.tx_concepto,
                    // this.nu_orden_compra,
 //                    this.PanelFecha,
@@ -1004,7 +1013,6 @@
                     //     this.co_tipo_solicitud,
                     this.co_solicitud,
                     this.co_requisicion,
-                    this.nu_compra,
                     this.monto_compra,
                     this.monto_iva,
                     this.monto_total,
@@ -1016,7 +1024,7 @@
             var tbar = {
                 xtype: 'toolbar',
                 layout: 'hbox',
-                items: this.nu_compra,
+               // items: this.nu_compra,
                 height: 25,
                 layoutConfig: {
                     align: 'left'
@@ -1024,14 +1032,14 @@
             };
 
             this.winformPanel_ = new Ext.Window({
-                title: 'Compra',
+                title: 'Compra / Servicios',
                 modal: true,
                 constrain: true,
                 width: 1204,
                 frame: true,
                 closabled: true,
                 height: 700,
-                tbar: tbar,
+             //   tbar: tbar,
                 items: [
                     this.formPanel_
 
