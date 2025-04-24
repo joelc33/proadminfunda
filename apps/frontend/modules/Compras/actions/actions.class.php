@@ -1853,7 +1853,7 @@ class ComprasActions extends sfActions
 
         $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, array(1, 2), Criteria::IN);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
-        $c->addAnd(Tb052ComprasPeer::IN_CONTRATO, null);
+        $c->addAnd(Tb052ComprasPeer::IN_CONTRATO, true, Criteria::DISTINCT);
 
         $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
         $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2), Criteria::IN);
