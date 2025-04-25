@@ -297,7 +297,7 @@
                     change: function (textfield, newValue, oldValue) {
 
                         var monto = recaudacion.formulario.monto.getValue() + (recaudacion.formulario.monto.getValue() * (recaudacion.formulario.co_iva_factura.getValue() / 100));
-                        var monto_iva = (recaudacion.formulario.monto.getValue() * (recaudacion.formulario.co_iva_factura.getValue() / 100));
+                        var monto_iva = (recaudacion.formulario.monto.getValue() / (recaudacion.formulario.co_iva_factura.getValue() / 100));
                         
                         recaudacion.formulario.mo_pendiente.setValue(monto_iva);
                         recaudacion.formulario.monto_pagado.setValue(monto);
