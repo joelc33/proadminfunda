@@ -244,7 +244,7 @@
             });
 
             this.monto = new Ext.form.NumberField({
-                fieldLabel: 'SubTotal',
+                fieldLabel: 'Total',
                 name: 'tb148_cuenta_cobrar_pago[mo_subtotal]',
                 id: 'monto',
                 width: '150px',
@@ -332,7 +332,7 @@
             });
 
             this.monto_pagado = new Ext.form.NumberField({
-                fieldLabel: 'Total',
+                fieldLabel: 'SubTotal',
                 name: 'tb148_cuenta_cobrar_pago[mo_pago]',
                 width: '150px',
                 minValue: 0,
