@@ -478,7 +478,7 @@
                             }
                         });
                     } else {
-                        recaudacion.formulario.monto.setValue(recaudacion.formulario.mo_pendiente.getValue());
+                        //recaudacion.formulario.monto.setValue(recaudacion.formulario.mo_pendiente.getValue());
                         recaudacion.formulario.onProcesar();
                     }
                 }
