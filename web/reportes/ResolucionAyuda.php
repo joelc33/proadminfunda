@@ -43,7 +43,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $this->Ln(10);
         $this->SetFont('Arial', 'BI', 10);
-        $this->Cell(0, 0, utf8_decode('214° y 265°'), 0, 0, 'C');
+       // $this->Cell(0, 0, utf8_decode('214° y 265°'), 0, 0, 'C');
 
         $this->Ln(1);
         $this->SetFont('Arial', 'BI', 14);
