@@ -283,6 +283,11 @@ class ModuloReporteActions extends sfActions
   {
    
   }  
+
+  public function executeOrdenCompra(sfWebRequest $request)
+  {
+   
+  }  
   
   public function executeReporteRelNomina(sfWebRequest $request)
   {
