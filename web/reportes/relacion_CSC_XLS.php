@@ -63,9 +63,15 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
     $nu_codigo = $_GET['nu_codigo'];
     if ($_GET["co_tipo"]) $tipo  = $_GET['co_tipo'];  
     else $tipo  = '';
+
+    list($dia,$mes,$anio) = explode("-",$_GET["fe_inicio"]);
+    $fe_inicio = $anio.'-'.$mes."-".$dia;
+
+    list($dia,$mes,$anio) = explode("-",$_GET["fe_fin"]);
+    $fe_fin = $anio.'-'.$mes."-".$dia;
      
-    $condicion .= " tb060.fe_emision >= '". $_GET["fe_inicio"]."' and ";
-    $condicion .= " tb060.fe_emision <= '".$_GET["fe_fin"]."' ";
+    $condicion .= " tb060.fe_emision >= '".$fe_inicio."' and ";
+    $condicion .= " tb060.fe_emision <= '".$fe_fin."' ";
     if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
     if ($tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
     if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE ";     
@@ -90,7 +96,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
              tb060.tx_serial 
              asc";         
            
-    // echo var_dump($sql); exit();  
+   //  echo var_dump($sql); exit();  
     $Movimientos = $conex->ObtenerFilasBySqlSelect($sql);
 
     $rowCount = 3;
