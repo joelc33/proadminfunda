@@ -90,7 +90,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
              tb060.tx_serial 
              asc";         
            
-    // echo var_dump($sql); exit();  
+     echo var_dump($sql); exit();  
     $Movimientos = $conex->ObtenerFilasBySqlSelect($sql);
 
     $rowCount = 3;
