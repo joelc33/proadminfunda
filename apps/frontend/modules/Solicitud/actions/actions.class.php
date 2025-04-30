@@ -522,7 +522,7 @@ class SolicitudActions extends sfActions
                             ($detalle_cotizacion["monto"] * $porc),
                             $cotizacion["co_detalle_cotizacion"],                                
                             '',
-                            $detalle_cotizacion["id"]
+                            $detalle_compra["id"]
                         );
                         
                     }
@@ -592,7 +592,7 @@ class SolicitudActions extends sfActions
                             ($datosPartida["monto_total"]),
                             $detalle_compra["co_detalle_cotizacion"],                                
                             '',
-                            $detalle_cotizacion["id"]
+                            $detalle_compra["id"]
                         );
                         
                     }

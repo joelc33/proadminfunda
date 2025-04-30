@@ -804,6 +804,57 @@ class ContabilidadActions extends sfActions
         ));
       }
     }
+    
+        public function executeGuardarRegresar(sfWebRequest $request){
+
+            $co_compras = $this->getRequestParameter("co_compras");
+            $co_solicitud = $this->getRequestParameter("co_solicitud");
+   
+    
+            $con = Propel::getConnection();
+            try{ 
+                $con->beginTransaction();
+
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
+       
+                $ruta->setCoProceso(11)->setNuOrden(1)->setInCargarDato(null)->save($con);
+                
+ 
+                $c = new Criteria();
+                $c->add(Tb053DetalleComprasPeer::CO_COMPRAS, $co_compras);
+                $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
+                while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+                $c1 = new Criteria();
+                $c1->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, $reg["co_detalle_compras"]);
+                $stmt1 = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($c1);
+                while($reg1 = $stmt1->fetch(PDO::FETCH_ASSOC)){
+                    
+                    $wherec = new Criteria();
+                    $wherec->add(Tb087PresupuestoMovimientoPeer::CO_PRESUPUESTO_DETALLE_COMPRA, $reg1["id"], Criteria::EQUAL);
+                    BasePeer::doDelete($wherec, $con);
+                }       
+                }
+                $con->commit();
+                    $this->data = json_encode(array(
+                        "success" => true,
+                        "msg" => 'Proceso realizado exitosamente',
+                    ));
+    
+                }catch (PropelException $e){
+    
+                    $con->rollback();
+    
+                    $this->data = json_encode(array(
+                        "success" => false,
+                        "msg" =>  $e->getMessage()
+                    ));
+    
+                }
+    
+            $this->setTemplate('store');
+    
+        }    
   
 
   public function executeEliminar(sfWebRequest $request)
