@@ -384,6 +384,62 @@
                     }
                 }
             });
+            
+            this.regresar = new Ext.Button({
+                text: 'Devolver a Orden de Compra',
+                iconCls: 'icon-volver',
+                handler: function() {
+ 
+                Ext.MessageBox.confirm('Confirmación', 'Esta seguro que desea regresar a orden de compras, ¿Desea Continuar?', function(boton) {
+                            if (boton == "yes") {
+                                
+            var cant = paqueteComunJS.funcion.getSumaColumnaGrid({
+                store: ContabilidadEditar.main.store_lista,
+                campo: 'nu_total'
+            });
+            
+            if (cant > 0) {
+                Ext.Msg.alert("Alerta", "Debe eliminar las facturas agregadas para poder regresar el proceso a orden de compra");
+                return false;
+            }            
+
+                Ext.Ajax.request({
+                    method:'POST',
+                    url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Contabilidad/guardarRegresar',
+                    params:{
+                        co_compras: ContabilidadEditar.main.OBJ.co_compras,
+                        co_solicitud: ContabilidadEditar.main.OBJ.co_solicitud
+                    },
+                    success:function(result, request ) {
+
+                        obj = Ext.util.JSON.decode(result.responseText);
+
+                        Ext.MessageBox.show({
+                            title: 'Mensaje',
+                            msg: obj.msg,
+                            closable: false,
+                            icon: Ext.MessageBox.INFO,
+                            resizable: false,
+                            animEl: document.body,
+                            buttons: Ext.MessageBox.OK
+                        });
+
+                    pendienteEntidadesLista.main.store_lista.baseParams.paginar = 'si';
+                    pendienteEntidadesLista.main.store_lista.load();
+                    pendienteEntidadesLista.main.store_lista.on('load', function() {
+                        pendienteEntidadesLista.main.estado.disable();
+                        pendienteEntidadesLista.main.revision.disable();
+                    });
+
+                    ContabilidadEditar.main.winformPanel_.close();
+                    }
+                });
+
+
+                            }
+                        });
+                }
+            });            
 
             this.salir = new Ext.Button({
                 text: 'Salir',
@@ -427,7 +483,8 @@
                 ],
                 buttons: [
                     this.guardar,
-                    this.salir
+                    this.salir,
+                    this.regresar
                 ],
                 buttonAlign: 'center'
             });
