@@ -70,33 +70,22 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
     list($dia,$mes,$anio) = explode("-",$_GET["fe_fin"]);
     $fe_fin = $anio.'-'.$mes."-".$dia;
      
-    $condicion .= " tb060.fe_emision >= '".$fe_inicio."' and ";
-    $condicion .= " tb060.fe_emision <= '".$fe_fin."' ";
+    $condicion .= " tb026.fe_registro >= '".$fe_inicio."' and ";
+    $condicion .= " tb026.fe_registro <= '".$fe_fin."' ";
     if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
     if ($tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
     if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE ";     
     
-    $sql = " select distinct tb060.co_solicitud, tb008.nu_codigo
-            ,tb060.tx_serial
-            ,tb008.tx_rif
-            ,tb008.tx_razon_social
-            ,tb060.created_at as fecha
-            ,case when tb060.in_anulado = true then 'Anulada' else case when tb060.in_pagado = true then 'Aprobada' else 'Pendiente' end end as estatus
-            ,tb060.mo_total as monto
-            ,(select COALESCE(sum(mo_retencion),0.00) from tb046_factura_retencion where co_odp = tb060.co_orden_pago) as deducido
-            ,0.00 as desafectado
-            ,(select COALESCE(sum(mo_pagado),0.00) from tb062_liquidacion_pago where co_odp = tb060.co_orden_pago) as cancelado
-            ,tb063.fe_pago            
-            from tb060_orden_pago tb060
-            left join tb026_solicitud tb026 on tb060.co_solicitud = tb026.co_solicitud
-            left join tb008_proveedor tb008 on tb026.co_proveedor = tb008.co_proveedor
-            left join tb062_liquidacion_pago tb062 on tb060.co_orden_pago = tb062.co_odp
-            left join tb063_pago tb063 on tb062.co_liquidacion_pago = tb063.co_liquidacion_pago
-             where tb060.tx_serial<>'' and tb026.co_tipo_solicitud in (1,2,70) and ".$condicion." order by 
-             tb060.tx_serial 
-             asc";         
+    $sql = "select distinct tb026.co_solicitud, tb008.nu_codigo ,tb052.numero_compra as tx_serial ,
+                tb008.tx_rif ,tb008.tx_razon_social ,tb026.fe_registro as fecha,
+                tx_estatus as estatus ,
+                (select COALESCE(sum(monto),0.00) from tb053_detalle_compras where co_compras = tb052.co_compras) as monto 
+                from tb026_solicitud tb026 left join tb008_proveedor tb008 on tb026.co_proveedor = tb008.co_proveedor 
+                    join tb052_compras as tb052 on (tb052.co_solicitud = tb026.co_solicitud) 
+                    join tb029_estatus as tb029 on (tb029.co_estatus = tb026.co_estatus)
+                where  tb026.co_tipo_solicitud in (1,2,70) and $condicion order by tb026.fe_registro asc";         
            
-     echo var_dump($sql); exit();  
+    
     $Movimientos = $conex->ObtenerFilasBySqlSelect($sql);
 
     $rowCount = 3;
