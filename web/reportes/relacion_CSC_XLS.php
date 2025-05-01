@@ -77,7 +77,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
     if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE ";     
     
     $sql = "select distinct tb026.co_solicitud, tb008.nu_codigo ,tb052.numero_compra as tx_serial ,
-                tb008.tx_rif ,tb008.tx_razon_social ,tb026.fe_registro as fecha,
+                tb008.tx_rif ,tb008.tx_razon_social ,to_char(tb026.fe_registro, 'dd/mm/yyyy') as fecha,tb026.fe_registro,
                 tx_estatus as estatus ,
                 (select COALESCE(sum(monto),0.00) from tb053_detalle_compras where co_compras = tb052.co_compras) as monto 
                 from tb026_solicitud tb026 left join tb008_proveedor tb008 on tb026.co_proveedor = tb008.co_proveedor 
