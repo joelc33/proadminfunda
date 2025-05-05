@@ -613,9 +613,11 @@ class SolicitudActions extends sfActions
                 }   
                 
                 if($count==1){
+                if($co_cotizacion){    
                 $Tb206Cotizacion = Tb206CotizacionPeer::retrieveByPK($co_cotizacion); 
                 $Tb206Cotizacion->setInActivo(true);
                 $Tb206Cotizacion->save($con);
+                }
                 }
 
                 $Tb030Ruta = Tb030RutaPeer::retrieveByPK($this->getCoRuta($co_solicitud));
