@@ -206,8 +206,8 @@ class ContabilidadActions extends sfActions
     
     
    
-    $iva = $nu_base_imponible*($co_iva_factura/100);
-    $monto_total = $nu_base_imponible+$iva;
+//    $iva = $nu_base_imponible*($co_iva_factura/100);
+    $monto_total = $nu_base_imponible+$mo_iva_factura;
    
     $stmt = Tb042RetencionPeer::getTipoRetencion($co_documento,$co_proveedor);
     $registros = array();
