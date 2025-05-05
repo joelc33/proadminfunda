@@ -389,7 +389,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetAligns(array("R","L"));
             $this->SetFont('Arial','B',8);
             $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
-            $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->nro_comprobante['fe_emision'])),0,0);
+            $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->datos1['fe_pago'])),0,0);
             $this->Ln(5);  
             
             $this->RoundedRect(10, $this->getY()-3, 95, 50, 0.5, '1001', '', $style);         
@@ -549,7 +549,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetFont('Arial','B',8);
 //            $this->Row(array(utf8_decode('Pagina:'),utf8_decode('1')),0,0);
             $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
-            $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->nro_comprobante['fe_emision'])),0,0);
+            $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->datos1['fe_pago'])),0,0);
             $this->Ln(10);  
             
             $this->RoundedRect(10, $this->getY()-3, 95, 50, 0.5, '1001', '', $style);         
@@ -708,7 +708,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetWidths(array(170,30, 30));
             $this->SetAligns(array("R","L"));
             $this->SetFont('Arial','B',8);
-            $this->Row(array(utf8_decode('Fecha de Comprob.:'),utf8_decode($this->nro_comprobante['fe_emision'])),0,0);
+            $this->Row(array(utf8_decode('Fecha de Comprob.:'),utf8_decode($this->datos1['fe_pago'])),0,0);
             $this->Row(array(utf8_decode('Periodo Fiscal: AÑO:'),utf8_decode($this->nro_comprobante['anio']).' / MES: '.$this->nro_comprobante['mes']),0,0);            
             $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
             $this->Ln(5);               
@@ -813,7 +813,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetAligns(array("R","L"));
             $this->SetFont('Arial','B',8);
             $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
-            $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->nro_comprobante['fe_emision'])),0,0);
+            $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->datos1['fe_pago'])),0,0);
             $this->Ln(5);  
             
             $this->RoundedRect(10, $this->getY()-3, 95, 50, 0.5, '1001', '', $style);         
@@ -1024,7 +1024,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
           $conex = new ConexionComun();     
           $sql = "select distinct   nu_factura, 
-                          fecha_compra as fe_pago, 
+                          to_char(tb063.fe_pago,'dd/mm/yyyy') as fe_pago,
                           co_factura,
                           tb045.nu_control,
                           to_char(tb045.fe_emision,'dd/mm/yyyy') as fe_emision,  
