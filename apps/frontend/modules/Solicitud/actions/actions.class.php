@@ -1313,6 +1313,7 @@ class SolicitudActions extends sfActions
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+        $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO);
         $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb126SolicitudAyudaPeer::CO_PROVEEDOR_SOLICITANTE);
         $c->add(Tb126SolicitudAyudaPeer::CO_SOLICITUD_AYUDA, $codigo);
         $stmt = Tb008ProveedorPeer::doSelectStmt($c);
