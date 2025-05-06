@@ -205,10 +205,12 @@ class ContabilidadActions extends sfActions
     $mo_iva_factura      = $this->getRequestParameter('mo_iva_factura');
     
     
-   
-//    $iva = $nu_base_imponible*($co_iva_factura/100);
-    $monto_total = $nu_base_imponible+$mo_iva_factura;
-   
+    if($co_iva_factura){
+    $iva = $nu_base_imponible*($co_iva_factura/100);    
+    $monto_total = $nu_base_imponible+$iva;
+    }else{
+    $monto_total = $nu_base_imponible+$mo_iva_factura;    
+    }
     $stmt = Tb042RetencionPeer::getTipoRetencion($co_documento,$co_proveedor);
     $registros = array();
  
