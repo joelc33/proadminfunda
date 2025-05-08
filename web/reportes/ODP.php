@@ -402,7 +402,7 @@ class PDF_Flo extends PDF_FlowingBlock
                         } else {
                             $Z = $this->GetY();
                             if(($Z-$Y)>10){
-                            $this->SetY($Z-9);
+                            $this->SetY($Z-7.5);
                             }
                             $this->SetWidths(array(135, 25, 20, 20));
                             $this->SetAligns(array("L", "R", "R", "R"));
