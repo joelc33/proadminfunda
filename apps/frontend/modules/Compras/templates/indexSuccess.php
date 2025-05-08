@@ -1,7 +1,7 @@
 <script type="text/javascript">
     Ext.ns("ComprasEditar");
     ComprasEditar.main = {
-        init: function() {
+        init: function () {
 
             this.OBJ = paqueteComunJS.funcion.doJSON({
                 stringData: '<?php echo $data ?>'
@@ -16,62 +16,62 @@
             this.storeCO_TIPO_PROCESO = this.getStoreCO_TIPO_PROCESO();
 
             this.Registro = Ext.data.Record.create([{
-                    name: 'co_detalle_requisicion',
-                    type: 'number'
-                },
-                {
-                    name: 'co_detalle_cotizacion',
-                    type: 'number'
-                },
-                {
-                    name: 'co_producto',
-                    type: 'number'
-                },
-                {
-                    name: 'cod_producto',
-                    type: 'string'
-                },
-                {
-                    name: 'tx_producto',
-                    type: 'string'
-                },
-                {
-                    name: 'nu_cantidad',
-                    type: 'number'
-                },
-                {
-                    name: 'precio_unitario',
-                    type: 'number'
-                },
-                {
-                    name: 'monto',
-                    type: 'number'
-                },
-                {
-                    name: 'detalle',
-                    type: 'string'
-                },
-                {
-                    name: 'co_partida',
-                    type: 'number'
-                },
-                {
-                    name: 'co_presupuesto',
-                    type: 'number'
-                },
-                {
-                    name: 'co_unidad_producto',
-                    type: 'number'
-                },
-                {
-                    name: 'in_exento',
-                    type: 'string'
-                },
-                {
-                    header: 'in_modificado',
-                    hidden: true,
-                    dataIndex: 'in_modificado'
-                }
+                name: 'co_detalle_requisicion',
+                type: 'number'
+            },
+            {
+                name: 'co_detalle_cotizacion',
+                type: 'number'
+            },
+            {
+                name: 'co_producto',
+                type: 'number'
+            },
+            {
+                name: 'cod_producto',
+                type: 'string'
+            },
+            {
+                name: 'tx_producto',
+                type: 'string'
+            },
+            {
+                name: 'nu_cantidad',
+                type: 'number'
+            },
+            {
+                name: 'precio_unitario',
+                type: 'number'
+            },
+            {
+                name: 'monto',
+                type: 'number'
+            },
+            {
+                name: 'detalle',
+                type: 'string'
+            },
+            {
+                name: 'co_partida',
+                type: 'number'
+            },
+            {
+                name: 'co_presupuesto',
+                type: 'number'
+            },
+            {
+                name: 'co_unidad_producto',
+                type: 'number'
+            },
+            {
+                name: 'in_exento',
+                type: 'string'
+            },
+            {
+                header: 'in_modificado',
+                hidden: true,
+                dataIndex: 'in_modificado'
+            }
             ]);
 
             //<ClavePrimaria>
@@ -152,7 +152,7 @@
                 name: 'tb052_compras[nu_proceso]',
                 value: ComprasEditar.main.OBJ.nu_proceso,
                 width: 250,
-                allowBlank: false                
+                allowBlank: false
             });
 
             this.co_documento = new Ext.form.ComboBox({
@@ -187,13 +187,13 @@
                 allowBlank: false,
                 width: 130
             });
-            this.co_documento.on("blur", function() {
+            this.co_documento.on("blur", function () {
                 if (ComprasEditar.main.tx_rif.getValue() != '') {
                     ComprasEditar.main.verificarProveedor();
                 }
             });
 
-            this.tx_rif.on("blur", function() {
+            this.tx_rif.on("blur", function () {
                 ComprasEditar.main.verificarProveedor();
             });
 
@@ -244,7 +244,7 @@
                 width: 415,
                 allowBlank: false,
                 listeners: {
-                    getSelectedIndex: function() {
+                    getSelectedIndex: function () {
                         var v = this.getValue();
                         var r = this.findRecord(this.valueField || this.displayField, v);
                         return (this.storeCO_RAMO.indexOf(r));
@@ -320,25 +320,25 @@
                 width: 100
             });
 
-//            this.PanelFecha = new Ext.Panel({
-//                items: [{
-//                    layout: 'column',
-//                    defaults: {
-//                        layout: 'form'
-//                    },
-//                    items: [{
-//                            labelWidth: 100,
-//                            columnWidth: .3,
-//                            items: [this.fecha_inicio]
-//                        },
-//                        {
-//                            labelWidth: 70,
-//                            columnWidth: .3,
-//                            items: [this.fecha_fin]
-//                        }
-//                    ]
-//                }]
-//            });
+            //            this.PanelFecha = new Ext.Panel({
+            //                items: [{
+            //                    layout: 'column',
+            //                    defaults: {
+            //                        layout: 'form'
+            //                    },
+            //                    items: [{
+            //                            labelWidth: 100,
+            //                            columnWidth: .3,
+            //                            items: [this.fecha_inicio]
+            //                        },
+            //                        {
+            //                            labelWidth: 70,
+            //                            columnWidth: .3,
+            //                            items: [this.fecha_fin]
+            //                        }
+            //                    ]
+            //                }]
+            //            });
 
             this.forma_pago = new Ext.form.TextField({
                 fieldLabel: 'Forma de Pago',
@@ -366,15 +366,15 @@
                         layout: 'form'
                     },
                     items: [{
-                            labelWidth: 100,
-                            columnWidth: .5,
-                            items: [this.monto_contrato]
-                        },
-                        {
-                            labelWidth: 120,
-                            columnWidth: .5,
-                            items: [this.forma_pago]
-                        }
+                        labelWidth: 100,
+                        columnWidth: .5,
+                        items: [this.monto_contrato]
+                    },
+                    {
+                        labelWidth: 120,
+                        columnWidth: .5,
+                        items: [this.forma_pago]
+                    }
                     ]
                 }]
             });
@@ -401,15 +401,15 @@
                         layout: 'form'
                     },
                     items: [{
-                            labelWidth: 100,
-                            columnWidth: .5,
-                            items: [this.tiempo_garantia]
-                        },
-                        {
-                            labelWidth: 120,
-                            columnWidth: .5,
-                            items: [this.forma_entrega]
-                        }
+                        labelWidth: 100,
+                        columnWidth: .5,
+                        items: [this.tiempo_garantia]
+                    },
+                    {
+                        labelWidth: 120,
+                        columnWidth: .5,
+                        items: [this.forma_entrega]
+                    }
                     ]
                 }]
             });
@@ -431,14 +431,14 @@
                 readOnly: true,
                 style: 'background:#c9c9c9;',
             });
-            
+
             this.tx_entrega = new Ext.form.TextField({
                 fieldLabel: 'Plazo de Entrega',
                 name: 'tb052_compras[tx_entrega]',
                 value: this.OBJ.tx_entrega,
                 allowBlank: false,
                 width: 775
-            });            
+            });
 
             this.tx_observacion = new Ext.form.TextArea({
                 fieldLabel: 'Anexos',
@@ -484,7 +484,7 @@
             this.buscar = new Ext.Button({
                 text: 'Buscar',
                 iconCls: 'icon-buscar',
-                handler: function() {
+                handler: function () {
 
                     if (ComprasEditar.main.co_tipo_proceso.getValue() == null) {
                         Ext.MessageBox.show({
@@ -538,8 +538,8 @@
 
                     this.nu_proceso,
                     this.tx_concepto,
-                   // this.nu_orden_compra,
-//                    this.PanelFecha,
+                    // this.nu_orden_compra,
+                    //                    this.PanelFecha,
                     this.tx_entrega,
                     this.in_responsabilidad_social,
                     this.tiempo_garantia,
@@ -597,7 +597,7 @@
                 width: 387,
                 allowBlank: false,
                 listeners: {
-                    getSelectedIndex: function() {
+                    getSelectedIndex: function () {
                         var v = this.getValue();
                         var r = this.findRecord(this.valueField || this.displayField, v);
                         return (this.storeCO_ENTE.indexOf(r));
@@ -625,7 +625,7 @@
             this.agregar = new Ext.Button({
                 text: 'Agregar',
                 iconCls: 'icon-nuevo',
-                handler: function() {
+                handler: function () {
 
                     if (ComprasEditar.main.co_iva_factura.getValue() == '') {
                         Ext.Msg.alert("Notificación", "Para agregar un producto, debe seleccionar el IVA ");
@@ -645,7 +645,7 @@
             this.editar = new Ext.Button({
                 text: 'Editar',
                 iconCls: 'icon-editar',
-                handler: function() {
+                handler: function () {
                     this.msg = Ext.get('formularioEditar');
                     this.msg.load({
                         url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/editarProducto',
@@ -659,7 +659,7 @@
                 text: 'Eliminar',
                 iconCls: 'icon-eliminar',
                 id: 'eliminar',
-                handler: function(boton) {
+                handler: function (boton) {
                     ComprasEditar.main.eliminar();
                 }
             });
@@ -746,11 +746,11 @@
                                 maxlength: 400
                             },
                             listeners: {
-                                change: function(field, newValue, oldValue) {
+                                change: function (field, newValue, oldValue) {
                                     this.setValue(newValue.toUpperCase());
                                 }
-                            }                            
-                        }) 
+                            }
+                        })
                     },
                     {
                         header: 'Cant.',
@@ -766,11 +766,11 @@
                                 maxlength: 400
                             },
                             listeners: {
-                                change: function(cmb, record, index) {
+                                change: function (cmb, record, index) {
                                     var monto = this.getValue() * ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.precio_unitario;
 
                                     var cantidad = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_cantidad;
-                                    
+
                                     var cantidad_restante = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_cantidad_restante;
 
                                     if (parseInt(this.getValue()) > parseInt(cantidad_restante)) {
@@ -809,16 +809,45 @@
                                 maxlength: 400
                             },
                             listeners: {
-                                change: function(cmb, record, index) {
+                                change: function (cmb, record, index) {
 
                                     var precio_base = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.monto_base;
                                     var precio_unitario = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.precio_unitario;
 
                                     if (parseFloat(this.getValue()) > parseFloat(precio_base)) {
                                         this.setValue(precio_unitario);
-                                        Ext.Msg.alert("Alerta", "El precio unitario ingresado es mayor al precio del presupuesto base");
+                                        // Ext.Msg.alert("Alerta", "El precio unitario ingresado es mayor al precio del presupuesto base");
+                                        Ext.MessageBox.confirm('Confirmación', 'El precio unitario ingresado es mayor al precio del presupuesto base. ¿Desea modificar el presupuesto base?', function (boton) {
+                                            if (boton == "yes") {
+                                                Ext.Ajax.request({
+                                                    method: 'POST',
+                                                    url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/modificarPb',
+                                                    params: {
+                                                        co_compra: ComprasEditar.main.OBJ.co_compras,
+                                                        co_solicitud: ComprasEditar.main.OBJ.co_solicitud
+                                                    },
+                                                    success: function (result, request) {
+                                                        obj = Ext.util.JSON.decode(result.responseText);
+                                                        if (obj.success == true) {
+                                                            solicitudLista.main.store_lista.baseParams.paginar = 'si';
+                                                            solicitudLista.main.store_lista.baseParams.in_ventanilla = 'true';
+                                                            solicitudLista.main.store_lista.load();
+                                                            solicitudLista.main.store_lista.on('load', function () {
+                                                                solicitudLista.main.estado.disable();
+                                                                solicitudLista.main.anular.disable();
+                                                            });
+                                                            ComprasEditar.main.winformPanel_.close();
+                                                            Ext.Msg.alert("Notificación", obj.msg);
+                                                        } else {
+                                                            Ext.Msg.alert("Notificación", obj.msg);
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
                                         return false;
                                     }
+
 
                                     var monto = this.getValue() * ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_cantidad;
                                     var nu_iva_producto = parseFloat(ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.nu_iva_producto);
@@ -833,6 +862,7 @@
 
                                 }
                             }
+
                         })
                     },
                     {
@@ -873,7 +903,7 @@
                 autoScroll: true,
                 stateful: true,
                 listeners: {
-                    cellclick: function(Grid, rowIndex, columnIndex, e) {
+                    cellclick: function (Grid, rowIndex, columnIndex, e) {
                         ComprasEditar.main.botonEliminar.enable();
                         ComprasEditar.main.rowIndex = rowIndex;
 
@@ -885,7 +915,7 @@
 
                 ComprasEditar.main.store_lista.baseParams.co_compras = this.OBJ.co_compras;
                 this.store_lista.load({
-                    callback: function() {
+                    callback: function () {
                         ComprasEditar.main.getTotal();
                         if (ComprasEditar.main.store_lista.getCount() > 0) {
                             ComprasEditar.main.buscar.disable();
@@ -909,7 +939,7 @@
             this.guardar = new Ext.Button({
                 text: 'Guardar',
                 iconCls: 'icon-guardar',
-                handler: function() {
+                handler: function () {
                     var cant = ComprasEditar.main.store_lista.getCount();
                     if (cant == 0) {
                         Ext.Msg.alert("Alerta", "Debe Agregar al menos un Material");
@@ -932,10 +962,10 @@
                         url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/guardar',
                         waitMsg: 'Enviando datos, por favor espere..',
                         waitTitle: 'Enviando',
-                        failure: function(form, action) {
+                        failure: function (form, action) {
                             Ext.MessageBox.alert('Error en transacción', action.result.msg);
                         },
-                        success: function(form, action) {
+                        success: function (form, action) {
                             if (action.result.success) {
                                 Ext.MessageBox.show({
                                     title: 'Mensaje',
@@ -950,7 +980,7 @@
                             solicitudLista.main.store_lista.baseParams.paginar = 'si';
                             solicitudLista.main.store_lista.baseParams.in_ventanilla = 'true';
                             solicitudLista.main.store_lista.load();
-                            solicitudLista.main.store_lista.on('load', function() {
+                            solicitudLista.main.store_lista.on('load', function () {
                                 solicitudLista.main.estado.disable();
                                 solicitudLista.main.anular.disable();
                             });
@@ -965,7 +995,7 @@
             this.salir = new Ext.Button({
                 text: 'Salir',
                 iconCls: 'icon-cancelar',
-                handler: function() {
+                handler: function () {
                     ComprasEditar.main.winformPanel_.close();
                 }
             });
@@ -986,16 +1016,16 @@
                     autoScroll: true
                 },
                 items: [{
-                        title: 'Datos de la Compra',
-                        items: [this.fieldPresupuesto,
-                            this.fieldProveedor,
-                            this.fieldContrato
-                        ]
-                    },
-                    {
-                        title: 'Materiales',
-                        items: [this.fieldCompra]
-                    }
+                    title: 'Datos de la Compra',
+                    items: [this.fieldPresupuesto,
+                    this.fieldProveedor,
+                    this.fieldContrato
+                    ]
+                },
+                {
+                    title: 'Materiales',
+                    items: [this.fieldCompra]
+                }
                 ]
             });
 
@@ -1067,7 +1097,7 @@
             this.winformPanel_.show();
 
         },
-        getVerificarIVA: function() {
+        getVerificarIVA: function () {
 
             var cant = paqueteComunJS.funcion.getSumaColumnaGrid({
                 store: ComprasEditar.main.store_lista,
@@ -1083,105 +1113,105 @@
                 ComprasEditar.main.co_iva_factura.setReadOnly(false);
             }
         },
-        getStoreCO_DOCUMENTO: function() {
+        getStoreCO_DOCUMENTO: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcodocumento',
                 root: 'data',
                 fields: [{
-                        name: 'co_documento'
-                    },
-                    {
-                        name: 'inicial'
-                    }
+                    name: 'co_documento'
+                },
+                {
+                    name: 'inicial'
+                }
                 ]
             });
             return this.store;
         },
-        getStoreCO_RAMO: function() {
+        getStoreCO_RAMO: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcoramo',
                 root: 'data',
                 fields: [{
-                        name: 'co_ramo'
-                    },
-                    {
-                        name: 'tx_ramo'
-                    }
+                    name: 'co_ramo'
+                },
+                {
+                    name: 'tx_ramo'
+                }
                 ]
             });
             return this.store;
         },
-        getLista: function() {
+        getLista: function () {
 
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storelistamateriales',
                 root: 'data',
                 fields: [{
-                        name: 'co_detalle_compras'
-                    },
-                    {
-                        name: 'co_detalle_requisicion'
-                    },
-                    {
-                        name: 'co_detalle_cotizacion'
-                    },
-                    {
-                        name: 'co_producto'
-                    },
-                    {
-                        name: 'co_presupuesto'
-                    },
-                    {
-                        name: 'cod_producto'
-                    },
-                    {
-                        name: 'tx_producto'
-                    },
-                    {
-                        name: 'nu_cantidad'
-                    },
-                    {
-                        name: 'precio_unitario'
-                    },
-                    {
-                        name: 'detalle'
-                    },
-                    {
-                        name: 'monto'
-                    },
-                    {
-                        name: 'co_requisicion'
-                    },
-                    {
-                        name: 'in_exento'
-                    },
-                    {
-                        name: 'co_iva_producto'
-                    },
-                    {
-                        name: 'nu_iva_producto'
-                    },
-                    {
-                        name: 'mo_iva_producto'
-                    },
-                    {
-                        name: 'monto_total'
-                    },
-                    {
-                        name: 'in_modificado'
-                    },
-                    {
-                        name: 'monto_base'
-                    },
-                    {
-                        name: 'nu_cantidad_restante'
-                    }
+                    name: 'co_detalle_compras'
+                },
+                {
+                    name: 'co_detalle_requisicion'
+                },
+                {
+                    name: 'co_detalle_cotizacion'
+                },
+                {
+                    name: 'co_producto'
+                },
+                {
+                    name: 'co_presupuesto'
+                },
+                {
+                    name: 'cod_producto'
+                },
+                {
+                    name: 'tx_producto'
+                },
+                {
+                    name: 'nu_cantidad'
+                },
+                {
+                    name: 'precio_unitario'
+                },
+                {
+                    name: 'detalle'
+                },
+                {
+                    name: 'monto'
+                },
+                {
+                    name: 'co_requisicion'
+                },
+                {
+                    name: 'in_exento'
+                },
+                {
+                    name: 'co_iva_producto'
+                },
+                {
+                    name: 'nu_iva_producto'
+                },
+                {
+                    name: 'mo_iva_producto'
+                },
+                {
+                    name: 'monto_total'
+                },
+                {
+                    name: 'in_modificado'
+                },
+                {
+                    name: 'monto_base'
+                },
+                {
+                    name: 'nu_cantidad_restante'
+                }
                 ]
             });
             return this.store;
         },
-        eliminar: function() {
-            Ext.MessageBox.confirm('Confirmación', '¿Esta seguro que desea eliminar el material?', function(boton) {
+        eliminar: function () {
+            Ext.MessageBox.confirm('Confirmación', '¿Esta seguro que desea eliminar el material?', function (boton) {
                 if (boton == "yes") {
 
                     var s = ComprasEditar.main.gridPanel.getSelectionModel().selection;
@@ -1198,14 +1228,14 @@
                             params: {
                                 co_detalle_compras: co_detalle_compras
                             },
-                            success: function(result, request) {
+                            success: function (result, request) {
                                 //ComprasEditar.main.store_lista.load();
                             }
                         });
 
                     }
 
-                    for(var i = 0, r; r = s[i]; i++){                        
+                    for (var i = 0, r; r = s[i]; i++) {
                         ComprasEditar.main.store_lista.remove(r);
                     }
 
@@ -1215,7 +1245,7 @@
             });
 
         },
-        getTotal: function() {
+        getTotal: function () {
 
             this.monto = 0;
             this.cancelar = 0;
@@ -1247,8 +1277,8 @@
                       monto_exento += store.data.monto
                   }
               });
-
-
+    
+    
               this.cancelar = parseFloat(this.monto);
               if (this.monto > 0) {
                   this.totaliva = (parseFloat(this.monto - monto_exento) * parseFloat(this.iva)) / 100;
@@ -1261,7 +1291,7 @@
 
 
         },
-        getStoreCO_IVA_FACTURA: function() {
+        getStoreCO_IVA_FACTURA: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcoivafactura',
                 root: 'data',
@@ -1271,63 +1301,63 @@
             });
             return this.store;
         },
-        getStoreCO_ENTE: function() {
+        getStoreCO_ENTE: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcoente',
                 root: 'data',
                 fields: [{
-                        name: 'co_ente'
-                    },
-                    {
-                        name: 'tx_ente'
-                    }
+                    name: 'co_ente'
+                },
+                {
+                    name: 'tx_ente'
+                }
                 ]
             });
             return this.store;
         },
-        getStoreCO_TPCONTRATO: function() {
+        getStoreCO_TPCONTRATO: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcotpcontrato',
                 root: 'data',
                 fields: [{
-                        name: 'co_tp_contrato'
-                    },
-                    {
-                        name: 'tx_tp_contrato'
-                    }
+                    name: 'co_tp_contrato'
+                },
+                {
+                    name: 'tx_tp_contrato'
+                }
                 ]
             });
             return this.store;
         },
-        getStoreCO_FUENTEFINANCIAMIENTO: function() {
+        getStoreCO_FUENTEFINANCIAMIENTO: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcofuentefinanciamiento',
                 root: 'data',
                 fields: [{
-                        name: 'co_fuente_financiamiento'
-                    },
-                    {
-                        name: 'tx_fuente_financiamiento'
-                    }
+                    name: 'co_fuente_financiamiento'
+                },
+                {
+                    name: 'tx_fuente_financiamiento'
+                }
                 ]
             });
             return this.store;
         },
-        getStoreCO_TIPO_PROCESO: function() {
+        getStoreCO_TIPO_PROCESO: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Contrato/storefkcotipoproceso',
                 root: 'data',
                 fields: [{
-                        name: 'co_tipo_solicitud'
-                    },
-                    {
-                        name: 'tx_tipo_solicitud'
-                    }
+                    name: 'co_tipo_solicitud'
+                },
+                {
+                    name: 'tx_tipo_solicitud'
+                }
                 ]
             });
             return this.store;
         },
-        verificarProveedor: function() {
+        verificarProveedor: function () {
             Ext.Ajax.request({
                 method: 'GET',
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/verificarProveedor',
@@ -1335,7 +1365,7 @@
                     co_documento: ComprasEditar.main.co_documento.getValue(),
                     tx_rif: ComprasEditar.main.tx_rif.getValue()
                 },
-                success: function(result, request) {
+                success: function (result, request) {
                     obj = Ext.util.JSON.decode(result.responseText);
                     if (!obj.data) {
                         ComprasEditar.main.co_proveedor.setValue("");
