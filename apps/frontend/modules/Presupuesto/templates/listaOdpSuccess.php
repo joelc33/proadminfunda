@@ -6,6 +6,8 @@
         },
         init: function() {
 
+            this.storeCO_DOCUMENTO = this.getStoreCO_DOCUMENTO();
+
             this.OBJ = paqueteComunJS.funcion.doJSON({
                 stringData: '<?php echo $data ?>'
             });
@@ -22,7 +24,52 @@
                 width: 100
             });
 
+            this.co_documento = new Ext.form.ComboBox({
+                fieldLabel: 'documento',
+                store: this.storeCO_DOCUMENTO,
+                typeAhead: true,
+                valueField: 'co_documento',
+                displayField: 'inicial',
+                hiddenName: 'co_documento',
+                //readOnly:(this.OBJ.co_documento!='')?true:false,
+                //style:(this.main.OBJ.co_documento!='')?'background:#c9c9c9;':'',
+                forceSelection: true,
+                resizable: true,
+                triggerAction: 'all',
+                emptyText: '...',
+                selectOnFocus: true,
+                mode: 'local',
+                width: 40,
+                resizable: true,
+                allowBlank: false
+            });
 
+            this.storeCO_DOCUMENTO.load();
+
+            this.tx_razon_social = new Ext.form.TextField({
+                fieldLabel: 'Nombre',
+                name: 'tx_razon_social',
+                value: '',
+                width: 700
+            });
+
+            this.nu_cedula_rif = new Ext.form.TextField({
+                fieldLabel: 'Nu cedula',
+                name: 'nu_cedula_rif',
+                maskRe: /[0-9]/,
+                value: '',
+                width: 155
+            });
+
+            this.compositefieldCIRIF = new Ext.form.CompositeField({
+                fieldLabel: 'Cedula / Rif',
+                items: [
+                    this.co_documento,
+                    this.nu_cedula_rif,
+                ]
+            });
+
+ 
             /**
              * <Form Principal que carga el Filtro>
              */
@@ -36,10 +83,9 @@
                 labelWidth: 110,
                 padding: '10px',
                 items: [
-                    this.co_solicitud
-                    /*,
-                            this.compositefieldCIRIF,
-                            this.tx_razon_social*/
+                    this.co_solicitud,
+                    this.compositefieldCIRIF,
+                    this.tx_razon_social
                 ],
                 keys: [{
                     key: [Ext.EventObject.ENTER],
@@ -349,6 +395,34 @@
                     },
                     {
                         name: 'tx_razon_social'
+                    }
+                ]
+            });
+            return this.store;
+        },
+        getStoreCO_PROCESO: function() {
+            this.store = new Ext.data.JsonStore({
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/storefkcoproceso',
+                root: 'data',
+                fields: [{
+                        name: 'co_proceso'
+                    },
+                    {
+                        name: 'tx_proceso'
+                    }
+                ]
+            });
+            return this.store;
+        },
+        getStoreCO_DOCUMENTO: function() {
+            this.store = new Ext.data.JsonStore({
+                url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/storefkcodocumento',
+                root: 'data',
+                fields: [{
+                        name: 'co_documento'
+                    },
+                    {
+                        name: 'inicial'
                     }
                 ]
             });
