@@ -496,7 +496,7 @@ class PDF_Flo extends PDF_FlowingBlock
                         left join tb007_documento as tb007 on (tb007.co_documento = tb008.co_documento)
                         left join tb008_proveedor as tb008p on (tb008p.co_proveedor = tb026.co_proveedor)
                         left join tb007_documento as tb007p on (tb007p.co_documento = tb008p.co_documento)
-                    where co_ruta = " . $_GET['codigo']; //$conex->decrypt($_GET['codigo']);
+                    where tb030.co_ruta = " . $_GET['codigo']; //$conex->decrypt($_GET['codigo']);
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
         return $datosSol[0];
