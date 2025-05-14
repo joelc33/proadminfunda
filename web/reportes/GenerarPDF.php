@@ -70,7 +70,7 @@ function getRutaId($co_solicitud, $co_tipo_solicitud, $co_proceso){
    INNER JOIN tb032_configuracion_ruta AS tb032 ON tb030.co_tipo_solicitud = tb032.co_tipo_solicitud AND tb030.co_proceso = tb032.co_proceso
    WHERE co_solicitud = '.$co_solicitud.' 
    AND tb030.co_tipo_solicitud = '.$co_tipo_solicitud.' 
-   AND tb030.co_proceso = '.$co_proceso;
+   AND tb030.co_proceso = '.$co_proceso.' order by tb030.co_ruta desc';
 
    //echo $sql; exit();
 
@@ -81,7 +81,7 @@ function getRutaId($co_solicitud, $co_tipo_solicitud, $co_proceso){
 
 $datos_ruta = getRutaId( $co_solicitud, $co_tipo_solicitud, $co_proceso);
 
-$definicion =  $_SERVER["SERVER_NAME"].':8081/proadmin/web/reportes/'.$datos_ruta['nb_reporte_orden'].'.php?codigo='.$datos_ruta['co_ruta'];
+$definicion =  $_SERVER["SERVER_NAME"].'/proadmin/web/reportes/'.$datos_ruta['nb_reporte_orden'].'.php?codigo='.$datos_ruta['co_ruta'];
 
 //echo $definicion;
 //exit();
