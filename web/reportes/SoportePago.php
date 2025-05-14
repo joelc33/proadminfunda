@@ -997,7 +997,7 @@ class PDF_Flo extends PDF_FlowingBlock
                    left join tb010_banco as tb010 on tb010.co_banco = tb063.co_banco
                    left join tb010_banco as tb010a on tb010a.co_banco = tb008.co_banco
                    left join tb011_cuenta_bancaria as tb011 on tb011.co_cuenta_bancaria = tb063.co_cuenta_bancaria
-                   left join tb155_cuenta_bancaria_historico as tb155 on tb155.co_solicitud = tb026.co_solicitud
+                   left join tb155_cuenta_bancaria_historico as tb155 on tb155.co_solicitud = tb026.co_solicitud and tb063.nu_monto = tb155.mo_transaccion
                    left join tb060_orden_pago as tb060 on tb060.co_orden_pago = tb062.co_odp
                    where tb063.co_pago = ".$_GET['codigo'];
 

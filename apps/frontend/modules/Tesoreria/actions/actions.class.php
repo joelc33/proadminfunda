@@ -1633,6 +1633,7 @@ class TesoreriaActions extends sfActions
         $c->addSelectColumn(Tb062LiquidacionPagoPeer::CO_LIQUIDACION_PAGO);
         $c->addSelectColumn(Tb062LiquidacionPagoPeer::MO_PENDIENTE);
         $c->addSelectColumn(Tb060OrdenPagoPeer::CO_TIPO_ODP);
+        $c->addSelectColumn(Tb060OrdenPagoPeer::CO_ORDEN_PAGO);
 
 
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
@@ -1725,7 +1726,7 @@ class TesoreriaActions extends sfActions
                 "mo_pendiente" => trim($res["mo_pendiente"]),
                 "fe_emision" => $dia . '-' . $mes . '-' . $anio,
                 "cant_revision" => $cantidad,
-                "tx_serial" => Tb060OrdenPagoPeer::getODP($res["co_solicitud"]),
+                "tx_serial" => Tb060OrdenPagoPeer::getODPPagosRealizados($res["co_orden_pago"]),
                 "co_ruta_odp" => $this->getTxRutaReporte(10, $res["co_solicitud"])
             );
         }
