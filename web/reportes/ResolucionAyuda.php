@@ -473,7 +473,7 @@ class PDF_Flo extends PDF_FlowingBlock
                         tb008.tx_razon_social,
                         tb008.tx_rif,
                         tb007.inicial,
-                        tb126.tx_observacion,
+                        tb026.tx_observacion,
                         tb008p.tx_razon_social as proveedor,
                         tb008p.tx_rif as rif_proveedor,
                         tb007p.inicial as inicia_proveedor,
