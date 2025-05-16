@@ -345,10 +345,27 @@ class PDF extends FPDF {
 
         
         $conex = new ConexionComun(); 
+        
+        if($_GET['in_periodo']){        
+        
+        
                   $sql = "SELECT sum(pre_deb) as pre_deb, sum(pre_cre) as pre_cre,sum(pre_deb)  - sum(pre_cre) as saldo, (sum(acu_deb) + sum(mes_deb)) - (sum(acu_cre) + sum(mes_cre)) as saldo_anterior,
                   (sum(acu_deb) + sum(mes_deb)) - (sum(acu_cre) + sum(mes_cre)) + (sum(pre_deb)  - sum(pre_cre)) as saldo_actual  
-from tb024_cuenta_contable tb024
-where (tb024.nu_cuenta_contable like '$nu_cuenta%') and tb024.co_cuenta_contable not in (select co_cuenta_contable from tb011_cuenta_bancaria where co_descripcion_cuenta = 3)";
+                    from tb024_cuenta_contable tb024
+                    where (tb024.nu_cuenta_contable like '$nu_cuenta%') and tb024.co_cuenta_contable not in (select co_cuenta_contable from tb011_cuenta_bancaria where co_descripcion_cuenta = 3)";
+                  
+        }else{
+
+            $co_mes = $_GET['co_mes'];
+            $nu_anio = $_GET['co_anio_fiscal'];            
+
+        $sql = "SELECT  (sum(acu_debito) + sum(mes_debito)) - (sum(acu_credito) + sum(mes_credito)) as saldo_actual
+        from tb179_resumen_mensual_contable tb179
+        inner join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb179.co_cuenta_contable)
+        where (tb024.nu_cuenta_contable like '$nu_cuenta%') and tb024.co_cuenta_contable not in (select co_cuenta_contable from tb011_cuenta_bancaria where co_descripcion_cuenta = 3) and co_mes = $co_mes and nu_anio = $nu_anio and in_cierre is not true";                   
+            
+        }
+                  
            //echo var_dump($sql); exit();  
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol[0];  
@@ -372,7 +389,6 @@ where (tb024.nu_cuenta_contable like '$nu_cuenta%') and tb024.co_cuenta_contable
     
     function getActivos($nu_cuenta_contable,$nu_nivel){
         $conex = new ConexionComun();  
-        if($_GET['in_periodo']){
 
              
           $sql = "SELECT tb024.tx_descripcion,nu_cuenta_contable,nu_nivel
@@ -380,18 +396,7 @@ where (tb024.nu_cuenta_contable like '$nu_cuenta%') and tb024.co_cuenta_contable
                left join tb011_cuenta_bancaria tb011 on (tb011.co_cuenta_contable = tb024.co_cuenta_contable)
                where tb024.nu_cuenta_contable like '$nu_cuenta_contable%' and nu_nivel = $nu_nivel
                order by nu_cuenta_contable";            
-        }else{
 
-    $co_mes = $_GET['co_mes'];
-    $nu_anio = $_GET['co_anio_fiscal'];
-    
-          $sql = "select *  from (SELECT  (sum(acu_debito) + sum(mes_debito)) - (sum(acu_credito) + sum(mes_credito)) as saldo_actual , codigo,descripcion as tx_descripcion
-from tb179_resumen_mensual_contable tb179
-inner join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb179.co_cuenta_contable)
-left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
-where (tb024.nu_cuenta_contable like '1%') and co_mes = $co_mes and nu_anio = $nu_anio and in_cierre is not true GROUP BY codigo,descripcion) as q1 order by codigo";       
-         
-        }
 
 //          echo var_dump($sql);  exit();
         
@@ -403,22 +408,12 @@ where (tb024.nu_cuenta_contable like '1%') and co_mes = $co_mes and nu_anio = $n
         function getPasivos(){
 
           $conex = new ConexionComun();  
-          if($_GET['in_periodo']){
+
           $sql = "select *  from (SELECT  (sum(acu_deb) + sum(mes_deb) + sum(pre_deb)) - (sum(acu_cre) + sum(mes_cre) + sum(pre_cre)) as saldo_actual , codigo,descripcion as tx_descripcion
 from tb024_cuenta_contable tb024
 left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
 where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '501010000%' or tb024.nu_cuenta_contable like '5010201%' or tb024.nu_cuenta_contable like '6010301%') GROUP BY codigo,descripcion) as q1 order by codigo";
-          }else{
-    $co_mes = $_GET['co_mes'];
-    $nu_anio = $_GET['co_anio_fiscal'];
-    
-          $sql = "select *  from (SELECT  sum((acu_debito + mes_debito) - (acu_credito + mes_credito)) as saldo_actual , codigo,descripcion as tx_descripcion
-        from tb179_resumen_mensual_contable tb179
-        inner join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb179.co_cuenta_contable)
-        left join tb190_anexo_contable tb190 on (tb190.nu_cuenta = case when substring(tb024.nu_cuenta_contable,1,3)::integer = 101 then  substring(tb024.nu_cuenta_contable,1,9) else substring(tb024.nu_cuenta_contable,1,9) end) 
-        where (tb024.nu_cuenta_contable like '2%' or tb024.nu_cuenta_contable like '501010000%' or tb024.nu_cuenta_contable like '5010201%' or tb024.nu_cuenta_contable like '6010301%') 
-        and co_mes = $co_mes and nu_anio = $nu_anio and in_cierre is not true GROUP BY codigo,descripcion) as q1 order by codigo";              
-          }              
+             
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol; 
 	
