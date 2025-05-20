@@ -21,6 +21,35 @@ class Tb209PresupuestoDetalleCompraPeer extends BaseTb209PresupuestoDetalleCompr
 
     }
 
+    static public function getDevolverDisponibilidad($id,$co_usuario,$con){
+
+        
+            $sql = "select co_partida,monto*-1 as monto,nu_anio,16 as co_movimiento,
+                    'aumento de capital en la compra' as observacion,co_detalle_presu_base  
+                    from ( select sum(nu_monto) as monto,nu_anio,tb087.co_partida,co_detalle_presu_base from tb087_presupuesto_movimiento tb087  join tb207_detalle_cotizacion tb207 on (tb087.co_detalle_presu_base = tb207.co_detalle_cotizacion)
+                    where co_cotizacion in ($id) group by co_detalle_presu_base,tb087.co_partida,nu_anio order by 1 desc) as q1 where monto >0";
+
+           
+            $stmt = $con->prepare($sql);
+            $stmt->execute();        
+
+            $registros = array();
+            while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
+            
+               $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
+               $tb087_presupuesto_movimiento->setNuMonto($reg["monto"]);
+               $tb087_presupuesto_movimiento->setNuAnio($reg["nu_anio"]);
+               $tb087_presupuesto_movimiento->setCoPartida($reg["co_partida"]);
+               $tb087_presupuesto_movimiento->setCoTipoMovimiento($reg["co_movimiento"]);
+               $tb087_presupuesto_movimiento->setCoDetallePresuBase($reg["co_detalle_presu_base"]);
+               $tb087_presupuesto_movimiento->setTxObservacion($reg["observacion"]);
+               $tb087_presupuesto_movimiento->setCoUsuario($co_usuario);
+               $tb087_presupuesto_movimiento->setInActivo(true);
+               $tb087_presupuesto_movimiento->save($con);
+            }
+        
+    }
+
 
     static public function setUpdatePresupuestoDetalleCompra($codigo, $monto, $usuario, $co_proyecto, $co_accion, $co_presupuesto, $co_partida, $con, $in_cotizacion = false)
     {
