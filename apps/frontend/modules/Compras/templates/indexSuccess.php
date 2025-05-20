@@ -503,7 +503,8 @@
                             url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Cotizacion/buscarPresupuestoBase',
                             params: {
                                 co_tipo_solicitud: ComprasEditar.main.co_tipo_proceso.getValue(),
-                                co_tipo_tramite: ComprasEditar.main.co_tipo_proceso.getValue()
+                                co_tipo_tramite: ComprasEditar.main.co_tipo_proceso.getValue(),
+                                co_solicitud_cotizacion: ComprasEditar.main.co_solicitud_cotizacion.getValue()
                             },
                             scripts: true,
                             text: "Cargando.."
@@ -824,7 +825,8 @@
                                                     url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/modificarPb',
                                                     params: {
                                                         co_compra: ComprasEditar.main.OBJ.co_compras,
-                                                        co_solicitud: ComprasEditar.main.OBJ.co_solicitud
+                                                        co_solicitud: ComprasEditar.main.OBJ.co_solicitud,
+                                                        co_solicitud_cotizacion: ComprasEditar.main.co_solicitud_cotizacion.getValue()
                                                     },
                                                     success: function (result, request) {
                                                         obj = Ext.util.JSON.decode(result.responseText);

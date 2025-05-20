@@ -66,20 +66,20 @@ class ComprasActions extends sfActions
         $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD, Tb045FacturaPeer::CO_SOLICITUD, Criteria::LEFT_JOIN);
         $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD_COTIZACION, Tb206CotizacionPeer::CO_SOLICITUD, Criteria::LEFT_JOIN);
         $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb052ComprasPeer::CO_PROVEEDOR);
-        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS,Tb056ContratoComprasPeer::CO_COMPRAS,  Criteria::LEFT_JOIN);
-        $c->addJoin(Tb052ComprasPeer::CO_RUTA,Tb030RutaPeer::CO_RUTA);
-        $c->add(Tb030RutaPeer::CO_ESTATUS_RUTA,1);
-       
+        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb056ContratoComprasPeer::CO_COMPRAS, Criteria::LEFT_JOIN);
+        $c->addJoin(Tb052ComprasPeer::CO_RUTA, Tb030RutaPeer::CO_RUTA);
+        $c->add(Tb030RutaPeer::CO_ESTATUS_RUTA, 1);
 
-       /* $datosRuta = new Criteria();
-        $datosRuta->addJoin(Tb052ComprasPeer::CO_RUTA, Tb030RutaPeer::CO_RUTA);
-        $datosRuta->add(Tb030RutaPeer::CO_ESTATUS_RUTA,1);
-        $stmtRuta = Tb052ComprasPeer::doSelectStmt($datosRuta);
-        $camposRuta = $stmtRuta->fetch(PDO::FETCH_ASSOC);
 
-        if(!empty($camposRuta["co_ruta"])){
-            $c->add(Tb052ComprasPeer::CO_RUTA,$camposRuta["co_ruta"]);
-        }*/
+        /* $datosRuta = new Criteria();
+         $datosRuta->addJoin(Tb052ComprasPeer::CO_RUTA, Tb030RutaPeer::CO_RUTA);
+         $datosRuta->add(Tb030RutaPeer::CO_ESTATUS_RUTA,1);
+         $stmtRuta = Tb052ComprasPeer::doSelectStmt($datosRuta);
+         $camposRuta = $stmtRuta->fetch(PDO::FETCH_ASSOC);
+
+         if(!empty($camposRuta["co_ruta"])){
+             $c->add(Tb052ComprasPeer::CO_RUTA,$camposRuta["co_ruta"]);
+         }*/
 
 
         $stmt = Tb052ComprasPeer::doSelectStmt($c);
@@ -1698,6 +1698,7 @@ class ComprasActions extends sfActions
     {
         $co_solicitud = $this->getRequestParameter('co_solicitud');
         $co_compra = $this->getRequestParameter('co_compra');
+        $co_solicitud_cotizacion = $this->getRequestParameter('co_solicitud_cotizacion');
 
         $con = Propel::getConnection();
         try {
@@ -1706,99 +1707,102 @@ class ComprasActions extends sfActions
 
             /*SE CREA LA NUEVA SOLICITUD DE COMPRAS CONTRATO* */
 
-            $coRutaOld = Tb030RutaPeer::getCoRuta($co_solicitud);
-            $rutaCompraOld = Tb030RutaPeer::retrieveByPK($coRutaOld);
+            $datosCotizacion = Tb206CotizacionPeer::getDatosCotizacion($co_solicitud_cotizacion);
 
-           /**************************Se crea la nueva ruta de la compra********************************/
-
-            $rutaCompraNew = new Tb030Ruta();
-            $rutaCompraNew->setCoSolicitud($rutaCompraOld->getCoSolicitud());
-            $rutaCompraNew->setCoTipoSolicitud($rutaCompraOld->getCoTipoSolicitud());
-            $rutaCompraNew->setCoProceso($rutaCompraOld->getCoProceso());
-            $rutaCompraNew->setObservacion($rutaCompraOld->getObservacion());
-            $rutaCompraNew->setCoEstatusRuta($rutaCompraOld->getCoEstatusRuta());
-            $rutaCompraNew->setCoUsuario($this->getUser()->getAttribute('codigo'));
-            $rutaCompraNew->setNuOrden($rutaCompraOld->getNuOrden());
-            $rutaCompraNew->setInActual($rutaCompraOld->getInActual());
-            $rutaCompraNew->setInCargarDato($rutaCompraOld->getInCargarDato());
-            $rutaCompraNew->save();
-
-           
-
-            $compraOld = Tb052ComprasPeer::retrieveByPK($co_compra);
-            $compraNew = new Tb052Compras();
-
-            $datosCotizacion = Tb206CotizacionPeer::getDatosCotizacion($compraOld->getCoSolicitudCotizacion());
-
-            /**************************Se crea la nueva compra********************************/
-            $compraNew->setCoEnte($compraOld->getCoEnte());
-            $compraNew->setCoUsuario($this->getUser()->getAttribute('codigo'));
-            $compraNew->setFechaCompra($compraOld->getFechaCompra());
-            $compraNew->setTxObservacion($compraOld->getTxObservacion());
-            $compraNew->setCoSolicitud($compraOld->getCoSolicitud());
-            $compraNew->setCoProveedor($compraOld->getCoProveedor());
-            $compraNew->setAnio($compraOld->getAnio());
-            $compraNew->setCoServicio($compraOld->getCoServicio());
-            $compraNew->setCoTipoSolicitud($compraOld->getCoTipoSolicitud());
-            $compraNew->setNuIva(0);
-            $compraNew->setMontoIva(0);
-            $compraNew->setMontoSubTotal(0);
-            $compraNew->setMontoTotal(0);
-            $compraNew->setCoEjecutor($compraOld->getCoEjecutor());
-            $compraNew->setNumeroCompra($compraOld->getNumeroCompra());
-            $compraNew->setNuOrdenCompra($compraOld->getNuOrdenCompra());
-            $compraNew->setInResponsabilidadSocial($compraOld->getInResponsabilidadSocial());
-            $compraNew->setInAnulado(false);
-            $compraNew->setTxConcepto($compraOld->getTxConcepto());
-            $compraNew->setInPatria($compraOld->getInPatria());
-            $compraNew->setInContrato($compraOld->getInContrato());
-            $compraNew->setCoRuta($rutaCompraNew->getCoRuta());
-            $compraNew->setCoEnte($compraOld->getCoEnte());
-            $compraNew->save();
-
-            $contratoOld = new Criteria();
-            $contratoOld->add(Tb056ContratoComprasPeer::CO_COMPRAS, $compraOld->getCoCompras());
-            $stmtContrato = Tb056ContratoComprasPeer::doSelectStmt($contratoOld);
-            $camposContrato = $stmtContrato->fetch(PDO::FETCH_ASSOC);
-
-            $contrato_compras = new Tb056ContratoCompras();
-            $contrato_compras->setCoCompras($compraNew->getCoCompras());
-            $contrato_compras->setFechaInicio($camposContrato["fecha_inicio"]);
-            $contrato_compras->setFechaFin($camposContrato["fecha_fin"]);
-            $contrato_compras->setCoRamo($camposContrato["co_ramo"]);
-            $contrato_compras->setMonto($camposContrato["monto"]);
-            $contrato_compras->setFechaEntrega($camposContrato["fecha_entrega"]);
-            $contrato_compras->setTiempoGarantia($camposContrato["tiempo_garantia"]);
-            $contrato_compras->setCoTpContrato($camposContrato["co_tp_contrato"]);
-            $contrato_compras->setCoFuenteFinanciamiento($camposContrato["co_fuente_financiamiento"]);
-            $contrato_compras->setNuExpediente($camposContrato["nu_expediente"]);
-            $contrato_compras->setCoSolicitudAnular($camposContrato["co_solicitud_anular"]);
-            $contrato_compras->setInAnular($camposContrato["in_anular"]);
-            $contrato_compras->setTxEntrega($camposContrato["tx_entrega"]);
-            $contrato_compras->save($con);
-   
-
-            /***** Se deshabilita la ruta de la compra anterior *****/
-
-            $rutaCompraOld->setInActual(false);
-            $rutaCompraOld->setCoEstatusRuta(4);
-            $rutaCompraOld->save();
-
-
+        
             /***SE CREA LA RUTA DEL LA REQUISICION *******/
-            
 
-            Tb039RequisicionesPeer::generarRequisicion($compraOld->getCoRequisicion(),
-                                                         $this->getUser()->getAttribute('ejercicio'),
-                                                        $this->getUser()->getAttribute('codigo'),
-                                                        $datosCotizacion["co_cotizacion"],
-                                                        $co_compra,
-                                                        $con);
-
-            
-
+            Tb039RequisicionesPeer::generarRequisicion(
+                $datosCotizacion["co_requisicion"],
+                $this->getUser()->getAttribute('ejercicio'),
+                $this->getUser()->getAttribute('codigo'),
+                $datosCotizacion["co_cotizacion"],
+                $co_compra,
+                $con
+            );
 
             /***FIN DE LA RUTA DE REQUISICION ******/
+
+            if (!empty($co_compra)) {
+
+                $coRutaOld = Tb030RutaPeer::getCoRuta($co_solicitud);
+                $rutaCompraOld = Tb030RutaPeer::retrieveByPK($coRutaOld);
+
+                /**************************Se crea la nueva ruta de la compra********************************/
+
+                $rutaCompraNew = new Tb030Ruta();
+                $rutaCompraNew->setCoSolicitud($rutaCompraOld->getCoSolicitud());
+                $rutaCompraNew->setCoTipoSolicitud($rutaCompraOld->getCoTipoSolicitud());
+                $rutaCompraNew->setCoProceso($rutaCompraOld->getCoProceso());
+                $rutaCompraNew->setObservacion($rutaCompraOld->getObservacion());
+                $rutaCompraNew->setCoEstatusRuta($rutaCompraOld->getCoEstatusRuta());
+                $rutaCompraNew->setCoUsuario($this->getUser()->getAttribute('codigo'));
+                $rutaCompraNew->setNuOrden($rutaCompraOld->getNuOrden());
+                $rutaCompraNew->setInActual($rutaCompraOld->getInActual());
+                $rutaCompraNew->setInCargarDato($rutaCompraOld->getInCargarDato());
+                $rutaCompraNew->save();
+
+
+
+                $compraOld = Tb052ComprasPeer::retrieveByPK($co_compra);
+                $compraNew = new Tb052Compras();
+
+                /**************************Se crea la nueva compra********************************/
+                $compraNew->setCoEnte($compraOld->getCoEnte());
+                $compraNew->setCoUsuario($this->getUser()->getAttribute('codigo'));
+                $compraNew->setFechaCompra($compraOld->getFechaCompra());
+                $compraNew->setTxObservacion($compraOld->getTxObservacion());
+                $compraNew->setCoSolicitud($compraOld->getCoSolicitud());
+                $compraNew->setCoProveedor($compraOld->getCoProveedor());
+                $compraNew->setAnio($compraOld->getAnio());
+                $compraNew->setCoServicio($compraOld->getCoServicio());
+                $compraNew->setCoTipoSolicitud($compraOld->getCoTipoSolicitud());
+                $compraNew->setNuIva(0);
+                $compraNew->setMontoIva(0);
+                $compraNew->setMontoSubTotal(0);
+                $compraNew->setMontoTotal(0);
+                $compraNew->setCoEjecutor($compraOld->getCoEjecutor());
+                $compraNew->setNumeroCompra($compraOld->getNumeroCompra());
+                $compraNew->setNuOrdenCompra($compraOld->getNuOrdenCompra());
+                $compraNew->setInResponsabilidadSocial($compraOld->getInResponsabilidadSocial());
+                $compraNew->setInAnulado(false);
+                $compraNew->setTxConcepto($compraOld->getTxConcepto());
+                $compraNew->setInPatria($compraOld->getInPatria());
+                $compraNew->setInContrato($compraOld->getInContrato());
+                $compraNew->setCoRuta($rutaCompraNew->getCoRuta());
+                $compraNew->setCoEnte($compraOld->getCoEnte());
+                $compraNew->save();
+
+                $contratoOld = new Criteria();
+                $contratoOld->add(Tb056ContratoComprasPeer::CO_COMPRAS, $compraOld->getCoCompras());
+                $stmtContrato = Tb056ContratoComprasPeer::doSelectStmt($contratoOld);
+                $camposContrato = $stmtContrato->fetch(PDO::FETCH_ASSOC);
+
+                $contrato_compras = new Tb056ContratoCompras();
+                $contrato_compras->setCoCompras($compraNew->getCoCompras());
+                $contrato_compras->setFechaInicio($camposContrato["fecha_inicio"]);
+                $contrato_compras->setFechaFin($camposContrato["fecha_fin"]);
+                $contrato_compras->setCoRamo($camposContrato["co_ramo"]);
+                $contrato_compras->setMonto($camposContrato["monto"]);
+                $contrato_compras->setFechaEntrega($camposContrato["fecha_entrega"]);
+                $contrato_compras->setTiempoGarantia($camposContrato["tiempo_garantia"]);
+                $contrato_compras->setCoTpContrato($camposContrato["co_tp_contrato"]);
+                $contrato_compras->setCoFuenteFinanciamiento($camposContrato["co_fuente_financiamiento"]);
+                $contrato_compras->setNuExpediente($camposContrato["nu_expediente"]);
+                $contrato_compras->setCoSolicitudAnular($camposContrato["co_solicitud_anular"]);
+                $contrato_compras->setInAnular($camposContrato["in_anular"]);
+                $contrato_compras->setTxEntrega($camposContrato["tx_entrega"]);
+                $contrato_compras->save($con);
+
+
+                /***** Se deshabilita la ruta de la compra anterior *****/
+
+                $rutaCompraOld->setInActual(false);
+                $rutaCompraOld->setCoEstatusRuta(4);
+                $rutaCompraOld->save();
+
+
+            }
 
 
             $con->commit();
@@ -1996,7 +2000,7 @@ class ComprasActions extends sfActions
         $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO, Criteria::JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO, Criteria::JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb052ComprasPeer::CO_SOLICITUD, Criteria::JOIN);
-        $c->addJoin(Tb052ComprasPeer::CO_RUTA,Tb030RutaPeer::CO_RUTA);
+        $c->addJoin(Tb052ComprasPeer::CO_RUTA, Tb030RutaPeer::CO_RUTA);
 
         $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, array(1, 2), Criteria::IN);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
