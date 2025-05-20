@@ -377,10 +377,26 @@ class PDF extends FPDF {
 
         
         $conex = new ConexionComun(); 
+        
+       if($_GET['in_periodo']){ 
+        
+        
                   $sql = "SELECT sum(pre_deb) as pre_deb, sum(pre_cre) as pre_cre,sum(pre_deb)  - sum(pre_cre) as saldo, (sum(acu_deb) + sum(mes_deb)) - (sum(acu_cre) + sum(mes_cre)) as saldo_anterior,
                   (sum(acu_deb) + sum(mes_deb)) - (sum(acu_cre) + sum(mes_cre)) + (sum(pre_deb)  - sum(pre_cre)) as saldo_actual  
 from tb024_cuenta_contable tb024
 where (tb024.nu_cuenta_contable like '$nu_cuenta%') and tb024.co_cuenta_contable in (select co_cuenta_contable from tb011_cuenta_bancaria where co_descripcion_cuenta = 3)";
+                  
+       }else{
+           
+            $co_mes = $_GET['co_mes'];
+            $nu_anio = $_GET['co_anio_fiscal'];            
+
+        $sql = "SELECT  (sum(acu_debito) + sum(mes_debito)) - (sum(acu_credito) + sum(mes_credito)) as saldo_actual
+        from tb179_resumen_mensual_contable tb179
+        inner join tb024_cuenta_contable tb024 on (tb024.co_cuenta_contable = tb179.co_cuenta_contable)
+        where (tb024.nu_cuenta_contable like '$nu_cuenta%') and tb024.co_cuenta_contable in (select co_cuenta_contable from tb011_cuenta_bancaria where co_descripcion_cuenta = 3) and co_mes = $co_mes and nu_anio = $nu_anio and in_cierre is not true";            
+           
+       }         
            //echo var_dump($sql); exit();  
           $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
           return  $datosSol[0];  
