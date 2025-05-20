@@ -1723,10 +1723,12 @@ class ComprasActions extends sfActions
             $rutaCompraNew->setInCargarDato($rutaCompraOld->getInCargarDato());
             $rutaCompraNew->save();
 
-
+           
 
             $compraOld = Tb052ComprasPeer::retrieveByPK($co_compra);
             $compraNew = new Tb052Compras();
+
+            $datosCotizacion = Tb206CotizacionPeer::getDatosCotizacion($compraOld->getCoSolicitudCotizacion());
 
             /**************************Se crea la nueva compra********************************/
             $compraNew->setCoEnte($compraOld->getCoEnte());
@@ -1784,13 +1786,13 @@ class ComprasActions extends sfActions
 
 
             /***SE CREA LA RUTA DEL LA REQUISICION *******/
-
-
             
 
             Tb039RequisicionesPeer::generarRequisicion($compraOld->getCoRequisicion(),
                                                          $this->getUser()->getAttribute('ejercicio'),
                                                         $this->getUser()->getAttribute('codigo'),
+                                                        $datosCotizacion["co_cotizacion"],
+                                                        $co_compra,
                                                         $con);
 
             
