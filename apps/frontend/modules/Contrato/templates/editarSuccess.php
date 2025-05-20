@@ -813,9 +813,44 @@
                                     var precio_base = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.monto_base;
                                     var precio_unitario = ComprasEditar.main.gridPanel.getStore().getAt(ComprasEditar.main.rowIndex).data.precio_unitario;
 
-                                    if (parseFloat(this.getValue()) > parseFloat(precio_base)) {
+                                    /*if (parseFloat(this.getValue()) > parseFloat(precio_base)) {
                                         this.setValue(precio_unitario);
                                         Ext.Msg.alert("Alerta", "El precio unitario ingresado es mayor al precio del presupuesto base");
+                                        return false;
+                                    }*/
+
+                                    if (parseFloat(this.getValue()) > parseFloat(precio_base)) {
+                                        this.setValue(precio_unitario);
+                                        // Ext.Msg.alert("Alerta", "El precio unitario ingresado es mayor al precio del presupuesto base");
+                                        Ext.MessageBox.confirm('Confirmación', 'El precio unitario ingresado es mayor al precio del presupuesto base. ¿Desea modificar el presupuesto base?', function (boton) {
+                                            if (boton == "yes") {
+                                                Ext.Ajax.request({
+                                                    method: 'POST',
+                                                    url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Compras/modificarPb',
+                                                    params: {
+                                                        co_compra: ComprasEditar.main.OBJ.co_compras,
+                                                        co_solicitud: ComprasEditar.main.OBJ.co_solicitud,
+                                                        co_solicitud_cotizacion: ComprasEditar.main.co_solicitud_cotizacion.getValue()
+                                                    },
+                                                    success: function (result, request) {
+                                                        obj = Ext.util.JSON.decode(result.responseText);
+                                                        if (obj.success == true) {
+                                                            solicitudLista.main.store_lista.baseParams.paginar = 'si';
+                                                            solicitudLista.main.store_lista.baseParams.in_ventanilla = 'true';
+                                                            solicitudLista.main.store_lista.load();
+                                                            solicitudLista.main.store_lista.on('load', function () {
+                                                                solicitudLista.main.estado.disable();
+                                                                solicitudLista.main.anular.disable();
+                                                            });
+                                                            ComprasEditar.main.winformPanel_.close();
+                                                            Ext.Msg.alert("Notificación", obj.msg);
+                                                        } else {
+                                                            Ext.Msg.alert("Notificación", obj.msg);
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
                                         return false;
                                     }
 
