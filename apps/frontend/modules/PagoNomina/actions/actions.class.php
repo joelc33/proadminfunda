@@ -453,10 +453,10 @@ if($data->sheets[0]['cells'][$i][2]==''){
 
                 /*****************Joel Codigo de Aporte********************/
 
-                $tb137_control_serial = Tb137ControlSerialPeer::retrieveByPK(9);
-                $serial = $tb137_control_serial->getNuSerial();
-                $tb137_control_serial->setNuSerial($serial + 1);
-                $tb137_control_serial->save($con);
+//                $tb137_control_serial = Tb137ControlSerialPeer::retrieveByPK(9);
+//                $serial = $tb137_control_serial->getNuSerial();
+//                $tb137_control_serial->setNuSerial($serial + 1);
+//                $tb137_control_serial->save($con);
 
                 $tb137_control_serial = new Tb159AportePatronalNomina();
                 $tb137_control_serial->setTxTipoNomina($tb122_pago_nomina->getTxConcepto());
@@ -471,7 +471,15 @@ if($data->sheets[0]['cells'][$i][2]==''){
 
 
                 /*********************Joel Codigo de Aporte***********************/
-                if($data->sheets[0]['cells'][$i][1]=='A'){
+                if($data->sheets[0]['cells'][$i][1]=='A' || $data->sheets[0]['cells'][$i][1]=='D'){
+                    
+               if($data->sheets[0]['cells'][$i][1]=='A'){
+                $total_pagar += trim($data->sheets[0]['cells'][$i][4]);
+               }else{
+                $total_retencion += trim($data->sheets[0]['cells'][$i][4]);   
+               }     
+                    
+                    
                 $mo_total += trim($data->sheets[0]['cells'][$i][4]);
                 }
                 if ($co_ejecutor == '')
@@ -493,7 +501,12 @@ if($data->sheets[0]['cells'][$i][2]==''){
             $co_compra = Tb052ComprasPeer::getCompra($tb132_pago_nomina_masivoForm["co_solicitud"]);
 
             if ($co_compra["co_compras"] != '') {
+                
                 $tb052_compras = Tb052ComprasPeer::retrieveByPk($co_compra["co_compras"]);
+                
+                $whereF = new Criteria();
+                $whereF->add(Tb045FacturaPeer::CO_SOLICITUD, $tb132_pago_nomina_masivoForm["co_solicitud"], Criteria::EQUAL);
+                BasePeer::doDelete($whereF, $con);                
             } else {
                 $tb052_compras = new Tb052Compras();
             }
@@ -518,6 +531,23 @@ if($data->sheets[0]['cells'][$i][2]==''){
             $tb052_compras->setInPatria($tb132_pago_nomina_masivoForm["in_patria"]);
             $tb052_compras->setTxObservacion($tb132_pago_nomina_masivoForm["tx_concepto"]);
             $tb052_compras->save($con);
+
+
+            $tb045_factura = new Tb045Factura(); 
+            $tb045_factura->setFeEmision($fecha)
+                           ->setNuTotal($mo_total)
+                           ->setNuBaseImponible($mo_total)
+                           ->setNuTotalRetencion($total_retencion)
+                           ->setTotalPagar($total_pagar)
+                           ->setTxConcepto($tb132_pago_nomina_masivoForm["tx_concepto"])  
+                           ->setFeRegistro($fecha) 
+                           ->setCoSolicitud($tb132_pago_nomina_masivoForm["co_solicitud"]);
+
+
+
+            $tb045_factura->setCoCompra($tb052_compras->getCoCompras());
+
+            $tb045_factura->save($con);            
 
             $c = new Criteria();
             $c->clearSelectColumns();
@@ -562,11 +592,16 @@ if($data->sheets[0]['cells'][$i][2]==''){
 
             while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-                if ($res["tx_tipo_movimiento"] == 'A') {
+//                if ($res["tx_tipo_movimiento"] == 'A') {
                     $reg = $this->getCoPartida($res["tx_partida"], $res["tx_ente"]);
 
                     //                echo "id=".$reg["id"].$res["tx_partida"].",".$res["tx_ente"]; exit();
-
+                    if ($res["tx_tipo_movimiento"] == 'P') {
+                        
+                    $in_aporte_nomina = true;    
+                    }else{
+                    $in_aporte_nomina = false;    
+                    }
                     $tb053_detalle_compras = new Tb053DetalleCompras();
                     $tb053_detalle_compras->setCoCompras($tb052_compras->getCoCompras());
                     $tb053_detalle_compras->setNuCantidad(1);
@@ -574,8 +609,9 @@ if($data->sheets[0]['cells'][$i][2]==''){
                     $tb053_detalle_compras->setMonto($res["total"]);
                     $tb053_detalle_compras->setDetalle($res["tx_descripcion"]);
                     $tb053_detalle_compras->setCoPresupuesto($reg["id"]);
-
+                    $tb053_detalle_compras->setInAporteNomina($in_aporte_nomina);
                     $tb053_detalle_compras->setDetalle($res["tx_descripcion"]);
+                    $tb053_detalle_compras->setTxMovimiento($res["tx_movimiento"]);
                     $tb053_detalle_compras->save($con);
 
                     Tb209PresupuestoDetalleCompraPeer::setInsertPresupuestoDetalleCompra($tb053_detalle_compras->getCoDetalleCompras(),
@@ -584,20 +620,37 @@ if($data->sheets[0]['cells'][$i][2]==''){
                     $con,false);
                    
 
-                } else {
-                    if ($res["tx_tipo_movimiento"] == 'D') {
+//                } else {
 
-                        $co_tipo_retencion = $this->getCoTipoRetencion($res["tx_movimiento"]);
+//                }
+                $i++;
+            }
+            
+            $c1 = new Criteria();
+            $c1->clearSelectColumns();
+            $c1->addSelectColumn('SUM(' . Tb132PagoNominaMasivoPeer::NU_MONTO . ') as total');
+            $c1->addSelectColumn(Tb132PagoNominaMasivoPeer::TX_TIPO_MOVIMIENTO);
+            $c1->addSelectColumn(Tb132PagoNominaMasivoPeer::TX_MOVIMIENTO);
+            $c1->add(Tb132PagoNominaMasivoPeer::CO_PAGO, $tb122_pago_nomina->getCoPagoNomina());
+            $c1->addGroupByColumn(Tb132PagoNominaMasivoPeer::TX_TIPO_MOVIMIENTO);
+            $c1->addGroupByColumn(Tb132PagoNominaMasivoPeer::TX_MOVIMIENTO);
+            $stmt1 = Tb132PagoNominaMasivoPeer::doSelectStmt($c1);
+
+            while ($res1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                
+                    if ($res1["tx_tipo_movimiento"] == 'D') {
+
+                        $co_tipo_retencion = $this->getCoTipoRetencion($res1["tx_movimiento"]);
 
                         $tb046_factura_retencion = new Tb046FacturaRetencion();
                         $tb046_factura_retencion->setCoTipoRetencion($co_tipo_retencion)
-                            ->setMoRetencion($res["total"])
+                            ->setMoRetencion($res1["total"])
                             ->setCoSolicitud($tb132_pago_nomina_masivoForm["co_solicitud"])
+                            ->setCoFactura($tb045_factura->getCoFactura())
                             ->save($con);
-                    }
-                }
-                $i++;
-            }
+                    }                
+
+            }            
 
 
             if ($i > 0) {
