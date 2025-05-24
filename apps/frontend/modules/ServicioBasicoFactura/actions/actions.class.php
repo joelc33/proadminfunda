@@ -332,6 +332,7 @@ class ServicioBasicoFacturaActions extends sfActions
             $v["nu_total_retencion"]        = $this->getRequestParameter("nu_total_retencion");
             $v["nu_total_pagar"]            = $this->getRequestParameter("total_pagar");
             $v["nu_total_pagar"]            = $this->getRequestParameter("nu_total_pagar");
+            $v["nu_exento"]                 = $this->getRequestParameter("exento");
             $v["json_detalle_retencion"]    = $this->getRequestParameter("json_detalle_retencion");
 
 
@@ -371,7 +372,7 @@ class ServicioBasicoFacturaActions extends sfActions
             $tb045_factura->setNuTotalRetencion($v["nu_total_retencion"]);
             $tb045_factura->setTxConcepto($v["tx_concepto"]);
             $tb045_factura->setFeRegistro($fe_cierre);
-            //   $tb045_factura->setNuExento($v["nu_exento"]);
+            $tb045_factura->setNuExento($v["nu_exento"]);
             //   $tb045_factura->setSubTotalCs($v["sub_total_cs"]);
             //   $tb045_factura->setNuIvaCs($v["co_iva_cs"]);
 

@@ -61,8 +61,14 @@
                 enableKeyEvents: true,
                 listeners: {
                     keyup: function(field) {
+                      
 
                         listaFactura.main.mo_exento.setValue(listaFactura.main.mon_exento.getValue());
+
+                        if (listaFactura.main.mon_exento.getValue() == '') {   
+                            listaFactura.main.mo_exento.setValue(0);
+                        }
+
                         listaFactura.main.storeDETALLE_RETENCION.load({
                             params: {
                                 nu_base_imponible: field.getValue(),
@@ -89,14 +95,13 @@
                 allowBlank: false,
                 width: 200,
                 enableKeyEvents: true,
-                allowNegative: false,
+               // allowNegative: false,
                 enableKeyEvents: true,
                 listeners: {
                     keyup: function(field) {
 
-                        if (listaFactura.main.mon_exento.getValue() == '') {
+                        if (listaFactura.main.mon_exento.getValue() == '') {   
                             listaFactura.main.mo_exento.setValue(0);
-                            listaFactura.main.mon_exento.setValue(0);
                         }
 
                         listaFactura.main.mo_exento.setValue(field.getValue());
@@ -431,6 +436,7 @@
                         params: {
                           nu_factura: listaFactura.main.nu_factura.getValue(),
                           nu_control: listaFactura.main.nu_control.getValue(),
+                          exento: listaFactura.main.mon_exento.getValue(),
                           fe_emision: listaFactura.main.fe_emision.value,
                           tx_producto: listaFactura.main.id_tb048_producto.lastSelectionText,
                           co_producto: listaFactura.main.id_tb048_producto.getValue(),
