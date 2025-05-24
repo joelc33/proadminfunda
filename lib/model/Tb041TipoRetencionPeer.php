@@ -11,4 +11,16 @@ class Tb041TipoRetencionPeer extends BaseTb041TipoRetencionPeer
          
          return $campos["co_cuenta_contable"];
     }
+    
+    static public function getCuentaContableTipoRetencion($tx_movimiento){
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb041TipoRetencionPeer::CO_CUENTA_CONTABLE);
+        $c->add(Tb041TipoRetencionPeer::TX_MOVIMIENTO,$tx_movimiento);
+        $stmt = Tb041TipoRetencionPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $campos;
+    }    
+    
 }
