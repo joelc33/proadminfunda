@@ -393,7 +393,15 @@ class PDF_Flo extends PDF_FlowingBlock
                                 else
                                     $soporte = $this->datos[0]['tx_concepto_factura'];
                             } else {
+                                
+                                if($this->datos[0]['co_tipo_solicitud']==23){
+                                
+                                $documento = $this->datos[0]['nu_orden_compra'];
+                                    
+                                }else{
+                                
                                 $documento = $this->datos[0]['numero_compra'];
+                                }
                             }
 
 
@@ -970,6 +978,8 @@ class PDF_Flo extends PDF_FlowingBlock
                           nu_total_retencion,
                           in_patria,
                           nu_exento,
+                          tb052.nu_orden_compra,
+                          tb026.co_tipo_solicitud,
                           case when mo_pagar is null then tb052.monto_total else mo_pagar end total_pagar,
                           nu_factura,
 						  tb052.monto_total,
