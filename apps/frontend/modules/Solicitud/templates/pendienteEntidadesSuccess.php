@@ -306,7 +306,7 @@
 
                     {
                         header: 'Tipo de Proceso',
-                        width: 250,
+                        width: 150,
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'tx_tipo_solicitud',
@@ -314,11 +314,27 @@
                     },
                     {
                         header: 'Unidad',
-                        width: 200,
+                        width: 150,
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'tx_proceso',
-                        renderer: renderRectificacion
+                        renderer: textoLargo
+                    },
+                    {
+                        header: 'Requisición',
+                        width: 80,
+                        menuDisabled: true,
+                        sortable: true,
+                        dataIndex: 'co_solicitud_requisicion',
+                        renderer: textoLargo
+                    },
+                    {
+                        header: 'Serial PB',
+                        width: 200,
+                        menuDisabled: true,
+                        sortable: true,
+                        dataIndex: 'tx_serial_cotizacion',
+                        renderer: textoLargo
                     },
                     {
                         header: 'Orden de Pago',
@@ -464,6 +480,12 @@
                     },
                     {
                         name: 'id_ruta'
+                    },
+                    {
+                        name: 'co_solicitud_requisicion'
+                    },
+                    {
+                        name: 'tx_serial_cotizacion'
                     }
                 ]
             });
