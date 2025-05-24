@@ -1584,6 +1584,9 @@ class SolicitudActions extends sfActions
         $c->addSelectColumn(Tb007DocumentoPeer::INICIAL);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RIF);
         $c->addSelectColumn(Tb008ProveedorPeer::TX_RAZON_SOCIAL);
+        $c->addSelectColumn(Tb206CotizacionPeer::CO_REQUISICION);
+        $c->addSelectColumn(Tb206CotizacionPeer::TX_SERIAL_COTIZACION);
+        $c->addAsColumn('co_solicitud_requisicion',Tb039RequisicionesPeer::CO_SOLICITUD);    
 
         // $c->addJoin(Tb026SolicitudPeer::CO_PERSONA, Tb109PersonaPeer::CO_PERSONA,   Criteria::LEFT_JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_PROVEEDOR, Tb008ProveedorPeer::CO_PROVEEDOR, Criteria::LEFT_JOIN);
@@ -1593,6 +1596,9 @@ class SolicitudActions extends sfActions
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD, Criteria::JOIN);
         $c->addJoin(Tb030RutaPeer::CO_PROCESO, Tb028ProcesoPeer::CO_PROCESO, Criteria::JOIN);
         $c->addJoin(Tb026SolicitudPeer::CO_USUARIO, Tb001UsuarioPeer::CO_USUARIO, Criteria::JOIN);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD,Tb052ComprasPeer::CO_SOLICITUD, Criteria::LEFT_JOIN);
+        $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD_COTIZACION, Tb206CotizacionPeer::CO_SOLICITUD, Criteria::LEFT_JOIN);
+        $c->addJoin(Tb206CotizacionPeer::CO_REQUISICION, Tb039RequisicionesPeer::CO_REQUISICION, Criteria::LEFT_JOIN);
 
         $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, $registro_tramite, Criteria::IN);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
@@ -1616,6 +1622,7 @@ class SolicitudActions extends sfActions
 
         $stmt = Tb026SolicitudPeer::doSelectStmt($c);
         $registros = array();
+        $encrip = new myConfig();
         while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             $cantidad = Tb026SolicitudPeer::getCantRevision($res["co_solicitud"]);
@@ -1643,7 +1650,11 @@ class SolicitudActions extends sfActions
                 "tx_rif" => $tx_rif,
                 "tx_razon_social" => $tx_razon_social,
                 "fe_creacion" => $dia . '-' . $mes . '-' . $anio,
-                "cant_revision" => $cantidad
+                "cant_revision" => $cantidad,
+                "co_solicitud_requisicion"  => $res["co_solicitud_requisicion"],
+                "tx_serial_cotizacion"      => $res["tx_serial_cotizacion"],
+                "co_ruta_req"  => $encrip->encrypt($this->getRutaReq($res["co_solicitud_requisicion"],1)),
+                "co_ruta_pb"   => $encrip->encrypt($this->getRutaReq($res["co_solicitud_requisicion"],2))
             );
         }
 
