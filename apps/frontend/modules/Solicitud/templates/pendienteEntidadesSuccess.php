@@ -265,7 +265,7 @@
 
             function renderDatosPb(val, attr, record) {
 
-                if (val != '') {
+                if (val != null) {
                     return '<a href="#" onclick="pendienteEntidadesLista.main.getDatosPb()">'+val+'</a>'
                 }
 
@@ -273,7 +273,7 @@
 
             function renderDatosReq(val, attr, record) {
 
-                if (val != '') {
+                if (val != null) {
                     return '<a href="#" onclick="pendienteEntidadesLista.main.getDatosReq()">'+val+'</a>'
                 }
 
