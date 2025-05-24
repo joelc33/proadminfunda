@@ -1475,7 +1475,10 @@ class SolicitudActions extends sfActions
                 "cant_revision" => $cantidad,
                 "id_ruta" => $res["co_ruta"],
                 "co_solicitud_requisicion"  => $res["co_solicitud_requisicion"],
-                "tx_serial_cotizacion"      => $res["tx_serial_cotizacion"]
+                "tx_serial_cotizacion"      => $res["tx_serial_cotizacion"],
+                "co_ruta_req"  => $encrip->encrypt($this->getRutaReq($res["co_solicitud_requisicion"],1)),
+                "co_ruta_pb"   => $encrip->encrypt($this->getRutaReq($res["co_solicitud_requisicion"],2))
+
             );
         }
 
@@ -1486,6 +1489,20 @@ class SolicitudActions extends sfActions
         ));
     }
 
+    protected function getRutaReq($codigo,$orden)
+    {
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
+        $c->add(Tb030RutaPeer::NU_ORDEN, $orden);
+        $c->add(Tb030RutaPeer::CO_SOLICITUD, $codigo);
+        $stmt = Tb030RutaPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $campos['co_ruta'];
+    }
+
+    
 
 
     public function executeStorelistaprocesado(sfWebRequest $request)

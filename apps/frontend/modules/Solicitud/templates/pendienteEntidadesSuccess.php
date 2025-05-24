@@ -263,6 +263,22 @@
 
             }
 
+            function renderDatosPb(val, attr, record) {
+
+                if (val != '') {
+                    return '<a href="#" onclick="pendienteEntidadesLista.main.getDatosPb()">'+val+'</a>'
+                }
+
+            }
+
+            function renderDatosReq(val, attr, record) {
+
+                if (val != '') {
+                    return '<a href="#" onclick="pendienteEntidadesLista.main.getDatosReq()">'+val+'</a>'
+                }
+
+            }
+
             this.gridPanel_ = new Ext.grid.GridPanel({
                 //    title:'Lista de solicitud',
                 iconCls: 'icon-libro',
@@ -326,7 +342,7 @@
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'co_solicitud_requisicion',
-                        renderer: textoLargo
+                        renderer: renderDatosReq
                     },
                     {
                         header: 'Serial PB',
@@ -334,15 +350,7 @@
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'tx_serial_cotizacion',
-                        renderer: textoLargo
-                    },
-                    {
-                        header: 'Orden de Pago',
-                        width: 150,
-                        menuDisabled: true,
-                        sortable: true,
-                        dataIndex: 'tx_serial',
-                        renderer: renderRectificacion
+                        renderer: renderDatosPb
                     },
                     {
                         header: 'Datos',
@@ -399,6 +407,12 @@
         },
         getDatos: function() {
             window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta'));
+        },
+        getDatosReq: function() {
+            window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_req'));
+        },
+        getDatosPb: function() {
+            window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_pb'));
         },
         onRevision: function() {
 
@@ -486,7 +500,14 @@
                     },
                     {
                         name: 'tx_serial_cotizacion'
+                    },
+                    {
+                        name: 'co_ruta_req'
+                    },
+                    {
+                        name: 'co_ruta_pb'
                     }
+
                 ]
             });
             return this.store;
