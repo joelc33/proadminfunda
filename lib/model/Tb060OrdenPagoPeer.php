@@ -1226,43 +1226,6 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 BasePeer::doDelete($wherec, $con);
 
                 break;
-            
-            case 23:
-                //Pago de nomina
-
-                $c = new Criteria();
-                $c->clearSelectColumns();
-                $c->addSelectColumn('coalesce(SUM(' .  Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
-                $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
-                $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
-                $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
-                $c->add(Tb087PresupuestoMovimientoPeer::IN_ACTIVO, true);
-                $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO, 2);
-                $c->add(Tb087PresupuestoMovimientoPeer::IN_ANULAR, NULL, Criteria::ISNULL);
-                $c->add(Tb053DetalleComprasPeer::IN_APORTE_NOMINA, FALSE, Criteria::EQUAL);
-                $c->add(Tb053DetalleComprasPeer::IN_PRESUPUESTO, TRUE);
-
-                $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
-                $campos = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                $c1 = new Criteria();
-                $c1->clearSelectColumns();
-                $c1->addSelectColumn('SUM(' . Tb046FacturaRetencionPeer::MO_RETENCION . ') as total_retencion');
-                $c1->add(Tb046FacturaRetencionPeer::CO_SOLICITUD, $co_solicitud);
-                $stmt1 = Tb046FacturaRetencionPeer::doSelectStmt($c1);
-                $campos1 = $stmt1->fetch(PDO::FETCH_ASSOC);
-
-                //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
-                $nu_monto =  $campos["total"];
-                $monto_total = $campos["total"];
-                $retencion =  $campos1["total_retencion"];
-                $total_retencion = $retencion;
-
-                $wherec = new Criteria();
-                $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
-                BasePeer::doDelete($wherec, $con);
-
-                break;            
 
             default:
                 //Otros
@@ -1332,7 +1295,12 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmtd = Tb052ComprasPeer::doSelectStmt($cd);
                 $datosFecha = $stmtd->fetch(PDO::FETCH_ASSOC);
 
-                list($anio, $mes, $dia) = explode('-', $fe_pago);//$datosFecha["fecha_compra"]);
+               // list($anio, $mes, $dia) = explode('-', $datosFecha["fecha_compra"]);
+
+               // echo $fe_pago; exit();
+
+                list($anio, $mes, $dia) = explode('-', $fe_pago);
+
 
                 $date = mktime(0, 0, 0, $mes, $dia, $anio);
 
@@ -1394,6 +1362,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     $tipo = 1;
                 }
 
+                
                 $Tb060OrdenPago = new Tb060OrdenPago();
                 $Tb060OrdenPago->setCoSolicitud($co_solicitud)
                     //->setFeEmision(date('Y-m-d'))
@@ -1683,117 +1652,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->setCoRuta($co_ruta)
                     ->save($con);
-            } else if ($co_tipo_solicitud == 23) {///pago de nomina
-
-                //echo $co_tipo_solicitud; exit();
-
-                $nu_monto_total = $nu_monto_no_retencion;
-                
-                $wherec = new Criteria();
-                $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
-                BasePeer::doDelete($wherec, $con);
-
-                $tb061_asiento_contable = new Tb061AsientoContable();
-                $tb061_asiento_contable->setMoHaber($nu_monto_total)
-                    ->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_gasto_pago"])
-                    ->setCoSolicitud($co_solicitud)
-                    ->setCoTipoAsiento(1)
-                    //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                    ->setCoRuta($co_ruta)
-                    ->save($con);
-
-                $c = new Criteria();
-                $c->clearSelectColumns();
-                $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRODUCTO);
-                $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRESUPUESTO);
-                $c->addSelectColumn(Tb053DetalleComprasPeer::MONTO);
-                $c->addSelectColumn(Tb209PresupuestoDetalleCompraPeer::CO_PRESUPUESTO);
-                $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
-                $c->addJoin(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS, Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA);
-                $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
-                $c->add(Tb053DetalleComprasPeer::IN_APORTE_NOMINA, FALSE, Criteria::EQUAL);
-                $c->add(Tb053DetalleComprasPeer::IN_PRESUPUESTO, TRUE);
-
-                $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
-
-                while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
-                    $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable(NULL, $co_solicitud, $reg["co_presupuesto"]);
-
-                    $tb061_asiento_contable = new Tb061AsientoContable();
-                    $tb061_asiento_contable->setMoDebe($reg["monto"])
-                        ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
-                        ->setCoSolicitud($co_solicitud)
-                        ->setCoProducto($reg["co_producto"])
-                        ->setCoTipoAsiento(1)
-                        ->setCoPresupuesto($reg["co_presupuesto"])
-                        //                                          ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                        ->setCoRuta($co_ruta)
-                        ->save($con);
-                }
-
-                $tb061_asiento_contable = new Tb061AsientoContable();
-                $tb061_asiento_contable->setMoDebe($nu_monto_total)
-                    ->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_gasto_pago"])
-                    ->setCoSolicitud($co_solicitud)
-                    ->setCoTipoAsiento(2)
-                    //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                    ->setCoRuta($co_ruta)
-                    ->save($con);
-
-                $tb061_asiento_contable = new Tb061AsientoContable();
-                $tb061_asiento_contable->setMoHaber($nu_monto_total)
-                    ->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_orden_pago"])
-                    ->setCoSolicitud($co_solicitud)
-                    ->setCoTipoAsiento(2)
-                    //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                    ->setCoRuta($co_ruta)
-                    ->save($con);
-                
-                
-                $cAP = new Criteria();
-                $cAP->clearSelectColumns();
-                $cAP->addSelectColumn(Tb053DetalleComprasPeer::CO_PRODUCTO);
-                $cAP->addSelectColumn(Tb053DetalleComprasPeer::CO_PRESUPUESTO);
-                $cAP->addSelectColumn(Tb053DetalleComprasPeer::MONTO);
-                $cAP->addSelectColumn(Tb053DetalleComprasPeer::TX_MOVIMIENTO);
-                $cAP->addSelectColumn(Tb209PresupuestoDetalleCompraPeer::CO_PRESUPUESTO);
-                $cAP->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
-                $cAP->addJoin(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS, Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA);
-                $cAP->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
-                $cAP->add(Tb053DetalleComprasPeer::IN_APORTE_NOMINA, TRUE, Criteria::EQUAL);
-                $cAP->add(Tb053DetalleComprasPeer::IN_PRESUPUESTO, TRUE);
-                $stmtAP = Tb053DetalleComprasPeer::doSelectStmt($cAP);
-
-                while ($regAP = $stmtAP->fetch(PDO::FETCH_ASSOC)) {
-                    
-                $cuenta_contable = Tb041TipoRetencionPeer::getCuentaContableTipoRetencion($regAP["tx_movimiento"]);    
-                    
-                $tb061_asiento_contable = new Tb061AsientoContable();
-                $tb061_asiento_contable->setMoHaber($regAP["monto"])
-                    ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
-                    ->setCoSolicitud($co_solicitud)
-                    ->setCoTipoAsiento(1)
-                    //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                    ->setCoRuta($co_ruta)
-                    ->save($con);                    
-
-                    $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable(NULL, $co_solicitud, $regAP["co_presupuesto"]);
-
-                    $tb061_asiento_contable = new Tb061AsientoContable();
-                    $tb061_asiento_contable->setMoDebe($regAP["monto"])
-                        ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
-                        ->setCoSolicitud($co_solicitud)
-                        ->setCoProducto($regAP["co_producto"])
-                        ->setCoTipoAsiento(1)
-                        ->setCoPresupuesto($regAP["co_presupuesto"])
-                        //                                          ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                        ->setCoRuta($co_ruta)
-                        ->save($con);
-                }              
-               
-                
-            }else {
+            } else {
 
                 //echo $co_tipo_solicitud; exit();
 
@@ -2005,8 +1864,6 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         break;
                 }
             }
-            
-            
         }
 
         return $Tb060OrdenPago->getCoOrdenPago();
