@@ -1295,7 +1295,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmtd = Tb052ComprasPeer::doSelectStmt($cd);
                 $datosFecha = $stmtd->fetch(PDO::FETCH_ASSOC);
 
-                list($anio, $mes, $dia) = explode('-', $datosFecha["fecha_compra"]);
+                list($anio, $mes, $dia) = explode('-', $fe_pago);//$datosFecha["fecha_compra"]);
 
                 $date = mktime(0, 0, 0, $mes, $dia, $anio);
 
