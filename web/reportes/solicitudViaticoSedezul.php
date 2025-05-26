@@ -331,16 +331,14 @@ function PutLink($URL, $txt)
         $this->Cell(0, 0, utf8_decode('PARA: '), 0, 0, 'L');
         $this->SetX(33);
         $this->SetFont('Arial', '', 10);
-//        $this->Cell(0,0,utf8_decode($this->datos['nb_responsable']),0,0,'L');
-        $this->Cell(0,0,utf8_decode('Oficina de Administración'),0,0,'L');
+        $this->Cell(0,0,utf8_decode($this->datos['nb_responsable']),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 0, utf8_decode('DE:'), 0, 0, 'L');
         $this->SetX(31);
         $this->SetFont('Arial', '', 10);
-//        $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'L');
-        $this->Cell(0,0,utf8_decode('Presidencia'),0,0,'L');
+        $this->Cell(0,0,utf8_decode($this->empresa['nb_presidente']),0,0,'L');
         $this->Ln(5);
         $this->SetX(20);
         $this->SetFont('Arial', 'B', 10);
@@ -363,7 +361,7 @@ function PutLink($URL, $txt)
          $this->SetAligns(array("J"));
          
          $html = '<p>     Por medio de la presente, me dirijo a usted con finalidad de solicitarle el <b>CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022</b> que seran utilizados para '.$this->datos['tx_evento'].' <b>'.$this->datos['tx_tipo_viatico'].'</b>, durante los dias '.date("d/m/Y", strtotime($this->datos['fe_desde'])).' al '.date("d/m/Y", strtotime($this->datos['fe_hasta'])).' , a '.$this->datos['tx_razon_social'].' portador(a) de la cedula de identidad N° '.$this->datos['tx_rif'].' representante de <b>'.$empresa.'</b>.</p>';
-         $inf = "     Por medio de la presente, me dirijo a usted con finalidad de solicitarle la ASIGNACIÓN DE VIÁTICOS, SEGÚN DECRETO N° 349 DE FECHA 05-05-2022, que seran utilizados para ".$this->datos['tx_evento'].", donde se visitará ".$this->datos['destino']." (".$this->datos['tx_tipo_viatico'].") durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_razon_social']." portador(a) de la cedula de identidad N° ".$this->datos['tx_rif']." en representación de ".$this->datos['tx_ente']."."; 
+         $inf = "     Por medio de la presente, me dirijo a usted con finalidad de solicitarle el CALCULO de la ASIGNACIÓN DE VIÁTICOS SEGÚN DECRETO N° 349 DE FECHA 05-05-2022 que seran utilizados para ".$this->datos['tx_evento']." hacia ".$this->datos['tx_tipo_viatico'].", donde se visitará ".$this->datos['destino']." durante los dias ".date("d/m/Y", strtotime($this->datos['fe_desde']))." al ".date("d/m/Y", strtotime($this->datos['fe_hasta']))." , a ".$this->datos['tx_razon_social']." portador(a) de la cedula de identidad N° ".$this->datos['tx_rif']." en representación de ".$this->datos['tx_ente']."."; 
          $this->SetX(50);
          $this->WriteHTML(utf8_decode($inf));
 
@@ -384,7 +382,7 @@ function PutLink($URL, $txt)
          $this->Cell(200,10,utf8_decode($this->empresa['nb_presidente']),0,0,'C'); 
          $this->SetFont('Arial','B',12);
          $this->Ln(5);
-         $this->Cell(200,10,utf8_decode('Presidente'),0,0,'C');         
+         $this->Cell(200,10,utf8_decode('Director'),0,0,'C');         
   
 
     }

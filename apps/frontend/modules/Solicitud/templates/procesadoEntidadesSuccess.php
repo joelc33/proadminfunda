@@ -188,6 +188,30 @@
                 }
             }
 
+                        function renderDatos(val, attr, record) {
+
+                if (val != '') {
+                    return '<a href="#" onclick="pendienteEntidadesLista.main.getDatos()">Ver Documento</a>'
+                }
+
+            }
+
+            function renderDatosPb(val, attr, record) {
+
+                if (val != null) {
+                    return '<a href="#" onclick="pendienteEntidadesLista.main.getDatosPb()">'+val+'</a>'
+                }
+
+            }
+
+            function renderDatosReq(val, attr, record) {
+
+                if (val != null) {
+                    return '<a href="#" onclick="pendienteEntidadesLista.main.getDatosReq()">'+val+'</a>'
+                }
+
+            }
+
             this.gridPanel_ = new Ext.grid.GridPanel({
                 //    title:'Lista de solicitud',
                 iconCls: 'icon-libro',
@@ -239,6 +263,22 @@
                         sortable: true,
                         dataIndex: 'tx_proceso',
                         renderer: renderRectificacion
+                    },
+                    {
+                        header: 'Requisición',
+                        width: 80,
+                        menuDisabled: true,
+                        sortable: true,
+                        dataIndex: 'co_solicitud_requisicion',
+                        renderer: renderDatosReq
+                    },
+                    {
+                        header: 'Serial PB',
+                        width: 200,
+                        menuDisabled: true,
+                        sortable: true,
+                        dataIndex: 'tx_serial_cotizacion',
+                        renderer: renderDatosPb
                     },
                     {
                         header: 'Orden de Pago',
@@ -360,6 +400,15 @@
                 text: "Cargando.."
             });
         },
+        getDatos: function() {
+            window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta'));
+        },
+        getDatosReq: function() {
+            window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_req'));
+        },
+        getDatosPb: function() {
+            window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_pb'));
+        },
         getLista: function() {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/storelistaprocesado',
@@ -396,6 +445,18 @@
                     },
                     {
                         name: 'tx_razon_social'
+                    },
+                    {
+                        name: 'co_solicitud_requisicion'
+                    },
+                    {
+                        name: 'tx_serial_cotizacion'
+                    },
+                    {
+                        name: 'co_ruta_req'
+                    },
+                    {
+                        name: 'co_ruta_pb'
                     }
                 ]
             });

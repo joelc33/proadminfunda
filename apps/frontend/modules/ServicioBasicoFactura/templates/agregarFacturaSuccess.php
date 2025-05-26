@@ -61,6 +61,13 @@
                 enableKeyEvents: true,
                 listeners: {
                     keyup: function(field) {
+                      
+
+                        listaFactura.main.mo_exento.setValue(listaFactura.main.mon_exento.getValue());
+
+                        if (listaFactura.main.mon_exento.getValue() == '') {   
+                            listaFactura.main.mo_exento.setValue(0);
+                        }
 
                         listaFactura.main.storeDETALLE_RETENCION.load({
                             params: {
@@ -80,6 +87,45 @@
                     }
                 }
             });
+
+            this.mon_exento = new Ext.form.NumberField({
+                fieldLabel: 'Monto Exento',
+                name: 'tb045_factura[mo_exento]',
+                value:0,
+                allowBlank: false,
+                width: 200,
+                enableKeyEvents: true,
+               // allowNegative: false,
+                enableKeyEvents: true,
+                listeners: {
+                    keyup: function(field) {
+
+                        if (listaFactura.main.mon_exento.getValue() == '') {   
+                            listaFactura.main.mo_exento.setValue(0);
+                        }
+
+                        listaFactura.main.mo_exento.setValue(field.getValue());
+                        
+                        listaFactura.main.storeDETALLE_RETENCION.load({
+                            params: {
+                                nu_base_imponible: listaFactura.main.nu_base_imponible.getValue(),
+                                co_documento: listaFactura.main.co_documento.getValue(),
+                                co_ramo: listaFactura.main.co_ramo.getValue(),
+                                co_iva_factura: listaFactura.main.co_iva_factura.getValue(),
+                                co_iva_retencion: listaFactura.main.co_iva_retencion.getRawValue(),
+                                mo_exento: listaFactura.main.mo_exento.getValue(),
+                                co_proveedor: listaFactura.main.co_proveedor.getValue()
+                            },
+                            callback: function() {
+                                listaFactura.main.calcular_monto_factura();
+                            }
+                        });
+
+                    }
+                }
+            });
+
+
 
             this.id_tb048_producto = new Ext.form.ComboBox({
                 fieldLabel: 'Tipo de Servicio',
@@ -264,6 +310,7 @@
                     this.fe_emision,
                     this.id_tb048_producto,
                     this.nu_base_imponible,
+                    this.mon_exento,
                     this.compositefieldIVAFactura,
                     this.nu_total,
                     this.fieldDatosRetencion,
@@ -389,6 +436,7 @@
                         params: {
                           nu_factura: listaFactura.main.nu_factura.getValue(),
                           nu_control: listaFactura.main.nu_control.getValue(),
+                          exento: listaFactura.main.mon_exento.getValue(),
                           fe_emision: listaFactura.main.fe_emision.value,
                           tx_producto: listaFactura.main.id_tb048_producto.lastSelectionText,
                           co_producto: listaFactura.main.id_tb048_producto.getValue(),

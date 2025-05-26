@@ -69,6 +69,8 @@ class PDF extends FPDF {
 
     }
 
+    //'DIRECTOR GENERAL DE(L) '
+
     function ChapterBody() {
 
         $this->op_reporte = $this->getOpcionReporte($_GET['codigo']);
@@ -91,7 +93,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',8);
          $this->Ln(5);
          $this->SetX(25);
-         $this->Cell(0,0,utf8_decode('DIRECTOR GENERAL DE(L) '.$this->empresa['nb_institucion']),0,0,'L');
+         $this->Cell(0,0,utf8_decode(strtoupper($this->empresa['tx_nit'].' '.$this->empresa['nb_institucion'])),0,0,'L');
          $this->SetFont('Arial','',8);
          $this->Ln(4);
          $this->SetX(25);

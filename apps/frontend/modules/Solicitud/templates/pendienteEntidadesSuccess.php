@@ -263,6 +263,22 @@
 
             }
 
+            function renderDatosPb(val, attr, record) {
+
+                if (val != null) {
+                    return '<a href="#" onclick="pendienteEntidadesLista.main.getDatosPb()">'+val+'</a>'
+                }
+
+            }
+
+            function renderDatosReq(val, attr, record) {
+
+                if (val != null) {
+                    return '<a href="#" onclick="pendienteEntidadesLista.main.getDatosReq()">'+val+'</a>'
+                }
+
+            }
+
             this.gridPanel_ = new Ext.grid.GridPanel({
                 //    title:'Lista de solicitud',
                 iconCls: 'icon-libro',
@@ -306,7 +322,7 @@
 
                     {
                         header: 'Tipo de Proceso',
-                        width: 250,
+                        width: 150,
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'tx_tipo_solicitud',
@@ -314,19 +330,27 @@
                     },
                     {
                         header: 'Unidad',
-                        width: 200,
-                        menuDisabled: true,
-                        sortable: true,
-                        dataIndex: 'tx_proceso',
-                        renderer: renderRectificacion
-                    },
-                    {
-                        header: 'Orden de Pago',
                         width: 150,
                         menuDisabled: true,
                         sortable: true,
-                        dataIndex: 'tx_serial',
-                        renderer: renderRectificacion
+                        dataIndex: 'tx_proceso',
+                        renderer: textoLargo
+                    },
+                    {
+                        header: 'Requisición',
+                        width: 80,
+                        menuDisabled: true,
+                        sortable: true,
+                        dataIndex: 'co_solicitud_requisicion',
+                        renderer: renderDatosReq
+                    },
+                    {
+                        header: 'Serial PB',
+                        width: 200,
+                        menuDisabled: true,
+                        sortable: true,
+                        dataIndex: 'tx_serial_cotizacion',
+                        renderer: renderDatosPb
                     },
                     {
                         header: 'Datos',
@@ -383,6 +407,12 @@
         },
         getDatos: function() {
             window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta'));
+        },
+        getDatosReq: function() {
+            window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_req'));
+        },
+        getDatosPb: function() {
+            window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + pendienteEntidadesLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta_pb'));
         },
         onRevision: function() {
 
@@ -464,7 +494,20 @@
                     },
                     {
                         name: 'id_ruta'
+                    },
+                    {
+                        name: 'co_solicitud_requisicion'
+                    },
+                    {
+                        name: 'tx_serial_cotizacion'
+                    },
+                    {
+                        name: 'co_ruta_req'
+                    },
+                    {
+                        name: 'co_ruta_pb'
                     }
+
                 ]
             });
             return this.store;
