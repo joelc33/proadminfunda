@@ -329,7 +329,11 @@ class PDF extends FPDF {
          $this->SetAligns(array("R","R","R"));
          $this->SetX(15);
          $this->Row(array(utf8_decode('TOTAL EGRESOS'),number_format($total<0?$total*-1:$total, 2, ',','.')),0,1);
-         $this->Row(array(utf8_decode('ESTADO DE RESULTADO'),number_format($total_ingreso<0?$total_ingreso*-1:$total_ingreso, 2, ',','.') , number_format($total<0?$total*-1:$total, 2, ',','.')),0,1);
+         $total_egreso = $total;
+         
+         $estado_resultado = $total_ingreso - $total_egreso;
+         
+         $this->Row(array(utf8_decode('ESTADO DE RESULTADO'),number_format($estado_resultado, 2, ',','.')),0,1);
     
          $this->Ln(25);
          $this->SetWidths(array(200)); 
