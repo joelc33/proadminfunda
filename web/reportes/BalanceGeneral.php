@@ -232,6 +232,30 @@ class PDF extends FPDF {
          $this->Row(array('NOTA: VER INFORME DE PREPARACION DEL CONTADOR PUBLICO'),0,1);  
          
          $this->addPage();
+         
+        $this->SetFont('Arial','B',10);
+        $this->SetWidths(array(200));
+        $this->SetAligns(array("C"));  
+        $this->Ln(6);
+        $this->Cell(0,0,utf8_decode('ESTADO DE RENDIMIENTO FINANCIERO'),0,0,'C');                
+        $this->Ln(6);
+        if($_GET['in_periodo']){
+        $this->periodo = $this->getPeriodo();
+        if($this->periodo){
+        $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($this->periodo['mes'])).' '.$this->periodo['anio']. ' (ABIERTO)'),0,0,'C'); 
+        $this->Ln(6);    
+        }else{
+        $this->Cell(0,0,utf8_decode('AL PERIODO AGOSTO 2018 (ABIERTO)'),0,0,'C'); 
+        $this->Ln(6);             
+        }
+        }else{
+        
+        $co_mes = $_GET['co_mes'];
+        $nu_anio = $_GET['co_anio_fiscal'];  
+        $this->periodo = $this->getPeriodo($co_mes);
+        $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($co_mes)).' '.$nu_anio),0,0,'C'); 
+         $this->Ln(6);             
+        }         
 
          $this->SetWidths(array(200)); 
          $this->SetAligns(array("C")); 
