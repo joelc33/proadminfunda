@@ -331,7 +331,7 @@ class PDF extends FPDF {
          $this->Row(array(utf8_decode('TOTAL EGRESOS'),number_format($total<0?$total*-1:$total, 2, ',','.')),0,1);
          $total_egreso = $total;
          
-         $estado_resultado = $total_ingreso - $total_egreso;
+         $estado_resultado = $total_ingreso + $total_egreso;
          
          $this->Row(array(utf8_decode('ESTADO DE RESULTADO'),number_format($estado_resultado, 2, ',','.')),0,1);
     
