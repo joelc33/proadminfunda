@@ -93,7 +93,10 @@ class PDF extends FPDF {
         $this->periodo = $this->getPeriodo($co_mes);
         $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($co_mes)).' '.$nu_anio),0,0,'C'); 
          $this->Ln(6);             
-        }        
+        }
+        $this->Ln(3);
+        $this->Cell(0,0,utf8_decode('(Cifras expresadas en miles de Bolivares Digitales'),0,0,'C'); 
+        $this->Ln(6);          
         
 
          $this->SetFont('Arial','B',8);     
@@ -257,6 +260,10 @@ class PDF extends FPDF {
          $this->Ln(6);             
         }         
 
+        $this->Ln(3);
+        $this->Cell(0,0,utf8_decode('(Cifras expresadas en miles de Bolivares Digitales'),0,0,'C'); 
+        $this->Ln(6);        
+        
          $this->SetWidths(array(200)); 
          $this->SetAligns(array("C")); 
          $this->SetFont('Arial','B',8);     
