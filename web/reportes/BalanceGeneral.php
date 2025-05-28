@@ -61,7 +61,7 @@ class PDF extends FPDF {
         $co_mes = $_GET['co_mes'];
         $nu_anio = $_GET['co_anio_fiscal'];  
         $this->periodo = $this->getPeriodo($co_mes);
-        $this->Cell(0,0,utf8_decode('AL PERIODO '.strtoupper(mes($co_mes)).' '.$nu_anio),0,0,'C'); 
+        $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($co_mes)).' '.$nu_anio),0,0,'C'); 
          $this->Ln(6);             
         }
 
