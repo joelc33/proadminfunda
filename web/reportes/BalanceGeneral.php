@@ -57,9 +57,11 @@ class PDF extends FPDF {
         $this->Ln(6);             
         }
         }else{
+        
         $co_mes = $_GET['co_mes'];
-        $nu_anio = $_GET['co_anio_fiscal'];            
-        $this->Cell(0,0,utf8_decode('AL PERIODO '.strtoupper(mes($co_mes)).' '.$nu_anio.' (CERRADO)'),0,0,'C'); 
+        $nu_anio = $_GET['co_anio_fiscal'];  
+        $this->periodo = $this->getPeriodo($co_mes);
+        $this->Cell(0,0,utf8_decode('AL PERIODO '.strtoupper(mes($co_mes)).' '.$nu_anio),0,0,'C'); 
          $this->Ln(6);             
         }
 
@@ -531,11 +533,18 @@ where (tb024.nu_cuenta_contable like '7%') and co_mes = $co_mes and nu_anio = $n
           return  $datosSol;  
     }   
     
-    function getPeriodo(){
+    function getPeriodo($co_mes){
+      
+        $where = '';
+        if($co_mes){
+         
+         $where = 'where co_mes ='.$co_mes;   
+            
+        }
 
         $sql = "SELECT EXTRACT(YEAR FROM (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE) AS anio,lpad(EXTRACT(MONTH FROM (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE)::text,2,'0') AS mes,
             EXTRACT(DAY FROM (date_trunc('DAY',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE)::text  as dia from 
-tb180_maestro_contable order by co_maestro_contable desc limit 1";
+tb180_maestro_contable $where order by co_maestro_contable desc limit 1";
 
         $conex = new ConexionComun();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
