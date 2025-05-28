@@ -40,7 +40,7 @@ class PDF extends FPDF {
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(4);
 //        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
-        $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
+//        $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
 
 
 
@@ -225,7 +225,7 @@ class PDF extends FPDF {
          
     }    
     
-         $this->Ln(5);
+         $this->Ln(25);
          $this->SetWidths(array(200)); 
          $this->SetAligns(array("L")); 
          $this->Row(array('* ANEXOS'),0,1);         
@@ -298,6 +298,7 @@ class PDF extends FPDF {
     
          $this->SetAligns(array("R","R","R"));
          $this->SetX(15);
+         $total_ingreso = $total;
          $this->Row(array(utf8_decode('TOTAL INGRESOS'),number_format($total<0?$total*-1:$total, 2, ',','.')),0,1);     
     
          $this->SetWidths(array(200)); 
@@ -328,8 +329,9 @@ class PDF extends FPDF {
          $this->SetAligns(array("R","R","R"));
          $this->SetX(15);
          $this->Row(array(utf8_decode('TOTAL EGRESOS'),number_format($total<0?$total*-1:$total, 2, ',','.')),0,1);
+         $this->Row(array(utf8_decode('ESTADO DE RESULTADO'),number_format($total_ingreso<0?$total_ingreso*-1:$total_ingreso, 2, ',','.') - number_format($total<0?$total*-1:$total, 2, ',','.')),0,1);
     
-         $this->Ln(5);
+         $this->Ln(25);
          $this->SetWidths(array(200)); 
          $this->SetAligns(array("L")); 
          $this->Row(array('* ANEXOS'),0,1);         
