@@ -41,29 +41,7 @@ class PDF extends FPDF {
         $this->Ln(4);
 //        $this->Cell(0,0,utf8_decode('San Francisco, '.date("d").' de '.mes(date("m")).' del '.date("Y")),0,0,'R');
         $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().'/{nb}',0,0,'R');
-        $this->SetFont('Arial','B',10);
-        $this->SetWidths(array(200));
-        $this->SetAligns(array("C"));  
-        $this->Ln(6);
-        $this->Cell(0,0,utf8_decode('BALANCE GENERAL'),0,0,'C');                
-        $this->Ln(6);
-        if($_GET['in_periodo']){
-        $this->periodo = $this->getPeriodo();
-        if($this->periodo){
-        $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($this->periodo['mes'])).' '.$this->periodo['anio']. ' (ABIERTO)'),0,0,'C'); 
-        $this->Ln(6);    
-        }else{
-        $this->Cell(0,0,utf8_decode('AL PERIODO AGOSTO 2018 (ABIERTO)'),0,0,'C'); 
-        $this->Ln(6);             
-        }
-        }else{
-        
-        $co_mes = $_GET['co_mes'];
-        $nu_anio = $_GET['co_anio_fiscal'];  
-        $this->periodo = $this->getPeriodo($co_mes);
-        $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($co_mes)).' '.$nu_anio),0,0,'C'); 
-         $this->Ln(6);             
-        }
+
 
 
     }
@@ -92,7 +70,31 @@ class PDF extends FPDF {
 
     function ChapterBody() {
      
-         
+
+        $this->SetFont('Arial','B',10);
+        $this->SetWidths(array(200));
+        $this->SetAligns(array("C"));  
+        $this->Ln(6);
+        $this->Cell(0,0,utf8_decode('ESTADO DE SITUACIÓN FINANCIERA'),0,0,'C');                
+        $this->Ln(6);
+        if($_GET['in_periodo']){
+        $this->periodo = $this->getPeriodo();
+        if($this->periodo){
+        $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($this->periodo['mes'])).' '.$this->periodo['anio']. ' (ABIERTO)'),0,0,'C'); 
+        $this->Ln(6);    
+        }else{
+        $this->Cell(0,0,utf8_decode('AL PERIODO AGOSTO 2018 (ABIERTO)'),0,0,'C'); 
+        $this->Ln(6);             
+        }
+        }else{
+        
+        $co_mes = $_GET['co_mes'];
+        $nu_anio = $_GET['co_anio_fiscal'];  
+        $this->periodo = $this->getPeriodo($co_mes);
+        $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($co_mes)).' '.$nu_anio),0,0,'C'); 
+         $this->Ln(6);             
+        }        
+        
 
          $this->SetFont('Arial','B',8);     
          $this->SetFillColor(201, 199, 199);
