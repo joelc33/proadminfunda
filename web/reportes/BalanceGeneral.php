@@ -74,17 +74,13 @@ class PDF extends FPDF {
         $this->SetFont('Arial','B',10);
         $this->SetWidths(array(200));
         $this->SetAligns(array("C"));  
-        $this->Ln(6);
+        $this->Ln(4);
         $this->Cell(0,0,utf8_decode('ESTADO DE SITUACIÓN FINANCIERA'),0,0,'C');                
-        $this->Ln(6);
+        $this->Ln(4);
         if($_GET['in_periodo']){
         $this->periodo = $this->getPeriodo();
         if($this->periodo){
-        $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($this->periodo['mes'])).' '.$this->periodo['anio']. ' (ABIERTO)'),0,0,'C'); 
-        $this->Ln(6);    
-        }else{
-        $this->Cell(0,0,utf8_decode('AL PERIODO AGOSTO 2018 (ABIERTO)'),0,0,'C'); 
-        $this->Ln(6);             
+        $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($this->periodo['mes'])).' '.$this->periodo['anio']. ' (ABIERTO)'),0,0,'C');   
         }
         }else{
         
@@ -93,7 +89,7 @@ class PDF extends FPDF {
         $this->periodo = $this->getPeriodo($co_mes);
         $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($co_mes)).' '.$nu_anio),0,0,'C');            
         }
-        $this->Ln(3);
+        $this->Ln(4);
         $this->Cell(0,0,utf8_decode('(Cifras expresadas en miles de Bolivares Digitales)'),0,0,'C'); 
         $this->Ln(6);       
         
@@ -238,17 +234,13 @@ class PDF extends FPDF {
         $this->SetFont('Arial','B',10);
         $this->SetWidths(array(200));
         $this->SetAligns(array("C"));  
-        $this->Ln(6);
+        $this->Ln(4);
         $this->Cell(0,0,utf8_decode('ESTADO DE RENDIMIENTO FINANCIERO'),0,0,'C');                
-        $this->Ln(6);
+        $this->Ln(4);
         if($_GET['in_periodo']){
         $this->periodo = $this->getPeriodo();
         if($this->periodo){
         $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($this->periodo['mes'])).' '.$this->periodo['anio']. ' (ABIERTO)'),0,0,'C'); 
-        $this->Ln(6);    
-        }else{
-        $this->Cell(0,0,utf8_decode('AL PERIODO AGOSTO 2018 (ABIERTO)'),0,0,'C'); 
-        $this->Ln(6);             
         }
         }else{
         
@@ -258,7 +250,7 @@ class PDF extends FPDF {
         $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($co_mes)).' '.$nu_anio),0,0,'C');          
         }         
 
-        $this->Ln(3);
+        $this->Ln(4);
         $this->Cell(0,0,utf8_decode('(Cifras expresadas en miles de Bolivares Digitales)'),0,0,'C'); 
         $this->Ln(6);        
         
