@@ -50,7 +50,7 @@ class PDF extends FPDF {
         if($_GET['in_periodo']){
         $this->periodo = $this->getPeriodo();
         if($this->periodo){
-        $this->Cell(0,0,utf8_decode('AL PERIODO '.strtoupper(mes($this->periodo['mes'])).' '.$this->periodo['anio']. ' (ABIERTO)'),0,0,'C'); 
+        $this->Cell(0,0,utf8_decode('AL '.$this->periodo['dia']. ' DE '.strtoupper(mes($this->periodo['mes'])).' '.$this->periodo['anio']. ' (ABIERTO)'),0,0,'C'); 
         $this->Ln(6);    
         }else{
         $this->Cell(0,0,utf8_decode('AL PERIODO AGOSTO 2018 (ABIERTO)'),0,0,'C'); 
@@ -533,7 +533,8 @@ where (tb024.nu_cuenta_contable like '7%') and co_mes = $co_mes and nu_anio = $n
     
     function getPeriodo(){
 
-        $sql = "SELECT EXTRACT(YEAR FROM (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE) AS anio,lpad(EXTRACT(MONTH FROM (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE)::text,2,'0') AS mes from 
+        $sql = "SELECT EXTRACT(YEAR FROM (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE) AS anio,lpad(EXTRACT(MONTH FROM (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE)::text,2,'0') AS mes,
+            EXTRACT(DAY FROM (date_trunc('DAY',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE)::text from 
 tb180_maestro_contable order by co_maestro_contable desc limit 1";
 
         $conex = new ConexionComun();
