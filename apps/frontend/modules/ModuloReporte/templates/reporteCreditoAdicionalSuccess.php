@@ -112,8 +112,7 @@
                         text: 'Limpiar',  // Limpiar campos del formulario
                         iconCls: 'icon-limpiar',
                         handler: this.onLimpiar
-                    },
-                    this.exportar]
+                    }]
 
             });
 
