@@ -269,6 +269,11 @@ class ModuloReporteActions extends sfActions
    
   }
 
+  public function executeReporteCreditoAdicional(sfWebRequest $request)
+  {
+   
+  }  
+
   public function executeReporteOdpProveedor(sfWebRequest $request)
   {
    
