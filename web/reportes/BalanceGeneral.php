@@ -573,7 +573,7 @@ where (tb024.nu_cuenta_contable like '7%') and co_mes = $co_mes and nu_anio = $n
         }
 
         $sql = "SELECT EXTRACT(YEAR FROM (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE) AS anio,lpad(EXTRACT(MONTH FROM (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE)::text,2,'0') AS mes,
-            EXTRACT(DAY FROM (date_trunc('DAY',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE)::text  as dia from 
+            EXTRACT(DAY FROM fecha_cierre::date)::text  as dia from 
 tb180_maestro_contable $where order by co_maestro_contable desc limit 1";
 
         $conex = new ConexionComun();
