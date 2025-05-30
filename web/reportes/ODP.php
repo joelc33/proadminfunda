@@ -643,7 +643,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->MultiCell(175, 20, 'ANEXOS ' . $nu_pago, 0, 1, 'J', 0);
                     $this->SetX(155); //COLUMNA
                     $this->SetFont('courier', '', 6);
-                    $this->MultiCell(175, 3, utf8_decode('Fecha de Emisión:    ') . date("d/m/Y", strtotime($this->datos[0]['fecha_odp'])), 0, 1, 'R', 0);
+                    $this->MultiCell(175, 3, utf8_decode('Fecha de Emisión:    ') . date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), 0, 1, 'R', 0);
                     $this->SetX(155); //COLUMNA
                     //$anio = date("Y");
                     $anio = $this->datos[0]['anio'];
@@ -802,7 +802,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->MultiCell(175, 20, 'ANEXOS ' . $nu_pago, 0, 1, 'J', 0);
             $this->SetX(155); //COLUMNA
             $this->SetFont('courier', '', 6);
-            $this->MultiCell(175, 3, utf8_decode('Fecha de Emisión:    ') . date("d/m/Y", strtotime($this->datos[0]['fecha_odp'])), 0, 1, 'R', 0);
+            $this->MultiCell(175, 3, utf8_decode('Fecha de Emisión:    ') . date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), 0, 1, 'R', 0);
             $this->SetX(155); //COLUMNA
             //$anio = date("Y");
             $anio = $this->datos[0]['anio'];
@@ -861,7 +861,7 @@ class PDF_Flo extends PDF_FlowingBlock
                     $this->MultiCell(175, 20, 'ANEXOS ' . $nu_pago, 0, 1, 'J', 0);
                     $this->SetX(155); //COLUMNA
                     $this->SetFont('courier', '', 6);
-                    $this->MultiCell(175, 3, utf8_decode('Fecha de Emisión:    ') . date("d/m/Y", strtotime($this->datos[0]['fecha_odp'])), 0, 1, 'R', 0);
+                    $this->MultiCell(175, 3, utf8_decode('Fecha de Emisión:    ') . date("d/m/Y", strtotime($this->datos[0]['fe_pago'])), 0, 1, 'R', 0);
                     $this->SetX(155); //COLUMNA
                     //$anio = date("Y");
                     $anio = $this->datos[0]['anio'];
@@ -955,7 +955,7 @@ class PDF_Flo extends PDF_FlowingBlock
                          SUBSTRING(upper(substr(tb052.tx_observacion,1,500)), 1, 150) as tx_observacion,
                          tb001.nb_usuario,
                          tb052.anio,
-                         tb060.created_at as fecha_odp,                      
+                         case when tb045.fe_emision is null then tb060.fe_emision else tb045.fe_emision end as fecha_odp,                  
                          tb052.co_solicitud,
                          tb060.tx_serial,
                          tb060.co_orden_pago as co_odp,
