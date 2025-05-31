@@ -231,19 +231,19 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetX(25);
         $this->Cell(50, 5, utf8_decode('BANCO:'), 0, 1, 'L');
 
-        $this->SetY($this->GetY()-5);
+        $this->SetY($this->GetY() - 5);
         $this->SetFont('Arial', '', 8);
-        $this->SetX(105);
-        $this->Cell(100, 5, utf8_decode($this->datos['tx_banco']), 0, 1, 'R');
-        
-       
+        $this->SetX(80);
+        $this->Cell(100, 5, utf8_decode(strtoupper($this->datos['tx_banco'])), 0, 1, 'J');
+
+
         $this->SetX(25);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(50, 5, utf8_decode('CUENTA BANCARIA:'), 0, 1, 'L');
-        $this->SetY($this->GetY()-5);
+        $this->SetY($this->GetY() - 5);
         $this->SetFont('Arial', '', 8);
-        $this->SetX(105);
-        $this->Cell(100, 5, $this->datos['tx_cuenta_bancaria'], 0, 0, 'R');
+        $this->SetX(80);
+        $this->Cell(100, 5, $this->datos['tx_cuenta_bancaria'], 0, 0, 'J');
 
         $this->Ln(5);
 
@@ -251,10 +251,10 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(200, 5, utf8_decode('DOCUMENTO NRO.:'), 0, 0, 'L');
         $this->Ln(5);
-        $this->SetY($this->GetY()-5);
+        $this->SetY($this->GetY() - 5);
         $this->SetFont('Arial', '', 8);
-        $this->SetX(105);
-        $this->Cell(100, 5, utf8_decode($this->datos['nu_documento']), 0, 0, 'R');
+        $this->SetX(80);
+        $this->Cell(100, 5, utf8_decode($this->datos['nu_documento']), 0, 0, 'J');
 
         $this->Ln(5);
 
@@ -262,10 +262,43 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(200, 5, utf8_decode('TRANSACCIÓN NRO.:'), 0, 0, 'L');
         $this->Ln(5);
-        $this->SetY($this->GetY()-5);
+        $this->SetY($this->GetY() - 5);
         $this->SetFont('Arial', '', 8);
-        $this->SetX(105);
-        $this->Cell(100, 5, utf8_decode($this->datos['nu_transaccion']), 0, 0, 'R');
+        $this->SetX(80);
+        $this->Cell(100, 5, utf8_decode($this->datos['nu_transaccion']), 0, 0, 'J');
+
+        $this->Ln(5);
+
+        $this->SetX(25);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(200, 5, utf8_decode('TIPO MOVIMIENTO:'), 0, 0, 'L');
+        $this->Ln(5);
+        $this->SetY($this->GetY() - 5);
+        $this->SetFont('Arial', '', 8);
+        $this->SetX(80);
+        $this->Cell(100, 5, utf8_decode($this->datos['de_tipo_cuenta_movimiento']), 0, 0, 'J');
+
+        $this->Ln(5);
+
+        $this->SetX(25);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(200, 5, utf8_decode('TIPO DOCUMENTO:'), 0, 0, 'J');
+        $this->Ln(5);
+        $this->SetY($this->GetY() - 5);
+        $this->SetFont('Arial', '', 8);
+        $this->SetX(80);
+        $this->Cell(100, 5, utf8_decode($this->datos['de_tipo_documento_cuenta']), 0, 0, 'J');
+
+        $this->Ln(5);
+
+        $this->SetX(25);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(200, 5, utf8_decode('SUB-TIPO DOCUMENTO:'), 0, 0, 'L');
+        $this->Ln(5);
+        $this->SetY($this->GetY() - 5);
+        $this->SetFont('Arial', '', 8);
+        $this->SetX(80);
+        $this->Cell(80, 5, utf8_decode($this->datos['de_subtipo_documento']), 0, 0, 'J');
 
 
         $this->Ln(5);
@@ -274,18 +307,18 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(200, 5, utf8_decode('MOTIVO DE LA TRANSFERENCIA:'), 0, 0, 'L');
         $this->Ln(5);
-        $this->SetY($this->GetY()-5);
+        $this->SetY($this->GetY() - 5);
         $this->SetFont('Arial', '', 8);
         $this->SetX(80);
-        $this->MultiCell(125,4,utf8_decode($this->datos['de_observacion']),0,'J',0);
+        $this->MultiCell(125, 4, utf8_decode(strtoupper($this->datos['de_observacion'])), 0, 'J', 0);
 
-       
+
 
         $this->SetY(141);
         $this->SetX(25);
-      
 
-       
+
+
 
 
         $this->RoundedRect(10, 205, 65, 20, 0.5, '1001', '', $style);
@@ -309,7 +342,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->Cell(200, 5, utf8_decode('TESORERÍA'), 0, 0, 'L');
 
 
-        
+
 
 
 
@@ -342,28 +375,33 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $conex = new ConexionComun();
         $sql = " SELECT tb155_cuenta_bancaria_historico.ID, 
-                    tb010_banco.TX_BANCO, 
-                    tb026_solicitud.CO_SOLICITUD, 
-                    tb011_cuenta_bancaria.TX_CUENTA_BANCARIA, 
-                    tb011_cuenta_bancaria.TX_DESCRIPCION, 
-                    tb155_cuenta_bancaria_historico.NU_DOCUMENTO, 
-                    tb155_cuenta_bancaria_historico.MO_TRANSACCION, 
-                    tb155_cuenta_bancaria_historico.MO_SALDO_NUEVO, 
-                    tb155_cuenta_bancaria_historico.MO_SALDO_ANTERIOR, 
-                    to_char(tb155_cuenta_bancaria_historico.FE_TRANSACCION,'dd/mm/yyyy') as FE_TRANSACCION, 
-                    tb155_cuenta_bancaria_historico.NU_TRANSACCION, 
-                    tb155_cuenta_bancaria_historico.DE_OBSERVACION, 
-                    tb029_estatus.TX_ESTATUS, 
-                    tb026_solicitud.CO_ESTATUS,
-                    tb030_ruta.CO_RUTA
-                    FROM tb155_cuenta_bancaria_historico, tb010_banco, tb026_solicitud, tb011_cuenta_bancaria, tb029_estatus,tb030_ruta
-                    WHERE tb026_solicitud.CO_ESTATUS IN (1,3,4) AND tb026_solicitud.CO_TIPO_SOLICITUD IN (35) AND 
-                    tb010_banco.CO_BANCO=tb155_cuenta_bancaria_historico.ID_TB010_BANCO AND tb026_solicitud.CO_SOLICITUD=tb155_cuenta_bancaria_historico.CO_SOLICITUD AND 
-                    tb029_estatus.CO_ESTATUS=tb026_solicitud.CO_ESTATUS AND tb011_cuenta_bancaria.CO_CUENTA_BANCARIA=tb155_cuenta_bancaria_historico.ID_TB011_CUENTA_BANCARIA 
-                    AND tb030_ruta.CO_SOLICITUD = tb026_solicitud.CO_SOLICITUD
-                    AND co_ruta = ".$_GET["codigo"]."
-                    ORDER BY tb026_solicitud.CO_SOLICITUD DESC,tb026_solicitud.CO_SOLICITUD DESC 
-                    LIMIT 15  "; //.$_GET['codigo'];
+                        tb010_banco.TX_BANCO, 
+                        tb026_solicitud.CO_SOLICITUD, 
+                        tb011_cuenta_bancaria.TX_CUENTA_BANCARIA, 
+                        tb011_cuenta_bancaria.TX_DESCRIPCION, 
+                        tb155_cuenta_bancaria_historico.NU_DOCUMENTO, 
+                        tb155_cuenta_bancaria_historico.MO_TRANSACCION, 
+                        tb155_cuenta_bancaria_historico.MO_SALDO_NUEVO, 
+                        tb155_cuenta_bancaria_historico.MO_SALDO_ANTERIOR, 
+                        to_char(tb155_cuenta_bancaria_historico.FE_TRANSACCION,'dd/mm/yyyy'), 
+                        tb155_cuenta_bancaria_historico.NU_TRANSACCION, 
+                        tb155_cuenta_bancaria_historico.DE_OBSERVACION, 
+                        tb029_estatus.TX_ESTATUS, 
+                        tb026_solicitud.CO_ESTATUS,
+                        tb030_ruta.CO_RUTA,
+                        tb154_tipo_cuenta_movimiento.de_tipo_cuenta_movimiento,
+                        tb153_tipo_documento_cuenta.de_tipo_documento_cuenta,
+                        tb156_subtipo_documento.de_subtipo_documento
+                        FROM tb155_cuenta_bancaria_historico, tb010_banco, tb026_solicitud, tb011_cuenta_bancaria, tb029_estatus,tb030_ruta,tb154_tipo_cuenta_movimiento,
+                        tb153_tipo_documento_cuenta,tb156_subtipo_documento
+                        WHERE tb026_solicitud.CO_ESTATUS IN (1,3,4) AND tb026_solicitud.CO_TIPO_SOLICITUD IN (35) AND 
+                        tb010_banco.CO_BANCO=tb155_cuenta_bancaria_historico.ID_TB010_BANCO AND tb026_solicitud.CO_SOLICITUD=tb155_cuenta_bancaria_historico.CO_SOLICITUD AND 
+                        tb029_estatus.CO_ESTATUS=tb026_solicitud.CO_ESTATUS AND tb011_cuenta_bancaria.CO_CUENTA_BANCARIA=tb155_cuenta_bancaria_historico.ID_TB011_CUENTA_BANCARIA 
+                        AND tb154_tipo_cuenta_movimiento.id = tb155_cuenta_bancaria_historico.id_tb154_tipo_cuenta_movimiento
+                        AND tb153_tipo_documento_cuenta.id = tb155_cuenta_bancaria_historico.id_tb153_tipo_documento_cuenta
+                        AND tb030_ruta.CO_SOLICITUD = tb026_solicitud.CO_SOLICITUD
+                        AND tb156_subtipo_documento.id = tb155_cuenta_bancaria_historico.id_tb156_subtipo_documento
+                    AND co_ruta = " . $_GET["codigo"]; //.$_GET['codigo'];
 
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
@@ -398,6 +436,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
 }
 
+
 $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->AliasNbPages();
 $pdf->PrintChapter();
@@ -418,8 +457,8 @@ $comm->Execute($update);
 
 $pdf->Output($dir, 'F');
 
-
-/*$pdf = new PDF_Flo('P', 'mm', 'letter');
+/*
+$pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetDisplayMode('default');
 $pdf->Output();*/
