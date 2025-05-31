@@ -277,7 +277,7 @@ class PDF_Flo extends PDF_FlowingBlock
         $this->SetY($this->GetY()-5);
         $this->SetFont('Arial', '', 8);
         $this->SetX(80);
-        $this->MultiCell(125,4,utf8_decode($this->datos['de_observacion']),1,'J',0);
+        $this->MultiCell(125,4,utf8_decode($this->datos['de_observacion']),0,'J',0);
 
        
 
