@@ -545,7 +545,7 @@ class ContratoActions extends sfActions
       }
 
       /*Campo tipo VARCHAR */
-      $tb052_compras->setTxObservacion($tb052_comprasForm["tx_observacion"]);
+      $tb052_compras->setTxObservacion($tb052_comprasForm["tx_concepto"]);
 
       $tb052_compras->setTxConcepto($tb052_comprasForm["tx_concepto"]);
 
