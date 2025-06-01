@@ -1,10 +1,10 @@
 <script type="text/javascript">
     Ext.ns("solicitudLista");
     solicitudLista.main = {
-        condicion: function(codigo) {
+        condicion: function (codigo) {
             return (codigo == '0') ? 'NO' : 'SI';
         },
-        init: function() {
+        init: function () {
 
             this.OBJ = paqueteComunJS.funcion.doJSON({
                 stringData: '<?php echo $data ?>'
@@ -43,25 +43,25 @@
                 ],
                 keys: [{
                     key: [Ext.EventObject.ENTER],
-                    handler: function() {
+                    handler: function () {
                         solicitudLista.main.aplicarFiltroByFormulario();
                     }
                 }],
                 buttonAlign: 'center',
                 buttons: [{
-                        text: 'Consultar',
-                        iconCls: 'icon-buscar',
-                        handler: function() {
-                            solicitudLista.main.aplicarFiltroByFormulario();
-                        }
-                    },
-                    {
-                        text: 'Limpiar',
-                        iconCls: 'icon-limpiar',
-                        handler: function() {
-                            solicitudLista.main.limpiarCamposByFormFiltro();
-                        }
+                    text: 'Consultar',
+                    iconCls: 'icon-buscar',
+                    handler: function () {
+                        solicitudLista.main.aplicarFiltroByFormulario();
                     }
+                },
+                {
+                    text: 'Limpiar',
+                    iconCls: 'icon-limpiar',
+                    handler: function () {
+                        solicitudLista.main.limpiarCamposByFormFiltro();
+                    }
+                }
                 ]
             });
 
@@ -77,10 +77,10 @@
             this.estado = new Ext.Button({
                 text: 'Procesar',
                 iconCls: 'icon-fin',
-                handler: function() { 
+                handler: function () {
 
                     /* */
-                    Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar este tramite?', function(boton) {
+                    Ext.MessageBox.confirm('Confirmación', '¿Realmente desea enviar este tramite?', function (boton) {
                         if (boton == "yes") {
                             this.msg = Ext.get('formulariosolicitud');
                             this.msg.load({
@@ -101,7 +101,7 @@
             this.nueva_solicitud = new Ext.Button({
                 text: 'Nuevo',
                 iconCls: 'icon-nuevo',
-                handler: function() {
+                handler: function () {
                     //                                contribuyenteLista.main.mascara.show();
                     this.msg = Ext.get('formulariocontribuyente');
                     this.msg.load({
@@ -115,10 +115,10 @@
             this.anular = new Ext.Button({
                 text: 'Anular',
                 iconCls: 'icon-anteriores',
-                handler: function() {
+                handler: function () {
 
                     /* */
-                    Ext.MessageBox.confirm('Confirmación', '¿Realmente desea anular este tramite?', function(boton) {
+                    Ext.MessageBox.confirm('Confirmación', '¿Realmente desea anular este tramite?', function (boton) {
                         if (boton == "yes") {
                             this.msg = Ext.get('formulariosolicitud');
                             this.msg.load({
@@ -139,7 +139,7 @@
             this.formulario = new Ext.Button({
                 text: 'Cargar Datos',
                 iconCls: 'icon-cambio',
-                handler: function() {
+                handler: function () {
                     this.msg = Ext.get('formulariosolicitud');
                     this.msg.load({
                         url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/cargarDatos",
@@ -157,7 +157,7 @@
             this.detalle = new Ext.Button({
                 text: 'Historico Proceso',
                 iconCls: 'icon-buscar',
-                handler: function() {
+                handler: function () {
                     this.msg = Ext.get('formulariosolicitud');
                     this.msg.load({
                         url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/Solicitud/historial",
@@ -183,6 +183,14 @@
 
             }
 
+            function renderDatos(val, attr, record) {
+
+                if (val != '') {
+                    return '<a href="#" onclick="solicitudLista.main.getDatos()">Ver Documento</a>'
+                }
+
+            }
+
             this.gridPanel_ = new Ext.grid.GridPanel({
                 title: 'Lista de Transcripción de Movimientos',
                 iconCls: 'icon-libro',
@@ -193,9 +201,9 @@
                 tbar: [
                     <?php
                     if ($sf_request->getAttribute('in_activo') == true) {
-                    ?>
-                        this.nueva_solicitud, '-',
-                    <?php
+                        ?>
+                                this.nueva_solicitud, '-',
+                        <?php
                     }
                     ?>
 //                    this.formulario, '-',
@@ -265,7 +273,7 @@
                         width: 400,
                         menuDisabled: true,
                         sortable: true,
-                        renderer:textoLargo,
+                        renderer: textoLargo,
                         dataIndex: 'tx_observacion'
                     },
                     {
@@ -274,19 +282,27 @@
                         menuDisabled: true,
                         sortable: true,
                         dataIndex: 'tx_estatus'
+                    },
+                    {
+                        header: 'Datos',
+                        width: 150,
+                        menuDisabled: true,
+                        sortable: true,
+                        dataIndex: 'in_reporte',
+                        renderer: renderDatos
                     }
                 ],
                 stripeRows: true,
                 autoScroll: true,
                 stateful: true,
                 listeners: {
-                    cellclick: function(Grid, rowIndex, columnIndex, e) {
-                        
-                        if(solicitudLista.main.store_lista.getAt(rowIndex).get('co_estatus')==4){
-                        solicitudLista.main.anular.disable();                            
-                        }else{
-                        solicitudLista.main.anular.enable();                           
-                        }                        
+                    cellclick: function (Grid, rowIndex, columnIndex, e) {
+
+                        if (solicitudLista.main.store_lista.getAt(rowIndex).get('co_estatus') == 4) {
+                            solicitudLista.main.anular.disable();
+                        } else {
+                            solicitudLista.main.anular.enable();
+                        }
 
                         solicitudLista.main.estado.enable();
                         solicitudLista.main.formulario.enable();
@@ -321,15 +337,15 @@
             this.store_lista.baseParams.paginar = 'si';
             this.store_lista.baseParams.in_ventanilla = 'true';
             this.store_lista.load();
-            this.store_lista.on('load', function() {
+            this.store_lista.on('load', function () {
                 solicitudLista.main.estado.disable();
                 solicitudLista.main.anular.disable();
             });
         },
-        getDatos: function() {
+        getDatos: function () {
             window.open("<?php echo $_SERVER['SCRIPT_NAME']; ?>/reporte/index/i/" + solicitudLista.main.gridPanel_.getSelectionModel().getSelected().get('co_ruta'));
         },
-        onReporte: function() {
+        onReporte: function () {
             this.msg = Ext.get('formulariosolicitud');
             this.msg.load({
                 url: "<?php echo $_SERVER["SCRIPT_NAME"] ?>/reporte/ReporteSolicitudesPendientesVentanilla",
@@ -337,81 +353,87 @@
                 text: "Cargando.."
             });
         },
-        getLista: function() {
+        getLista: function () {
             this.store = new Ext.data.JsonStore({
                 url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/IngresoFinanciero/storelista',
                 root: 'data',
                 fields: [{
-                        name: 'id'
-                    },
-                    {
-                        name: 'co_solicitud'
-                    },
-                    {
-                        name: 'in_activo'
-                    },
-                    {
-                        name: 'created_at'
-                    },
-                    {
-                        name: 'updated_at'
-                    },
-                    {
-                        name: 'id_tb011_cuenta_bancaria'
-                    },
-                    {
-                        name: 'mo_transaccion'
-                    },
-                    {
-                        name: 'fe_transaccion'
-                    },
-                    {
-                        name: 'mo_saldo_nuevo'
-                    },
-                    {
-                        name: 'de_observacion'
-                    },
-                    {
-                        name: 'id_tb010_banco'
-                    },
-                    {
-                        name: 'id_tb154_tipo_cuenta_movimiento'
-                    },
-                    {
-                        name: 'id_tb153_tipo_documento_cuenta'
-                    },
-                    {
-                        name: 'id_tb156_subtipo_documento'
-                    },
-                    {
-                        name: 'nu_documento'
-                    },
-                    {
-                        name: 'mo_saldo_anterior'
-                    },
-                    {
-                        name: 'nu_transaccion'
-                    },
-                    {
-                        name: 'tx_observacion'
-                    },             
-                    {
-                        name: 'tx_estatus'
-                    },
-                    {
-                        name: 'co_estatus'
-                    },                    
-                    {
-                        name: 'cuenta',
-                        convert: function(v, r) {
-                            return r.id_tb011_cuenta_bancaria + ' - ' + r.tx_descripcion;
-                        }
+                    name: 'id'
+                },
+                {
+                    name: 'co_solicitud'
+                },
+                {
+                    name: 'in_activo'
+                },
+                {
+                    name: 'created_at'
+                },
+                {
+                    name: 'updated_at'
+                },
+                {
+                    name: 'id_tb011_cuenta_bancaria'
+                },
+                {
+                    name: 'mo_transaccion'
+                },
+                {
+                    name: 'fe_transaccion'
+                },
+                {
+                    name: 'mo_saldo_nuevo'
+                },
+                {
+                    name: 'de_observacion'
+                },
+                {
+                    name: 'id_tb010_banco'
+                },
+                {
+                    name: 'id_tb154_tipo_cuenta_movimiento'
+                },
+                {
+                    name: 'id_tb153_tipo_documento_cuenta'
+                },
+                {
+                    name: 'id_tb156_subtipo_documento'
+                },
+                {
+                    name: 'nu_documento'
+                },
+                {
+                    name: 'mo_saldo_anterior'
+                },
+                {
+                    name: 'nu_transaccion'
+                },
+                {
+                    name: 'tx_observacion'
+                },
+                {
+                    name: 'tx_estatus'
+                },
+                {
+                    name: 'co_estatus'
+                },
+                {
+                    name: 'cuenta',
+                    convert: function (v, r) {
+                        return r.id_tb011_cuenta_bancaria + ' - ' + r.tx_descripcion;
                     }
+                },
+                {
+                    name: 'in_reporte'
+                },
+                {
+                    name: 'co_ruta'
+                }
                 ]
             });
             return this.store;
         },
-        aplicarFiltroByFormulario: function() {
+        aplicarFiltroByFormulario: function () {
             //Capturamos los campos con su value para posteriormente verificar cual
             //esta lleno y trabajar en base a ese.
             var campo = solicitudLista.main.formFiltroPrincipal.getForm().getValues();
@@ -444,7 +466,7 @@
             }
 
         },
-        limpiarCamposByFormFiltro: function() {
+        limpiarCamposByFormFiltro: function () {
             solicitudLista.main.formFiltroPrincipal.getForm().reset();
             solicitudLista.main.store_lista.baseParams = {};
             solicitudLista.main.store_lista.load();

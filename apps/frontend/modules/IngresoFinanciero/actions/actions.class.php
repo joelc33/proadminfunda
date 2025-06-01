@@ -15,12 +15,12 @@ class IngresoFinancieroActions extends sfActions
     {
         // $this->forward('IngresoFinanciero', 'lista');
         $this->data = json_encode(array(
-            "co_rol"            => $this->getUser()->getAttribute('rol'),
-            "co_usuario"        => $this->getUser()->getAttribute('codigo'),
-            "in_activo"         => $this->getUser()->getAttribute('in_activo'),
+            "co_rol" => $this->getUser()->getAttribute('rol'),
+            "co_usuario" => $this->getUser()->getAttribute('codigo'),
+            "in_activo" => $this->getUser()->getAttribute('in_activo'),
             "tx_tipo_solicitud" => $this->getRequestParameter("tx_tipo_solicitud"),
             "co_tipo_solicitud" => 35,
-            "tx_url"            => $this->getRequestParameter("tx_url"),
+            "tx_url" => $this->getRequestParameter("tx_url"),
 
         ));
 
@@ -37,7 +37,7 @@ class IngresoFinancieroActions extends sfActions
     }
 
     public function executeEditar(sfWebRequest $request)
-    { 
+    {
         $codigo = $this->getRequestParameter("co_solicitud");
         if ($codigo != '' || $codigo != null) {
             $c = new Criteria();
@@ -46,47 +46,47 @@ class IngresoFinancieroActions extends sfActions
             $stmt = Tb155CuentaBancariaHistoricoPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->data = json_encode(array(
-                "id"                => $campos["id"],
-                "in_activo"     => $campos["in_activo"],
-                "created_at"     => $campos["created_at"],
-                "updated_at"     => $campos["updated_at"],
-                "id_tb011_cuenta_bancaria"     => $campos["id_tb011_cuenta_bancaria"],
-                "mo_transaccion"     => $campos["mo_transaccion"],
-                "fe_transaccion"     => $campos["fe_transaccion"],
-                "mo_saldo_nuevo"     => $campos["mo_saldo_nuevo"],
-                "de_observacion"     => $campos["de_observacion"],
-                "id_tb010_banco"     => $campos["id_tb010_banco"],
-                "id_tb154_tipo_cuenta_movimiento"     => $campos["id_tb154_tipo_cuenta_movimiento"],
-                "id_tb153_tipo_documento_cuenta"     => $campos["id_tb153_tipo_documento_cuenta"],
-                "id_tb156_subtipo_documento"     => $campos["id_tb156_subtipo_documento"],
-                "nu_documento"              => $campos["nu_documento"],
-                "mo_saldo_anterior"         => $campos["mo_saldo_anterior"],
-                "nu_transaccion"            => $campos["nu_transaccion"],
-                "co_solicitud"              => $campos["co_solicitud"],
-                "fe_desde"                  =>  '01/01/' . $this->getUser()->getAttribute('ejercicio'),
-                "fe_hasta"                  =>  date("d/m/Y")
+                "id" => $campos["id"],
+                "in_activo" => $campos["in_activo"],
+                "created_at" => $campos["created_at"],
+                "updated_at" => $campos["updated_at"],
+                "id_tb011_cuenta_bancaria" => $campos["id_tb011_cuenta_bancaria"],
+                "mo_transaccion" => $campos["mo_transaccion"],
+                "fe_transaccion" => $campos["fe_transaccion"],
+                "mo_saldo_nuevo" => $campos["mo_saldo_nuevo"],
+                "de_observacion" => $campos["de_observacion"],
+                "id_tb010_banco" => $campos["id_tb010_banco"],
+                "id_tb154_tipo_cuenta_movimiento" => $campos["id_tb154_tipo_cuenta_movimiento"],
+                "id_tb153_tipo_documento_cuenta" => $campos["id_tb153_tipo_documento_cuenta"],
+                "id_tb156_subtipo_documento" => $campos["id_tb156_subtipo_documento"],
+                "nu_documento" => $campos["nu_documento"],
+                "mo_saldo_anterior" => $campos["mo_saldo_anterior"],
+                "nu_transaccion" => $campos["nu_transaccion"],
+                "co_solicitud" => $campos["co_solicitud"],
+                "fe_desde" => '01/01/' . $this->getUser()->getAttribute('ejercicio'),
+                "fe_hasta" => date("d/m/Y")
             ));
         } else {
             $this->data = json_encode(array(
-                "id"     => "",
-                "in_activo"     => "",
-                "created_at"     => "",
-                "updated_at"     => "",
-                "id_tb011_cuenta_bancaria"     => "",
-                "mo_transaccion"     => "",
-                "fe_transaccion"     => "",
-                "mo_saldo_nuevo"     => "",
-                "de_observacion"     => "",
-                "id_tb010_banco"     => "",
-                "id_tb154_tipo_cuenta_movimiento"     => "",
-                "id_tb153_tipo_documento_cuenta"     => "",
-                "id_tb156_subtipo_documento"     => "",
-                "nu_documento"     => "",
-                "mo_saldo_anterior"     => "",
-                "nu_transaccion"     => "",
-                "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
-                "fe_desde"                  =>  '01/01/' . $this->getUser()->getAttribute('ejercicio'),
-                "fe_hasta"                  =>  date("d/m/Y")
+                "id" => "",
+                "in_activo" => "",
+                "created_at" => "",
+                "updated_at" => "",
+                "id_tb011_cuenta_bancaria" => "",
+                "mo_transaccion" => "",
+                "fe_transaccion" => "",
+                "mo_saldo_nuevo" => "",
+                "de_observacion" => "",
+                "id_tb010_banco" => "",
+                "id_tb154_tipo_cuenta_movimiento" => "",
+                "id_tb153_tipo_documento_cuenta" => "",
+                "id_tb156_subtipo_documento" => "",
+                "nu_documento" => "",
+                "mo_saldo_anterior" => "",
+                "nu_transaccion" => "",
+                "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+                "fe_desde" => '01/01/' . $this->getUser()->getAttribute('ejercicio'),
+                "fe_hasta" => date("d/m/Y")
             ));
         }
     }
@@ -253,7 +253,7 @@ class IngresoFinancieroActions extends sfActions
                 $con->rollback();
                 $this->data = json_encode(array(
                     "success" => false,
-                    "msg" =>  $e->getMessage()
+                    "msg" => $e->getMessage()
                 ));
             }
         } else {
@@ -264,11 +264,11 @@ class IngresoFinancieroActions extends sfActions
             try {
 
                 $tb026_solicitudForm = array(
-                    "co_tipo_solicitud"   => 35,
-                    "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
-                    "fe_solicitud"        => $tb155_cuenta_bancaria_historicoForm["fe_transaccion"],
-                    "observacion"         => $tb155_cuenta_bancaria_historicoForm["de_observacion"],
-                    "codigo"              => $this->getUser()->getAttribute('codigo')
+                    "co_tipo_solicitud" => 35,
+                    "ejercicio" => $this->getUser()->getAttribute('ejercicio'),
+                    "fe_solicitud" => $tb155_cuenta_bancaria_historicoForm["fe_transaccion"],
+                    "observacion" => $tb155_cuenta_bancaria_historicoForm["de_observacion"],
+                    "codigo" => $this->getUser()->getAttribute('codigo')
                 );
 
                 $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
@@ -278,7 +278,7 @@ class IngresoFinancieroActions extends sfActions
                 } else {
                     $this->data = json_encode(array(
                         "success" => false,
-                        "msg" =>  $resp["msg"]
+                        "msg" => $resp["msg"]
                     ));
 
                     return;
@@ -286,7 +286,7 @@ class IngresoFinancieroActions extends sfActions
 
                 //echo "llego=".$tb155_cuenta_bancaria_historicoForm["co_solicitud"]; exit();
 
-                
+
                 /*CAMPOS*/
 
                 /*Campo tipo BOOLEAN */
@@ -452,9 +452,17 @@ class IngresoFinancieroActions extends sfActions
                         ->save($con);
                 }
 
-            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb155_cuenta_bancaria_historicoForm["co_solicitud"]));
-            $ruta->setCoEstatusRuta(2)->save($con);                
-                
+                $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb155_cuenta_bancaria_historico->getCoSolicitud()));
+
+                $co_ruta = $ruta->getCoRuta();
+
+                $ruta->setCoUsuario($this->getUser()->getAttribute('codigo'));
+                $ruta->setInCargarDato(true);
+                $ruta->setCoEstatusRuta(2)->save($con);
+                $con->commit();
+
+                Tb030RutaPeer::getGenerarReporte($co_ruta);
+
                 $this->data = json_encode(array(
                     "success" => true,
                     "msg" => 'Modificación realizada exitosamente'
@@ -464,7 +472,7 @@ class IngresoFinancieroActions extends sfActions
                 $con->rollback();
                 $this->data = json_encode(array(
                     "success" => false,
-                    "msg" =>  $e->getMessage()
+                    "msg" => $e->getMessage()
                 ));
             }
         }
@@ -498,30 +506,30 @@ class IngresoFinancieroActions extends sfActions
     public function executeLista(sfWebRequest $request)
     {
         $this->data = json_encode(array(
-            "co_solicitud"       => $this->getRequestParameter("co_solicitud"),
+            "co_solicitud" => $this->getRequestParameter("co_solicitud"),
         ));
     }
 
     public function executeStorelista(sfWebRequest $request)
     {
-        $paginar    =   $this->getRequestParameter("paginar");
-        $limit         =   $this->getRequestParameter("limit", 15);
-        $start         =   $this->getRequestParameter("start", 0);
-        $in_activo      =   $this->getRequestParameter("in_activo");
-        $created_at      =   $this->getRequestParameter("created_at");
-        $updated_at      =   $this->getRequestParameter("updated_at");
-        $id_tb011_cuenta_bancaria      =   $this->getRequestParameter("id_tb011_cuenta_bancaria");
-        $mo_transaccion      =   $this->getRequestParameter("mo_transaccion");
-        $fe_transaccion      =   $this->getRequestParameter("fe_transaccion");
-        $mo_saldo_nuevo      =   $this->getRequestParameter("mo_saldo_nuevo");
-        $de_observacion      =   $this->getRequestParameter("de_observacion");
-        $id_tb010_banco      =   $this->getRequestParameter("id_tb010_banco");
-        $id_tb154_tipo_cuenta_movimiento      =   $this->getRequestParameter("id_tb154_tipo_cuenta_movimiento");
-        $id_tb153_tipo_documento_cuenta      =   $this->getRequestParameter("id_tb153_tipo_documento_cuenta");
-        $id_tb156_subtipo_documento      =   $this->getRequestParameter("id_tb156_subtipo_documento");
-        $nu_documento      =   $this->getRequestParameter("nu_documento");
-        $mo_saldo_anterior      =   $this->getRequestParameter("mo_saldo_anterior");
-        $co_solicitud      =   $this->getRequestParameter("co_solicitud");
+        $paginar = $this->getRequestParameter("paginar");
+        $limit = $this->getRequestParameter("limit", 15);
+        $start = $this->getRequestParameter("start", 0);
+        $in_activo = $this->getRequestParameter("in_activo");
+        $created_at = $this->getRequestParameter("created_at");
+        $updated_at = $this->getRequestParameter("updated_at");
+        $id_tb011_cuenta_bancaria = $this->getRequestParameter("id_tb011_cuenta_bancaria");
+        $mo_transaccion = $this->getRequestParameter("mo_transaccion");
+        $fe_transaccion = $this->getRequestParameter("fe_transaccion");
+        $mo_saldo_nuevo = $this->getRequestParameter("mo_saldo_nuevo");
+        $de_observacion = $this->getRequestParameter("de_observacion");
+        $id_tb010_banco = $this->getRequestParameter("id_tb010_banco");
+        $id_tb154_tipo_cuenta_movimiento = $this->getRequestParameter("id_tb154_tipo_cuenta_movimiento");
+        $id_tb153_tipo_documento_cuenta = $this->getRequestParameter("id_tb153_tipo_documento_cuenta");
+        $id_tb156_subtipo_documento = $this->getRequestParameter("id_tb156_subtipo_documento");
+        $nu_documento = $this->getRequestParameter("nu_documento");
+        $mo_saldo_anterior = $this->getRequestParameter("mo_saldo_anterior");
+        $co_solicitud = $this->getRequestParameter("co_solicitud");
 
 
         $c = new Criteria();
@@ -585,16 +593,16 @@ class IngresoFinancieroActions extends sfActions
             if ($mo_saldo_anterior != "") {
                 $c->add(Tb155CuentaBancariaHistoricoPeer::mo_saldo_anterior, $mo_saldo_anterior);
             }
-            
+
             if ($co_solicitud != "") {
                 $c->add(Tb155CuentaBancariaHistoricoPeer::CO_SOLICITUD, $co_solicitud);
-            }            
-            
+            }
+
         }
         $c->setIgnoreCase(true);
         //   $c->add(Tb155CuentaBancariaHistoricoPeer::CO_SOLICITUD, $co_solicitud);
 
-        $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 3,4), Criteria::IN);
+        $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 3, 4), Criteria::IN);
         $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, 35, Criteria::IN);
         $cantidadTotal = Tb155CuentaBancariaHistoricoPeer::doCount($c);
         $c->setLimit($limit)->setOffset($start);
@@ -616,46 +624,54 @@ class IngresoFinancieroActions extends sfActions
         $c->addSelectColumn(Tb155CuentaBancariaHistoricoPeer::DE_OBSERVACION);
         $c->addSelectColumn(Tb029EstatusPeer::TX_ESTATUS);
         $c->addSelectColumn(Tb026SolicitudPeer::CO_ESTATUS);
+        $c->addSelectColumn(Tb030RutaPeer::TX_RUTA_REPORTE);
+        $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
 
         $c->addJoin(Tb010BancoPeer::CO_BANCO, Tb155CuentaBancariaHistoricoPeer::ID_TB010_BANCO);
         $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb155CuentaBancariaHistoricoPeer::CO_SOLICITUD);
         $c->addJoin(Tb029EstatusPeer::CO_ESTATUS, Tb026SolicitudPeer::CO_ESTATUS);
         $c->addJoin(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA, Tb155CuentaBancariaHistoricoPeer::ID_TB011_CUENTA_BANCARIA);
+        $c->addJoin(Tb026SolicitudPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
 
         $c->addDescendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
 
+        //echo $c->toString(); exit();
+
         $stmt = Tb155CuentaBancariaHistoricoPeer::doSelectStmt($c);
         $registros = "";
+        $encrip = new myConfig();
         while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $registros[] = array(
-                "id"                                => trim($res["id"]),
-                "in_activo"                         => trim($res["in_activo"]),
-                "created_at"                        => trim($res["created_at"]),
-                "updated_at"                        => trim($res["updated_at"]),
-                "id_tb011_cuenta_bancaria"          => trim($res["tx_cuenta_bancaria"]),
-                "mo_transaccion"                    => trim($res["mo_transaccion"]),
-                "fe_transaccion"                    => trim($res["fe_transaccion"]),
-                "mo_saldo_nuevo"                    => trim($res["mo_saldo_nuevo"]),
-                "de_observacion"                    => trim($res["de_observacion"]),
-                "id_tb010_banco"                    => trim($res["tx_banco"]),
-                "tx_descripcion"                    => trim($res["tx_descripcion"]),
-                "id_tb154_tipo_cuenta_movimiento"   => trim($res["id_tb154_tipo_cuenta_movimiento"]),
-                "id_tb153_tipo_documento_cuenta"    => trim($res["id_tb153_tipo_documento_cuenta"]),
-                "id_tb156_subtipo_documento"        => trim($res["id_tb156_subtipo_documento"]),
-                "nu_documento"                      => trim($res["nu_documento"]),
-                "mo_saldo_anterior"                 => trim($res["mo_saldo_anterior"]),
-                "nu_transaccion"                    => trim($res["nu_transaccion"]),
-                "co_solicitud"                      => trim($res["co_solicitud"]),
-                "tx_observacion"                    => trim($res["de_observacion"]),
-                "tx_estatus"                        => trim($res["tx_estatus"]),
-                "co_estatus"                        => trim($res["co_estatus"]),
+                "id" => trim($res["id"]),
+                "in_activo" => trim($res["in_activo"]),
+                "created_at" => trim($res["created_at"]),
+                "updated_at" => trim($res["updated_at"]),
+                "in_reporte" => ($res["tx_ruta_reporte"] == null) ? '' : $res["co_ruta"],
+                "id_tb011_cuenta_bancaria" => trim($res["tx_cuenta_bancaria"]),
+                "mo_transaccion" => trim($res["mo_transaccion"]),
+                "fe_transaccion" => trim($res["fe_transaccion"]),
+                "mo_saldo_nuevo" => trim($res["mo_saldo_nuevo"]),
+                "de_observacion" => trim($res["de_observacion"]),
+                "id_tb010_banco" => trim($res["tx_banco"]),
+                "tx_descripcion" => trim($res["tx_descripcion"]),
+                "id_tb154_tipo_cuenta_movimiento" => trim($res["id_tb154_tipo_cuenta_movimiento"]),
+                "id_tb153_tipo_documento_cuenta" => trim($res["id_tb153_tipo_documento_cuenta"]),
+                "id_tb156_subtipo_documento" => trim($res["id_tb156_subtipo_documento"]),
+                "nu_documento" => trim($res["nu_documento"]),
+                "mo_saldo_anterior" => trim($res["mo_saldo_anterior"]),
+                "nu_transaccion" => trim($res["nu_transaccion"]),
+                "co_solicitud" => trim($res["co_solicitud"]),
+                "tx_observacion" => trim($res["de_observacion"]),
+                "tx_estatus" => trim($res["tx_estatus"]),
+                "co_estatus" => trim($res["co_estatus"]),
+                "co_ruta" => $encrip->encrypt($res["co_ruta"]),
             );
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  $cantidadTotal,
-            "data"      =>  $registros
+            "success" => true,
+            "total" => $cantidadTotal,
+            "data" => $registros
         ));
     }
 
@@ -663,11 +679,11 @@ class IngresoFinancieroActions extends sfActions
     public function executeStorefkidtb011cuentabancaria(sfWebRequest $request)
     {
 
-        $banco      =   $this->getRequestParameter("banco");
+        $banco = $this->getRequestParameter("banco");
 
         $c = new Criteria();
         $c->add(Tb011CuentaBancariaPeer::CO_BANCO, $banco);
-        $c->addJoin(Tb024CuentaContablePeer::CO_CUENTA_CONTABLE,Tb011CuentaBancariaPeer::CO_CUENTA_CONTABLE);
+        $c->addJoin(Tb024CuentaContablePeer::CO_CUENTA_CONTABLE, Tb011CuentaBancariaPeer::CO_CUENTA_CONTABLE);
         $stmt = Tb011CuentaBancariaPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -675,19 +691,19 @@ class IngresoFinancieroActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
     //modelo fk tb010_banco.CO_BANCO
     public function executeStorefkidtb010banco(sfWebRequest $request)
     {
-        $c = new Criteria(); 
+        $c = new Criteria();
         $c->setDistinct();
-        $c->addJoin(Tb010BancoPeer::CO_BANCO,Tb011CuentaBancariaPeer::CO_BANCO);
-        $c->addJoin(Tb024CuentaContablePeer::CO_CUENTA_CONTABLE,Tb011CuentaBancariaPeer::CO_CUENTA_CONTABLE);
+        $c->addJoin(Tb010BancoPeer::CO_BANCO, Tb011CuentaBancariaPeer::CO_BANCO);
+        $c->addJoin(Tb024CuentaContablePeer::CO_CUENTA_CONTABLE, Tb011CuentaBancariaPeer::CO_CUENTA_CONTABLE);
         $stmt = Tb010BancoPeer::doSelectStmt($c);
         $registros = array();
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -695,9 +711,9 @@ class IngresoFinancieroActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -716,9 +732,9 @@ class IngresoFinancieroActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -726,8 +742,8 @@ class IngresoFinancieroActions extends sfActions
     public function executeStorefkidtb153tipodocumentocuenta(sfWebRequest $request)
     {
         $c = new Criteria();
-        if($this->getRequestParameter("id")!=5){
-        $c->add(Tb153TipoDocumentoCuentaPeer::ID_TIPO_CUENTA_MOVIMIENTO, $this->getRequestParameter("id"));
+        if ($this->getRequestParameter("id") != 5) {
+            $c->add(Tb153TipoDocumentoCuentaPeer::ID_TIPO_CUENTA_MOVIMIENTO, $this->getRequestParameter("id"));
         }
         $stmt = Tb153TipoDocumentoCuentaPeer::doSelectStmt($c);
         $registros = array();
@@ -736,9 +752,9 @@ class IngresoFinancieroActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -746,7 +762,7 @@ class IngresoFinancieroActions extends sfActions
     public function executeStorefkidtb156subtipodocumento(sfWebRequest $request)
     {
 
-        $tipo      =   $this->getRequestParameter("tipo");
+        $tipo = $this->getRequestParameter("tipo");
 
         $c = new Criteria();
         $c->add(Tb156SubtipoDocumentoPeer::ID_TB154_TIPO_CUENTA_MOVIMIENTO, $tipo);
@@ -757,9 +773,9 @@ class IngresoFinancieroActions extends sfActions
         }
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "total"     =>  count($registros),
-            "data"      =>  $registros
+            "success" => true,
+            "total" => count($registros),
+            "data" => $registros
         ));
         $this->setTemplate('store');
     }
@@ -768,7 +784,7 @@ class IngresoFinancieroActions extends sfActions
     public function executeCargarDisponible(sfWebRequest $request)
     {
 
-        $cuenta      =   $this->getRequestParameter("cuenta");
+        $cuenta = $this->getRequestParameter("cuenta");
 
         $c = new Criteria();
         $c->add(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA, $cuenta);
@@ -776,56 +792,56 @@ class IngresoFinancieroActions extends sfActions
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $this->data = json_encode(array(
-            "success"   =>  true,
-            "data"      =>  $campos
+            "success" => true,
+            "data" => $campos
         ));
 
         $this->setTemplate('store');
     }
-    
-    
+
+
     public function executeEnviarAnular(sfWebRequest $request)
     {
 
         $co_solicitud = $this->getRequestParameter("co_solicitud");
-        
+
         $c = new Criteria();
         $c->add(Tb155CuentaBancariaHistoricoPeer::CO_SOLICITUD, $co_solicitud);
         $stmt = Tb155CuentaBancariaHistoricoPeer::doSelectStmt($c);
-        $campos = $stmt->fetch(PDO::FETCH_ASSOC); 
-        
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
         $fecha_solicitud = date('Y-m-d');
 
-            $tb026_solicitud = new Tb026Solicitud();
-            $tb026_solicitud->setCoProceso(46);
-            $tb026_solicitud->setCoTipoSolicitud(35);
-            $tb026_solicitud->setTxObservacion('Anulacion Transcripcion de movimiento: solicitud Nº: ' .$co_solicitud);
-            $tb026_solicitud->setCoEstatus(1);
-            $tb026_solicitud->setCreatedAt($fecha_solicitud);
-            $tb026_solicitud->setUpdatedAt($fecha_solicitud);
+        $tb026_solicitud = new Tb026Solicitud();
+        $tb026_solicitud->setCoProceso(46);
+        $tb026_solicitud->setCoTipoSolicitud(35);
+        $tb026_solicitud->setTxObservacion('Anulacion Transcripcion de movimiento: solicitud Nº: ' . $co_solicitud);
+        $tb026_solicitud->setCoEstatus(1);
+        $tb026_solicitud->setCreatedAt($fecha_solicitud);
+        $tb026_solicitud->setUpdatedAt($fecha_solicitud);
 
-            $tb026_solicitud->setCoUsuario($this->getUser()->getAttribute('codigo'));
-            $tb026_solicitud->setIdTb013AnioFiscal($this->getUser()->getAttribute('ejercicio'));
-           
-            $tb026_solicitud->setFeRegistro($fecha_solicitud);
-            $tb026_solicitud->save($con);
-            
-            
+        $tb026_solicitud->setCoUsuario($this->getUser()->getAttribute('codigo'));
+        $tb026_solicitud->setIdTb013AnioFiscal($this->getUser()->getAttribute('ejercicio'));
+
+        $tb026_solicitud->setFeRegistro($fecha_solicitud);
+        $tb026_solicitud->save($con);
+
+
         $Tb030Ruta = new Tb030Ruta();
-       $Tb030Ruta->setCoUsuario($this->getUser()->getAttribute('codigo'))
-               ->setCoEstatusRuta(1)
-               ->setNuOrden(1)
-               ->setInActual(true)
-               ->setCreatedAt($fecha_solicitud)
-               ->setUpdatedAt($fecha_solicitud)
-               ->setCoSolicitud($tb026_solicitud->getCoSolicitud())
-               ->setCoProceso(46)
-               ->setCoTipoSolicitud(35);
-            $Tb030Ruta->setObservacion('Anulacion Transcripcion de movimiento: solicitud Nº: ' .$co_solicitud);
-        
-        $Tb030Ruta->save($con);            
-        
-         if ($campos["id_tb154_tipo_cuenta_movimiento"] == 3) {
+        $Tb030Ruta->setCoUsuario($this->getUser()->getAttribute('codigo'))
+            ->setCoEstatusRuta(1)
+            ->setNuOrden(1)
+            ->setInActual(true)
+            ->setCreatedAt($fecha_solicitud)
+            ->setUpdatedAt($fecha_solicitud)
+            ->setCoSolicitud($tb026_solicitud->getCoSolicitud())
+            ->setCoProceso(46)
+            ->setCoTipoSolicitud(35);
+        $Tb030Ruta->setObservacion('Anulacion Transcripcion de movimiento: solicitud Nº: ' . $co_solicitud);
+
+        $Tb030Ruta->save($con);
+
+        if ($campos["id_tb154_tipo_cuenta_movimiento"] == 3) {
 
             $tb011_cuenta_bancaria = new Criteria();
             $tb011_cuenta_bancaria->add(Tb011CuentaBancariaPeer::CO_CUENTA_BANCARIA, $campos["id_tb011_cuenta_bancaria"]);
@@ -865,7 +881,7 @@ class IngresoFinancieroActions extends sfActions
             $tb011_cuenta_bancaria = Tb011CuentaBancariaPeer::retrieveByPK($campos["id_tb011_cuenta_bancaria"]);
             $tb011_cuenta_bancaria->setMoDisponible($saldo_nuevo);
             $tb011_cuenta_bancaria->save($con);
-        }       
+        }
 
 
         $tb155_cuenta_bancaria_historico = new Tb155CuentaBancariaHistorico();
@@ -873,7 +889,7 @@ class IngresoFinancieroActions extends sfActions
         $tb155_cuenta_bancaria_historico->setIdTb011CuentaBancaria($campos["id_tb011_cuenta_bancaria"]);
         $tb155_cuenta_bancaria_historico->setMoTransaccion($campos["mo_transaccion"]);
         $tb155_cuenta_bancaria_historico->setFeTransaccion($fecha_solicitud);
-        $tb155_cuenta_bancaria_historico->setDeObservacion('Anulacion Transcripcion de movimiento: solicitud Nº: ' .$co_solicitud);
+        $tb155_cuenta_bancaria_historico->setDeObservacion('Anulacion Transcripcion de movimiento: solicitud Nº: ' . $co_solicitud);
         $tb155_cuenta_bancaria_historico->setIdTb010Banco($campos["id_tb010_banco"]);
         $tb155_cuenta_bancaria_historico->setIdTb154TipoCuentaMovimiento($tipo_cuenta_movieminto);
         $tb155_cuenta_bancaria_historico->setIdTb153TipoDocumentoCuenta($tipo_cuenta_documento);
@@ -882,7 +898,7 @@ class IngresoFinancieroActions extends sfActions
         $tb155_cuenta_bancaria_historico->setMoSaldoAnterior($saldo_anterior);
         $tb155_cuenta_bancaria_historico->setNuTransaccion($campos["nu_transaccion"]);
         $tb155_cuenta_bancaria_historico->setCoSolicitud($tb026_solicitud->getCoSolicitud());
-        $tb155_cuenta_bancaria_historico->save();        
+        $tb155_cuenta_bancaria_historico->save();
 
         if ($campos["id_tb153_tipo_documento_cuenta"] == 1) {
             $co_tipo_asiento = 9;
@@ -952,14 +968,14 @@ class IngresoFinancieroActions extends sfActions
                 ->setInActivo(true)
                 ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
                 ->save($con);
-        } 
-        
+        }
+
         $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb026_solicitud->getCoSolicitud()));
-        $ruta->setCoEstatusRuta(2)->save($con);        
+        $ruta->setCoEstatusRuta(2)->save($con);
 
         $tb026_solicitud_vieja = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
         $tb026_solicitud_vieja->setCoEstatus(4);
         $tb026_solicitud_vieja->save();
-    }    
-    
+    }
+
 }
