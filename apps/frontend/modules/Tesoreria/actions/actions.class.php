@@ -1464,6 +1464,7 @@ class TesoreriaActions extends sfActions
 
                     $sql_retencion = "SELECT  count(t1.co_factura_retencion) + 1 as correlativo
 	   FROM  tb046_factura_retencion as t1
+           join tb026_solicitud as t2 on (t1.co_solicitud = t2.co_solicitud)
 	   WHERE nu_comprobante is not null and t2.id_tb013_anio_fiscal = ".$tb026_solicitud->getIdTb013AnioFiscal()." and co_tipo_retencion = " . $reg["co_tipo_retencion"];
 
                     $stmt_retencion = $con->prepare($sql_retencion);
