@@ -837,7 +837,9 @@ class TesoreriaActions extends sfActions
             }
 
             $listaPagos = json_decode($json_pagos, true);
-            $cant_pagos = count($listaPagos);
+            $cant_pagos = count($listaPagos); 
+
+          
             foreach ($listaPagos as $PagosForm) {
                 $tb062_liquidacion_pago = Tb062LiquidacionPagoPeer::retrieveByPk($PagosForm["co_liquidacion_pago"]);
                 /*CAMPOS*/
@@ -881,32 +883,10 @@ class TesoreriaActions extends sfActions
                 /*CAMPOS*/
                 $tb062_liquidacion_pago->save($con);
 
-                /*if($tb062PagosForm["co_forma_pago"]==1){
-                    $c = new Criteria();
-                    $c->add(Tb077ChequePeer::CO_CHEQUERA, $tb062PagosForm["co_chequera"]);
-                    $c->add(Tb077ChequePeer::CO_ESTADO_CHEQUE,1);
-                    $c->addAscendingOrderByColumn(Tb077ChequePeer::CO_CHEQUE);
-                    $c->setLimit(1);
-                    $cantidad = Tb077ChequePeer::doCount($c);
-                    $stmt = Tb077ChequePeer::doSelectStmt($c);
-                    $res = $stmt->fetch(PDO::FETCH_ASSOC);
-                    if($cantidad==0){
-                        $con->rollback();
-                        $this->data = json_encode(array(
-                        "success" => false,
-                        "msg" =>  $e->getMessage()
-                        ));  
-                        return;
-                    }
-                    $nu_pago = $res["tx_descripcion"];
-                    $tb077Cheque = Tb077ChequePeer::retrieveByPK($res["co_cheque"]);
-                    $tb077Cheque->setCoEstadoCheque(2)->save($con);            
-
-                }else{
-                    $nu_pago =  $tb062PagosForm["nu_referencia"];
-                }*/
 
                 $tipo_asiento = 3;
+
+                
 
                 switch ($tb062PagosForm["co_forma_pago"]) {
                     case 1:
@@ -1279,6 +1259,9 @@ class TesoreriaActions extends sfActions
 
             $stmt_presupuesto = Tb053DetalleComprasPeer::doSelectStmt($cpresupuesto);
 
+            $total_monto    = 0;
+            $total_detalle  = 0; 
+                            
 
             while ($reg = $stmt_presupuesto->fetch(PDO::FETCH_ASSOC)) {
                 if ($reg["co_presupuesto"] != '') {
@@ -1293,6 +1276,8 @@ class TesoreriaActions extends sfActions
                         $tb085_presupuesto->setMoPagado($mo_pagado);
                         $tb085_presupuesto->save($con);
 
+                      
+
                     } else {
 
                         $tb085_presupuesto = Tb085PresupuestoPeer::retrieveByPK($reg["co_presupuesto"]);
@@ -1300,6 +1285,8 @@ class TesoreriaActions extends sfActions
                         $mo_pagado = $tb085_presupuesto->getMoPagado() + $porcentaje;
                         $tb085_presupuesto->setMoPagado($mo_pagado);
                         $tb085_presupuesto->save($con);
+
+                        
 
                     }
 
@@ -1325,13 +1312,16 @@ class TesoreriaActions extends sfActions
                             }
 
                             break;
-                        default:
-                            //                                var_dump($porcentaje_pago);
-//                                exit();
+                        default:                           
+
+                            $monto = Tb087PresupuestoMovimientoPeer::getMontoItemFactura($co_ruta,$reg["co_detalle_compras"],$porcentaje);
+                            $total_detalle += $porcentaje; 
+                            
+
                             $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
                             $tb087_presupuesto_movimiento->setCoPartida($tb085_presupuesto->getId())
                                 ->setCoTipoMovimiento(3)
-                                ->setNuMonto($porcentaje)
+                                ->setNuMonto($monto)
                                 ->setCreatedAt($fecha)
                                 ->setNuAnio($this->getUser()->getAttribute('ejercicio'))
                                 ->setCoDetalleCompra($reg["co_detalle_compras"])
@@ -1486,7 +1476,7 @@ class TesoreriaActions extends sfActions
                 $tb030ruta->setCoUsuarioActualizo($this->getUser()->getAttribute('codigo'));
                 $tb030ruta->save($con);
 
-
+              
                 //fondo de terceros 
                 if ($co_tipo_solicitud == 14) {
                     $ft = new Criteria;
@@ -1506,6 +1496,13 @@ class TesoreriaActions extends sfActions
 
             }
 
+           
+           
+            if($total_detalle>Tb087PresupuestoMovimientoPeer::MontoPagado($co_solicitud)){
+                $tb030ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
+                $tb030ruta->setCoProceso(8);
+                $tb030ruta->save($con);
+            }
 
             $con->commit();
 

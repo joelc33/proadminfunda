@@ -3,6 +3,52 @@
 class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
 {
 
+    static public function getMontoItemFactura($co_ruta,$co_detalle_compra,$porcentaje)
+    {
+
+       
+        $cf = new Criteria();
+        $cf->addJoin(Tb087PresupuestoMovimientoPeer::CO_FACTURA,Tb045FacturaPeer::CO_FACTURA);
+        $cf->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO,Tb045FacturaPeer::CO_ODP);
+        $cf->addJoin(Tb030RutaPeer::CO_RUTA,Tb060OrdenPagoPeer::CO_RUTA);
+        $cf->add(Tb030RutaPeer::CO_PROCESO, 10);
+        $cf->add(Tb030RutaPeer::CO_RUTA, $co_ruta,Criteria::LESS_THAN);
+        $cf->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO, 2);
+        $cf->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $co_detalle_compra);
+        $cf->addDescendingOrderByColumn(Tb030RutaPeer::CO_RUTA);
+        $cf->setLimit(1);
+
+        $stmtf = Tb087PresupuestoMovimientoPeer::doSelectStmt($cf);
+        $camposf = $stmtf->fetch(PDO::FETCH_ASSOC);
+
+        if(empty($camposf["nu_monto"]))
+            return $porcentaje;
+        else
+            return $camposf["nu_monto"];
+    }
+
+    static public function MontoPagado($co_solicitud)
+    {
+
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::NU_MONTO);
+        $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA,Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+        $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS,Tb052ComprasPeer::CO_COMPRAS);
+        $c->add(Tb052ComprasPeer::CO_SOLICITUD,$co_solicitud);
+        $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,3);
+
+        $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
+
+        $monto = 0;
+        while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+           $monto += $reg["nu_monto"];     
+        }
+
+        return $monto;
+    }
+
+
     static public function verificar($detalle_compra, $tipo)
     {
 
