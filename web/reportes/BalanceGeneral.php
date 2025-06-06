@@ -151,13 +151,15 @@ class PDF extends FPDF {
          $this->SetAligns(array("R","R","R"));
          $this->SetX(15);
          $this->Row(array(utf8_decode('TOTAL ACTIVOS'),number_format($total<0?$total*-1:$total, 2, ',','.')),0,1);    
-    
+         $this->Ln(3);
          $this->SetWidths(array(200)); 
          $this->SetAligns(array("C")); 
          $this->SetFont('Arial','B',8);     
          $this->SetFillColor(201, 199, 199);
          $this->Row(array('PASIVO Y PATRIMONIO'),0,1); 
          $this->Ln(3);
+         
+         $sub_pas  = 0;         
          
          $this->lista_cuentas = $this->getCuentas(2,2);
          foreach($this->lista_cuentas as $key => $cuenta){
@@ -175,8 +177,7 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',8);         
       
          $this->lista_activos = $this->getActivos($cuenta['nu_cuenta_contable'],4);
-         $sub_actTesoro = 0;
-         $sub_pasTesoro  = 0;
+
 
          $y = $this->GetY();
           $this->SetAligns(array("L","R","R")); 
@@ -185,11 +186,21 @@ class PDF extends FPDF {
          $this->montos = $this->getMontos($campo['nu_cuenta_contable']);    
          $this->SetX(15);             
          $this->Row(array(utf8_decode($campo['tx_descripcion']),number_format($this->montos['saldo_actual']<0?$this->montos['saldo_actual']*-1:$this->montos['saldo_actual'], 2, ',','.')),0,1);         
-         $sub_actTesoro = $campo['saldo_actual'] + $sub_actTesoro;
+         $sub_pas = $this->montos['saldo_actual'] + $sub_pas;
 
          }
          
-    }         
+    }
+    
+         $this->Ln(3);    
+         $this->SetAligns(array("R","R","R"));
+         $this->SetX(15);
+         $this->Row(array(utf8_decode('TOTAL PASIVO'),number_format($sub_pas<0?$sub_pas*-1:$sub_pas, 2, ',','.')),0,1);    
+         $this->Ln(3);
+         
+         $sub_pat  = 0;
+         $total_ing  = 0;
+         $total_Egr = 0;
 
          $this->lista_cuentas = $this->getCuentas(5,2);
          foreach($this->lista_cuentas as $key => $cuenta){
@@ -207,23 +218,66 @@ class PDF extends FPDF {
          $this->SetFont('Arial','B',8);         
       
          $this->lista_activos = $this->getActivos($cuenta['nu_cuenta_contable'],4);
-         $sub_actTesoro = 0;
-         $sub_pasTesoro  = 0;
+
 
          $y = $this->GetY();
           $this->SetAligns(array("L","R","R")); 
-         foreach($this->lista_activos as $key => $campo){ 
+         foreach($this->lista_activos as $key => $campo){
+             
+         if($campo['nu_cuenta_contable']=='5060000'){
+
+         $this->lista_cuentas = $this->getCuentas(3,2);
+         foreach($this->lista_cuentas as $key => $cuenta){
+
+         $this->lista_activos = $this->getActivos($cuenta['nu_cuenta_contable'],4);
+
+         foreach($this->lista_activos as $key => $campoI){ 
+            $this->montos = $this->getMontos($campoI['nu_cuenta_contable']);
+             $total_ing = $this->montos['saldo_actual'] + $total_ing;
+
+         }             
+             
+         }
+         
+         $this->lista_activos = $this->getActivos(4,2);
+
+         foreach($this->lista_activos as $key => $campoE){ 
+            $this->montos = $this->getMontos($campoE['nu_cuenta_contable']);
+             $total_Egr = $this->montos['saldo_actual'] + $total_Egr;
+
+         }
+
+         
+         $this->SetX(15);             
+         $this->Row(array(utf8_decode($campo['tx_descripcion']),number_format(($total_ing + $total_Egr)<0?($total_ing + $total_Egr)*-1:($total_ing + $total_Egr), 2, ',','.')),0,1);          
+         $sub_pat = ($total_ing + $total_Egr) + $sub_pat;
+         
+         }else{             
              
          $this->montos = $this->getMontos($campo['nu_cuenta_contable']);    
          $this->SetX(15);             
          $this->Row(array(utf8_decode($campo['tx_descripcion']),number_format($this->montos['saldo_actual']<0?$this->montos['saldo_actual']*-1:$this->montos['saldo_actual'], 2, ',','.')),0,1);
-         $sub_actTesoro = $campo['saldo_actual'] + $sub_actTesoro;
+         $sub_pat = $this->montos['saldo_actual'] + $sub_pat;
 
          }
+         }
          
-    }    
+    }
+
+         $this->Ln(3);    
+         $this->SetAligns(array("R","R","R"));
+         $this->SetX(15);
+         $this->Row(array(utf8_decode('TOTAL PATRIMONIO'),number_format($sub_pat<0?$sub_pat*-1:$sub_pat, 2, ',','.')),0,1);    
+         $this->Ln(3);
+         
+         $sub_pasPat = $sub_pas +  $sub_pat;       
+         
+ 
+         $this->SetAligns(array("R","R","R"));
+         $this->SetX(15);
+         $this->Row(array(utf8_decode('TOTAL PASIVO + PATRIMONIO'),number_format($sub_pasPat<0?$sub_pasPat*-1:$sub_pasPat, 2, ',','.')),0,1);     
     
-         $this->Ln(25);
+         $this->Ln(10);
          $this->SetWidths(array(200)); 
          $this->SetAligns(array("L")); 
          $this->Row(array('* ANEXOS'),0,1);         
