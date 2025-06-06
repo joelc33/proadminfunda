@@ -388,7 +388,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetWidths(array(170,30, 30));
             $this->SetAligns(array("R","L"));
             $this->SetFont('Arial','B',8);
-            $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
+//            $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
             $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->datos1['fe_pago'])),0,0);
             $this->Ln(5);  
             
@@ -548,7 +548,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetAligns(array("R","L"));
             $this->SetFont('Arial','B',8);
 //            $this->Row(array(utf8_decode('Pagina:'),utf8_decode('1')),0,0);
-            $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
+//            $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
             $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->datos1['fe_pago'])),0,0);
             $this->Ln(10);  
             
@@ -812,7 +812,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->SetWidths(array(170,30, 30));
             $this->SetAligns(array("R","L"));
             $this->SetFont('Arial','B',8);
-            $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
+//            $this->Row(array(utf8_decode('Nro. Comprobante:'),utf8_decode($this->nro_comprobante['anio'].$this->nro_comprobante['mes'].$this->nro_comprobante['nu_comprobante'])),0,0);   
             $this->Row(array(utf8_decode('Fecha de Emisión:'),utf8_decode($this->datos1['fe_pago'])),0,0);
             $this->Ln(5);  
             
