@@ -3,16 +3,16 @@
 class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
 {
 
-    static public function getMontoItemFactura($co_ruta,$co_detalle_compra,$porcentaje)
+    static public function getMontoItemFactura($co_ruta, $co_detalle_compra, $monto)
     {
 
-       
+
         $cf = new Criteria();
-        $cf->addJoin(Tb087PresupuestoMovimientoPeer::CO_FACTURA,Tb045FacturaPeer::CO_FACTURA);
-        $cf->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO,Tb045FacturaPeer::CO_ODP);
-        $cf->addJoin(Tb030RutaPeer::CO_RUTA,Tb060OrdenPagoPeer::CO_RUTA);
+        $cf->addJoin(Tb087PresupuestoMovimientoPeer::CO_FACTURA, Tb045FacturaPeer::CO_FACTURA);
+        $cf->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
+        $cf->addJoin(Tb030RutaPeer::CO_RUTA, Tb060OrdenPagoPeer::CO_RUTA);
         $cf->add(Tb030RutaPeer::CO_PROCESO, 10);
-        $cf->add(Tb030RutaPeer::CO_RUTA, $co_ruta,Criteria::LESS_THAN);
+        $cf->add(Tb030RutaPeer::CO_RUTA, $co_ruta, Criteria::LESS_THAN);
         $cf->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO, 2);
         $cf->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $co_detalle_compra);
         $cf->addDescendingOrderByColumn(Tb030RutaPeer::CO_RUTA);
@@ -21,10 +21,50 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
         $stmtf = Tb087PresupuestoMovimientoPeer::doSelectStmt($cf);
         $camposf = $stmtf->fetch(PDO::FETCH_ASSOC);
 
-        if(empty($camposf["nu_monto"]))
-            return $porcentaje;
+        if (empty($camposf["nu_monto"]))
+            return $monto;
         else
             return $camposf["nu_monto"];
+    }
+    
+
+     static public function getMontoItemFacturaODP($co_solicitud, $co_detalle_compra, $monto)
+    {
+
+
+        $c = new Criteria();
+        $c->addJoin(Tb045FacturaPeer::CO_FACTURA,Tb087PresupuestoMovimientoPeer::CO_FACTURA);
+        $c->add(Tb045FacturaPeer::CO_SOLICITUD,$co_solicitud);
+        $c->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA,$co_detalle_compra);
+        $c->add(Tb045FacturaPeer::CO_ODP,null,Criteria::ISNULL);
+        $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
+
+        $camposf = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (empty($camposf["nu_monto"]))
+            return $monto;
+        else
+            return $camposf["nu_monto"];
+    }
+
+
+   
+    static public function getMontoTotalFactura($co_solicitud, $monto)
+    {
+        
+        $c = new Criteria();
+        $c->clearSelectColumns();
+        $c->addSelectColumn('coalesce(SUM(' . Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
+        $c->addJoin(Tb045FacturaPeer::CO_FACTURA,Tb087PresupuestoMovimientoPeer::CO_FACTURA);
+        $c->add(Tb045FacturaPeer::CO_SOLICITUD,$co_solicitud);
+        $c->add(Tb045FacturaPeer::CO_ODP,null,Criteria::ISNULL);
+        $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
+        $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (empty($campos["total"]))
+            return $monto;
+        else
+            return $campos["total"];
     }
 
     static public function MontoPagado($co_solicitud)
@@ -33,16 +73,16 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
         $c = new Criteria();
         $c->clearSelectColumns();
         $c->addSelectColumn(Tb087PresupuestoMovimientoPeer::NU_MONTO);
-        $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA,Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
-        $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS,Tb052ComprasPeer::CO_COMPRAS);
-        $c->add(Tb052ComprasPeer::CO_SOLICITUD,$co_solicitud);
-        $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO,3);
+        $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+        $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
+        $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
+        $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO, 3);
 
         $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
 
         $monto = 0;
         while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
-           $monto += $reg["nu_monto"];     
+            $monto += $reg["nu_monto"];
         }
 
         return $monto;
@@ -102,7 +142,7 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
         $tb087_presupuesto_movimiento->save($con);
     }
 
-    static public function afectarPartidas($con,$ejercicio,$co_usuario,$co_ruta)
+    static public function afectarPartidas($con, $ejercicio, $co_usuario, $co_ruta)
     {
 
         $c = new Criteria();
@@ -111,10 +151,10 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
         $c->addSelectColumn(Tb209PresupuestoDetalleCompraPeer::ID);
         $c->addSelectColumn(Tb209PresupuestoDetalleCompraPeer::MONTO);
         $c->addSelectColumn(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA);
-        $c->addJoin(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS,Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA);
-        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS,Tb053DetalleComprasPeer::CO_COMPRAS);
-        $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD,Tb030RutaPeer::CO_SOLICITUD);
-        $c->add(Tb030RutaPeer::CO_RUTA,$co_ruta);
+        $c->addJoin(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS, Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA);
+        $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
+        $c->addJoin(Tb052ComprasPeer::CO_SOLICITUD, Tb030RutaPeer::CO_SOLICITUD);
+        $c->add(Tb030RutaPeer::CO_RUTA, $co_ruta);
 
 
         $c->addAscendingOrderByColumn(Tb209PresupuestoDetalleCompraPeer::ID);
@@ -125,7 +165,7 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
 
             Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $ejercicio, $co_usuario, $reg["co_presupuesto"], 1, $reg["monto"], '', $reg["co_detalle_compra"], $reg["id"]);
             Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $ejercicio, $co_usuario, $reg["co_presupuesto"], 2, $reg["monto"], '', $reg["co_detalle_compra"], $reg["id"]);
-     
+
         }
 
     }

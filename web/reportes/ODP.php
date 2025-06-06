@@ -212,7 +212,7 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $i = 1;
 
-        //echo var_dump($this->datos); exit();
+     //   echo var_dump($this->datos); exit();
 
         foreach ($this->datos as $key => $valor) {
 
@@ -976,7 +976,7 @@ class PDF_Flo extends PDF_FlowingBlock
                           tb045.co_compra as nu_compra, 
                           numero_compra,
                           nu_total_retencion,
-                          in_patria,
+                          tb052.in_patria,
                           nu_exento,
                           tb052.nu_orden_compra,
                           tb026.co_tipo_solicitud,
@@ -998,7 +998,7 @@ class PDF_Flo extends PDF_FlowingBlock
                   where tb030.co_ruta =" . $_GET['codigo'] . " and tb060.in_anulado = false) as tabla 
                   order by co_factura asc, co_compras asc";
 
-        // echo var_dump($sql);  exit();
+       //  echo var_dump($sql);  exit();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
         return  $datosSol;
     }
@@ -1043,7 +1043,9 @@ class PDF_Flo extends PDF_FlowingBlock
                          nu_se as se,
                          nu_sse as sse,
                          nu_fi as f,
-                         sum(tb087.nu_monto) as monto
+                         (select case when p.nu_monto is null then tb087.nu_monto else  p.nu_monto end
+						    from tb087_presupuesto_movimiento p join tb045_factura f on (p.co_factura = f.co_factura) 
+						  where p.co_detalle_compra = tb053.co_detalle_compras and f.co_odp = tb060.co_orden_pago)  as monto
                   from  tb052_compras as tb052 
                   left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras 
 				  left join tb087_presupuesto_movimiento as tb087 on (tb087.co_detalle_compra = tb053.co_detalle_compras)
@@ -1052,9 +1054,10 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb083_proyecto_ac as tb083 on tb084.id_tb083_proyecto_ac = tb083.id
                   left join tb082_ejecutor as tb082 on tb082.id = tb083.id_tb082_ejecutor
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud                               
-                 left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector                 
+                  left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector    
+				  left join tb060_orden_pago as tb060 on tb060.co_ruta = tb030.co_ruta                 
                  where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2 and tb087.nu_monto > 0
-                  group by 1,2,3,4,5,6,7,8,9,10,11
+                  group by 1,2,3,4,5,6,7,8,9,10,11,12
 				 limit 8";
 
         // echo var_dump($sql); exit();                  
@@ -1062,7 +1065,7 @@ class PDF_Flo extends PDF_FlowingBlock
         return  $datosSol;
     }
 
-    function getOtrasPartidas($fact)
+    function getOtrasPartidas()
     {
 
         $conex = new ConexionComun();
@@ -1078,7 +1081,9 @@ class PDF_Flo extends PDF_FlowingBlock
                          nu_se as se,
                          nu_sse as sse,
                          nu_fi as f,
-                         sum(tb087.nu_monto) as monto
+                         (select case when p.nu_monto is null then tb087.nu_monto else  p.nu_monto end
+						    from tb087_presupuesto_movimiento p join tb045_factura f on (p.co_factura = f.co_factura) 
+						  where p.co_detalle_compra = tb053.co_detalle_compras and f.co_odp = tb060.co_orden_pago)  as monto
                   from  tb052_compras as tb052 
                   left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras 
 				  left join tb087_presupuesto_movimiento as tb087 on (tb087.co_detalle_compra = tb053.co_detalle_compras)
@@ -1087,9 +1092,10 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb083_proyecto_ac as tb083 on tb084.id_tb083_proyecto_ac = tb083.id
                   left join tb082_ejecutor as tb082 on tb082.id = tb083.id_tb082_ejecutor
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud                               
-                 left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector                 
+                  left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector    
+				  left join tb060_orden_pago as tb060 on tb060.co_ruta = tb030.co_ruta                  
                  where tb030.co_ruta =" . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2 and tb087.in_activo = true
-                  group by 1,2,3,4,5,6,7,8,9,10,11 
+                  group by 1,2,3,4,5,6,7,8,9,10,11,12
 				 limit 5000 OFFSET 8";
 
         // echo var_dump($sql); exit();                  
@@ -1213,5 +1219,5 @@ $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetMargins(0, 0);
 $pdf->SetDisplayMode('default');
-$pdf->Output();
-*/
+$pdf->Output();*/
+

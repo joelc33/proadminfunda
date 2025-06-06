@@ -1969,9 +1969,11 @@ class ComprasActions extends sfActions
 
 
         $registro_proceso = Tb028ProcesoPeer::getListaProcesoAsignado($this->getUser()->getAttribute('codigo'));
+       
         $registro_tramite = Tb006TipoSolicitudUsuarioPeer::getListaTramiteAsignado($this->getUser()->getAttribute('codigo'));
+       
 
-
+      
         $c->setIgnoreCase(true);
         $c->addSelectColumn(Tb030RutaPeer::CO_PROCESO);
         $c->addSelectColumn(Tb030RutaPeer::CO_RUTA);
@@ -2005,6 +2007,7 @@ class ComprasActions extends sfActions
         $c->addAnd(Tb026SolicitudPeer::CO_TIPO_SOLICITUD, array(1, 2), Criteria::IN);
         $c->addAnd(Tb030RutaPeer::CO_PROCESO, $registro_proceso, Criteria::IN);
         $c->addAnd(Tb052ComprasPeer::IN_CONTRATO, false, Criteria::EQUAL);
+        //$c->addAnd(Tb052ComprasPeer::IN_CONTRATO, null, Criteria::ISNULL);
 
         $c->addAnd(Tb030RutaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
         $c->addAnd(Tb026SolicitudPeer::CO_ESTATUS, array(1, 2), Criteria::IN);
@@ -2012,10 +2015,14 @@ class ComprasActions extends sfActions
         $c->addAnd(Tb030RutaPeer::IN_ACTUAL, true);
         $c->addAnd(Tb026SolicitudPeer::ID_TB013_ANIO_FISCAL, $this->getUser()->getAttribute('ejercicio'));
 
+     
+
         $cantidadTotal = Tb026SolicitudPeer::doCount($c);
 
         $c->setLimit($limit)->setOffset($start);
         $c->addDescendingOrderByColumn(Tb026SolicitudPeer::CO_SOLICITUD);
+
+      
 
         $stmt = Tb026SolicitudPeer::doSelectStmt($c);
         $registros = array();
@@ -2290,7 +2297,7 @@ class ComprasActions extends sfActions
             $cantidad = 0;
             while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-                // $reg["tx_producto"] = $reg["tx_producto"];
+                 $reg["tx_producto"] = $reg["tx_producto"].' '.$reg["tx_observacion"];;
 
                 $cant = $reg["nu_cantidad"];
                 foreach ($listaProducto as $productoForm) {
@@ -2347,7 +2354,7 @@ class ComprasActions extends sfActions
             $registros = array();
             while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-                $reg["tx_producto"] = $reg["tx_producto"];
+                $reg["tx_producto"] = $reg["tx_producto"].'-'.$reg["tx_observacion"];
 
                 $registros[] = $reg;
             }

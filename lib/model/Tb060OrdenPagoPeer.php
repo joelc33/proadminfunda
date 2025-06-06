@@ -991,6 +991,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
                 //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
                 $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+                $c->add(Tb045FacturaPeer::CO_ODP, NULL, Criteria::ISNULL);
                 $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
                 //echo $c->toString(); exit();
                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
@@ -1021,6 +1022,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
                 //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
                 $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+                $c->add(Tb045FacturaPeer::CO_ODP, NULL, Criteria::ISNULL);
                 $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
                 //echo $c->toString(); exit();
                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
@@ -1050,6 +1052,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
                 //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
                 $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+                $c->add(Tb045FacturaPeer::CO_ODP, NULL, Criteria::ISNULL);
                 $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
                 //echo $c->toString(); exit();
                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
@@ -1270,6 +1273,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
+                $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta, Criteria::EQUAL);
                 BasePeer::doDelete($wherec, $con);
 
                 $c = new Criteria();
@@ -1286,7 +1290,8 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $nu_monto =  $campos["total"];
+                
+                $nu_monto =  Tb087PresupuestoMovimientoPeer::getMontoTotalFactura($co_solicitud, $campos["total"]);
                 $monto_total = $nu_monto;
 
                 break;
@@ -1552,6 +1557,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $c = new Criteria();
                 $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
+                $c->add(Tb045FacturaPeer::CO_ODP, null, Criteria::ISNULL);
                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
 
                 while ($reg = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -1633,6 +1639,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
+                $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta, Criteria::EQUAL);
                 BasePeer::doDelete($wherec, $con);
 
                 $tb061_asiento_contable = new Tb061AsientoContable();
@@ -1697,6 +1704,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
+                $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta, Criteria::EQUAL);
                 BasePeer::doDelete($wherec, $con);
 
                 $tb061_asiento_contable = new Tb061AsientoContable();
@@ -1856,10 +1864,13 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRODUCTO);
                 $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRESUPUESTO);
                 $c->addSelectColumn(Tb053DetalleComprasPeer::MONTO);
+                 $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
                 //$c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRESUPUESTO);
                 $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
                 $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
                 $c->add(Tb053DetalleComprasPeer::IN_PRESUPUESTO, TRUE);
+
+
 
                 $stmt = Tb053DetalleComprasPeer::doSelectStmt($c);
 
@@ -1867,8 +1878,12 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                     $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable($reg["co_producto"], $co_solicitud, $reg["co_presupuesto"]);
 
+                    $monto_producto = Tb087PresupuestoMovimientoPeer::getMontoItemFacturaODP($co_solicitud, $reg["co_detalle_compras"],$reg["monto"]);
+
+                  //  echo $monto_producto; exit();
+                    
                     $tb061_asiento_contable = new Tb061AsientoContable();
-                    $tb061_asiento_contable->setMoDebe($reg["monto"])
+                    $tb061_asiento_contable->setMoDebe($monto_producto)
                         ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
                         ->setCoSolicitud($co_solicitud)
                         ->setCoProducto($reg["co_producto"])
