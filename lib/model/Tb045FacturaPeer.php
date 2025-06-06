@@ -3,6 +3,29 @@
 class Tb045FacturaPeer extends BaseTb045FacturaPeer
 {
 
+
+    static public function getCoFactura($co_ruta, $co_detalle_compra)
+    {
+
+        $cf = new Criteria();
+        $cf->clearSelectColumns();
+        $cf->addSelectColumn(Tb045FacturaPeer::CO_FACTURA);
+        $cf->addJoin(Tb087PresupuestoMovimientoPeer::CO_FACTURA, Tb045FacturaPeer::CO_FACTURA);
+        $cf->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
+        $cf->addJoin(Tb030RutaPeer::CO_RUTA, Tb060OrdenPagoPeer::CO_RUTA);
+        $cf->add(Tb030RutaPeer::CO_PROCESO, 10);
+        $cf->add(Tb030RutaPeer::CO_RUTA, $co_ruta, Criteria::LESS_THAN);
+        $cf->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO, 2);
+        $cf->add(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, $co_detalle_compra);
+        $cf->addDescendingOrderByColumn(Tb030RutaPeer::CO_RUTA);
+        $cf->setLimit(1);
+
+        $stmtf = Tb087PresupuestoMovimientoPeer::doSelectStmt($cf);
+        $camposf = $stmtf->fetch(PDO::FETCH_ASSOC);
+
+        return $camposf["co_factura"];
+    }
+
     static public function setRetenciones($con, $co_solicitud, $co_usuario, $co_ruta, $co_ejercicio)
     {
 

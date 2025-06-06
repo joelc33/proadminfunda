@@ -8,6 +8,9 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
 
 
         $cf = new Criteria();
+        $cf->clearSelectColumns();
+        $cf->addSelectColumn(Tb087PresupuestoMovimientoPeer::NU_MONTO);
+        $cf->addSelectColumn(Tb045FacturaPeer::CO_FACTURA);
         $cf->addJoin(Tb087PresupuestoMovimientoPeer::CO_FACTURA, Tb045FacturaPeer::CO_FACTURA);
         $cf->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
         $cf->addJoin(Tb030RutaPeer::CO_RUTA, Tb060OrdenPagoPeer::CO_RUTA);
@@ -26,6 +29,8 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
         else
             return $camposf["nu_monto"];
     }
+
+    
     
 
      static public function getMontoItemFacturaODP($co_solicitud, $co_detalle_compra, $monto)
@@ -76,7 +81,7 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
         $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
         $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
         $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
-        $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO, 3);
+        $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO, 2);
 
         $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
 
