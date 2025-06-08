@@ -1171,7 +1171,7 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb060_orden_pago as tb060 on tb060.co_solicitud = tb061.co_solicitud 
                   left join tb024_cuenta_contable as tb024 on tb024.co_cuenta_contable = tb061.co_cuenta_contable  
                   where ((tb061.co_tipo_asiento=2 and mo_haber is not null) or (tb061.co_tipo_asiento=2 and mo_debe is not null)) 
-                  and tb061.co_solicitud = " . $fact . " order by  co_tipo_asiento desc";
+                  and tb061.co_solicitud = " . $fact . " and tb061.co_ruta = ".$_GET['codigo']."  order by  co_tipo_asiento desc";
 
         // echo var_dump($sql); exit();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
@@ -1194,7 +1194,7 @@ class PDF_Flo extends PDF_FlowingBlock
                   left join tb060_orden_pago as tb060 on tb060.co_solicitud = tb061.co_solicitud 
                   left join tb024_cuenta_contable as tb024 on tb024.co_cuenta_contable = tb061.co_cuenta_contable  
                   where ((tb061.co_tipo_asiento=2 and mo_haber is not null)) 
-                  and tb061.co_solicitud = " . $fact . " order by  co_tipo_asiento desc ";
+                  and tb061.co_solicitud = " . $fact . " and tb061.co_ruta = ".$_GET['codigo']." order by  co_tipo_asiento desc ";
 
         // echo var_dump($sql); exit();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
