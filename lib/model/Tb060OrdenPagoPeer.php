@@ -345,6 +345,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
             $wherec = new Criteria();
             $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
+            $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta);
             BasePeer::doDelete($wherec, $con);
 
             $c = new Criteria();
@@ -668,6 +669,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
+                $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta);
                 BasePeer::doDelete($wherec, $con);
 
                 $tb061_asiento_contable = new Tb061AsientoContable();
@@ -855,6 +857,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
+                $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta);
                 BasePeer::doDelete($wherec, $con);
 
               /*  $c = new Criteria();
@@ -1006,6 +1009,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
+                $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta);
                 BasePeer::doDelete($wherec, $con);
 
 
@@ -1037,6 +1041,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
+                $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta);
                 BasePeer::doDelete($wherec, $con);
 
                 break;
@@ -1067,6 +1072,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
+                $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta);
                 BasePeer::doDelete($wherec, $con);
 
                 break;
@@ -1190,6 +1196,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
+                $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta);
                 BasePeer::doDelete($wherec, $con);
 
                 break;
@@ -1226,6 +1233,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
+                $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta);
                 BasePeer::doDelete($wherec, $con);
 
                 break;
@@ -1263,6 +1271,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
+                $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta);
                 BasePeer::doDelete($wherec, $con);
 
                 break;             
