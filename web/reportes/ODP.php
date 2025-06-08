@@ -1086,7 +1086,7 @@ class PDF_Flo extends PDF_FlowingBlock
                                         f
 								  limit 8";
 
-         echo var_dump($sql); exit();                  
+       //  echo var_dump($sql); exit();                  
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
         return  $datosSol;
     }
@@ -1245,7 +1245,7 @@ class PDF_Flo extends PDF_FlowingBlock
     }
 }
 
-
+/*
 $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->AliasNbPages();
 $pdf->PrintChapter();
@@ -1265,11 +1265,11 @@ $update = "update tb030_ruta set tx_ruta_reporte = '" . $dir . "' where co_ruta 
 $comm->Execute($update);
 $pdf->SetMargins(0, 0);
 $pdf->Output($dir, 'F');
+*/
 
-/*
 $pdf = new PDF_Flo('P', 'mm', 'letter');
 $pdf->PrintChapter();
 $pdf->SetMargins(0, 0);
 $pdf->SetDisplayMode('default');
 $pdf->Output();
-*/
+
