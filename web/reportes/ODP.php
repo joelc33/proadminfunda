@@ -1086,7 +1086,7 @@ class PDF_Flo extends PDF_FlowingBlock
                                         f
 								  limit 8";
 
-        // echo var_dump($sql); exit();                  
+         echo var_dump($sql); exit();                  
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
         return  $datosSol;
     }
