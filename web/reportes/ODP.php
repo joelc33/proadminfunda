@@ -1032,9 +1032,20 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $conex = new ConexionComun();
 
-        $sql = "select *,case when monto_fact is null then monto_detalle_compra else monto_fact end as monto 
+        $sql = "select 					co_categoria,
+                                        anio,
+                                        ue,
+                                        pac,
+                                        ae,
+                                        p,                         
+                                        g,
+                                        e,
+                                        se,
+                                        sse,
+                                        f,
+										sum(case when monto_fact is null then monto_detalle_compra else monto_fact end) as monto 
                 from (
-                select distinct tb085.co_categoria,
+                                        select distinct tb085.co_categoria,
                                         anio,
                                         nu_ejecutor as ue,
                                         tb080.nu_sector||'.'||nu_proyecto_ac as pac,
@@ -1047,7 +1058,7 @@ class PDF_Flo extends PDF_FlowingBlock
                                         nu_fi as f,
                                         (select  sum(p.nu_monto) 
                                             from tb087_presupuesto_movimiento p join tb045_factura f on (p.co_factura = f.co_factura) 
-                                        where p.co_detalle_compra = tb053.co_detalle_compras and f.co_odp = tb060.co_orden_pago)  as monto_fact,
+                                        where p.co_detalle_compra = tb053.co_detalle_compras and p.co_partida = tb087.co_partida and f.co_odp = tb060.co_orden_pago)  as monto_fact,
                                         sum(tb087.nu_monto) as monto_detalle_compra
                                 from  tb052_compras as tb052 
                                 left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras 
@@ -1061,7 +1072,19 @@ class PDF_Flo extends PDF_FlowingBlock
                                 left join tb060_orden_pago as tb060 on tb060.co_ruta = tb030.co_ruta    
                                 where tb030.co_ruta = " . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2 and tb087.nu_monto > 0
                                 group by 1,2,3,4,5,6,7,8,9,10,11,12
-                                limit 8) as partidas";
+                                ) as partidas
+								group by co_categoria,
+                                        anio,
+                                        ue,
+                                        pac,
+                                        ae,
+                                        p,                         
+                                        g,
+                                        e,
+                                        se,
+                                        sse,
+                                        f
+								  limit 8";
 
         // echo var_dump($sql); exit();                  
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
@@ -1073,9 +1096,20 @@ class PDF_Flo extends PDF_FlowingBlock
 
         $conex = new ConexionComun();
 
-        $sql = "select *,case when monto_fact is null then monto_detalle_compra else monto_fact end as monto 
+        $sql = "select 					co_categoria,
+                                        anio,
+                                        ue,
+                                        pac,
+                                        ae,
+                                        p,                         
+                                        g,
+                                        e,
+                                        se,
+                                        sse,
+                                        f,
+										sum(case when monto_fact is null then monto_detalle_compra else monto_fact end) as monto 
                 from (
-                select distinct tb085.co_categoria,
+                                        select distinct tb085.co_categoria,
                                         anio,
                                         nu_ejecutor as ue,
                                         tb080.nu_sector||'.'||nu_proyecto_ac as pac,
@@ -1088,7 +1122,7 @@ class PDF_Flo extends PDF_FlowingBlock
                                         nu_fi as f,
                                         (select  sum(p.nu_monto) 
                                             from tb087_presupuesto_movimiento p join tb045_factura f on (p.co_factura = f.co_factura) 
-                                        where p.co_detalle_compra = tb053.co_detalle_compras and f.co_odp = tb060.co_orden_pago)  as monto_fact,
+                                        where p.co_detalle_compra = tb053.co_detalle_compras and p.co_partida = tb087.co_partida and f.co_odp = tb060.co_orden_pago)  as monto_fact,
                                         sum(tb087.nu_monto) as monto_detalle_compra
                                 from  tb052_compras as tb052 
                                 left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras 
@@ -1101,8 +1135,20 @@ class PDF_Flo extends PDF_FlowingBlock
                                 left join tb080_sector as tb080 on tb080.id = tb083.id_tb080_sector    
                                 left join tb060_orden_pago as tb060 on tb060.co_ruta = tb030.co_ruta    
                                 where tb030.co_ruta = " . $_GET['codigo'] . " and tb087.co_tipo_movimiento = 2 and tb087.nu_monto > 0
-                                group by 1,2,3,4,5,6,7,8,9,10,11,12                                
-				                limit 5000 OFFSET 8) as partidas";
+                                group by 1,2,3,4,5,6,7,8,9,10,11,12
+                                ) as partidas
+								group by co_categoria,
+                                        anio,
+                                        ue,
+                                        pac,
+                                        ae,
+                                        p,                         
+                                        g,
+                                        e,
+                                        se,
+                                        sse,
+                                        f
+								  limit 5000 OFFSET 8";
 
         // echo var_dump($sql); exit();                  
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
