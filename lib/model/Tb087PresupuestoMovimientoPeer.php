@@ -72,7 +72,7 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
             return $campos["total"];
     }
 
-    static public function MontoPagado($co_solicitud)
+    static public function MontoPagado($co_solicitud,$co_tipo)
     {
 
         $c = new Criteria();
@@ -81,7 +81,7 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
         $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
         $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
         $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
-        $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO, 2);
+        $c->add(Tb087PresupuestoMovimientoPeer::CO_TIPO_MOVIMIENTO, $co_tipo);
 
         $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
 

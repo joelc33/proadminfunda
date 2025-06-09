@@ -368,12 +368,14 @@
                 iconCls: 'icon-guardar',
                 handler: function() {
 
+                    ContabilidadEditar.main.calcularMonto();
+
                     if (!ContabilidadEditar.main.formPanel_.getForm().isValid()) {
                         Ext.Msg.alert("Alerta", "Debe ingresar los campos en rojo");
                         return false;
                     }
 
-                    if (parseFloat(ContabilidadEditar.main.monto_total_factura) > parseFloat(ContabilidadEditar.main.OBJ.monto)) {
+                    if (parseFloat(ContabilidadEditar.main.total_pagar) > parseFloat(ContabilidadEditar.main.total_pagar)) {
                         Ext.MessageBox.confirm('Confirmación', 'El total de la factura debe ser igual al monto previsto, ¿Desea Continuar?', function(boton) {
                             if (boton == "yes") {
                                 ContabilidadEditar.main.setGuardar();

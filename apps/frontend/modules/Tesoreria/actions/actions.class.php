@@ -1315,7 +1315,7 @@ class TesoreriaActions extends sfActions
                         default:                           
 
                             $monto = Tb087PresupuestoMovimientoPeer::getMontoItemFactura($co_ruta,$reg["co_detalle_compras"],$porcentaje);
-                            $total_detalle += $porcentaje; // - Tb046FacturaRetencionPeer::getMontoRetencion(Tb045FacturaPeer::getCoFactura($co_ruta,$reg["co_detalle_compras"])); 
+                            $total_detalle += $porcentaje; //- Tb046FacturaRetencionPeer::getMontoRetencion(Tb045FacturaPeer::getCoFactura($co_ruta,$reg["co_detalle_compras"])); 
                             
 
                             $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
@@ -1496,8 +1496,12 @@ class TesoreriaActions extends sfActions
 
             }
 
+            $monto_comprometido = Tb087PresupuestoMovimientoPeer::MontoPagado($co_solicitud,1);
+            $monto_causado      = Tb087PresupuestoMovimientoPeer::MontoPagado($co_solicitud,2);
+
+         //   echo $monto_comprometido.">".$monto_causado; exit();
                 
-            if($total_detalle>Tb087PresupuestoMovimientoPeer::MontoPagado($co_solicitud)){
+            if($monto_comprometido > $monto_causado){
                 $tb030ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
                 $tb030ruta->setCoProceso(8);
                 $tb030ruta->save($con);
