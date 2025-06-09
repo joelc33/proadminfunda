@@ -246,8 +246,8 @@ class PresupuestoActions extends sfActions
 
         $co_solicitud = $this->getRequestParameter("co_solicitud");
         $tx_concepto = $this->getRequestParameter("tx_concepto");
-        list($dia, $mes, $anio ) = explode("/", $this->getRequestParameter("fecha"));
-        $fecha_odp = $anio.'-'.$mes.'-'.$dia;
+        list($dia, $mes, $anio) = explode("/", $this->getRequestParameter("fecha"));
+        $fecha_odp = $anio . '-' . $mes . '-' . $dia;
 
         $con = Propel::getConnection();
         try {
@@ -255,12 +255,13 @@ class PresupuestoActions extends sfActions
 
 
 
-            $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'),null,$fecha_odp);
+            $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'), null, $fecha_odp);
 
             //          echo "odp=".$co_odp; exit();
 
             $wherec = new Criteria();
             $wherec->add(Tb046FacturaRetencionPeer::CO_SOLICITUD, $co_solicitud);
+            $wherec->add(Tb046FacturaRetencionPeer::CO_ODP, null, Criteria::ISNULL);
 
             $updc = new Criteria();
             $updc->add(Tb046FacturaRetencionPeer::CO_ODP, $co_odp);
@@ -276,10 +277,49 @@ class PresupuestoActions extends sfActions
 
             BasePeer::doUpdate($wherec, $updc, $con);
 
+            /** Si la orden de pago tiene factura calcula el monto a pagar y las retenciones+*/
+
+          /*  $cf = new Criteria();
+            $cf->add(Tb045FacturaPeer::CO_ODP, $co_odp);
+            $stmtf = Tb045FacturaPeer::doSelectStmt($cf);
+
+            $monto_total_fac = 0;
+            while ($campos_fac = $stmtf->fetch(PDO::FETCH_ASSOC)) {
+                $monto_total_fac += $campos_fac["total_pagar"];
+            }
+
+            $cr = new Criteria();
+            $cr->add(Tb046FacturaRetencionPeer::CO_ODP, $co_odp);
+            $stmtr = Tb046FacturaRetencionPeer::doSelectStmt($cr);
+
+            $monto_total_ret = 0;
+            while ($campos_ret = $stmtf->fetch(PDO::FETCH_ASSOC)) {
+                $monto_total_ret += $campos_ret["mo_retencion"];
+            }
+
+
+
             $tb060_orden_pago = Tb060OrdenPagoPeer::retrieveByPK($co_odp);
 
+            if ($monto_total_fac > 0) {
+                $tb060_orden_pago->setMoPagar($monto_total_fac);
+                $tb060_orden_pago->setMoPendiente($monto_total_fac);
+                $tb060_orden_pago->setMoRetencion($monto_total_ret);
+                $tb060_orden_pago->setMoTotal($monto_total_fac + $monto_total_ret);
+
+
+                $wherelp = new Criteria();
+                $wherelp->add(Tb062LiquidacionPagoPeer::CO_ODP, $co_odp);
+
+                $updlp = new Criteria();
+                $updlp->add(Tb062LiquidacionPagoPeer::MO_PAGAR, $monto_total_fac);
+                $updlp->add(Tb062LiquidacionPagoPeer::MO_PENDIENTE, $monto_total_fac);
+
+                BasePeer::doUpdate($wherelp, $updlp, $con);
+            }**/
+            $tb060_orden_pago = Tb060OrdenPagoPeer::retrieveByPK($co_odp);
             $tb060_orden_pago->setTxConcepto($tx_concepto);
-            $tb060_orden_pago->save();
+            $tb060_orden_pago->save($con);
 
             $con->commit();
 
@@ -1039,15 +1079,15 @@ class PresupuestoActions extends sfActions
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $this->data = json_encode(array(
-            "nu_iva"                    => $campos["nu_iva"],
-            "tx_serial_cotizacion"      => $campos["tx_serial_cotizacion"],
-            "tx_observacion"            => $campos["tx_observacion"],
-            "monto_sub_total"           => $campos["monto_sub_total"],
-            "co_solicitud"              => $this->getRequestParameter("co_solicitud"),
-            "monto_iva"                 => $campos["monto_iva"],
-            "monto_total"               => $campos["monto_total"],
-            "co_cotizacion"             => $campos["co_cotizacion"],
-            "co_fuente_financiamiento"  => $campos["co_fuente_financiamiento"]
+            "nu_iva" => $campos["nu_iva"],
+            "tx_serial_cotizacion" => $campos["tx_serial_cotizacion"],
+            "tx_observacion" => $campos["tx_observacion"],
+            "monto_sub_total" => $campos["monto_sub_total"],
+            "co_solicitud" => $this->getRequestParameter("co_solicitud"),
+            "monto_iva" => $campos["monto_iva"],
+            "monto_total" => $campos["monto_total"],
+            "co_cotizacion" => $campos["co_cotizacion"],
+            "co_fuente_financiamiento" => $campos["co_fuente_financiamiento"]
         ));
     }
 
@@ -1709,7 +1749,7 @@ class PresupuestoActions extends sfActions
 
                 $datos_partida = Tb209PresupuestoDetalleCompraPeer::getDatosPresupuestoDetalleCompra($co_detalle_cotizacion, $in_cotizacion = true);
 
-            
+
                 // var_dump($co_detalle_cotizacion); exit();
 
                 Tb209PresupuestoDetalleCompraPeer::setUpdatePresupuestoDetalleCompra($co_detalle_cotizacion, $mo_debitar, $this->getUser()->getAttribute('codigo'), $co_proyecto, $co_accion, $co_presupuesto, $co_partida, $con, true);
@@ -1775,7 +1815,7 @@ class PresupuestoActions extends sfActions
                 }
 
                 $tb206_cotizacion = Tb206CotizacionPeer::retrieveByPK($co_cotizacion);
-                $tb206_cotizacion->setCoFuenteFinanciamiento($co_fuente_financiamiento?$co_fuente_financiamiento:null);
+                $tb206_cotizacion->setCoFuenteFinanciamiento($co_fuente_financiamiento ? $co_fuente_financiamiento : null);
                 $tb206_cotizacion->save($con);
 
                 $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
@@ -1871,7 +1911,10 @@ class PresupuestoActions extends sfActions
                 ));
             } else {
 
-                if ($mo_debitar < $monto_restante) {
+               // echo round($monto_restante,2)-round($mo_debitar,2); exit();
+                if (round($mo_debitar,2) < round($monto_restante,2)) {
+
+                  
 
                     $tb209_insert = new Tb209PresupuestoDetalleCompra();
                     $tb209_insert->setMonto($monto_restante - $mo_debitar);
@@ -3683,7 +3726,7 @@ class PresupuestoActions extends sfActions
         $this->setTemplate('store');
     }
 
-    
+
 
     public function executeDesafectacion(sfWebRequest $request)
     {
