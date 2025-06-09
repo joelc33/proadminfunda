@@ -210,8 +210,13 @@
                 stateful: true
             });
 
+            var list_factura = paqueteComunJS.funcion.getJsonByObjStore({
+                store: ContabilidadEditar.main.gridPanel.getStore()
+            });
+
             this.store_lista.baseParams.co_solicitud = this.OBJ.co_solicitud;
             this.store_lista.baseParams.iva = this.OBJ.iva;
+            this.store_lista.baseParams.json_factura = list_factura;
             this.store_lista.load();
 
 
