@@ -9,13 +9,6 @@ this.store_lista = this.getLista();
 this.OBJ = paqueteComunJS.funcion.doJSON({stringData:'<?php echo $data ?>'});
 
 this.store_mes = this.getDataMes();
-
-
-//<ClavePrimaria>
-this.co_cierre_egreso = new Ext.form.Hidden({
-    name:'co_cierre_egreso',
-    value:this.OBJ.co_cierre_egreso
-});
 //</ClavePrimaria>
 
 this.hiddenJsonMovimiento  = new Ext.form.Hidden({
@@ -75,19 +68,18 @@ this.co_mes = new Ext.form.ComboBox({
     resizable:true
 });
 
-this.store_mes.load();
+//this.store_mes.load();
 
 this.editar= new Ext.Button({
     text:'Ver Detalle',
     iconCls: 'icon-reporteest',
     handler:function(){
-	CierrePresupuestoEgreso.main.mascara.show();
+	//CierrePresupuestoEgreso.main.mascara.show();
         this.msg = Ext.get('formularioPresupuestoEgreso');
         this.msg.load({
-         url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/CierreContable/detalleTipoAsiento',
+         url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/CierreContable/detalle',
          params:{
-                co_tipo_asiento:DetalleCierrePresupuestoEgreso.main.gridPanel_.getSelectionModel().getSelected().get('co_tipo_asiento'),
-                fecha:DetalleCierrePresupuestoEgreso.main.gridPanel_.getSelectionModel().getSelected().get('fecha')
+                co_comprobante_contable:DetalleCierrePresupuestoEgreso.main.gridPanel_.getSelectionModel().getSelected().get('co_comprobante_contable')
             },
          scripts: true,
          text: "Cargando.."
@@ -100,39 +92,53 @@ function renderTipoAsiento(val, attr, record) {
     if(parseFloat(record.data.mo_debe) < parseFloat(record.data.mo_haber)){
         return '<p style="color:red"><b>'+record.data.fecha+'</b></p>';     
      }else{
-    if(parseFloat(record.data.mo_debe) > parseFloat(record.data.mo_haber)){
-        return '<p style="color:red"><b>'+record.data.fecha+'</b></p>';     
-     }else{         
        return record.data.fecha; 
-         }
          }
 }
 
+function renderMonto(val, attr, record) { 
+     return paqueteComunJS.funcion.getNumeroFormateado(val);     
+} 
+
+function renderContabilizado(val, attr, record) { 
+    if(record.data.in_contabilizado=='SI')
+    {
+       return '<p style="color:green">'+val+'</p>'    
+        
+    }else
+    {
+      return '<p style="color:red">'+val+'</p>'
+    }
+     
+} 
+
 this.gridPanel_ = new Ext.grid.GridPanel({
-    title:'Detalle del Movimiento',
+    title:'Detalle comprobantes',
     //iconCls: 'icon-libro',
     store: this.store_lista,
     loadMask:true,
 //    frame:true,
-    height:400,
+    height:440,
     border:false,
     tbar:[
         this.editar//,'-',this.excel,'-',this.excelDecreto,'-',this.excelSaldoInicial
     ],
     columns: [
     new Ext.grid.RowNumberer(),
-        {header: 'Tipo Asiento', hidden:true, width:250,  menuDisabled:true, sortable: true, dataIndex: 'co_tipo_asiento'},
-        {header: 'Fecha Movimiento', width:100,  menuDisabled:true, sortable: true, dataIndex: 'fecha', renderer: renderTipoAsiento},
-        {header: 'Tipo Asiento', width:250,  menuDisabled:true, sortable: true, renderer: textoLargo, dataIndex: 'tx_tipo_asiento'},
-        {header: 'Monto Debito', width:150,  menuDisabled:true, sortable: true, renderer: formatoNro, dataIndex: 'mo_debe'},
-        {header: 'Monto Credito', width:150,  menuDisabled:true, sortable: true, renderer: formatoNro, dataIndex: 'mo_haber'}
-   ],
+    {header: 'co_comprobante_contable',hidden:true, menuDisabled:true,dataIndex: 'co_comprobante_contable'},
+    {header: 'Fecha', width:80,  menuDisabled:true, sortable: true,  dataIndex: 'fe_comprobante'},
+    {header: 'Tipo Documento', width:150,  menuDisabled:true, sortable: true,  dataIndex: 'tx_tipo_asiento'},
+    {header: 'Nro Comprobante', width:100,  menuDisabled:true, sortable: true,  dataIndex: 'nu_comprobante'},
+    {header: 'Monto Debito', width:130,  menuDisabled:true, sortable: true,  dataIndex: 'mo_debito',renderer:renderMonto},
+    {header: 'Monto Credito', width:130,  menuDisabled:true, sortable: true,  dataIndex: 'mo_credito',renderer:renderMonto},
+    {header: 'Contabilizado', width:80,  menuDisabled:true, sortable: true,  dataIndex: 'in_contabilizado',renderer:renderContabilizado}
+    ],
    listeners:{cellclick:function(Grid, rowIndex, columnIndex,e ){DetalleCierrePresupuestoEgreso.main.editar.enable();}},
     stripeRows: true,
     autoScroll:true,
     stateful: true,
     bbar: new Ext.PagingToolbar({
-        pageSize: 100000,
+        pageSize: 20,
         store: this.store_lista,
         displayInfo: true,
         displayMsg: '<span style="color:black">Registros: {0} - {1} de {2}</span>',
@@ -140,6 +146,7 @@ this.gridPanel_ = new Ext.grid.GridPanel({
     })    
 });
 
+this.store_lista.load();
 
 this.ejercicio = new Ext.form.NumberField({
 	fieldLabel:'Ejercicio',
@@ -154,49 +161,20 @@ this.ejercicio = new Ext.form.NumberField({
 this.guardar = new Ext.Button({
     text:'Pocesar',
     iconCls: 'icon-guardar',
-    handler:function(){
-        
-        this.monto_debe = paqueteComunJS.funcion.getSumaColumnaGrid({
-            store:DetalleCierrePresupuestoEgreso.main.store_lista,
-            campo:'mo_debe'
-            }); 
-            
-        this.monto_haber = paqueteComunJS.funcion.getSumaColumnaGrid({
-            store:DetalleCierrePresupuestoEgreso.main.store_lista,
-            campo:'mo_haber'
-            });             
-        
-        
-            if(DetalleCierrePresupuestoEgreso.main.OBJ.co_mes == 1 && DetalleCierrePresupuestoEgreso.main.OBJ.in_cerrado == false){
-                Ext.Msg.alert("Alerta","Debe realizar el Cierre Fiscal Contable del ejercicio anterior!");
-                return false;
-
-            }     
-            
-            if(parseFloat(this.monto_debe)>parseFloat(this.monto_haber)){
-                Ext.Msg.alert("Alerta","Hay Diferencias entre debitos y creditos, Verifique las fechas en color rojo");
-                return false;
-            }
-                            console.log(DetalleCierrePresupuestoEgreso.main.OBJ.co_mes);
-                console.log(DetalleCierrePresupuestoEgreso.main.OBJ.in_cerrado);
-        
+    handler:function(){       
 
       Ext.MessageBox.confirm('Confirmación', '¿Realmente desea procesar el cierre?', function(boton){
       if(boton=="yes"){
+          
+            DetalleCierrePresupuestoEgreso.main.guardar.setDisabled(true);          
             if(!DetalleCierrePresupuestoEgreso.main.formFiltroPrincipal.getForm().isValid()){
                 Ext.Msg.alert("Alerta","Debe ingresar los campos en rojo");
                 return false;
             }
-            
-            var list_movimiento = paqueteComunJS.funcion.getJsonByObjStore({
-                store:DetalleCierrePresupuestoEgreso.main.gridPanel_.getStore()
-            });
-        
-            DetalleCierrePresupuestoEgreso.main.hiddenJsonMovimiento.setValue(list_movimiento);
 
             DetalleCierrePresupuestoEgreso.main.formFiltroPrincipal.getForm().submit({
                 method:'POST',
-                url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/CierreContable/guardar',
+                url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/CierreContable/guardarCierreFiscal',
                 waitMsg: 'Enviando datos, por favor espere..',
                 waitTitle:'Enviando',
                 failure: function(form, action) {
@@ -215,6 +193,7 @@ this.guardar = new Ext.Button({
                          });
                      }
                      CierrePresupuestoEgreso.main.store_lista.load();
+                    
                      DetalleCierrePresupuestoEgreso.main.winformPanel_.close();
                  }
             });
@@ -233,7 +212,7 @@ this.salir = new Ext.Button({
 });
 
 this.formFiltroPrincipal = new Ext.form.FormPanel({
-    title:'Busqueda',
+    title:'Detalle',
     iconCls: 'icon-solpendiente',
     collapsible: true,
     titleCollapse: true,
@@ -241,35 +220,35 @@ this.formFiltroPrincipal = new Ext.form.FormPanel({
     border:false,
     labelWidth: 110,
     padding:'10px',
-    items:[this.co_cierre_egreso,
-            this.fe_desde,
-            this.fe_hasta,
+    items:[
+//            this.fe_desde,
+//            this.fe_hasta,
             //this.co_mes,
             this.ejercicio,
-            this.hiddenJsonMovimiento],
-    buttonAlign:'center',
-    buttons:[
-        {
-            text:'Consultar',
-            iconCls:'icon-buscar',
-            handler:function(){
-                DetalleCierrePresupuestoEgreso.main.aplicarFiltroByFormulario();
-            }
-        }
-    ]
+            this.hiddenJsonMovimiento]
+//    buttonAlign:'center',
+//    buttons:[
+//        {
+//            text:'Consultar',
+//            iconCls:'icon-buscar',
+//            handler:function(){
+//                DetalleCierrePresupuestoEgreso.main.aplicarFiltroByFormulario();
+//            }
+//        }
+//    ]
 });
 
 this.winformPanel_ = new Ext.Window({
-    title:'Cierre Contable',
+    title:'Nuevo Cierre Ejercicio Fiscal Contable',
     modal:true,
     constrain:true,
     width:800,
     frame:true,
     closabled:true,
-    height:630,
+    height:130,
     items:[
         this.formFiltroPrincipal,
-        this.gridPanel_
+//        this.gridPanel_
     ],
     buttons:[
         this.guardar,
@@ -323,14 +302,16 @@ aplicarFiltroByFormulario: function(){
 }, 
 getLista: function(){
     this.store = new Ext.data.JsonStore({
-    url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/CierreContable/storelista',
+    url:'<?php echo $_SERVER["SCRIPT_NAME"] ?>/CierreContable/storelistaMovimiento',
     root:'data',
     fields:[
-            {name: 'co_tipo_asiento'},
+            {name: 'co_comprobante_contable'},
+            {name: 'nu_comprobante'},
+            {name: 'mo_debito'},
+            {name: 'mo_credito'},
             {name: 'tx_tipo_asiento'},
-            {name: 'fecha'},
-            {name: 'mo_debe'},
-            {name: 'mo_haber'}
+            {name: 'fe_comprobante'},
+            {name: 'in_contabilizado'}
            ]
     });
     return this.store;
