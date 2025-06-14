@@ -7,11 +7,12 @@ class PDF extends FPDF {
     public $title;
     public $conexion;
     function Header() {
+        $this->empresa = $this->getDatosEmpresa(1);
         $this->SetFont('courier','B',12);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'L');
+        $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'L');
         $this->SetFont('courier','',8);
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('Coordinación General de Administración'),0,0,'L');
+        $this->Cell(0,0,utf8_decode($this->empresa['nb_institucion']),0,0,'L');
         $this->Ln(4);
         //$this->Cell(0,0,utf8_decode('[FBANR018]'),0,0,'L');
         $this->SetFont('courier','',8);
