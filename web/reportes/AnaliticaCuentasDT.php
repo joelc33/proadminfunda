@@ -22,10 +22,10 @@ class PDF extends FPDF
 //        }
 
         $this->SetFont('courier', 'B', 12);
-        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'L');
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
         $this->SetFont('courier', '', 8);
         $this->Ln(4);
-        $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'L');
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
         $this->Ln(4);
         $this->SetX(10);
         $this->Cell(0, 0, utf8_decode('DIVISION DE CONTABILIDAD'), 0, 0, 'C');
