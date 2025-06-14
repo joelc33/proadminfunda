@@ -30,6 +30,11 @@ class CierreContableActions extends sfActions
     
   }    
   
+  public function executeEjercicioFiscal(sfWebRequest $request)
+  {
+    
+  }  
+  
   public function executeGuardar(sfWebRequest $request)
   {
     
@@ -351,19 +356,324 @@ class CierreContableActions extends sfActions
         ));
       }
      
+  } 
+  
+  public function executeGuardarCierreFiscal(sfWebRequest $request)
+  {
+    
+
+    $ejercicio           =   $this->getRequestParameter('ejercicio');
+    
+     $con = Propel::getConnection();
+     
+      try
+      { 
+        $con->beginTransaction();
+        
+                $tb026_solicitudForm = array(
+                    "co_tipo_solicitud"   => 53,
+                    "ejercicio"           => $this->getUser()->getAttribute('ejercicio'),
+                    "fe_solicitud"        => '31/12/'.$ejercicio,
+                    "observacion"         => "Cierre Ejercicio Fiscal Contable",
+                    "codigo"              =>  $this->getUser()->getAttribute('codigo')
+                );
+    
+                $resp = Tb026SolicitudPeer::setSolicitud($tb026_solicitudForm, $con);
+    
+                if ($resp["success"] == true) {
+                    $co_solicitud = $resp["co_solicitud"];
+                } else {
+                    $this->data = json_encode(array(
+                        "success" => false,
+                        "msg" =>  $resp["msg"]
+                    ));
+    
+                    return;
+                }        
+        
+           $sqlc ="SELECT co_maestro_contable from 
+           tb180_maestro_contable where nu_anio = $ejercicio and co_mes = 12 order by co_maestro_contable desc limit 1";
+
+           $stmtc = $con->prepare($sqlc);
+           $stmtc->execute(); 
+
+           $cierre = $stmtc->fetch(PDO::FETCH_ASSOC);        
+        
+        $tb180_maestro_contable = Tb180MaestroContablePeer::retrieveByPK($cierre["co_maestro_contable"]);        
+
+        $sql = "select co_cuenta_contable,tx_cuenta,tx_descripcion as denominacion, ((acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb)) * -1 as mo_credito, 0 as mo_debito
+        from tb024_cuenta_contable 
+        where nu_cuenta_contable like '4%' and nu_nivel = 5 
+        and (acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb) < 0 
+         group by co_cuenta_contable,nu_cuenta_contable,tx_descripcion";
+        //var_dump($sql);        exit();
+        $stmt = $con->prepare($sql);
+        $stmt->execute();        
+            $mo_debe = 0;
+            $mo_haber = 0;
+        while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+            $mo_debe = $mo_debe + $reg["mo_credito"];
+            $mo_haber = $mo_haber + $reg["mo_credito"];
+
+        }
+          
+            $Tb176ComprobanteContable = new Tb176ComprobanteContable();
+            $Tb176ComprobanteContable->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                              ->setMoDebito($mo_debe)
+                              ->setMoCredito($mo_haber)
+                              ->setNuAnio($tb180_maestro_contable->getNuAnio())
+                              ->setCoTipoAsiento(16)
+                              ->setFeComprobante($tb180_maestro_contable->getFechaCierre())
+                              ->setCreatedAt(date("Y-m-d"))
+                              ->setInContabilizado(TRUE)
+                              ->setInCerrado(true)
+                              ->setFeContabilizado($tb180_maestro_contable->getFechaCierre())
+                              ->setFeCerrado($tb180_maestro_contable->getFechaCierre())
+                              ->save($con);
+            
+        $sqlC = "select co_cuenta_contable,tx_cuenta,tx_descripcion as denominacion, ((acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb)) * -1 as mo_credito, 0 as mo_debito
+        from tb024_cuenta_contable 
+        where nu_cuenta_contable like '4%' and nu_nivel = 5 
+        and (acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb) < 0 
+         group by co_cuenta_contable,nu_cuenta_contable,tx_descripcion";
+
+        $stmtC = $con->prepare($sqlC);
+        $stmtC->execute();             
+        
+        while($regC = $stmtC->fetch(PDO::FETCH_ASSOC)){
+
+            
+                    $tb061_aiento_contable = new Tb061AsientoContable();
+                    $tb061_aiento_contable->setCoSolicitud($co_solicitud);
+                    $tb061_aiento_contable->setCoCuentaContable($regC["co_cuenta_contable"]);
+                    $tb061_aiento_contable->setMoDebe(0);
+                    $tb061_aiento_contable->setMoHaber($regC["mo_credito"]);
+                    $tb061_aiento_contable->setCreatedAt($tb180_maestro_contable->getFechaCierre());
+                    $tb061_aiento_contable->setCoUsuario($this->getUser()->getAttribute('codigo'));
+                    $tb061_aiento_contable->setCoTipoAsiento(16);
+                    $tb061_aiento_contable->setNuComprobante($Tb176ComprobanteContable->getCoComprobanteContable());
+                    $tb061_aiento_contable->setInActivo(TRUE);
+                    $tb061_aiento_contable->save($con);
+                    
+                    $Tb177DetComprobante = new Tb177DetComprobante();
+                    $Tb177DetComprobante->setCoComprobanteContable($Tb176ComprobanteContable->getCoComprobanteContable())
+                                        ->setMoCredito($regC["mo_credito"])
+                                        ->setMoDebito(0)                       
+                                        ->setCoCuentaContable($regC["co_cuenta_contable"])
+                                        ->setCoSolicitud($co_solicitud)
+                                        ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                        ->setFeMovimiento($tb180_maestro_contable->getFechaCierre())
+                                        ->save($con);                    
+                         
+                    $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($regC["co_cuenta_contable"]);
+
+                    $tb024_cuenta_contable->setPreCre(0);
+
+                    $tb024_cuenta_contable->setPreDeb(0);
+                    
+                    $tb024_cuenta_contable->setMesCre(0);
+
+                    $tb024_cuenta_contable->setMesDeb(0); 
+                    
+                    $tb024_cuenta_contable->setAcuCre(0);
+
+                    $tb024_cuenta_contable->setAcuDeb(0);                    
+
+                    $tb024_cuenta_contable->save($con);  
+
+        } 
+        
+        $c1 = new Criteria();
+        $c1->clearSelectColumns();
+        $c1->addSelectColumn(Tb024CuentaContablePeer::CO_CUENTA_CONTABLE);
+        $c1->add(Tb024CuentaContablePeer::NU_CUENTA_CONTABLE,'50102010100001');  
+        $stmt1 = Tb024CuentaContablePeer::doSelectStmt($c1);
+        $reg1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+        
+                    $tb061_aiento_contable = new Tb061AsientoContable();
+                    $tb061_aiento_contable->setCoSolicitud($co_solicitud);
+                    $tb061_aiento_contable->setCoCuentaContable($reg1["co_cuenta_contable"]);
+                    $tb061_aiento_contable->setMoDebe($mo_debe);
+                    $tb061_aiento_contable->setMoHaber(0);
+                    $tb061_aiento_contable->setCreatedAt($tb180_maestro_contable->getFechaCierre());
+                    $tb061_aiento_contable->setCoUsuario($this->getUser()->getAttribute('codigo'));
+                    $tb061_aiento_contable->setCoTipoAsiento(16);
+                    $tb061_aiento_contable->setNuComprobante($Tb176ComprobanteContable->getCoComprobanteContable());
+                    $tb061_aiento_contable->setInActivo(TRUE);
+                    $tb061_aiento_contable->save($con);
+                    
+                    $Tb177DetComprobante = new Tb177DetComprobante();
+                    $Tb177DetComprobante->setCoComprobanteContable($Tb176ComprobanteContable->getCoComprobanteContable())
+                                        ->setMoCredito(0)
+                                        ->setMoDebito($mo_debe)                       
+                                        ->setCoCuentaContable($reg1["co_cuenta_contable"])
+                                        ->setCoSolicitud($co_solicitud)
+                                        ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                        ->setFeMovimiento($tb180_maestro_contable->getFechaCierre())
+                                        ->save($con);                    
+                         
+                    $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($reg1["co_cuenta_contable"]); 
+                    $tb024_cuenta_contable->setMesDeb($tb024_cuenta_contable->getMesDeb() + $mo_debe);
+                    $tb024_cuenta_contable->save($con);
+                    
+                    
+        $sql2 = "select co_cuenta_contable,tx_cuenta,tx_descripcion as denominacion, (acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb) as mo_debito, 0 as mo_credito
+        from tb024_cuenta_contable 
+        where nu_cuenta_contable like '3%' and nu_nivel = 5 and (acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb) > 0  group by co_cuenta_contable,nu_cuenta_contable,tx_descripcion";
+        //var_dump($sql);        exit();
+        $stmt2 = $con->prepare($sql2);
+        $stmt2->execute();        
+            $mo_debe = 0;
+            $mo_haber = 0;
+        while($reg2 = $stmt2->fetch(PDO::FETCH_ASSOC)){
+
+            $mo_debe = $mo_debe + $reg2["mo_debito"];
+            $mo_haber = $mo_haber + $reg2["mo_debito"];
+
+        }                    
+                    
+             $Tb176ComprobanteContable = new Tb176ComprobanteContable();
+            $Tb176ComprobanteContable->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                              ->setMoDebito($mo_debe)
+                              ->setMoCredito($mo_haber)
+                              ->setNuAnio($tb180_maestro_contable->getNuAnio())
+                              ->setCoTipoAsiento(16)
+                              ->setFeComprobante($tb180_maestro_contable->getFechaCierre())
+                              ->setCreatedAt(date("Y-m-d"))
+                              ->setInContabilizado(TRUE)
+                              ->setInCerrado(true)
+                              ->setFeContabilizado($tb180_maestro_contable->getFechaCierre())
+                              ->setFeCerrado($tb180_maestro_contable->getFechaCierre())
+                              ->save($con);
+            
+        $sqlD = "select co_cuenta_contable,tx_cuenta,tx_descripcion as denominacion, (acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb) as mo_debito, 0 as mo_credito
+        from tb024_cuenta_contable 
+        where nu_cuenta_contable like '3%' and nu_nivel = 5 and (acu_cre + mes_cre + pre_cre) - (acu_deb + mes_deb + pre_deb) > 0  group by co_cuenta_contable,nu_cuenta_contable,tx_descripcion";
+
+        $stmtD = $con->prepare($sqlD);
+        $stmtD->execute();             
+        
+        while($regD = $stmtD->fetch(PDO::FETCH_ASSOC)){
+
+            
+                    $tb061_aiento_contable = new Tb061AsientoContable();
+                    $tb061_aiento_contable->setCoSolicitud($co_solicitud);
+                    $tb061_aiento_contable->setCoCuentaContable($regD["co_cuenta_contable"]);
+                    $tb061_aiento_contable->setMoDebe($regD["mo_debito"]);
+                    $tb061_aiento_contable->setMoHaber(0);
+                    $tb061_aiento_contable->setCreatedAt($tb180_maestro_contable->getFechaCierre());
+                    $tb061_aiento_contable->setCoUsuario($this->getUser()->getAttribute('codigo'));
+                    $tb061_aiento_contable->setCoTipoAsiento(16);
+                    $tb061_aiento_contable->setNuComprobante($Tb176ComprobanteContable->getCoComprobanteContable());
+                    $tb061_aiento_contable->setInActivo(TRUE);
+                    $tb061_aiento_contable->save($con);
+                    
+                    $Tb177DetComprobante = new Tb177DetComprobante();
+                    $Tb177DetComprobante->setCoComprobanteContable($Tb176ComprobanteContable->getCoComprobanteContable())
+                                        ->setMoCredito(0)
+                                        ->setMoDebito($regD["mo_debito"])                       
+                                        ->setCoCuentaContable($regD["co_cuenta_contable"])
+                                        ->setCoSolicitud($co_solicitud)
+                                        ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                        ->setFeMovimiento($tb180_maestro_contable->getFechaCierre())
+                                        ->save($con);                    
+                         
+                    $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($regD["co_cuenta_contable"]);
+
+                    $tb024_cuenta_contable->setPreCre(0);
+
+                    $tb024_cuenta_contable->setPreDeb(0);
+                    
+                    $tb024_cuenta_contable->setMesCre(0);
+
+                    $tb024_cuenta_contable->setMesDeb(0); 
+                    
+                    $tb024_cuenta_contable->setAcuCre(0);
+
+                    $tb024_cuenta_contable->setAcuDeb(0);                    
+
+                    $tb024_cuenta_contable->save($con);  
+
+        }            
+            
+        $c1 = new Criteria();
+        $c1->clearSelectColumns();
+        $c1->addSelectColumn(Tb024CuentaContablePeer::CO_CUENTA_CONTABLE);
+        $c1->add(Tb024CuentaContablePeer::NU_CUENTA_CONTABLE,'50102010100001');  
+        $stmt1 = Tb024CuentaContablePeer::doSelectStmt($c1);
+        $reg1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+        
+                    $tb061_aiento_contable = new Tb061AsientoContable();
+                    $tb061_aiento_contable->setCoSolicitud($co_solicitud);
+                    $tb061_aiento_contable->setCoCuentaContable($reg1["co_cuenta_contable"]);
+                    $tb061_aiento_contable->setMoDebe(0);
+                    $tb061_aiento_contable->setMoHaber($mo_haber);
+                    $tb061_aiento_contable->setCreatedAt($tb180_maestro_contable->getFechaCierre());
+                    $tb061_aiento_contable->setCoUsuario($this->getUser()->getAttribute('codigo'));
+                    $tb061_aiento_contable->setCoTipoAsiento(16);
+                    $tb061_aiento_contable->setNuComprobante($Tb176ComprobanteContable->getCoComprobanteContable());
+                    $tb061_aiento_contable->setInActivo(TRUE);
+                    $tb061_aiento_contable->save($con);
+                    
+                    $Tb177DetComprobante = new Tb177DetComprobante();
+                    $Tb177DetComprobante->setCoComprobanteContable($Tb176ComprobanteContable->getCoComprobanteContable())
+                                        ->setMoCredito($mo_haber)
+                                        ->setMoDebito(0)                       
+                                        ->setCoCuentaContable($reg1["co_cuenta_contable"])
+                                        ->setCoSolicitud($co_solicitud)
+                                        ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                                        ->setFeMovimiento($tb180_maestro_contable->getFechaCierre())
+                                        ->save($con);                    
+                         
+                    $tb024_cuenta_contable = Tb024CuentaContablePeer::retrieveByPK($reg1["co_cuenta_contable"]); 
+                    $tb024_cuenta_contable->setMesCre($tb024_cuenta_contable->getMesCre() + $mo_haber);
+                    $tb024_cuenta_contable->save($con);
+                    
+                    $tb180_maestro_contable->setInCerrado(true);
+                    $tb180_maestro_contable->save($con);                    
+        
+            $con->commit();
+            
+            $this->data = json_encode(array(
+                    "success" => true,
+                    "msg" => 'El cierre ejercicio fiscal contable se proceso exitosamente'
+            ));
+            
+                      
+       
+      }catch (PropelException $e)
+      {
+        $con->rollback();
+        $this->data = json_encode(array(
+            "success" => false,
+            "msg" =>  $e->getMessage()
+        ));
+      }
+     
   }  
   
   public function executeEditar(sfWebRequest $request)
   {
     $codigo = $this->getRequestParameter("codigo");
     $con = Propel::getConnection();
-           $sql ="SELECT (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '2 MONTH - 1 day')::DATE as last_day, (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE as first_day,EXTRACT(YEAR FROM (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE) AS year from 
+           $sql ="SELECT (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '2 MONTH - 1 day')::DATE as last_day, (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE as first_day,EXTRACT(YEAR FROM (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE) AS year,EXTRACT(MONTH FROM (date_trunc('MONTH',fecha_cierre::date) + INTERVAL '1 MONTH + 0 day')::DATE) AS mes from 
 tb180_maestro_contable order by co_maestro_contable desc limit 1";
 
            $stmt = $con->prepare($sql);
            $stmt->execute(); 
 
-           $next_month = $stmt->fetch(PDO::FETCH_ASSOC);    
+           $next_month = $stmt->fetch(PDO::FETCH_ASSOC); 
+           
+           $anio = $next_month["year"] - 1;
+           
+           $sqlc ="SELECT in_cerrado from 
+           tb180_maestro_contable where nu_anio = $anio and co_mes = 12 order by co_maestro_contable desc limit 1";
+
+           $stmtc = $con->prepare($sqlc);
+           $stmtc->execute(); 
+
+           $cierre = $stmtc->fetch(PDO::FETCH_ASSOC);            
     
     if($codigo!=''||$codigo!=null){
 
@@ -373,10 +683,12 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
             "nu_comprobante"          => "",
             "mo_credito"              => "",
             "mo_debito"               => "",
-            "co_mes"                  => "",
+            "co_mes"                  => $next_month["mes"],
             "fe_desde"                => $next_month["first_day"],
             "fe_hasta"                => $next_month["last_day"],
-            "ejercicio"               => $next_month["year"]
+            "ejercicio"               => $next_month["year"],
+            "in_cerrado"              => $cierre["in_cerrado"],
+            
         ));
     }
 
@@ -404,6 +716,34 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
             "co_mes"                  => "",
             "fe_desde"                => $next_month["first_day"],
             "fe_hasta"                => $next_month["last_day"],
+            "ejercicio"               => $next_month["year"]
+        ));
+    }
+
+  }  
+  
+  public function executeEditarCierreFiscal(sfWebRequest $request)
+  {
+    $codigo = $this->getRequestParameter("codigo");
+    $con = Propel::getConnection();
+           $sql ="SELECT nu_anio AS year from 
+            tb180_maestro_contable where co_mes = 12 and in_cerrado = false order by co_maestro_contable asc limit 1";
+           $stmt = $con->prepare($sql);
+           $stmt->execute(); 
+
+           $next_month = $stmt->fetch(PDO::FETCH_ASSOC);    
+    
+    if($codigo!=''||$codigo!=null){
+
+    }else{
+        $this->data = json_encode(array(
+            "co_comprobante_contable" => "",
+            "nu_comprobante"          => "",
+            "mo_credito"              => "",
+            "mo_debito"               => "",
+            "co_mes"                  => "",
+            "fe_desde"                => "",
+            "fe_hasta"                => "",
             "ejercicio"               => $next_month["year"]
         ));
     }
@@ -725,6 +1065,40 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
                        
         $c = new Criteria();
         $c->clearSelectColumns();      
+        $cantidadTotal = Tb180MaestroContablePeer::doCount($c);        
+
+        //$c->setLimit($limit)->setOffset($start);        
+        $c->addAscendingOrderByColumn(Tb180MaestroContablePeer::CO_MAESTRO_CONTABLE);
+        
+        $stmt = Tb180MaestroContablePeer::doSelectStmt($c);
+        $registros = array();
+        while($reg = $stmt->fetch(PDO::FETCH_ASSOC)){
+                      
+//            list($anio,$mes,$dia) = explode("-",$reg["fe_comprobante"]);
+//            
+//            $reg["fe_comprobante"] = $dia.'/'.$mes.'/'.$anio;
+            
+            $registros[] = $reg;
+        }
+
+
+        $this->data = json_encode(array(
+            "success"   =>  true,
+            "total"     =>  $cantidadTotal,
+            "data"      =>  $registros
+        ));
+    } 
+    
+  public function executeStorelistaCierreFiscal(sfWebRequest $request)
+  {
+       
+        $limit      =   $this->getRequestParameter("limit",20);
+        $start      =   $this->getRequestParameter("start",0);
+                       
+        $c = new Criteria();
+        $c->clearSelectColumns();      
+        $c->add(Tb180MaestroContablePeer::CO_MES, 12);
+        $c->add(Tb180MaestroContablePeer::IN_CERRADO, TRUE);
         $cantidadTotal = Tb180MaestroContablePeer::doCount($c);        
 
         //$c->setLimit($limit)->setOffset($start);        
