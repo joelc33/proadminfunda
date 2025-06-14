@@ -11,12 +11,16 @@ class PDF extends FPDF {
 
         $this->Image("imagenes/escudosanfco.png", 100, 7,20);
 
+         $this->empresa = $this->getDatosEmpresa(1);
+
         $this->SetFont('Arial','B',9);
         $this->SetTextColor(0,0,0);
         $this->SetY(32);
         $this->Cell(0,0,utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'),0,0,'C');
         $this->Ln(4);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
         $this->Ln(4);
        // $this->Cell(0,0,utf8_decode('SECRETARIA DE ADMINISTRACION Y FINANZAS'),0,0,'C');
        // $this->Ln(6);
@@ -181,6 +185,29 @@ class PDF extends FPDF {
           return $conex->ObtenerFilasBySqlSelect($sql);
   
     }
+
+    function getDatosEmpresa( $codigo){
+
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
+        tx_sigla,
+        op_imagen->'izquierda'->0 as izquierda_x,
+        op_imagen->'izquierda'->1 as izquierda_y,
+        op_imagen->'izquierda'->2 as izquierda_w,
+        op_imagen->'centro'->0 as centro_x,
+        op_imagen->'centro'->1 as centro_y,
+        op_imagen->'centro'->2 as centro_w,
+        op_imagen->'derecha'->0 as derecha_x,
+        op_imagen->'derecha'->1 as derecha_y,
+        op_imagen->'derecha'->2 as derecha_w
+        FROM public.tb015_empresa
+        WHERE co_empresa = ".$codigo.";";
+
+        $conex = new ConexionComun();
+        $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+        return  $datosSol[0];
+  
+    }     
 
     function getDetalleTransferencia(){
 

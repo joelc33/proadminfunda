@@ -19,14 +19,11 @@ class PDF extends FPDF {
 //            $this->Image("imagenes/".$this->empresa['tx_imagen_der'],  $this->empresa['derecha_x'], $this->empresa['derecha_y'], $this->empresa['derecha_w']);
 //        }
 
-        $this->SetFont('Arial','B',8);
-        $this->SetTextColor(0,0,0);
-        $this->SetY(10);
-        $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'C');
+        $this->SetFont('courier','B',12);
+        $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'C');
+        $this->SetFont('courier','',8);
         $this->Ln(4);
-        $this->SetX(10);
-        $this->Cell(0,0,utf8_decode('RIF. G-200005297'),0,0,'C');
+        $this->Cell(0,0,utf8_decode($this->empresa['nb_institucion']),0,0,'C');
         $this->Ln(4);
         $this->SetX(10);
         $this->Cell(0,0,utf8_decode('DIVISION DE CONTABILIDAD'),0,0,'C');

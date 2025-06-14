@@ -11,6 +11,8 @@ class PDF extends FPDF
 
         $this->Image("imagenes/escudosanfco.png", 167, 7, 20);
 
+        $this->empresa = $this->getDatosEmpresa(1);
+
         $this->SetFont('Arial', 'B', 8);
 
         $fecha = strtotime("01-$_GET[fecha]");
@@ -45,7 +47,9 @@ class PDF extends FPDF
         $this->SetY(32);
         $this->Cell(0, 0, utf8_decode('REPUBLICA BOLIVARIANA DE VENEZUELA'), 0, 0, 'C');
         $this->Ln(4);
-        $this->Cell(0, 0, utf8_decode('<NOMBRE DE LA INSTITUCION>'), 0, 0, 'C');
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'C');
+        $this->Ln(4);
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_institucion']), 0, 0, 'C');
         //$this->Ln(4);
         //$this->Cell(0, 0, utf8_decode('DIRECCIÓN DE ASESORÍA TECNICA Y EVALUACION DE PROYECTOS GUBERNAMENTALES'), 0, 0, 'C');
 
@@ -106,7 +110,8 @@ class PDF extends FPDF
         $this->Row(array(utf8_decode("ESTADO: ZULIA"), utf8_decode("DISTRITO: MARACAIBO"), utf8_decode("MUNICIPIO: MARACAIBO")), 1, 1);
         if ($_GET['organigrama']) {
             $this->datos4 = $this->getEjecutor();
-            foreach ($this->datos4 as $key => $val) {}
+            foreach ($this->datos4 as $key => $val) {
+            }
             $this->SetFont('Arial', '', 8);
             $this->SetWidths(array(100, 234));
             $this->SetAligns(array("L", "L", "L"));
@@ -115,7 +120,8 @@ class PDF extends FPDF
             $this->SetWidths(array(334));
             $this->SetAligns(array("L"));
             $this->Row(array(utf8_decode("DIRECCIÓN: $val[tx_direccion]")), 1, 1);
-            $this->Row(array(utf8_decode('OBSERVACIÓN: ')), 1, 1);}
+            $this->Row(array(utf8_decode('OBSERVACIÓN: ')), 1, 1);
+        }
         $this->Ln(5);
 
     }
@@ -300,7 +306,8 @@ class PDF extends FPDF
         if (isset($this->bienesincorporados) && !empty($this->bienesincorporados)) {
             foreach ($this->bienesincorporados as $key => $bi) {
                 $cbi++;
-            }}
+            }
+        }
         return $cbi;
 
     }
@@ -319,6 +326,30 @@ class PDF extends FPDF
         return $cbd;
     }
 
+    function getDatosEmpresa($codigo)
+    {
+
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
+        tx_sigla,
+        op_imagen->'izquierda'->0 as izquierda_x,
+        op_imagen->'izquierda'->1 as izquierda_y,
+        op_imagen->'izquierda'->2 as izquierda_w,
+        op_imagen->'centro'->0 as centro_x,
+        op_imagen->'centro'->1 as centro_y,
+        op_imagen->'centro'->2 as centro_w,
+        op_imagen->'derecha'->0 as derecha_x,
+        op_imagen->'derecha'->1 as derecha_y,
+        op_imagen->'derecha'->2 as derecha_w
+        FROM public.tb015_empresa
+        WHERE co_empresa = " . $codigo . ";";
+
+        $conex = new ConexionComun();
+        $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
+        return $datosSol[0];
+
+    }
+
     public function GetCantDes60($ubi)
     {
         $this->bienesdesincorporados = $this->getBienesDes($ubi);
@@ -328,7 +359,8 @@ class PDF extends FPDF
                 if ($bd['co_subtipo_movimiento_bienes'] == 63) {
                     $cbdf++;
                 }
-            }}
+            }
+        }
         return $cbdf;
     }
 
@@ -356,7 +388,11 @@ class PDF extends FPDF
         $this->SetFillColor(255, 255, 255);
         $this->Row(array('
 
-            ', '', '', ''), 1, 0);
+            ',
+            '',
+            '',
+            ''
+        ), 1, 0);
         $this->ln();
 
     }
@@ -416,7 +452,7 @@ class PDF extends FPDF
         $fecha = strtotime("01-$_GET[fecha]");
         $mes = date("m", $fecha);
         $anio = date("y", $fecha);
-        $fecha = date("d-m-Y",mktime(0, 0, 0, $mes,1, $anio)-1);
+        $fecha = date("d-m-Y", mktime(0, 0, 0, $mes, 1, $anio) - 1);
         $conex = new ConexionComun();
         $sql = "SELECT tb171.nu_monto           
         FROM tb173_movimiento_bienes AS tb173
@@ -426,7 +462,7 @@ class PDF extends FPDF
         JOIN tb172_tipo_movimiento_bienes AS tb172 ON tb172.co_tipo_movimiento_bienes=tbbn004.co_tipo_movimiento_bienes
         WHERE tbbn008.created_at::date <='$fecha' AND tb172.co_tipo_movimiento_bienes IN (1,2) AND tbbn008.co_ubicacion= $ubi";
 
-         //echo var_dump($sql); exit();
+        //echo var_dump($sql); exit();
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
         return $datosSol;
 
