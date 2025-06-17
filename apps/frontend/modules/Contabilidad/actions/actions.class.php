@@ -396,6 +396,9 @@ class ContabilidadActions extends sfActions
         $c->addJoin(Tb008ProveedorPeer::CO_DOCUMENTO, Tb007DocumentoPeer::CO_DOCUMENTO);
         $c->add(Tb052ComprasPeer::CO_SOLICITUD, $codigo);
 
+        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($codigo));
+
+
         $stmt = Tb056ContratoComprasPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -415,7 +418,8 @@ class ContabilidadActions extends sfActions
             "tx_ramo" => $campos["tx_ramo"],
             "monto" => $campos["monto"],
             "nu_iva" => $campos["nu_iva"],
-            "nu_orden_pago" => $this->getNuOrdenPago($this->getRequestParameter("co_solicitud"))
+            "nu_orden_pago" => $this->getNuOrdenPago($this->getRequestParameter("co_solicitud")),
+            "fecha_asignacion"  => date("d/m/Y", strtotime( $ruta->getCreatedAt()))
         ));
     }
 
@@ -547,15 +551,16 @@ class ContabilidadActions extends sfActions
     public function executeGuardar(sfWebRequest $request)
     {
 
-        $co_compra = $this->getRequestParameter("co_compra");
-        $co_documento = $this->getRequestParameter("co_documento");
-        $co_ramo = $this->getRequestParameter("co_ramo");
-        $co_solicitud = $this->getRequestParameter("co_solicitud");
-        $co_proveedor = $this->getRequestParameter("co_proveedor");
-        $co_iva_factura = $this->getRequestParameter("co_iva_factura");
-        $co_iva = $this->getRequestParameter("co_iva");
-        $json_factura = $this->getRequestParameter("json_factura");
-        $nu_orden_pago = $this->getRequestParameter("nu_orden_pago");
+        $co_compra          = $this->getRequestParameter("co_compra");
+        $co_documento       = $this->getRequestParameter("co_documento");
+        $co_ramo            = $this->getRequestParameter("co_ramo");
+        $co_solicitud       = $this->getRequestParameter("co_solicitud");
+        $co_proveedor       = $this->getRequestParameter("co_proveedor");
+        $co_iva_factura     = $this->getRequestParameter("co_iva_factura");
+        $co_iva             = $this->getRequestParameter("co_iva");
+        $json_factura       = $this->getRequestParameter("json_factura");
+        $nu_orden_pago      = $this->getRequestParameter("nu_orden_pago");
+        $fecha_asignacion   = $this->getRequestParameter("fecha_Asignacion");
 
         $con = Propel::getConnection();
 
@@ -570,7 +575,7 @@ class ContabilidadActions extends sfActions
             //$co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud,$con);
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
 
-
+            list($dia,$mes,$anio) = explode("/", $fecha_asignacion);
 
             $wherec = new Criteria();
             $wherec->add(Tb056ContratoComprasPeer::CO_COMPRAS, $co_compra);
@@ -781,6 +786,7 @@ class ContabilidadActions extends sfActions
 
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
 
+            $ruta->setCreatedAt( $anio.'-'.$mes.'-'.$dia);
             $c = new Criteria();
             $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
             $cant = Tb045FacturaPeer::doCount($c);

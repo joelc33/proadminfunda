@@ -29,14 +29,16 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
     static public function setRetenciones($con, $co_solicitud, $co_usuario, $co_ruta, $co_ejercicio)
     {
 
-      
+
 
         $c = new Criteria();
         $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
         $c->add(Tb045FacturaPeer::CO_ODP, NULL, Criteria::ISNULL);
         $stmt = Tb045FacturaPeer::doSelectStmt($c);
 
-        $x=0;
+        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
+
+        $x = 0;
         while ($campos = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             $co_cuenta_por_pagar = Tb130CuentaDocumentoPeer::getCoCuentaContable($co_solicitud); //Factura
@@ -49,10 +51,11 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                 ->setCoUsuario($co_usuario)
                 ->setCoRuta($co_ruta)
                 ->setCoTipoAsiento(1)
+                ->setCreatedAt($ruta->getCreatedAt())
                 ->save($con);
 
 
-              
+
             $c1 = new Criteria();
             $c1->add(Tb129DetalleFacturaPeer::CO_FACTURA, $campos["co_factura"]);
             $stmt1 = Tb129DetalleFacturaPeer::doSelectStmt($c1);
@@ -63,7 +66,7 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
 
                 $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable($res["co_producto"], $co_solicitud);
 
-                
+
 
                 $monto = $res["mo_total"]; //+$mo_retencion;
 
@@ -75,6 +78,7 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                     ->setCoUsuario($co_usuario)
                     ->setCoTipoAsiento(1)
                     ->setCoRuta($co_ruta)
+                    ->setCreatedAt($ruta->getCreatedAt())
                     ->save($con);
 
 
@@ -122,7 +126,7 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                 while ($resdc = $stmtdc->fetch(PDO::FETCH_ASSOC)) {
 
 
-                  //  echo $resdc["monto"] ."*". $porc; exit();
+                    //  echo $resdc["monto"] ."*". $porc; exit();
 
                     $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
                     $tb087_presupuesto_movimiento->setCoPartida($resdc["co_presupuesto"])
@@ -134,6 +138,7 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                         ->setCoDetalleCompra($res["co_detalle_compra"])
                         ->setCoPresupuestoDetalleCompra($resdc["id"])
                         ->setInActivo(true)
+                        ->setCreatedAt($ruta->getCreatedAt())
                         ->save($con);
                     //    }
                 }
@@ -141,41 +146,41 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                 //$total_iva += $mo_iva;
             }
 
-                      $monto_iva=0;
-                      $cIva = new Criteria();
-                      $cIva->add(Tb053DetalleComprasPeer::CO_COMPRAS, $campos["co_compra"]);
-                      $cIva->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336);
-                      $stmtIva = Tb053DetalleComprasPeer::doSelectStmt($cIva);
-                      while ($regIva = $stmtIva->fetch(PDO::FETCH_ASSOC)) {
-                          $monto_iva= $monto_iva + $regIva["monto"];
-                      }
+            $monto_iva = 0;
+            $cIva = new Criteria();
+            $cIva->add(Tb053DetalleComprasPeer::CO_COMPRAS, $campos["co_compra"]);
+            $cIva->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336);
+            $stmtIva = Tb053DetalleComprasPeer::doSelectStmt($cIva);
+            while ($regIva = $stmtIva->fetch(PDO::FETCH_ASSOC)) {
+                $monto_iva = $monto_iva + $regIva["monto"];
+            }
 
-                    $ci = new Criteria();
-                    $ci->add(Tb053DetalleComprasPeer::CO_COMPRAS, $campos["co_compra"]);
-                    $ci->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336);
-                    $stmti = Tb053DetalleComprasPeer::doSelectStmt($ci);
+            $ci = new Criteria();
+            $ci->add(Tb053DetalleComprasPeer::CO_COMPRAS, $campos["co_compra"]);
+            $ci->add(Tb053DetalleComprasPeer::CO_PRODUCTO, 19336);
+            $stmti = Tb053DetalleComprasPeer::doSelectStmt($ci);
 
-                    while ($campos_iva = $stmti->fetch(PDO::FETCH_ASSOC)) {
-                        
-                    $porcentaje_iva = ($campos["nu_iva_factura"] * 100) / ($monto_iva);
-                    if ($porcentaje_iva == 100)
-                        $porc_iva = 1;
-                    else
-                        $porc_iva = ($porcentaje_iva / 100);                        
+            while ($campos_iva = $stmti->fetch(PDO::FETCH_ASSOC)) {
 
-                    
+                $porcentaje_iva = ($campos["nu_iva_factura"] * 100) / ($monto_iva);
+                if ($porcentaje_iva == 100)
+                    $porc_iva = 1;
+                else
+                    $porc_iva = ($porcentaje_iva / 100);
 
 
 
 
-                    $dci = new Criteria();
-                    $dci->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, $campos_iva["co_detalle_compras"]);
-                    $stmtdci = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($dci);
-                    $total_iva = 0;
-                    while ($resdci = $stmtdci->fetch(PDO::FETCH_ASSOC)) {
-                        
-                    $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable('', $co_solicitud,$resdci["co_presupuesto"]);             
-                        
+
+
+                $dci = new Criteria();
+                $dci->add(Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COMPRA, $campos_iva["co_detalle_compras"]);
+                $stmtdci = Tb209PresupuestoDetalleCompraPeer::doSelectStmt($dci);
+                $total_iva = 0;
+                while ($resdci = $stmtdci->fetch(PDO::FETCH_ASSOC)) {
+
+                    $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable('', $co_solicitud, $resdci["co_presupuesto"]);
+
                     $tb061_asiento_contable = new Tb061AsientoContable();
                     $tb061_asiento_contable->setMoDebe($resdci["monto"] * $porc_iva)
                         ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
@@ -185,22 +190,24 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                         ->setCoUsuario($co_usuario)
                         ->setCoTipoAsiento(1)
                         ->setCoRuta($co_ruta)
-                        ->save($con);                        
+                        ->setCreatedAt($ruta->getCreatedAt())
+                        ->save($con);
 
-                        $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
-                        $tb087_presupuesto_movimiento->setCoPartida($resdci["co_presupuesto"])
-                            ->setCoTipoMovimiento(2)
-                            ->setNuMonto(($resdci["monto"] * $porc_iva))
-                            ->setNuAnio($co_ejercicio)
-                            ->setCoUsuario($co_usuario)
-                            ->setCoDetalleCompra($resdci["co_detalle_compra"])
-                            ->setInActivo(true)
-                            ->setCoFactura($campos["co_factura"])
-                            ->setCoPresupuestoDetalleCompra($resdci["id"])
-                            ->save($con);
-                        
-                    }
+                    $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
+                    $tb087_presupuesto_movimiento->setCoPartida($resdci["co_presupuesto"])
+                        ->setCoTipoMovimiento(2)
+                        ->setNuMonto(($resdci["monto"] * $porc_iva))
+                        ->setNuAnio($co_ejercicio)
+                        ->setCoUsuario($co_usuario)
+                        ->setCoDetalleCompra($resdci["co_detalle_compra"])
+                        ->setInActivo(true)
+                        ->setCoFactura($campos["co_factura"])
+                        ->setCoPresupuestoDetalleCompra($resdci["id"])
+                        ->setCreatedAt($ruta->getCreatedAt())
+                        ->save($con);
+
                 }
+            }
 
 
             $tb061_asiento_contable = new Tb061AsientoContable();
@@ -211,6 +218,7 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                 ->setCoUsuario($co_usuario)
                 ->setCoTipoAsiento(2)
                 ->setCoRuta($co_ruta)
+                ->setCreatedAt($ruta->getCreatedAt())
                 ->save($con);
 
             $tb061_asiento_contable = new Tb061AsientoContable();
@@ -221,10 +229,11 @@ class Tb045FacturaPeer extends BaseTb045FacturaPeer
                 ->setCoUsuario($co_usuario)
                 ->setCoTipoAsiento(2)
                 ->setCoRuta($co_ruta)
+                ->setCreatedAt($ruta->getCreatedAt())
                 ->save($con);
         }
 
-        
+
     }
 
     static public function getIVA($monto, $iva)

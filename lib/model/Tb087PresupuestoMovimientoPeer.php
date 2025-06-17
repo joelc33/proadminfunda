@@ -124,12 +124,14 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
         return $campos["co_partida"];
     }
 
-    static public function movimientoPartida($con, $co_ejercicio, $co_usuario, $co_presupuesto, $co_tipo_movimiento, $monto, $co_detalle_cotizacion = '', $co_detalle_compras = '', $co_presupuesto_detalle_compra = '')
+    static public function movimientoPartida($con, $co_ejercicio, $co_usuario, $co_presupuesto, $co_tipo_movimiento, $monto, $co_detalle_cotizacion = '', $co_detalle_compras = '', $co_presupuesto_detalle_compra = '',$fecha_movimiento='')
     {
 
         if ($co_tipo_movimiento == 4 || $co_tipo_movimiento == 13 || $co_tipo_movimiento == 16) {
             $monto = $monto * (-1);
         }
+
+    
 
         $tb087_presupuesto_movimiento = new Tb087PresupuestoMovimiento();
         $tb087_presupuesto_movimiento->setCoPartida($co_presupuesto);
@@ -143,6 +145,8 @@ class Tb087PresupuestoMovimientoPeer extends BaseTb087PresupuestoMovimientoPeer
             $tb087_presupuesto_movimiento->setCoDetalleCompra($co_detalle_compras);
         if (!empty($co_presupuesto_detalle_compra))
             $tb087_presupuesto_movimiento->setCoPresupuestoDetalleCompra($co_presupuesto_detalle_compra);
+         if (!empty($fecha_movimiento))
+            $tb087_presupuesto_movimiento->setCreatedAt($fecha_movimiento);
         $tb087_presupuesto_movimiento->setInActivo(true);
         $tb087_presupuesto_movimiento->save($con);
     }

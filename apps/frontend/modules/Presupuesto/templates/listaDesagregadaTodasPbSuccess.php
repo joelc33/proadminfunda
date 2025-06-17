@@ -30,6 +30,11 @@
                 value: this.OBJ.co_detalle_cotizacion
             });
 
+            this.fecha = new Ext.form.Hidden({
+                name: 'fecha_asignacion',
+                value: this.OBJ.fecha_Asignacion
+            });
+
             this.co_fuente_financiamiento = new Ext.form.Hidden({
                 name: 'co_fuente_financiamiento',
                 value: this.OBJ.co_fuente_financiamiento
@@ -430,6 +435,7 @@
 
                             PartidapresupuestoListaDesagregada.main.winformPanel_.close();
 
+
                         }
                     });
 
@@ -460,7 +466,8 @@
                     this.co_cotizacion,
                     this.monto,
                     this.co_presupuesto,
-                    this.mo_debitar
+                    this.mo_debitar,
+                    this.fecha
                 ]
             });
 

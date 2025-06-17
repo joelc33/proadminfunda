@@ -299,10 +299,20 @@
 
             });
 
+            this.fecha = new Ext.form.DateField({
+                fieldLabel: 'Fecha Asignación',
+                name: 'fecha_Asignacion',  
+                id: 'fecha_asignacion',                    
+                format:'d/m/Y',
+                allowBlank: false,
+                value:this.OBJ.fecha_asignacion,
+                width: 100
+            });
+
 
             this.fieldDatosRamo = new Ext.form.FieldSet({
                 title: 'Ramo del Proveedor',
-                items: [this.co_ramo]
+                items: [this.fecha,this.co_ramo]
             });
 
             if (this.OBJ.co_proveedor != '') {

@@ -253,7 +253,8 @@ class PresupuestoActions extends sfActions
         try {
             $con->beginTransaction();
 
-
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
+            $ruta->setCreatedAt($fecha_odp)->save($con);
 
             $co_odp = Tb060OrdenPagoPeer::generarODP($co_solicitud, $con, $this->getUser()->getAttribute('ejercicio'), null, $fecha_odp);
 
@@ -1075,8 +1076,12 @@ class PresupuestoActions extends sfActions
 
         //echo "query= ".$c->toString(); exit();
 
+        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($codigo));
+
         $stmt = Tb056ContratoComprasPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+     
 
         $this->data = json_encode(array(
             "nu_iva" => $campos["nu_iva"],
@@ -1087,7 +1092,8 @@ class PresupuestoActions extends sfActions
             "monto_iva" => $campos["monto_iva"],
             "monto_total" => $campos["monto_total"],
             "co_cotizacion" => $campos["co_cotizacion"],
-            "co_fuente_financiamiento" => $campos["co_fuente_financiamiento"]
+            "co_fuente_financiamiento" => $campos["co_fuente_financiamiento"],
+            "fecha_asignacion" =>  date("d/m/Y", strtotime( $ruta->getCreatedAt()))
         ));
     }
 
@@ -1691,18 +1697,19 @@ class PresupuestoActions extends sfActions
     public function executeGuardarCambioPb()
     {
 
-        $co_partida = $this->getRequestParameter('co_partida');
-        $co_presupuesto = $this->getRequestParameter('co_presupuesto');
-        $co_detalle_cotizacion = $this->getRequestParameter('co_detalle_cotizacion');
-        $co_proyecto = $this->getRequestParameter("co_proyecto");
-        $co_accion = $this->getRequestParameter("co_accion");
-        $co_cotizacion = $this->getRequestParameter("co_cotizacion");
-        $co_ejecutor = $this->getRequestParameter("co_ejecutor");
-        $co_solicitud = $this->getRequestParameter("co_solicitud");
-        $mo_disponible = $this->getRequestParameter("monto");
-        $co_fuente_financiamiento = $this->getRequestParameter("co_fuente_financiamiento");
-        $monto = $this->getRequestParameter("monto");
-        $mo_debitar = $this->getRequestParameter("mo_debitar");
+        $co_partida                 = $this->getRequestParameter('co_partida');
+        $co_presupuesto             = $this->getRequestParameter('co_presupuesto');
+        $co_detalle_cotizacion      = $this->getRequestParameter('co_detalle_cotizacion');
+        $co_proyecto                = $this->getRequestParameter("co_proyecto");
+        $co_accion                  = $this->getRequestParameter("co_accion");
+        $co_cotizacion              = $this->getRequestParameter("co_cotizacion");
+        $co_ejecutor                = $this->getRequestParameter("co_ejecutor");
+        $co_solicitud               = $this->getRequestParameter("co_solicitud");
+        $mo_disponible              = $this->getRequestParameter("monto");
+        $co_fuente_financiamiento   = $this->getRequestParameter("co_fuente_financiamiento");
+        $monto                      = $this->getRequestParameter("monto");
+        $mo_debitar                 = $this->getRequestParameter("mo_debitar");
+        $fecha_asignacion           = $this->getRequestParameter("fecha_asignacion");
 
 
         $con = Propel::getConnection();
@@ -1712,10 +1719,13 @@ class PresupuestoActions extends sfActions
 
             $Tb207DetalleCotizacion = Tb207DetalleCotizacionPeer::retrieveByPK($co_detalle_cotizacion);
 
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));           
+
+            $ruta->setCreatedAt($fecha_asignacion)->save($con);
+
 
             //$Tb207DetalleCotizacion->getMonto()
             if ($monto < $mo_debitar) {
-
                 $this->data = json_encode(array(
                     "success" => false,
                     "msg" => "El Monto Disponible de la partida es menor al monto total"
@@ -1730,8 +1740,9 @@ class PresupuestoActions extends sfActions
                 $programatica = $this->getProgramatica($co_presupuesto);
 
 
-                if ($Tb207DetalleCotizacion->getCoPresupuesto() != '') {
-
+                if ($Tb207DetalleCotizacion->getCoPresupuesto() != '') {         
+                    
+                   
 
                     $montod = $Tb207DetalleCotizacion->getMonto();
                     Tb087PresupuestoMovimientoPeer::movimientoPartida(
@@ -1742,7 +1753,9 @@ class PresupuestoActions extends sfActions
                         16,
                         $mo_debitar,
                         $co_detalle_cotizacion,
-                        ''
+                        '',
+                        '',
+                        $fecha_asignacion
                     );
                 }
 
@@ -1764,7 +1777,8 @@ class PresupuestoActions extends sfActions
                     $mo_debitar,
                     $co_detalle_cotizacion,
                     '',
-                    $datos_partida["id"]
+                    $datos_partida["id"],
+                    $fecha_asignacion
 
                 );
 
@@ -1818,7 +1832,7 @@ class PresupuestoActions extends sfActions
                 $tb206_cotizacion->setCoFuenteFinanciamiento($co_fuente_financiamiento ? $co_fuente_financiamiento : null);
                 $tb206_cotizacion->save($con);
 
-                $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
+                
 
                 $c1 = new Criteria();
                 $c1->addJoin(Tb207DetalleCotizacionPeer::CO_DETALLE_COTIZACION, Tb209PresupuestoDetalleCompraPeer::CO_DETALLE_COTIZACION);
@@ -2423,7 +2437,8 @@ class PresupuestoActions extends sfActions
             "co_partida" => $this->getRequestParameter("co_partida"),
             "co_producto" => $this->getRequestParameter("co_producto"),
             "co_solicitud" => $this->getRequestParameter("co_solicitud"),
-            "co_fuente_financiamiento" => $this->getRequestParameter("co_fuente_financiamiento")
+            "co_fuente_financiamiento" => $this->getRequestParameter("co_fuente_financiamiento"),
+            "fecha_Asignacion" =>  $this->getRequestParameter("fecha_Asignacion")
         ));
     }
 

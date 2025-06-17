@@ -25,9 +25,9 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         return $campos["tx_serial"];
     }
-    
-    
-    
+
+
+
     static public function getODPPagosRealizados($co_orden_pago)
     {
         $c = new Criteria();
@@ -38,9 +38,9 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $campos["tx_serial"];
-    }    
-    
-    
+    }
+
+
     static public function getODPRuta($co_orden_pago)
     {
         $c = new Criteria();
@@ -49,7 +49,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $campos["co_ruta"];
-    }    
+    }
 
     static public function getNuOrdenPago($co_solicitud, $con, $ejercicio)
     {
@@ -220,7 +220,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $campos["co_tipo_solicitud"] = 1;
         }
 
-        $co_tipo_solicitud =  $campos["co_tipo_solicitud"];
+        $co_tipo_solicitud = $campos["co_tipo_solicitud"];
 
 
 
@@ -237,7 +237,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $nu_monto    =  $campos["monto_total"];
+            $nu_monto = $campos["monto_total"];
             $monto_total = $nu_monto;
         } else if ($co_tipo_solicitud == 26) {
 
@@ -250,7 +250,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $nu_monto =  $campos["total"] - $campos["total_iva_retencion"];
+            $nu_monto = $campos["total"] - $campos["total_iva_retencion"];
 
 
             $monto_total = $campos["total"];
@@ -264,7 +264,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $retencion =  $campos["total_retencion"];
+            $retencion = $campos["total_retencion"];
 
             $c = new Criteria();
             $c->clearSelectColumns();
@@ -275,7 +275,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $total_iva_retencion =  $campos["total_iva_retencion"];
+            $total_iva_retencion = $campos["total_iva_retencion"];
 
             $total_retencion = $retencion - $total_iva_retencion;
         } else if ($co_tipo_solicitud == 38) {
@@ -292,7 +292,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb161PagoFondoTerceroPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $nu_monto =  $campos["total"];
+            $nu_monto = $campos["total"];
             $monto_total = $nu_monto;
         } else if ($co_tipo_solicitud == 39 || $co_tipo_solicitud == 40) {
 
@@ -309,7 +309,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $nu_monto =  $campos["total"];
+            $nu_monto = $campos["total"];
             $monto_total = $campos["total"];
 
 
@@ -324,7 +324,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $retencion =  $campos["total_retencion"];
+            $retencion = $campos["total_retencion"];
 
             $c = new Criteria();
             $c->clearSelectColumns();
@@ -337,7 +337,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $total_iva_retencion =  $campos["total_iva_retencion"];
+            $total_iva_retencion = $campos["total_iva_retencion"];
 
             $total_retencion = $retencion; //- $total_iva_retencion;
 
@@ -350,7 +350,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
             $c = new Criteria();
             $c->clearSelectColumns();
-            $c->addSelectColumn('coalesce(SUM(' .  Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
+            $c->addSelectColumn('coalesce(SUM(' . Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
             $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
             $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
             $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
@@ -362,7 +362,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $nu_monto =  $campos["total"];
+            $nu_monto = $campos["total"];
             $monto_total = $nu_monto;
         } else {
 
@@ -380,7 +380,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $nu_monto =  $campos["total"] - $campos["total_iva_retencion"];
+            $nu_monto = $campos["total"] - $campos["total_iva_retencion"];
             $monto_total = $campos["total"];
 
 
@@ -396,7 +396,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $retencion =  $campos["total_retencion"];
+            $retencion = $campos["total_retencion"];
 
             $c = new Criteria();
             $c->clearSelectColumns();
@@ -409,7 +409,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $stmt = Tb045FacturaPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $total_iva_retencion =  $campos["total_iva_retencion"];
+            $total_iva_retencion = $campos["total_iva_retencion"];
 
             $total_retencion = $retencion - $total_iva_retencion;
         }
@@ -427,7 +427,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         $stmt = Tb060OrdenPagoPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
-        $co_orden_pago =  $campos["co_orden_pago"];
+        $co_orden_pago = $campos["co_orden_pago"];
 
         $nu_monto_total = $nu_monto - $total_retencion;
 
@@ -454,7 +454,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 if (date("Y") > $ejercicio) {
                     $tx_serial = $ejercicio . '12-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
                 } else {
-                    $tx_serial = date('Ym',$date) . '-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
+                    $tx_serial = date('Ym', $date) . '-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
                 }
             } else {
                 $tx_serial = '';
@@ -463,7 +463,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             if (date("Y") > $ejercicio) {
                 $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . $ejercicio . '12-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
             } else {
-                $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . date('Ym',$date) . '-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
+                $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . date('Ym', $date) . '-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
             }
 
             if (date("Y") > $ejercicio) {
@@ -567,7 +567,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
             $stmt = Tb062LiquidacionPagoPeer::doSelectStmt($c);
             $campos = $stmt->fetch(PDO::FETCH_ASSOC);
-            $co_liquidacion_pago =  $campos["co_liquidacion_pago"];
+            $co_liquidacion_pago = $campos["co_liquidacion_pago"];
 
 
             $Tb062LiquidacionPago = Tb062LiquidacionPagoPeer::retrieveByPK($co_liquidacion_pago);
@@ -813,9 +813,11 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
             $campos["co_tipo_solicitud"] = 1;
         }
 
-        $co_tipo_solicitud =  $campos["co_tipo_solicitud"];
+        $co_tipo_solicitud = $campos["co_tipo_solicitud"];
 
         $co_ruta = self::getCoRuta($co_solicitud);
+
+        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
 
         switch ($co_tipo_solicitud) {
             case 28:
@@ -829,7 +831,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmt = Tb052ComprasPeer::doSelectStmt($c);
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $nu_monto    =  $campos["monto_total"];
+                $nu_monto = $campos["monto_total"];
                 $monto_total = $nu_monto;
                 break;
             case 26:
@@ -849,10 +851,10 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
-                $nu_monto =  $campos["total"];
+                $nu_monto = $campos["total"];
                 $monto_total = $campos["total"];
-                $retencion =  $campos["total_retencion"];
-                $total_iva_retencion =  $campos["total_iva_retencion"];
+                $retencion = $campos["total_retencion"];
+                $total_iva_retencion = $campos["total_iva_retencion"];
                 $total_retencion = $retencion;
 
                 $wherec = new Criteria();
@@ -860,44 +862,44 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta);
                 BasePeer::doDelete($wherec, $con);
 
-              /*  $c = new Criteria();
-                $c->clearSelectColumns();
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
-                $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
-                $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
-                $stmt = Tb045FacturaPeer::doSelectStmt($c);
-                $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+                /*  $c = new Criteria();
+                  $c->clearSelectColumns();
+                  $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
+                  $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
+                  $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+                  $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+                  $stmt = Tb045FacturaPeer::doSelectStmt($c);
+                  $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $nu_monto =  $campos["total"] - $campos["total_iva_retencion"];
+                  $nu_monto =  $campos["total"] - $campos["total_iva_retencion"];
 
-                $monto_total = $campos["total"];
+                  $monto_total = $campos["total"];
 
-                $c = new Criteria();
-                $c->clearSelectColumns();
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
-                $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
-                $c->add(Tb045FacturaPeer::CO_ODP, NULL, Criteria::ISNULL);
-                $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+                  $c = new Criteria();
+                  $c->clearSelectColumns();
+                  $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
+                  $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+                  $c->add(Tb045FacturaPeer::CO_ODP, NULL, Criteria::ISNULL);
+                  $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
 
-                $stmt = Tb045FacturaPeer::doSelectStmt($c);
-                $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+                  $stmt = Tb045FacturaPeer::doSelectStmt($c);
+                  $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $retencion =  $campos["total_retencion"];
+                  $retencion =  $campos["total_retencion"];
 
-                $c = new Criteria();
-                $c->clearSelectColumns();
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
-                $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
-                $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+                  $c = new Criteria();
+                  $c->clearSelectColumns();
+                  $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
+                  $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+                  $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
 
-                $stmt = Tb045FacturaPeer::doSelectStmt($c);
-                $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+                  $stmt = Tb045FacturaPeer::doSelectStmt($c);
+                  $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $total_iva_retencion =  $campos["total_iva_retencion"];
+                  $total_iva_retencion =  $campos["total_iva_retencion"];
 
-                //$total_retencion = $retencion - $total_iva_retencion;   
-                $total_retencion = $retencion;*/
+                  //$total_retencion = $retencion - $total_iva_retencion;   
+                  $total_retencion = $retencion;*/
                 break;
             case 38:
                 //Fondo de Tercero MASIVO           
@@ -912,7 +914,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmt = Tb161PagoFondoTerceroPeer::doSelectStmt($c);
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $nu_monto =  $campos["total"];
+                $nu_monto = $campos["total"];
                 $monto_total = $nu_monto;
                 break;
             case 39:
@@ -930,10 +932,10 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $nu_monto =  $campos["total"];
+                $nu_monto = $campos["total"];
                 $monto_total = $campos["total"];
-                $retencion =  $campos["total_retencion"];
-                $total_iva_retencion =  $campos["total_iva_retencion"];
+                $retencion = $campos["total_retencion"];
+                $total_iva_retencion = $campos["total_iva_retencion"];
                 $total_retencion = $retencion;
 
                 break;
@@ -951,7 +953,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $nu_monto =  $campos["total"];
+                $nu_monto = $campos["total"];
                 $monto_total = $campos["total"];
 
                 $c = new Criteria();
@@ -964,7 +966,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $retencion =  $campos["total_retencion"];
+                $retencion = $campos["total_retencion"];
 
                 $c = new Criteria();
                 $c->clearSelectColumns();
@@ -977,7 +979,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $total_iva_retencion =  $campos["total_iva_retencion"];
+                $total_iva_retencion = $campos["total_iva_retencion"];
 
                 $total_retencion = $retencion; //- $total_iva_retencion;
 
@@ -1001,10 +1003,10 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
-                $nu_monto =  $campos["total"];
+                $nu_monto = $campos["total"];
                 $monto_total = $campos["total"];
-                $retencion =  $campos["total_retencion"];
-                $total_iva_retencion =  $campos["total_iva_retencion"];
+                $retencion = $campos["total_retencion"];
+                $total_iva_retencion = $campos["total_iva_retencion"];
                 $total_retencion = $retencion;
 
                 $wherec = new Criteria();
@@ -1033,10 +1035,10 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
-                $nu_monto =  $campos["total"];
+                $nu_monto = $campos["total"];
                 $monto_total = $campos["total"];
-                $retencion =  $campos["total_retencion"];
-                $total_iva_retencion =  $campos["total_iva_retencion"];
+                $retencion = $campos["total_retencion"];
+                $total_iva_retencion = $campos["total_iva_retencion"];
                 $total_retencion = $retencion;
 
                 $wherec = new Criteria();
@@ -1064,10 +1066,10 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
-                $nu_monto =  $campos["total"];
+                $nu_monto = $campos["total"];
                 $monto_total = $campos["total"];
-                $retencion =  $campos["total_retencion"];
-                $total_iva_retencion =  $campos["total_iva_retencion"];
+                $retencion = $campos["total_retencion"];
+                $total_iva_retencion = $campos["total_iva_retencion"];
                 $total_retencion = $retencion;
 
                 $wherec = new Criteria();
@@ -1077,99 +1079,99 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 break;
 
-                /*  case 64:
-                //Servicios Nuevo
+            /*  case 64:
+            //Servicios Nuevo
 
-                $c = new Criteria();
-                $c->clearSelectColumns();
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
-                //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
-                //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
-                $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
-                $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
-                //echo $c->toString(); exit();
-                $stmt = Tb045FacturaPeer::doSelectStmt($c);
-                $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+            $c = new Criteria();
+            $c->clearSelectColumns();
+            $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
+            $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
+            $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
+            //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
+            //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
+            $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+            $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+            //echo $c->toString(); exit();
+            $stmt = Tb045FacturaPeer::doSelectStmt($c);
+            $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
-                $nu_monto =  $campos["total"];
-                $monto_total = $campos["total"];
-                $retencion =  $campos["total_retencion"];
-                $total_iva_retencion =  $campos["total_iva_retencion"];
-                $total_retencion = $retencion;
+            //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
+            $nu_monto =  $campos["total"];
+            $monto_total = $campos["total"];
+            $retencion =  $campos["total_retencion"];
+            $total_iva_retencion =  $campos["total_iva_retencion"];
+            $total_retencion = $retencion;
 
-                $wherec = new Criteria();
-                $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
-                BasePeer::doDelete($wherec, $con);
+            $wherec = new Criteria();
+            $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
+            BasePeer::doDelete($wherec, $con);
 
-                break;*/
+            break;*/
 
-           /* case 65:
-                //Obras
+            /* case 65:
+                 //Obras
 
-                $c = new Criteria();
-                $c->clearSelectColumns();
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
-                //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
-                //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
-                $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
-                $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
-                //echo $c->toString(); exit();
-                $stmt = Tb045FacturaPeer::doSelectStmt($c);
-                $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+                 $c = new Criteria();
+                 $c->clearSelectColumns();
+                 $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
+                 $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
+                 $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
+                 //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
+                 //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
+                 $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+                 $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+                 //echo $c->toString(); exit();
+                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
+                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
-                $nu_monto =  $campos["total"];
-                $monto_total = $campos["total"];
-                $retencion =  $campos["total_retencion"];
-                $total_iva_retencion =  $campos["total_iva_retencion"];
-                $total_retencion = $retencion;
+                 //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
+                 $nu_monto =  $campos["total"];
+                 $monto_total = $campos["total"];
+                 $retencion =  $campos["total_retencion"];
+                 $total_iva_retencion =  $campos["total_iva_retencion"];
+                 $total_retencion = $retencion;
 
-                $wherec = new Criteria();
-                $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
-                BasePeer::doDelete($wherec, $con);
+                 $wherec = new Criteria();
+                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
+                 BasePeer::doDelete($wherec, $con);
 
-                break;
+                 break;
 
-            case 68:
-                //Registro de factura
+             case 68:
+                 //Registro de factura
 
-                $c = new Criteria();
-                $c->clearSelectColumns();
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
-                $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
-                //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
-                //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
-                $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
-                $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
-                //echo $c->toString(); exit();
-                $stmt = Tb045FacturaPeer::doSelectStmt($c);
-                $campos = $stmt->fetch(PDO::FETCH_ASSOC);
+                 $c = new Criteria();
+                 $c->clearSelectColumns();
+                 $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL . ') as total');
+                 $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_IVA_RETENCION . ') as total_iva_retencion');
+                 $c->addSelectColumn('SUM(' . Tb045FacturaPeer::NU_TOTAL_RETENCION . ') as total_retencion');
+                 //$c->addJoin(Tb060OrdenPagoPeer::CO_ORDEN_PAGO, Tb045FacturaPeer::CO_ODP);
+                 //$c->add(Tb060OrdenPagoPeer::IN_PAGADO,FALSE);
+                 $c->add(Tb045FacturaPeer::IN_ANULAR, NULL, Criteria::ISNULL);
+                 $c->add(Tb045FacturaPeer::CO_SOLICITUD, $co_solicitud);
+                 //echo $c->toString(); exit();
+                 $stmt = Tb045FacturaPeer::doSelectStmt($c);
+                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
-                $nu_monto =  $campos["total"];
-                $monto_total = $campos["total"];
-                $retencion =  $campos["total_retencion"];
-                $total_iva_retencion =  $campos["total_iva_retencion"];
-                $total_retencion = $retencion;
+                 //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
+                 $nu_monto =  $campos["total"];
+                 $monto_total = $campos["total"];
+                 $retencion =  $campos["total_retencion"];
+                 $total_iva_retencion =  $campos["total_iva_retencion"];
+                 $total_retencion = $retencion;
 
-                $wherec = new Criteria();
-                $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
-                BasePeer::doDelete($wherec, $con);
+                 $wherec = new Criteria();
+                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud);
+                 BasePeer::doDelete($wherec, $con);
 
-                break;
-            */
+                 break;
+             */
             case 43:
                 //Prestaciones Sociales
 
                 $c = new Criteria();
                 $c->clearSelectColumns();
-                $c->addSelectColumn('coalesce(SUM(' .  Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
+                $c->addSelectColumn('coalesce(SUM(' . Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
                 $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
                 $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
                 $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
@@ -1189,9 +1191,9 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $campos1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 
                 //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
-                $nu_monto =  $campos["total"];
+                $nu_monto = $campos["total"];
                 $monto_total = $campos["total"];
-                $retencion =  $campos1["total_retencion"];
+                $retencion = $campos1["total_retencion"];
                 $total_retencion = $retencion;
 
                 $wherec = new Criteria();
@@ -1206,7 +1208,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $c = new Criteria();
                 $c->clearSelectColumns();
-                $c->addSelectColumn('coalesce(SUM(' .  Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
+                $c->addSelectColumn('coalesce(SUM(' . Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
                 $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
                 $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
                 $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
@@ -1226,9 +1228,9 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $campos1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 
                 //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
-                $nu_monto =  $campos["total"];
+                $nu_monto = $campos["total"];
                 $monto_total = $campos["total"];
-                $retencion =  $campos1["total_retencion"];
+                $retencion = $campos1["total_retencion"];
                 $total_retencion = $retencion;
 
                 $wherec = new Criteria();
@@ -1237,13 +1239,13 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 BasePeer::doDelete($wherec, $con);
 
                 break;
-            
+
             case 23:
                 //Pago de nomina
 
                 $c = new Criteria();
                 $c->clearSelectColumns();
-                $c->addSelectColumn('coalesce(SUM(' .  Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
+                $c->addSelectColumn('coalesce(SUM(' . Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
                 $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
                 $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
                 $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
@@ -1264,9 +1266,9 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $campos1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 
                 //$nu_monto =  $campos["total"]-$campos["total_iva_retencion"];
-                $nu_monto =  $campos["total"];
+                $nu_monto = $campos["total"];
                 $monto_total = $campos["total"];
-                $retencion =  $campos1["total_retencion"];
+                $retencion = $campos1["total_retencion"];
                 $total_retencion = $retencion;
 
                 $wherec = new Criteria();
@@ -1274,7 +1276,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta);
                 BasePeer::doDelete($wherec, $con);
 
-                break;             
+                break;
 
             default:
                 //Otros
@@ -1287,7 +1289,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $c = new Criteria();
                 $c->clearSelectColumns();
-                $c->addSelectColumn('coalesce(SUM(' .  Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
+                $c->addSelectColumn('coalesce(SUM(' . Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
                 $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
                 $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
                 $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
@@ -1299,8 +1301,8 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                
-                $nu_monto =  Tb087PresupuestoMovimientoPeer::getMontoTotalFactura($co_solicitud, $campos["total"]);
+
+                $nu_monto = Tb087PresupuestoMovimientoPeer::getMontoTotalFactura($co_solicitud, $campos["total"]);
                 $monto_total = $nu_monto;
 
                 break;
@@ -1318,7 +1320,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         $stmt = Tb060OrdenPagoPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
-        $co_orden_pago =  $campos["co_orden_pago"];
+        $co_orden_pago = $campos["co_orden_pago"];
 
 
 
@@ -1346,16 +1348,16 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmtd = Tb052ComprasPeer::doSelectStmt($cd);
                 $datosFecha = $stmtd->fetch(PDO::FETCH_ASSOC);
 
-               // list($anio, $mes, $dia) = explode('-', $datosFecha["fecha_compra"]);
+                // list($anio, $mes, $dia) = explode('-', $datosFecha["fecha_compra"]);
 
-               // echo $fe_pago; exit();
+                // echo $fe_pago; exit();
 
                 list($anio, $mes, $dia) = explode('-', $fe_pago);
 
 
                 $date = mktime(0, 0, 0, $mes, $dia, $anio);
 
-               
+
                 if ($co_tipo_solicitud != 28 && $co_tipo_solicitud != 38) {
                     if (date("Y") > $ejercicio) {
                         $tx_serial = $ejercicio . '12-' . str_pad(self::getNuOrdenPago($co_solicitud, $con, $ejercicio), 5, "0", STR_PAD_LEFT);
@@ -1369,20 +1371,20 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $solicitud_odp = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
                 $datosSolicitudAyuda = '';
-                if(!empty($solicitud_odp->getCoSolicitudAyuda())){
+                if (!empty($solicitud_odp->getCoSolicitudAyuda())) {
                     $cs = new Criteria();
-                    $cs->add(Tb126SolicitudAyudaPeer::CO_SOLICITUD_AYUDA,$solicitud_odp->getCoSolicitudAyuda());
+                    $cs->add(Tb126SolicitudAyudaPeer::CO_SOLICITUD_AYUDA, $solicitud_odp->getCoSolicitudAyuda());
                     $stmts = Tb126SolicitudAyudaPeer::doSelectStmt($cs);
                     $datosSolicitudAyuda = $stmts->fetch(PDO::FETCH_ASSOC);
                 }
 
-                if(!empty($datosSolicitudAyuda)){
+                if (!empty($datosSolicitudAyuda)) {
 
-                    $tx_docuemnto_odp       = $datosSolicitudAyuda['nu_resolucion'];
+                    $tx_docuemnto_odp = $datosSolicitudAyuda['nu_resolucion'];
 
-                }else{
+                } else {
 
-                   
+
 
                     if (date("Y") > $ejercicio) {
                         $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . $ejercicio . '12-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
@@ -1390,14 +1392,14 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         $tx_docuemnto_odp = self::getTxSiglas($co_tipo_solicitud, $con) . date('Ym', $date) . '-' . str_pad(self::getNuDocumentoPago($co_solicitud, $con, $ejercicio), 4, "0", STR_PAD_LEFT);
                     }
 
-                }               
+                }
 
                 if (date("Y") > $ejercicio) {
                     //$FeEmision = $ejercicio.'-12-31';
 //                    $FeEmision = $fe_pago;
                     $FeEmision = $fe_pago;
                 } else {
-//                    $FeEmision = date("Y-m-d");
+                    //                    $FeEmision = date("Y-m-d");
                     $FeEmision = $fe_pago;
                 }
 
@@ -1413,7 +1415,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     $tipo = 1;
                 }
 
-                
+
                 $Tb060OrdenPago = new Tb060OrdenPago();
                 $Tb060OrdenPago->setCoSolicitud($co_solicitud)
                     //->setFeEmision(date('Y-m-d'))
@@ -1434,20 +1436,20 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $datos_solicitud = Tb026SolicitudPeer::retrieveByPK($co_solicitud);
 
-                if($datos_solicitud->getCoProceso()!=68){
+                if ($datos_solicitud->getCoProceso() != 68) {
 
                     $wherec = new Criteria();
                     $wherec->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
-    
+
                     $updc = new Criteria();
                     $updc->add(Tb052ComprasPeer::NU_ORDEN_COMPRA, $tx_docuemnto_odp);
                     $updc->add(Tb052ComprasPeer::MONTO_TOTAL, $monto_total);
-    
-                    BasePeer::doUpdate($wherec, $updc, $con);   
+
+                    BasePeer::doUpdate($wherec, $updc, $con);
 
                 }
 
-              
+
 
                 /*  $compra = Tb052ComprasPeer::retrieveByPK($co_solicitud);
                         if($compra->getMontoTotal() == 0){
@@ -1538,7 +1540,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                 $stmt = Tb062LiquidacionPagoPeer::doSelectStmt($c);
                 $campos = $stmt->fetch(PDO::FETCH_ASSOC);
-                $co_liquidacion_pago =  $campos["co_liquidacion_pago"];
+                $co_liquidacion_pago = $campos["co_liquidacion_pago"];
 
                 //echo $nu_monto_total; exit();            
 
@@ -1579,6 +1581,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         //                                                       ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                         ->setCoRuta($co_ruta)
                         ->setCoTipoAsiento(1)
+                        ->setCreatedAt($ruta->getCreatedAt())
                         ->save($con);
 
                     $cd = new Criteria();
@@ -1600,6 +1603,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                                 ->setCoSolicitud($co_solicitud)
                                 ->setCoProducto(19336)
                                 ->setCoFactura($reg["co_factura"])
+                                ->setCreatedAt($ruta->getCreatedAt())
                                 //                                                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                 ->setCoTipoAsiento(1)
                                 ->setCoPresupuesto($reg_compra["co_presupuesto"])
@@ -1612,6 +1616,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                                 ->setCoSolicitud($co_solicitud)
                                 ->setCoProducto($reg_compra["co_producto"])
                                 ->setCoFactura($reg["co_factura"])
+                                ->setCreatedAt($ruta->getCreatedAt())
                                 //                                                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                 ->setCoTipoAsiento(1)
                                 ->setCoPresupuesto($reg_compra["co_presupuesto"])
@@ -1627,6 +1632,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         ->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_orden_pago"])
                         ->setCoSolicitud($co_solicitud)
                         ->setCoFactura($reg["co_factura"])
+                        ->setCreatedAt($ruta->getCreatedAt())
                         //                                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))                            
                         ->setCoTipoAsiento(2)
                         ->setCoRuta($co_ruta)
@@ -1637,6 +1643,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         ->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_gasto_pago"])
                         ->setCoSolicitud($co_solicitud)
                         ->setCoFactura($reg["co_factura"])
+                        ->setCreatedAt($ruta->getCreatedAt())
                         //                                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                         ->setCoTipoAsiento(2)
                         ->setCoRuta($co_ruta)
@@ -1656,6 +1663,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     ->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_gasto_pago"])
                     ->setCoSolicitud($co_solicitud)
                     ->setCoTipoAsiento(1)
+                    ->setCreatedAt($ruta->getCreatedAt())
                     //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->setCoRuta($co_ruta)
                     ->save($con);
@@ -1682,6 +1690,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         ->setCoSolicitud($co_solicitud)
                         ->setCoProducto($reg["co_producto"])
                         ->setCoTipoAsiento(1)
+                        ->setCreatedAt($ruta->getCreatedAt())
                         ->setCoPresupuesto($reg["co_presupuesto"])
                         //                                          ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                         ->setCoRuta($co_ruta)
@@ -1693,6 +1702,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     ->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_gasto_pago"])
                     ->setCoSolicitud($co_solicitud)
                     ->setCoTipoAsiento(2)
+                    ->setCreatedAt($ruta->getCreatedAt())
                     //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->setCoRuta($co_ruta)
                     ->save($con);
@@ -1702,6 +1712,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     ->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_orden_pago"])
                     ->setCoSolicitud($co_solicitud)
                     ->setCoTipoAsiento(2)
+                    ->setCreatedAt($ruta->getCreatedAt())
                     //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->setCoRuta($co_ruta)
                     ->save($con);
@@ -1710,7 +1721,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 //echo $co_tipo_solicitud; exit();
 
                 $nu_monto_total = $nu_monto_no_retencion;
-                
+
                 $wherec = new Criteria();
                 $wherec->add(Tb061AsientoContablePeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
                 $wherec->add(Tb061AsientoContablePeer::CO_RUTA, $co_ruta, Criteria::EQUAL);
@@ -1721,6 +1732,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     ->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_gasto_pago"])
                     ->setCoSolicitud($co_solicitud)
                     ->setCoTipoAsiento(1)
+                    ->setCreatedAt($ruta->getCreatedAt())
                     //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->setCoRuta($co_ruta)
                     ->save($con);
@@ -1750,6 +1762,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         ->setCoProducto($reg["co_producto"])
                         ->setCoTipoAsiento(1)
                         ->setCoPresupuesto($reg["co_presupuesto"])
+                        ->setCreatedAt($ruta->getCreatedAt())
                         //                                          ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                         ->setCoRuta($co_ruta)
                         ->save($con);
@@ -1760,6 +1773,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     ->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_gasto_pago"])
                     ->setCoSolicitud($co_solicitud)
                     ->setCoTipoAsiento(2)
+                    ->setCreatedAt($ruta->getCreatedAt())
                     //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->setCoRuta($co_ruta)
                     ->save($con);
@@ -1769,11 +1783,12 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     ->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_orden_pago"])
                     ->setCoSolicitud($co_solicitud)
                     ->setCoTipoAsiento(2)
+                    ->setCreatedAt($ruta->getCreatedAt())
                     //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->setCoRuta($co_ruta)
                     ->save($con);
-                
-                
+
+
                 $cAP = new Criteria();
                 $cAP->clearSelectColumns();
                 $cAP->addSelectColumn(Tb053DetalleComprasPeer::CO_PRODUCTO);
@@ -1789,17 +1804,18 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $stmtAP = Tb053DetalleComprasPeer::doSelectStmt($cAP);
 
                 while ($regAP = $stmtAP->fetch(PDO::FETCH_ASSOC)) {
-                    
-                $cuenta_contable = Tb041TipoRetencionPeer::getCuentaContableTipoRetencion($regAP["tx_movimiento"]);    
-                    
-                $tb061_asiento_contable = new Tb061AsientoContable();
-                $tb061_asiento_contable->setMoHaber($regAP["monto"])
-                    ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
-                    ->setCoSolicitud($co_solicitud)
-                    ->setCoTipoAsiento(1)
-                    //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
-                    ->setCoRuta($co_ruta)
-                    ->save($con);                    
+
+                    $cuenta_contable = Tb041TipoRetencionPeer::getCuentaContableTipoRetencion($regAP["tx_movimiento"]);
+
+                    $tb061_asiento_contable = new Tb061AsientoContable();
+                    $tb061_asiento_contable->setMoHaber($regAP["monto"])
+                        ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
+                        ->setCoSolicitud($co_solicitud)
+                        ->setCoTipoAsiento(1)
+                        ->setCreatedAt($ruta->getCreatedAt())
+                        //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
+                        ->setCoRuta($co_ruta)
+                        ->save($con);
 
                     $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable(NULL, $co_solicitud, $regAP["co_presupuesto"]);
 
@@ -1808,14 +1824,15 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
                         ->setCoSolicitud($co_solicitud)
                         ->setCoProducto($regAP["co_producto"])
+                        ->setCreatedAt($ruta->getCreatedAt())
                         ->setCoTipoAsiento(1)
                         ->setCoPresupuesto($regAP["co_presupuesto"])
                         //                                          ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                         ->setCoRuta($co_ruta)
                         ->save($con);
-                }              
-               
-                
+                }
+
+
             } else {
 
                 //echo $co_tipo_solicitud; exit();
@@ -1865,6 +1882,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                     ->setCoTipoAsiento(1)
                     ->setCreatedAt($fe_pago)
                     ->setCoRuta($co_ruta)
+                    ->setCreatedAt($ruta->getCreatedAt())
                     //                                  ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->save($con);
 
@@ -1873,7 +1891,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                 $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRODUCTO);
                 $c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRESUPUESTO);
                 $c->addSelectColumn(Tb053DetalleComprasPeer::MONTO);
-                 $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
+                $c->addSelectColumn(Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
                 //$c->addSelectColumn(Tb053DetalleComprasPeer::CO_PRESUPUESTO);
                 $c->addJoin(Tb053DetalleComprasPeer::CO_COMPRAS, Tb052ComprasPeer::CO_COMPRAS);
                 $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud, Criteria::EQUAL);
@@ -1887,10 +1905,10 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
                     $cuenta_contable = Tb024CuentaContablePeer::getCuentaContable($reg["co_producto"], $co_solicitud, $reg["co_presupuesto"]);
 
-                    $monto_producto = Tb087PresupuestoMovimientoPeer::getMontoItemFacturaODP($co_solicitud, $reg["co_detalle_compras"],$reg["monto"]);
+                    $monto_producto = Tb087PresupuestoMovimientoPeer::getMontoItemFacturaODP($co_solicitud, $reg["co_detalle_compras"], $reg["monto"]);
 
-                  //  echo $monto_producto; exit();
-                    
+                    //  echo $monto_producto; exit();
+
                     $tb061_asiento_contable = new Tb061AsientoContable();
                     $tb061_asiento_contable->setMoDebe($monto_producto)
                         ->setCoCuentaContable($cuenta_contable["co_cuenta_contable"])
@@ -1898,6 +1916,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         ->setCoProducto($reg["co_producto"])
                         ->setCoTipoAsiento(1)
                         ->setCreatedAt($fe_pago)
+                        ->setCreatedAt($ruta->getCreatedAt())
                         ->setCoPresupuesto($reg["co_presupuesto"])
                         ->setCoRuta($co_ruta)
                         //                                          ->setCoUsuario($this->getUser()->getAttribute('codigo'))
@@ -1915,6 +1934,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         $tb061_asiento_contable->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_orden_pago"]);
                         $tb061_asiento_contable->setCoSolicitud($co_solicitud);
                         $tb061_asiento_contable->setCoTipoAsiento(2);
+                        $tb061_asiento_contable->setCreatedAt($ruta->getCreatedAt());
                         $tb061_asiento_contable->setCreatedAt($fe_pago);
                         $tb061_asiento_contable->save($con);
 
@@ -1958,6 +1978,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                             //$tb061_asiento_contable->setCoCuentaContable($reg_compras["co_cuenta_contable"]);
                             $tb061_asiento_contable->setCoCuentaContable($cc_movimiento);
                             $tb061_asiento_contable->setCoSolicitud($co_solicitud);
+                            $tb061_asiento_contable->setCreatedAt($ruta->getCreatedAt());
                             //$tb061_asiento_contable->setCoProducto($reg_compras["co_producto"]);
                             $tb061_asiento_contable->setCoTipoAsiento(2);
                             $tb061_asiento_contable->setCreatedAt($fe_pago);
@@ -1979,6 +2000,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         $tb061_asiento_contable->setCoTipoAsiento(2);
                         $tb061_asiento_contable->setCreatedAt($fe_pago);
                         $tb061_asiento_contable->setCoRuta($co_ruta);
+                        $tb061_asiento_contable->setCreatedAt($ruta->getCreatedAt());
                         $tb061_asiento_contable->save($con);
 
                         $tb061_asiento_contable = new Tb061AsientoContable();
@@ -1986,6 +2008,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         $tb061_asiento_contable->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_orden_pago"]);
                         $tb061_asiento_contable->setCoSolicitud($co_solicitud);
                         $tb061_asiento_contable->setCoTipoAsiento(2);
+                        $tb061_asiento_contable->setCreatedAt($ruta->getCreatedAt());
                         $tb061_asiento_contable->setCreatedAt($fe_pago);
                         $tb061_asiento_contable->setCoRuta($co_ruta);
                         $tb061_asiento_contable->save($con);
@@ -1999,6 +2022,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         $tb061_asiento_contable->setCoSolicitud($co_solicitud);
                         $tb061_asiento_contable->setCoTipoAsiento(2);
                         $tb061_asiento_contable->setCreatedAt($fe_pago);
+                        $tb061_asiento_contable->setCreatedAt($ruta->getCreatedAt());
                         $tb061_asiento_contable->setCoRuta($co_ruta);
                         $tb061_asiento_contable->save($con);
 
@@ -2007,6 +2031,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         $tb061_asiento_contable->setCoCuentaContable($co_cuenta_por_pagar["co_cuenta_orden_pago"]);
                         $tb061_asiento_contable->setCoSolicitud($co_solicitud);
                         $tb061_asiento_contable->setCoTipoAsiento(2);
+                        $tb061_asiento_contable->setCreatedAt($ruta->getCreatedAt());
                         $tb061_asiento_contable->setCreatedAt($fe_pago);
                         $tb061_asiento_contable->setCoRuta($co_ruta);
                         $tb061_asiento_contable->save($con);
@@ -2020,6 +2045,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         $tb061_asiento_contable->setCoSolicitud($co_solicitud);
                         $tb061_asiento_contable->setCoTipoAsiento(2);
                         $tb061_asiento_contable->setCreatedAt($fe_pago);
+                        $tb061_asiento_contable->setCreatedAt($ruta->getCreatedAt());
                         $tb061_asiento_contable->setCoRuta($co_ruta);
                         $tb061_asiento_contable->save($con);
 
@@ -2029,6 +2055,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
                         $tb061_asiento_contable->setCoSolicitud($co_solicitud);
                         $tb061_asiento_contable->setCoTipoAsiento(2);
                         $tb061_asiento_contable->setCreatedAt($fe_pago);
+                        $tb061_asiento_contable->setCreatedAt($ruta->getCreatedAt());
                         $tb061_asiento_contable->setCoRuta($co_ruta);
                         $tb061_asiento_contable->save($con);
 
@@ -2051,7 +2078,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
         $stmt = Tb045FacturaPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $nu_monto =  $campos["total"];
+        $nu_monto = $campos["total"];
 
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -2061,7 +2088,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
         $stmt = Tb045FacturaPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $retencion =  $campos["total_retencion"];
+        $retencion = $campos["total_retencion"];
 
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -2071,7 +2098,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
         $stmt = Tb045FacturaPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $total_iva_retencion =  $campos["total_iva_retencion"];
+        $total_iva_retencion = $campos["total_iva_retencion"];
 
         $total_retencion = $retencion - $total_iva_retencion;
 
@@ -2083,7 +2110,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         $stmt = Tb060OrdenPagoPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
-        $co_orden_pago =  $campos["co_orden_pago"];
+        $co_orden_pago = $campos["co_orden_pago"];
 
 
         $c = new Criteria();
@@ -2094,7 +2121,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         $stmt = Tb062LiquidacionPagoPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
-        $co_liquidacion_pago =  $campos["co_liquidacion_pago"];
+        $co_liquidacion_pago = $campos["co_liquidacion_pago"];
 
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -2103,7 +2130,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         $stmt = Tb026SolicitudPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
-        $co_tipo_solicitud =  $campos["co_tipo_solicitud"];
+        $co_tipo_solicitud = $campos["co_tipo_solicitud"];
 
 
         $nu_monto_total = $nu_monto - $total_retencion;
@@ -2176,7 +2203,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         $c = new Criteria();
         $c->clearSelectColumns();
-        $c->addSelectColumn('coalesce(SUM(' .  Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
+        $c->addSelectColumn('coalesce(SUM(' . Tb087PresupuestoMovimientoPeer::NU_MONTO . '),0) as total');
         $c->addJoin(Tb087PresupuestoMovimientoPeer::CO_DETALLE_COMPRA, Tb053DetalleComprasPeer::CO_DETALLE_COMPRAS);
         $c->addJoin(Tb052ComprasPeer::CO_COMPRAS, Tb053DetalleComprasPeer::CO_COMPRAS);
         $c->add(Tb052ComprasPeer::CO_SOLICITUD, $co_solicitud);
@@ -2188,7 +2215,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
         $stmt = Tb087PresupuestoMovimientoPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $nu_monto_total =  $campos["total"];
+        $nu_monto_total = $campos["total"];
 
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -2198,7 +2225,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         $stmt = Tb060OrdenPagoPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
-        $co_orden_pago =  $campos["co_orden_pago"];
+        $co_orden_pago = $campos["co_orden_pago"];
 
 
         $c = new Criteria();
@@ -2209,7 +2236,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         $stmt = Tb062LiquidacionPagoPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
-        $co_liquidacion_pago =  $campos["co_liquidacion_pago"];
+        $co_liquidacion_pago = $campos["co_liquidacion_pago"];
 
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -2218,7 +2245,7 @@ class Tb060OrdenPagoPeer extends BaseTb060OrdenPagoPeer
 
         $stmt = Tb026SolicitudPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
-        $co_tipo_solicitud =  $campos["co_tipo_solicitud"];
+        $co_tipo_solicitud = $campos["co_tipo_solicitud"];
 
 
         if ($cant_orden_pago == 0) {
