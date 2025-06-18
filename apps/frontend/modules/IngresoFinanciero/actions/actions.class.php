@@ -204,6 +204,7 @@ class IngresoFinancieroActions extends sfActions
                         ->setCoTipoAsiento($co_tipo_asiento)
                         ->setInActivo(true)
                         ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
+                        ->setCreatedAt($fecha)
                         ->save($con);
 
 
@@ -216,6 +217,7 @@ class IngresoFinancieroActions extends sfActions
                         ->setCoTipoAsiento($co_tipo_asiento)
                         ->setInActivo(true)
                         ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
+                        ->setCreatedAt($fecha)
                         ->save($con);
                 } else {
 
@@ -227,6 +229,7 @@ class IngresoFinancieroActions extends sfActions
                         ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                         ->setCoTipoAsiento($co_tipo_asiento)
                         ->setInActivo(true)
+                        ->setCreatedAt($fecha)
                         ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
                         ->save($con);
 
@@ -239,6 +242,7 @@ class IngresoFinancieroActions extends sfActions
                         ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                         ->setCoTipoAsiento($co_tipo_asiento)
                         ->setInActivo(true)
+                        ->setCreatedAt($fecha)
                         ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
                         ->save($con);
                 }
@@ -412,6 +416,7 @@ class IngresoFinancieroActions extends sfActions
                         ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                         ->setCoTipoAsiento($co_tipo_asiento)
                         ->setInActivo(true)
+                        ->setCreatedAt($fecha)
                         ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
                         ->save($con);
 
@@ -424,6 +429,7 @@ class IngresoFinancieroActions extends sfActions
                         ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                         ->setCoTipoAsiento($co_tipo_asiento)
                         ->setInActivo(true)
+                        ->setCreatedAt($fecha)
                         ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
                         ->save($con);
                 } else {
@@ -436,6 +442,7 @@ class IngresoFinancieroActions extends sfActions
                         ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                         ->setCoTipoAsiento($co_tipo_asiento)
                         ->setInActivo(true)
+                        ->setCreatedAt($fecha)
                         ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
                         ->save($con);
 
@@ -448,6 +455,7 @@ class IngresoFinancieroActions extends sfActions
                         ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                         ->setCoTipoAsiento($co_tipo_asiento)
                         ->setInActivo(true)
+                        ->setCreatedAt($fecha)
                         ->setIdTb155CuentaBancariaHistorico($tb155_cuenta_bancaria_historico->getId())
                         ->save($con);
                 }

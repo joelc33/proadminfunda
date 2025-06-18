@@ -27,6 +27,13 @@
                 value: this.OBJ.co_solicitud
             });
 
+            this.fecha = new Ext.form.Hidden({
+                name: 'fecha_asignacion',
+                value: this.OBJ.fecha_asignacion
+            });
+
+            
+
             this.co_ejecutor = new Ext.form.Hidden({
                 name: 'co_ejecutor',
                 value: this.OBJ.co_ejecutor
@@ -201,6 +208,7 @@
             this.fieldDatosPartida = new Ext.form.FieldSet({
                 title: 'Datos de la Partida',
                 items: [this.co_detalle_compra,
+                this.fecha,
                 this.co_fuente_financiamiento,
                 this.co_solicitud,
                 this.co_ejecutor,

@@ -86,7 +86,8 @@
                             co_compras: ContabilidadEditar.main.OBJ.co_compras,
                             co_partida: ContabilidadEditar.main.id_partida,
                             co_producto: ContabilidadEditar.main.co_producto,
-                            co_solicitud: ContabilidadEditar.main.OBJ.co_solicitud
+                            co_solicitud: ContabilidadEditar.main.OBJ.co_solicitud,
+                            fecha_asignacion: ContabilidadEditar.main.fecha.getValue()
                         }
                     });
                 }
@@ -235,10 +236,20 @@
                 objStore: this.storeCO_EJECUTOR
             });
 
+            this.fecha = new Ext.form.DateField({
+                fieldLabel: 'Fecha Asignación',
+                name: 'fecha_Asignacion',  
+                id: 'fecha_Asignacion',                    
+                format:'d/m/Y',
+                allowBlank: false,
+                value:this.OBJ.fecha_asignacion,
+                width: 100
+            });
+
 
             this.fieldDatosEnte = new Ext.form.FieldSet({
                 title: 'Datos del Ente Ejeutor',
-                items: [this.co_ejecutor]
+                items: [this.fecha,this.co_ejecutor]
             });
 
             this.tx_concepto = new Ext.form.TextField({
@@ -336,13 +347,19 @@
                     }
                 });
             }, this);
-
+ 
             if (flag == true) {
-                Ext.get('co_ejecutor').setStyle('background-color', '#c9c9c9');
+                Ext.get('co_ejecutor').setStyle('background-color', '#c9c9c9');               
                 ContabilidadEditar.main.co_ejecutor.setReadOnly(true);
+
+                Ext.get('fecha_Asignacion').setStyle('background-color', '#c9c9c9');               
+                ContabilidadEditar.main.fecha.setReadOnly(true);
             } else {
                 Ext.get('co_ejecutor').setStyle('background-color', '#FFFFFF');
                 ContabilidadEditar.main.co_ejecutor.setReadOnly(false);
+
+                Ext.get('fecha_Asignacion').setStyle('background-color', '#FFFFFF');               
+                ContabilidadEditar.main.fecha.setReadOnly(false);
             }
 
         },

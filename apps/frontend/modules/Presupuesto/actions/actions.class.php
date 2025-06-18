@@ -997,6 +997,7 @@ class PresupuestoActions extends sfActions
         $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb026SolicitudPeer::CO_PROVEEDOR);
         $c->add(Tb026SolicitudPeer::CO_SOLICITUD, $codigo);
 
+        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($codigo));
 
         $stmt = Tb026SolicitudPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -1013,6 +1014,7 @@ class PresupuestoActions extends sfActions
         $campos["co_partida"] = $datos_detalle["co_partida"];
         $campos["detalle"] = $datos_detalle["detalle"];
         $campos["co_solicitud"] = $codigo;
+        $campos["fecha_asignacion"] = date("d/m/Y", strtotime($ruta->getCreatedAt()));
 
         $this->data = json_encode($campos);
     }
@@ -1880,17 +1882,18 @@ class PresupuestoActions extends sfActions
     public function executeGuardarCambio()
     {
 
-        $co_partida = $this->getRequestParameter('co_partida');
-        $co_presupuesto = $this->getRequestParameter('co_presupuesto');
-        $co_detalle_compra = $this->getRequestParameter('co_detalle_compra');
-        $co_proyecto = $this->getRequestParameter("co_proyecto");
-        $co_accion = $this->getRequestParameter("co_accion");
-        $co_compras = $this->getRequestParameter("co_compras");
-        $co_ejecutor = $this->getRequestParameter("co_ejecutor");
-        $co_solicitud = $this->getRequestParameter("co_solicitud");
-        $mo_disponible = $this->getRequestParameter("monto");
-        $mo_debitar = $this->getRequestParameter("mo_debitar");
-        $co_fuente_financiamiento = $this->getRequestParameter("co_fuente_financiamiento");
+        $co_partida                 = $this->getRequestParameter('co_partida');
+        $co_presupuesto             = $this->getRequestParameter('co_presupuesto');
+        $co_detalle_compra          = $this->getRequestParameter('co_detalle_compra');
+        $co_proyecto                = $this->getRequestParameter("co_proyecto");
+        $co_accion                  = $this->getRequestParameter("co_accion");
+        $co_compras                 = $this->getRequestParameter("co_compras");
+        $co_ejecutor                = $this->getRequestParameter("co_ejecutor");
+        $co_solicitud               = $this->getRequestParameter("co_solicitud");
+        $mo_disponible              = $this->getRequestParameter("monto");
+        $mo_debitar                 = $this->getRequestParameter("mo_debitar");
+        $co_fuente_financiamiento   = $this->getRequestParameter("co_fuente_financiamiento");
+        $fecha_asignacion           = $this->getRequestParameter("fecha_asignacion");
 
 
         $con = Propel::getConnection();
@@ -1911,6 +1914,12 @@ class PresupuestoActions extends sfActions
             $data_detalle_compra = $stmt->fetch(PDO::FETCH_ASSOC);
 
             $monto_restante = $Tb053DetalleCompra->getMonto() - $data_detalle_compra["monto"];
+
+            //list($dia,$mes,$anio) = explode("/",$fecha_asignacion);
+            $fecha = $fecha_asignacion;
+
+            $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
+            $ruta->setCreatedAt( $fecha)->save($con);
 
             //$Tb053DetalleCompra->getMonto()
             if ($mo_disponible < $mo_debitar) {
@@ -1955,8 +1964,8 @@ class PresupuestoActions extends sfActions
                     ->save($con);
 
 
-                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $co_presupuesto, 1, $mo_debitar, '', $Tb053DetalleCompra->getCoDetalleCompras(), $update_tb209->getId());
-                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $co_presupuesto, 2, $mo_debitar, '', $Tb053DetalleCompra->getCoDetalleCompras(), $update_tb209->getId());
+                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $co_presupuesto, 1, $mo_debitar, '', $Tb053DetalleCompra->getCoDetalleCompras(), $update_tb209->getId(),$fecha);
+                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $co_presupuesto, 2, $mo_debitar, '', $Tb053DetalleCompra->getCoDetalleCompras(), $update_tb209->getId(),$fecha);
 
                 $c = new Criteria();
                 $c->clearSelectColumns();
@@ -2164,7 +2173,7 @@ class PresupuestoActions extends sfActions
                     ->save($con);
 
 
-                $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($Tb052Compras->getCoSolicitud()));
+                
                 $c1 = new Criteria();
                 $c1->add(Tb053DetalleComprasPeer::CO_COMPRAS, $co_compras);
                 $c1->add(Tb053DetalleComprasPeer::CO_PRESUPUESTO, NULL);
@@ -2397,7 +2406,8 @@ class PresupuestoActions extends sfActions
             "co_partida" => $this->getRequestParameter("co_partida"),
             "co_producto" => $this->getRequestParameter("co_producto"),
             "co_solicitud" => $this->getRequestParameter("co_solicitud"),
-            "co_fuente_financiamiento" => $this->getRequestParameter("co_fuente_financiamiento")
+            "co_fuente_financiamiento" => $this->getRequestParameter("co_fuente_financiamiento"),
+            "fecha_asignacion" => $this->getRequestParameter("fecha_asignacion")
         ));
     }
 

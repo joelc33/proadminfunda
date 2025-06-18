@@ -27,6 +27,11 @@
                 value: this.OBJ.tx_descripcion
             });
 
+            this.fecha = new Ext.form.Hidden({
+                name: 'partida[fe_compromiso]',
+                value: this.OBJ.fe_compromiso
+            });
+
 
 
             this.co_ejecutor = new Ext.form.ComboBox({
@@ -260,6 +265,7 @@
                 bodyStyle: 'padding:10px;',
                 items: [
                     this.co_ejecutor,
+                    this.fecha,
                     this.co_proyecto,
                     this.co_accion,
                     this.co_partida,

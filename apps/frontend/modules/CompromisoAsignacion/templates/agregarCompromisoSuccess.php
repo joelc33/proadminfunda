@@ -134,7 +134,8 @@
                         url: '<?php echo $_SERVER["SCRIPT_NAME"] ?>/CompromisoAsignacion/agregarAsignacion',
                         params:{
                             co_compras: agregarCompromiso.main.OBJ.co_compras,
-                            tx_descripcion: agregarCompromiso.main.tx_descripcion.getValue()
+                            tx_descripcion: agregarCompromiso.main.tx_descripcion.getValue(),
+                            fe_compromiso: agregarCompromiso.main.fe_compromiso.getValue()
                         },
                         scripts: true,
                         text: "Cargando.."

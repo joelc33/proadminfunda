@@ -30,13 +30,15 @@ class CompromisoAsignacionActions extends sfActions
     {
         $this->data = json_encode(array(
             "co_compras" => $this->getRequestParameter("co_compras"),
-            "tx_descripcion" => $this->getRequestParameter("tx_descripcion")
+            "tx_descripcion" => $this->getRequestParameter("tx_descripcion"),
+            "fe_compromiso"  => $this->getRequestParameter("fe_compromiso")
         ));
     }
 
     public function executeAgregarCompromiso(sfWebRequest $request)
     {
-        $codigo = $this->getRequestParameter("co_compras");
+        $codigo         = $this->getRequestParameter("co_compras");
+
         if ($codigo != '' || $codigo != null) {
             $c = new Criteria();
             $c->clearSelectColumns();
@@ -331,10 +333,6 @@ class CompromisoAsignacionActions extends sfActions
                 $tb146_compromiso_asignacion->setCoCompras($tb052_compras->getCoCompras());
                 $tb146_compromiso_asignacion->setTxDescripcion($tb146_compromiso_asignacionForm["tx_descripcion"]);
                 $tb146_compromiso_asignacion->setCoUsuario($this->getUser()->getAttribute('codigo'));
-
-
-
-
                 $tb146_compromiso_asignacion->setFeCompromiso($fecha);
                 $tb146_compromiso_asignacion->setCoSolicitud($tb146_compromiso_asignacionForm["co_solicitud"]);
                 $tb146_compromiso_asignacion->save($con);
@@ -455,9 +453,8 @@ class CompromisoAsignacionActions extends sfActions
             $tb052_compra = Tb052ComprasPeer::retrieveByPK($asignacionForm["co_compras"]);
             $tb052_compra->setMontoTotal($monto)->save($con);
 
-
-            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 1, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras(), $tb209_presupuesto_detalle_compra->getId());
-            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 2, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras(), $tb209_presupuesto_detalle_compra->getId());
+            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 1, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras(), $tb209_presupuesto_detalle_compra->getId(),$asignacionForm["fe_compromiso"]);
+            Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $asignacionForm["co_presupuesto"], 2, $asignacionForm["mo_pagar"], '', $tb053_detalle_compras->getCoDetalleCompras(), $tb209_presupuesto_detalle_compra->getId(),$asignacionForm["fe_compromiso"]);
 
 
             $this->data = json_encode(array(
