@@ -1620,6 +1620,14 @@ class PresupuestomodificacionActions extends sfActions
 
       /*CAMPOS*/
 
+     
+
+      list($dia, $mes, $anio) = explode("/", $tb096_presupuesto_modificacionForm["fe_modificacion"]);
+      $fecha = $anio . "-" . $mes . "-" . $dia;
+
+      $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($tb096_presupuesto_modificacionForm["co_solicitud"]));
+      $ruta->setCreatedAt($fecha)->save($con);
+
       /*Campo tipo BIGINT */
       $tb096_presupuesto_modificacion->setIdTb095TipoModificacion(5);
 
@@ -1627,9 +1635,10 @@ class PresupuestomodificacionActions extends sfActions
       $tb096_presupuesto_modificacion->setNuModificacion($tb096_presupuesto_modificacionForm["nu_modificacion"]);
 
       /*Campo tipo DATE */
-      list($dia, $mes, $anio) = explode("/", $tb096_presupuesto_modificacionForm["fe_modificacion"]);
-      $fecha = $anio . "-" . $mes . "-" . $dia;
+      
       $tb096_presupuesto_modificacion->setFeModificacion($fecha);
+
+      
 
       /*Campo tipo VARCHAR */
       $tb096_presupuesto_modificacion->setDeModificacion($tb096_presupuesto_modificacionForm["de_modificacion"]);
@@ -2182,6 +2191,7 @@ class PresupuestomodificacionActions extends sfActions
                   ->setMoSaldoNuevo($saldo_nuevo)
                   ->setMoSaldoAnterior($saldo_anterior)
                   ->setInActivo(true)
+                  ->setCreatedAt($fecha)
                   ->save($con);
 
                 $tb097_movimiento = Tb097ModificacionDetallePeer::retrieveByPK($campos_destino["id"]);
@@ -2262,6 +2272,7 @@ class PresupuestomodificacionActions extends sfActions
                   ->setMoSaldoNuevo($saldo_nuevo)
                   ->setMoSaldoAnterior($saldo_anterior)
                   ->setInActivo(true)
+                  ->setCreatedAt($fecha)
                   ->save($con);
 
                 $tb097_movimiento = Tb097ModificacionDetallePeer::retrieveByPK($campos_destino["id"]);
