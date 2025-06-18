@@ -450,6 +450,7 @@ class TransferenciaCuentaActions extends sfActions
                     ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->setCoRuta($ruta->getCoRuta())
                     ->setCoSolicitud($tb066_transferencia_cuenta->getCoSolicitud())
+                    ->setCreatedAt($fecha)
                     ->save($con);
 
                 if (date("Y") > $this->getUser()->getAttribute('ejercicio')) {
@@ -465,6 +466,7 @@ class TransferenciaCuentaActions extends sfActions
                     ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                     ->setCoRuta($ruta->getCoRuta())
                     ->setCoSolicitud($tb066_transferencia_cuenta->getCoSolicitud())
+                    ->setCreatedAt($fecha)
                     ->save($con);
                 
                 
