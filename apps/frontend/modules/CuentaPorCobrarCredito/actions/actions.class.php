@@ -178,6 +178,7 @@ class CuentaPorCobrarCreditoActions extends sfActions
                                   ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                   ->setCoTipoAsiento(11)
                                   ->setInActivo(true)
+                                  ->setCreatedAt($fe_documento)
                                   ->save($con);        
                     
                     $tb061_asiento_contable = new Tb061AsientoContable();
@@ -187,6 +188,7 @@ class CuentaPorCobrarCreditoActions extends sfActions
                                   ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                   ->setCoTipoAsiento(11)
                                   ->setInActivo(true)
+                                  ->setCreatedAt($fe_documento)
                                   ->save($con);  
                     
                     
@@ -379,6 +381,7 @@ class CuentaPorCobrarCreditoActions extends sfActions
                                   ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                   ->setCoTipoAsiento(11)
                                   ->setInActivo(true)
+                                  ->setCreatedAt($fe_documento)
                                   ->save($con);        
                     
                     $tb061_asiento_contable = new Tb061AsientoContable();
@@ -388,6 +391,7 @@ class CuentaPorCobrarCreditoActions extends sfActions
                                   ->setCoUsuario($this->getUser()->getAttribute('codigo'))
                                   ->setCoTipoAsiento(11)
                                   ->setInActivo(true)
+                                  ->setCreatedAt($fe_documento)
                                   ->save($con);                     
         
 
