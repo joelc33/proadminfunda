@@ -1021,7 +1021,7 @@ class PresupuestoActions extends sfActions
 
     public function executeAsignarPartidaServicio(sfWebRequest $request)
     {
-        $codigo = $this->getRequestParameter("co_solicitud");
+        $codigo = $this->getRequestParameter("co_factura");
 
         $c = new Criteria();
         $c->clearSelectColumns();
@@ -1035,7 +1035,7 @@ class PresupuestoActions extends sfActions
         $c->addJoin(Tb007DocumentoPeer::CO_DOCUMENTO, Tb008ProveedorPeer::CO_DOCUMENTO);
         $c->addJoin(Tb008ProveedorPeer::CO_PROVEEDOR, Tb045FacturaPeer::CO_PROVEEDOR);
         //$c->addJoin(Tb048ProductoPeer::CO_PRODUCTO, Tb045FacturaPeer::ID_TB048_PRODUCTO);
-        $c->add(Tb045FacturaPeer::CO_SOLICITUD, $codigo);
+        $c->add(Tb045FacturaPeer::CO_FACTURA, $codigo);
 
         $stmt = Tb045FacturaPeer::doSelectStmt($c);
         $campos = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -2066,17 +2066,22 @@ class PresupuestoActions extends sfActions
     public function executeGuardarCambioServicio()
     {
 
-        $co_partida = $this->getRequestParameter('co_partida');
-        $co_presupuesto = $this->getRequestParameter('co_presupuesto');
-        $co_detalle_compra = $this->getRequestParameter('co_detalle_compra');
-        $co_proyecto = $this->getRequestParameter("co_proyecto");
-        $co_accion = $this->getRequestParameter("co_accion");
-        $co_compras = $this->getRequestParameter("co_compras");
-        $co_ejecutor = $this->getRequestParameter("co_ejecutor");
-        $co_solicitud = $this->getRequestParameter("co_solicitud");
-        $mo_disponible = $this->getRequestParameter("mo_disponible2");
-        $co_fuente_financiamiento = $this->getRequestParameter("co_fuente_financiamiento");
+        $co_partida                 = $this->getRequestParameter('co_partida');
+        $co_presupuesto             = $this->getRequestParameter('co_presupuesto');
+        $co_detalle_compra          = $this->getRequestParameter('co_detalle_compra');
+        $co_proyecto                = $this->getRequestParameter("co_proyecto");
+        $co_accion                  = $this->getRequestParameter("co_accion");
+        $co_compras                 = $this->getRequestParameter("co_compras");
+        $co_ejecutor                = $this->getRequestParameter("co_ejecutor");
+        $co_solicitud               = $this->getRequestParameter("co_solicitud");
+        $mo_disponible              = $this->getRequestParameter("mo_disponible2");
+        $co_fuente_financiamiento   = $this->getRequestParameter("co_fuente_financiamiento");
+        $fecha           = $this->getRequestParameter("fecha_asignacion");
 
+        list($dia,$mes,$anio) = explode("/",$fecha);
+        $fecha_asignacion = $anio.'-'.$mes.'-'.$dia;
+
+        $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
 
         $con = Propel::getConnection();
 
@@ -2101,8 +2106,8 @@ class PresupuestoActions extends sfActions
                     ->setCoAccionEspecifica($co_accion)
                     ->save($con);
 
-                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $co_presupuesto, 1, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
-                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $co_presupuesto, 2, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras());
+                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $co_presupuesto, 1, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras(),'',$fecha_asignacion);
+                Tb087PresupuestoMovimientoPeer::movimientoPartida($con, $this->getUser()->getAttribute('ejercicio'), $this->getUser()->getAttribute('codigo'), $co_presupuesto, 2, $Tb053DetalleCompra->getMonto(), '', $Tb053DetalleCompra->getCoDetalleCompras(),'',$fecha_asignacion);
 
 
                 $c = new Criteria();

@@ -156,6 +156,15 @@
                 width: 500
             });
 
+            this.fecha = new Ext.form.DateField({
+                fieldLabel: 'Fecha Asignación',
+                name: 'fecha_asignacion',  
+                id: 'fecha_asignacion',                    
+                format:'d/m/Y',
+                allowBlank: false,
+                width: 100
+            });
+
             this.mo_pagar = new Ext.form.TextField({
                 fieldLabel: 'Monto Asigancion',
                 name: 'mo_pagar',
@@ -240,6 +249,7 @@
                 autoScroll: true,
                 bodyStyle: 'padding:10px;',
                 items: [
+                    this.fecha,
                     this.co_ejecutor,
                     this.co_proyecto,
                     this.co_accion,
