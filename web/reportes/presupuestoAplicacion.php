@@ -10,11 +10,18 @@ class PDF extends FPDF {
         $this->empresa = $this->getDatosEmpresa(1);
 
         $this->SetFont('courier','B',12);
-        $this->Cell(0,0,utf8_decode('<NOMBRE DE LA INSTITUCION>'),0,0,'L');
+        $this->Cell(0, 0, utf8_decode($this->empresa['nb_empresa']), 0, 0, 'L');
         $this->SetFont('courier','',8);
         $this->Ln(4);
-        //$this->Cell(0,0,utf8_decode('Secretaria de Administración'),0,0,'L');
-        $this->Cell(0,0,utf8_decode($this->empresa['nb_empresa']),0,0,'L');
+         if (!empty($this->empresa['nb_institucion'])) {
+            $this->Ln(2);
+            $this->SetX(52);
+            $this->MultiCell(110,4,utf8_decode($this->empresa['nb_institucion']),0,'L',0); 
+            $this->Ln(2);
+        }else{
+        $this->Ln(4);    
+        }
+        $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'L');             
         $this->Ln(4);
         $this->Cell(0,0,utf8_decode('[FPRER054]'),0,0,'L');
         $this->SetFont('courier','',8);
@@ -421,9 +428,9 @@ class PDF extends FPDF {
           return  $datosSol; 	
     }
 
-    function getDatosEmpresa( $codigo){
+     function getDatosEmpresa( $codigo){
 
-        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, 
+        $sql = "SELECT co_empresa, nb_empresa, co_estado, co_municipio, tx_rif, tx_nit, nb_institucion, nb_presidente,
         tx_direccion, tx_imagen_der, tx_imagen_izq, tx_imagen_cen, nu_telefono, 
         tx_sigla,
         op_imagen->'izquierda'->0 as izquierda_x,
@@ -443,6 +450,7 @@ class PDF extends FPDF {
         return  $datosSol[0];
   
     }
+
 
 
 
