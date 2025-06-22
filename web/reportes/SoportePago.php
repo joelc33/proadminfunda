@@ -190,6 +190,7 @@ class PDF_Flo extends PDF_FlowingBlock
     }
 
     function ChapterBody() {
+        $this->empresa = $this->getDatosEmpresa(1);
 
          $this->Ln(1);
          $this->datos = $this->getPagos();
@@ -330,7 +331,7 @@ class PDF_Flo extends PDF_FlowingBlock
          
          $this->SetY(220); 
          $this->SetX(20);
-         $this->Cell(200,5,utf8_decode('DIRECTOR GENERAL'),0,0,'L');
+         $this->Cell(200,5,utf8_decode($this->empresa['tx_nit']),0,0,'L');
          $this->SetX(80);
          $this->Cell(200,5,utf8_decode('ADMINISTRADOR'),0,0,'L');          
          $this->SetX(150);
@@ -970,7 +971,7 @@ class PDF_Flo extends PDF_FlowingBlock
           $sql = " select tb008.tx_razon_social,
                           tb008.nb_representante_legal,
                          inicial||'-'||tb008.tx_rif as tx_rif,
-                         tb008.nu_cuenta_bancaria,
+                         case when tb026.co_tipo_solicitud in (23,64,68) then null else tb008.nu_cuenta_bancaria end as nu_cuenta_bancaria,
                          to_char(tb063.fe_pago,'dd-mm-yyyy') as fe_emision,
                          tb062.mo_pagar,
                          tb062.mo_pendiente,
@@ -982,7 +983,7 @@ class PDF_Flo extends PDF_FlowingBlock
                          tb063.nu_serial_pago,
                          tb010.tx_banco,
                          tb010a.tx_siglas,
-                         tb010a.tx_banco as tx_banco_proveedor,
+                         case when tb026.co_tipo_solicitud in (23,64,68) then null else tb010a.tx_banco end as tx_banco_proveedor,
                          tx_cuenta_bancaria,
                          de_observacion,
                          tb060.co_orden_pago,
