@@ -1917,9 +1917,11 @@ class PresupuestoActions extends sfActions
 
             //list($dia,$mes,$anio) = explode("/",$fecha_asignacion);
             $fecha = $fecha_asignacion;
-
+            
+            if($fecha){
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
             $ruta->setCreatedAt( $fecha)->save($con);
+            }
 
             //$Tb053DetalleCompra->getMonto()
             if ($mo_disponible < $mo_debitar) {
