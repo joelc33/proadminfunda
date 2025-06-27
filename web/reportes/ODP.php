@@ -168,7 +168,7 @@ class PDF_Flo extends PDF_FlowingBlock
             $this->MultiCell(110, 5, utf8_decode($this->empresa['nb_empresa']), 0, 'C', 0);
             $this->Ln(2);
         }else{
-        $this->Ln(4);    
+        $this->Ln(2);    
         }
         $this->Cell(0, 0, utf8_decode('RIF. ' . $this->empresa['tx_rif']), 0, 0, 'C');
         $this->Ln(4);
