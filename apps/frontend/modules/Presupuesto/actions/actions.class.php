@@ -1917,9 +1917,11 @@ class PresupuestoActions extends sfActions
 
             //list($dia,$mes,$anio) = explode("/",$fecha_asignacion);
             $fecha = $fecha_asignacion;
-
+            
+            if($fecha){
             $ruta = Tb030RutaPeer::retrieveByPK(Tb030RutaPeer::getCoRuta($co_solicitud));
             $ruta->setCreatedAt( $fecha)->save($con);
+            }
 
             //$Tb053DetalleCompra->getMonto()
             if ($mo_disponible < $mo_debitar) {
@@ -2183,13 +2185,15 @@ class PresupuestoActions extends sfActions
                 $c1->add(Tb053DetalleComprasPeer::CO_COMPRAS, $co_compras);
                 $c1->add(Tb053DetalleComprasPeer::CO_PRESUPUESTO, NULL);
                 $cant = Tb053DetalleComprasPeer::doCount($c1);
-
+                
                 if ($cant == 0) {
                     $ruta->setInCargarDato(true)->save($con);
-                }
+                    $con->commit();
+                    Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
 
-                $con->commit();
-                Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
+                } else {
+                    $con->commit();
+                }                
 
 
 
@@ -2322,10 +2326,12 @@ class PresupuestoActions extends sfActions
 
                 if ($cant == 0) {
                     $ruta->setInCargarDato(true)->save($con);
-                }
+                    $con->commit();
+                    Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
 
-                $con->commit();
-                Tb030RutaPeer::getGenerarReporte($ruta->getCoRuta());
+                } else {
+                    $con->commit();
+                }
 
 
 
