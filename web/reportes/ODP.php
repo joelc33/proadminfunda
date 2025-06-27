@@ -935,10 +935,11 @@ class PDF_Flo extends PDF_FlowingBlock
     {
 
         $conex = new ConexionComun();
-        $sql = "select sum(tb052.monto_total) as nu_monto, sum(tb052.monto_total) as total_pagar
+        $sql = "select sum(tb060.mo_total) as nu_monto, sum(tb060.mo_total) as total_pagar
                   from   tb026_solicitud as tb026
                   left join tb052_compras as tb052 on tb052.co_solicitud = tb026.co_solicitud                                                   
                   left join tb030_ruta as tb030 on tb030.co_solicitud = tb052.co_solicitud 
+				  left join tb060_orden_pago as tb060 on (tb060.co_ruta = tb030.co_ruta)
                   where tb030.co_ruta =" . $_GET['codigo'];
 
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
