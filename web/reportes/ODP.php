@@ -1087,7 +1087,8 @@ class PDF_Flo extends PDF_FlowingBlock
                                         se,
                                         sse,
                                         f
-								  limit 8";
+                                having sum(case when co_factura is null then monto_detalle_compra else monto_fact end) > 0
+								limit 8";
 
        //  echo var_dump($sql); exit();                  
         $datosSol = $conex->ObtenerFilasBySqlSelect($sql);
@@ -1152,6 +1153,7 @@ class PDF_Flo extends PDF_FlowingBlock
                                         se,
                                         sse,
                                         f
+                                  having sum(case when co_factura is null then monto_detalle_compra else monto_fact end) > 0
 								  limit 5000 OFFSET 8";
 
         // echo var_dump($sql); exit();                  
