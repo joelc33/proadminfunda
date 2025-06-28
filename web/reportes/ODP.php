@@ -1058,7 +1058,9 @@ class PDF_Flo extends PDF_FlowingBlock
                                         nu_se as se,
                                         nu_sse as sse,
                                         nu_fi as f,
-										tb087.co_factura,
+										(select  p.co_factura
+                                            from tb087_presupuesto_movimiento p join tb045_factura f on (p.co_factura = f.co_factura) 
+                                        where f.co_odp = tb060.co_orden_pago and p.co_tipo_movimiento = 2 limit 1)  as co_factura,
                                         coalesce((select  sum(p.nu_monto) 
                                             from tb087_presupuesto_movimiento p join tb045_factura f on (p.co_factura = f.co_factura) 
                                         where p.co_detalle_compra = tb053.co_detalle_compras and p.co_partida = tb087.co_partida and f.co_odp = tb060.co_orden_pago and p.co_tipo_movimiento = 2),0)  as monto_fact,
@@ -1124,7 +1126,9 @@ class PDF_Flo extends PDF_FlowingBlock
                                         nu_se as se,
                                         nu_sse as sse,
                                         nu_fi as f,
-										tb087.co_factura,
+										(select  p.co_factura
+                                            from tb087_presupuesto_movimiento p join tb045_factura f on (p.co_factura = f.co_factura) 
+                                        where f.co_odp = tb060.co_orden_pago and p.co_tipo_movimiento = 2 limit 1)  as co_factura,
                                         coalesce((select  sum(p.nu_monto) 
                                             from tb087_presupuesto_movimiento p join tb045_factura f on (p.co_factura = f.co_factura) 
                                         where p.co_detalle_compra = tb053.co_detalle_compras and p.co_partida = tb087.co_partida and f.co_odp = tb060.co_orden_pago and p.co_tipo_movimiento = 2),0)  as monto_fact,
