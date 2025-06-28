@@ -1060,7 +1060,7 @@ class PDF_Flo extends PDF_FlowingBlock
                                         nu_fi as f,
                                         (select  sum(p.nu_monto) 
                                             from tb087_presupuesto_movimiento p join tb045_factura f on (p.co_factura = f.co_factura) 
-                                        where p.co_detalle_compra = tb053.co_detalle_compras and p.co_partida = tb087.co_partida and f.co_odp = tb060.co_orden_pago)  as monto_fact,
+                                        where p.co_detalle_compra = tb053.co_detalle_compras and p.co_partida = tb087.co_partida and f.co_odp = tb060.co_orden_pago and p.co_tipo_movimiento = 2)  as monto_fact,
                                         sum(tb087.nu_monto) as monto_detalle_compra
                                 from  tb052_compras as tb052 
                                 left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras 
@@ -1124,7 +1124,7 @@ class PDF_Flo extends PDF_FlowingBlock
                                         nu_fi as f,
                                         (select  sum(p.nu_monto) 
                                             from tb087_presupuesto_movimiento p join tb045_factura f on (p.co_factura = f.co_factura) 
-                                        where p.co_detalle_compra = tb053.co_detalle_compras and p.co_partida = tb087.co_partida and f.co_odp = tb060.co_orden_pago)  as monto_fact,
+                                        where p.co_detalle_compra = tb053.co_detalle_compras and p.co_partida = tb087.co_partida and f.co_odp = tb060.co_orden_pag and p.co_tipo_movimiento = 2)  as monto_fact,
                                         sum(tb087.nu_monto) as monto_detalle_compra
                                 from  tb052_compras as tb052 
                                 left join tb053_detalle_compras as tb053 on tb052.co_compras = tb053.co_compras 
