@@ -1628,7 +1628,7 @@ tb180_maestro_contable order by co_maestro_contable desc limit 1";
         $c->setIgnoreCase(true);
 
         $c->add(Tb024CuentaContablePeer::TX_TIPO, 'S');
-        $c->add(Tb024CuentaContablePeer::NU_NIVEL, 8, Criteria::NOT_IN);
+//        $c->add(Tb024CuentaContablePeer::NU_NIVEL, 8, Criteria::NOT_IN);
 //        $c->addAscendingOrderByColumn(Tb024CuentaContablePeer::NU_NIVEL);
         $c->addAscendingOrderByColumn(Tb024CuentaContablePeer::NU_CUENTA_CONTABLE);
         $cantidadTotal = Tb024CuentaContablePeer::doCount($c);
