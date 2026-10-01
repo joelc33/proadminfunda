@@ -70,14 +70,14 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
     list($dia,$mes,$anio) = explode("-",$_GET["fe_fin"]);
     $fe_fin = $anio.'-'.$mes."-".$dia;
      
-    $condicion .= " tb052.fe_compra >= '".$fe_inicio."' and ";
-    $condicion .= " tb052.fe_compra <= '".$fe_fin."' ";
+    $condicion .= " tb052.fecha_compra >= '".$fe_inicio."' and ";
+    $condicion .= " tb052.fecha_compra <= '".$fe_fin."' ";
     if ($_GET["nu_codigo"]) $condicion .= " and tb008.nu_codigo like '".$nu_codigo."'";
     if ($tipo=='APROBADAS') $condicion .= " and tb060.in_anulado = FALSE ";        
     if ($tipo=='ANULADAS')  $condicion .= " and tb060.in_anulado = TRUE ";     
     
     $sql = "select distinct tb026.co_solicitud, tb008.nu_codigo ,tb052.numero_compra as tx_serial ,
-                tb008.tx_rif ,tb008.tx_razon_social ,to_char(tb052.fe_compra, 'dd/mm/yyyy') as fecha,tb052.fe_compra as fe_registro,
+                tb008.tx_rif ,tb008.tx_razon_social ,to_char(tb052.fecha_compra, 'dd/mm/yyyy') as fecha,tb052.fecha_compra as fe_registro,
                 tx_estatus as estatus ,
                 (select COALESCE(sum(monto),0.00) from tb053_detalle_compras where co_compras = tb052.co_compras) as monto 
                 from tb026_solicitud tb026 left join tb008_proveedor tb008 on tb026.co_proveedor = tb008.co_proveedor 
