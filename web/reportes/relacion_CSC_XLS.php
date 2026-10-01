@@ -83,7 +83,7 @@ require_once '../../plugins/reader/Classes/PHPExcel/IOFactory.php';
                 from tb026_solicitud tb026 left join tb008_proveedor tb008 on tb026.co_proveedor = tb008.co_proveedor 
                     join tb052_compras as tb052 on (tb052.co_solicitud = tb026.co_solicitud) 
                     join tb029_estatus as tb029 on (tb029.co_estatus = tb026.co_estatus)
-                where  tb026.co_tipo_solicitud in (1,2,70) and $condicion order by tb026.fe_registro asc";         
+                where  tb026.co_tipo_solicitud in (1,2,70) and $condicion order by tb052.fecha_compra asc";         
            
     
     $Movimientos = $conex->ObtenerFilasBySqlSelect($sql);
